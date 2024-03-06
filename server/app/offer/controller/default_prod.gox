@@ -1,0 +1,213 @@
+package controller
+
+import (
+	"context"
+	"time"
+
+	o_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/offer/datastore"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+func (impl *OfferControllerImpl) createDefaults(ctx context.Context) error {
+	impl.Logger.Debug("offer createDefaults started...")
+	// DEVELOPERS NOTE: ALL OF THESE ARE PURPOPSEFULLY HARD-CODE AND ARE TO BE DELETED UPON RELEASE.
+
+	orgID, _ := primitive.ObjectIDFromHex("648763d3f6fbead15f5bd4d2")
+	branchID, _ := primitive.ObjectIDFromHex("64c3dd106249b6afbf9075d3")
+
+	//
+	// ---- Single Class Pass ----
+	//
+
+	o1ID, _ := primitive.ObjectIDFromHex("64da7dc7a2e51dc58bf5cf1e")
+	o1, _ := impl.GetByID(ctx, o1ID)
+	if o1 == nil || true { // Temporary always true, delete when ready to launch.
+		impl.Logger.Debug("creating `Single Class Pass`...")
+		o1 = &o_ds.Offer{
+			OrganizationID:   orgID,
+			OrganizationName: "BP8 Fitness",
+			BranchID:         branchID,
+			BranchName:       "BP8 Fitness",
+			ID:               o1ID,
+			Name:             "Single Class Pass",
+			Description:      "Join us for an invigorating workout session at BP8 Fitness! Experience our high-energy classes for just $25 per class.",
+			Price:            25,
+			PriceCurrency:    "CAD",
+			PayFrequency:     o_ds.PayFrequencyOneTime,
+			Status:           o_ds.StatusActive,
+			Type:             o_ds.OfferTypeService,
+			BusinessFunction: o_ds.BusinessFunctionProvideLimitedUsageBasedService,
+			DaysLimit:        1,
+			PurchaseLimit:    1,
+			CreatedAt:        time.Now(),
+			ModifiedAt:       time.Now(),
+			StripeProductID:  "prod_OUaFT2ke6MkFMx",            // See: https://dashboard.stripe.com/products/prod_OUaFT2ke6MkFMx
+			StripePriceID:    "price_1Nhb4zC1dNpgYbqFwvZ5SX2N", // See: https://dashboard.stripe.com/prices/price_1Nhb4zC1dNpgYbqFYj7FG9Vs
+		}
+		if err := impl.OfferStorer.Upsert(ctx, o1); err != nil {
+			return err
+		}
+	}
+
+	//
+	// ---- 7-Day Trial ----
+	//
+
+	o2ID, _ := primitive.ObjectIDFromHex("64da7e8abdc60f3f9a1b4600")
+	o2, _ := impl.GetByID(ctx, o2ID)
+	if o2 == nil || true { // Temporary always true, delete when ready to launch.
+		impl.Logger.Debug("creating `7-Day Trial`...")
+		o2 = &o_ds.Offer{
+			OrganizationID:   orgID,
+			OrganizationName: "BP8 Fitness",
+			BranchID:         branchID,
+			BranchName:       "BP8 Fitness",
+			ID:               o2ID,
+			Name:             "7-Day Trial",
+			Description:      "Curious to see what BP8 Fitness is all about? Try our 7-day trial for only $5! Dive into a week of transformative workouts, exclusive amenities, and a taste of the BP8 Fitness community. ",
+			Price:            5,
+			PriceCurrency:    "CAD",
+			PayFrequency:     o_ds.PayFrequencyOneTime,
+			Status:           o_ds.StatusActive,
+			Type:             o_ds.OfferTypeService,
+			BusinessFunction: o_ds.BusinessFunctionProvideLimitedTimeBasedService,
+			DaysLimit:        7,
+			PurchaseLimit:    1,
+			CreatedAt:        time.Now(),
+			ModifiedAt:       time.Now(),
+			StripeProductID:  "prod_OUaITn7wCJU5KL",            // See: https://dashboard.stripe.com/products/prod_OUaITn7wCJU5KL
+			StripePriceID:    "price_1Nhb7sC1dNpgYbqFPqVAEuGY", // See: https://dashboard.stripe.com/prices/price_1Nhb7sC1dNpgYbqFPqVAEuGY
+		}
+		if err := impl.OfferStorer.Upsert(ctx, o2); err != nil {
+			return err
+		}
+	}
+
+	// ---- 10 pack Class Pass ----
+	o3ID, _ := primitive.ObjectIDFromHex("64da7ee44c70cc814c7b42da")
+	o3, _ := impl.GetByID(ctx, o3ID)
+	if o3 == nil || true { // Temporary always true, delete when ready to launch.
+		impl.Logger.Debug("creating `10 pack Class Pass`...")
+		o3 = &o_ds.Offer{
+			OrganizationID:   orgID,
+			OrganizationName: "BP8 Fitness",
+			BranchID:         branchID,
+			BranchName:       "BP8 Fitness",
+			ID:               o3ID,
+			Name:             "10 pack Class Pass",
+			Description:      "Ready to take your fitness journey to the next level? Our 10 pack is priced at $200, perfect for those committed to regular workouts. Flexibility meets affordability.",
+			Price:            200,
+			PriceCurrency:    "CAD",
+			PayFrequency:     o_ds.PayFrequencyOneTime,
+			Status:           o_ds.StatusActive,
+			Type:             o_ds.OfferTypeService,
+			BusinessFunction: o_ds.BusinessFunctionProvideUnlimitedSubscriptionBasedService,
+			ClassLimit:       10,
+			PurchaseLimit:    1,
+			CreatedAt:        time.Now(),
+			ModifiedAt:       time.Now(),
+			StripeProductID:  "prod_OUaKNWLCvSuxbN",            // See: https://dashboard.stripe.com/products/prod_OUaKNWLCvSuxbN
+			StripePriceID:    "price_1Nhb9UC1dNpgYbqFanU39ffl", // See: https://dashboard.stripe.com/prices/price_1Nhb9UC1dNpgYbqFanU39ffl
+		}
+		if err := impl.OfferStorer.Upsert(ctx, o3); err != nil {
+			return err
+		}
+	}
+
+	// ---- Monthly Subscription ----
+	o4ID, _ := primitive.ObjectIDFromHex("64da7f02443e34e206d03fa6")
+	o4, _ := impl.GetByID(ctx, o4ID)
+	if o4 == nil || true { // Temporary always true, delete when ready to launch.
+		impl.Logger.Debug("creating `Monthly`...")
+		o4 = &o_ds.Offer{
+			OrganizationID:   orgID,
+			OrganizationName: "BP8 Fitness",
+			BranchID:         branchID,
+			BranchName:       "BP8 Fitness",
+			ID:               o4ID,
+			Name:             "Monthly",
+			Description:      "Get unlimited access to all our classes with our 140 plan.",
+			Price:            140,
+			PriceCurrency:    "CAD",
+			PayFrequency:     o_ds.PayFrequencyMonthly,
+			Status:           o_ds.StatusActive,
+			Type:             o_ds.OfferTypeService,
+			BusinessFunction: o_ds.BusinessFunctionProvideUnlimitedSubscriptionBasedService,
+			PurchaseLimit:    0,
+			CreatedAt:        time.Now(),
+			ModifiedAt:       time.Now(),
+			StripeProductID:  "prod_OIHSLb9WNwgMrp",            // See: https://dashboard.stripe.com/products/prod_OUaLmgSZzm9dj5
+			StripePriceID:    "price_1NhbAYC1dNpgYbqF5ZMu1V1w", // See: https://dashboard.stripe.com/prices/price_1NhbAYC1dNpgYbqF5ZMu1V1w
+		}
+		if err := impl.OfferStorer.Upsert(ctx, o4); err != nil {
+			return err
+		}
+	}
+
+	// ---- 3-Month Membership Subscription ----
+	o5ID, _ := primitive.ObjectIDFromHex("64da966a25186d13373b2f83")
+	o5, _ := impl.GetByID(ctx, o5ID)
+	if o5 == nil || true { // Temporary always true, delete when ready to launch.
+		impl.Logger.Debug("creating `3-Month Membership`...")
+		o5 = &o_ds.Offer{
+			OrganizationID:   orgID,
+			OrganizationName: "BP8 Fitness",
+			BranchID:         branchID,
+			BranchName:       "BP8 Fitness",
+			ID:               o5ID,
+			Name:             "3-Month Membership",
+			Description:      "Unlock long-term fitness benefits with our 3-month membership at just $150! Commit to your wellness journey and enjoy consistent progress. Choose BP8 Fitness for a supportive community.",
+			Price:            150,
+			PriceCurrency:    "CAD",
+			PayFrequency:     o_ds.PayFrequencyMonthly,
+			Status:           o_ds.StatusActive,
+			Type:             o_ds.OfferTypeService,
+			BusinessFunction: o_ds.BusinessFunctionProvideLimitedSubscriptionBasedService,
+			DaysLimit:        30 * 3, // 30 days * 3
+			PurchaseLimit:    0,
+			CreatedAt:        time.Now(),
+			ModifiedAt:       time.Now(),
+			StripeProductID:  "prod_OUaMu2Brau838d",            // See: https://dashboard.stripe.com/products/prod_OUaMu2Brau838d
+			StripePriceID:    "price_1NhbC2C1dNpgYbqFPbprZ8oF", // See: https://dashboard.stripe.com/prices/price_1NhbC2C1dNpgYbqFPbprZ8oF
+		}
+		if err := impl.OfferStorer.Upsert(ctx, o5); err != nil {
+			return err
+		}
+	}
+
+	// ---- VIP Legendary (Monthly) Membership ----
+	o6ID, _ := primitive.ObjectIDFromHex("64da7ef78d1c8fef4b76c9ad")
+	o6, _ := impl.GetByID(ctx, o6ID)
+	if o6 == nil || true { // Temporary always true, delete when ready to launch.
+		impl.Logger.Debug("creating `VIP Legendary Membership`...")
+		o6 = &o_ds.Offer{
+			OrganizationID:   orgID,
+			OrganizationName: "BP8 Fitness",
+			BranchID:         branchID,
+			BranchName:       "BP8 Fitness",
+			ID:               o6ID,
+			Name:             "VIP Legendary Membership",
+			Description:      "Join the elite fitness enthusiasts with our VIP Legendary Membership at $150 per month. Enjoy the ultimate BP8 Fitness experience, with unlimited access to all classes, priority booking, personalized workout plans, and exclusive merchandise. Elevate your fitness journey to legendary status.",
+			Price:            150,
+			PriceCurrency:    "CAD",
+			PayFrequency:     o_ds.PayFrequencyMonthly,
+			Status:           o_ds.StatusActive,
+			Type:             o_ds.OfferTypeService,
+			BusinessFunction: o_ds.BusinessFunctionProvideUnlimitedSubscriptionBasedService,
+			PurchaseLimit:    0,
+			CreatedAt:        time.Now(),
+			ModifiedAt:       time.Now(),
+			StripeProductID:  "prod_OUaNka5WVCs8Sk",            // See: https://dashboard.stripe.com/products/prod_OUaNka5WVCs8Sk
+			StripePriceID:    "price_1NhbDAC1dNpgYbqFtLWSt9XV", // See: https://dashboard.stripe.com/prices/price_1NhbDAC1dNpgYbqFtLWSt9XV
+		}
+		if err := impl.OfferStorer.Upsert(ctx, o6); err != nil {
+			return err
+		}
+	}
+
+	// uID := primitive.NewObjectID()
+	// impl.Logger.Warn("id.", slog.Any("id", uID))
+
+	impl.Logger.Debug("offer createDefaults finished")
+	return nil
+}

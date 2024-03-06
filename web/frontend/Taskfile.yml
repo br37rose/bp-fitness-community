@@ -1,0 +1,14 @@
+version: '3'
+
+tasks:
+  desc: "start the project (for web-development only)"
+  start:
+    cmds:
+      - npm run start:dev
+
+  buildprod:
+    desc: "build the project into a production artifact (for production usage only)"
+    cmds:
+      - npm run build:prod
+      - cp -Rf ./build/* ../bp8fitnesscommunity-frontend-static
+      - rm -Rf ./build

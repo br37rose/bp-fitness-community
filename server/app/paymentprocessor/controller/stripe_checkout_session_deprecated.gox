@@ -1,0 +1,208 @@
+package controller
+
+import (
+	"context"
+	"errors"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log/slog"
+
+	usr_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config/constants"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
+)
+
+func (c *PaymentProcessorControllerImpl) CreateStripeSubscriptionCheckoutSessionURL(ctx context.Context, priceID string) (string, error) {
+	// Extract from our session the following data.
+	userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
+
+	// Lookup the user in our database, else return a `400 Bad Request` error.
+	u, err := c.UserStorer.GetByID(ctx, userID)
+	if err != nil {
+		c.Logger.Error("database error", slog.Any("err", err))
+		return "", err
+	}
+	if u == nil {
+		c.Logger.Warn("user does not exist validation error")
+		return "", errors.New("user id does not exist")
+	}
+	c.Logger.Debug("creating stripe checkout session", slog.String("priceID", priceID), slog.Any("userId", u.ID))
+
+	// Defensive code: Prevent executing this function if different processor.
+	if u.PaymentProcessorName != "Stripe, Inc." {
+		c.Logger.Warn("not stripe payment processor assigned to user.")
+		return "", errors.New("user is using payment processor which is not supported")
+	}
+
+	// Defensive code: Prevent creating a new subscription if a previous
+	// subscription already exists!
+	if u.StripeSubscription != nil {
+		if u.StripeSubscription.Status == usr_d.SubscriptionStatusActive {
+			c.Logger.Warn("subscription already exists error")
+			return "", httperror.NewForBadRequestWithSingleField("subscription", "you already have a subscription, please cancel existing subscription before enrolling again")
+		}
+	}
+
+	redirectURL, err := c.PaymentProcessor.CreateSubscriptionCheckoutSessionURL(c.Emailer.GetFrontendDomainName(), "/subscription/success", "/subscription/canceled", u.PaymentProcessorCustomerID, priceID)
+	if err != nil {
+		return "", err
+	}
+
+	c.Logger.Debug("stripe checkout session ready", slog.String("redirectURL", redirectURL))
+	return redirectURL, nil
+}
+
+func (c *PaymentProcessorControllerImpl) CompleteStripeSubscriptionCheckoutSession(ctx context.Context, sessionID string) error {
+	// Extract from our session the following data.
+	userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
+
+	// Lookup the `Checkout Session` on `Stripe` for the particular unique id.
+	checkoutSession, err := c.PaymentProcessor.GetCheckoutSession(sessionID)
+	if err != nil {
+		c.Logger.Error("unable to get checkout session from stripe error")
+		return err
+	}
+	if checkoutSession == nil {
+		c.Logger.Error("checkout session does not exist error")
+		return httperror.NewForBadRequestWithSingleField("session_id", "checkout session does not exist")
+	}
+	if checkoutSession.Subscription == nil {
+		c.Logger.Error("subscription does not exiserror")
+		return httperror.NewForBadRequestWithSingleField("subscription", "does not exist")
+	}
+	if checkoutSession.Customer == nil {
+		c.Logger.Error("customer does not exiserror")
+		return httperror.NewForBadRequestWithSingleField("customer", "does not exist")
+	}
+
+	// For debugging purposes only.
+	c.Logger.Debug("fetched subscription from stripe",
+		slog.String("sessionID", sessionID),
+		slog.String("Subscription.ID", checkoutSession.Subscription.ID),
+		slog.String("Customer.ID", checkoutSession.Customer.ID))
+
+	// Lookup the user in our database, else return a `400 Bad Request` error.
+	u, err := c.UserStorer.GetByID(ctx, userID)
+	if err != nil {
+		c.Logger.Error("database error", slog.Any("err", err))
+		return err
+	}
+	if u == nil {
+		c.Logger.Error("user does not exist validation error")
+		return httperror.NewForBadRequestWithSingleField("user", "does not exist")
+	}
+
+	// Defensive code: Prevent executing this function if different processor.
+	if u.PaymentProcessorName != "Stripe, Inc." {
+		c.Logger.Error("not stripe payment processor assigned to user")
+		return errors.New("user is using payment processor which is not stripe")
+	}
+
+	// Defensive code: Confirm that the `customer id` in the looked up session
+	// matches the authenticated users payment processor customer id to
+	// confirm they are the same users!
+	if u.PaymentProcessorCustomerID != checkoutSession.Customer.ID {
+		c.Logger.Error("unauthorized user fetching session error")
+		return httperror.NewForForbiddenWithSingleField("session_id", "you do not belong to this session")
+	}
+
+	switch checkoutSession.PaymentStatus {
+	case "paid":
+		c.Logger.Debug("fetched subscription is paid")
+	case "unpaid":
+		c.Logger.Error("unauthorized user fetching session error")
+		return httperror.NewForForbiddenWithSingleField("message", "you do not pay yet for the subscription")
+	case "no_payment_required":
+		c.Logger.Debug("fetched subscription payment is not required")
+	}
+
+	switch checkoutSession.Status {
+	case "open":
+		c.Logger.Warn("unauthorized user fetching session error")
+		return httperror.NewForForbiddenWithSingleField("message", "your checkout session is still open")
+	case "expired":
+		c.Logger.Error("unauthorized user fetching session error")
+		return httperror.NewForForbiddenWithSingleField("message", "your checkout session expired")
+	case "complete":
+		c.Logger.Debug("fetched subscription is completed")
+	}
+
+	subscription, err := c.PaymentProcessor.GetSubscription(checkoutSession.Subscription.ID)
+	if err != nil {
+		c.Logger.Error("get subscription from stripe error", slog.Any("err", err))
+		return err
+	}
+	if subscription == nil {
+		c.Logger.Error("subscription does not exiserror")
+		return httperror.NewForBadRequestWithSingleField("subscription", "does not exist")
+	}
+	if subscription.Plan == nil {
+		c.Logger.Error("subscription plan does not exiserror")
+		return httperror.NewForBadRequestWithSingleField("subscription plan", "does not exist")
+	}
+
+	c.Logger.Debug("processing stripe subscription...",
+		slog.Any("Subscription Plan", subscription.Plan),
+		slog.Any("Subscription Items", subscription.Items),
+	)
+
+	// Create our new user subscription.
+	u.StripeSubscription = &usr_d.StripeSubscription{
+		PriceID:        subscription.Plan.ID, // aka `price_id`
+		SubscriptionID: subscription.ID,
+		Interval:       string(subscription.Plan.Interval),
+		Status:         string(subscription.Status),
+	}
+	u.IsSubscriber = true
+
+	// Update the user record.
+	if err := c.UserStorer.UpdateByID(ctx, u); err != nil {
+		c.Logger.Error("update user error", slog.Any("err", err))
+		return err
+	}
+
+	// Create the initial invoice.
+	invoice := subscription.LatestInvoice
+
+	// Create our own interval stripe representation of the invoice and save
+	// this new invoices it in the database.
+
+	si := &usr_d.StripeInvoice{
+		InvoiceID:            invoice.ID,
+		Created:              invoice.Created,
+		Paid:                 invoice.Paid,
+		HostedInvoiceURL:     invoice.HostedInvoiceURL,
+		InvoicePDF:           invoice.InvoicePDF,
+		SubtotalExcludingTax: 0,
+		Tax:                  0,
+		Total:                0,
+		Number:               invoice.Number,
+		Currency:             string(invoice.Currency),
+	}
+	if invoice.SubtotalExcludingTax > 0 {
+		si.SubtotalExcludingTax = fromStripeFormat(invoice.SubtotalExcludingTax)
+	}
+	if invoice.Tax > 0 {
+		si.Tax = fromStripeFormat(invoice.Tax)
+	}
+	if invoice.Total > 0 {
+		si.Total = fromStripeFormat(invoice.Total)
+	}
+
+	u.StripeInvoices = append(u.StripeInvoices, si)
+
+	// Update the user record.
+	if err := c.UserStorer.UpdateByID(ctx, u); err != nil {
+		c.Logger.Error("update user error", slog.Any("err", err))
+		return err
+	}
+	c.Logger.Debug("customer invoice created",
+		slog.Any("invoice_id", invoice.ID),
+		slog.Any("customer_id", invoice.Customer.ID),
+		slog.Bool("paid", invoice.Paid),
+		slog.Int64("created", invoice.Created),
+		slog.String("invoice_pdf", invoice.InvoicePDF),
+		slog.String("hosted_invoice_url", invoice.HostedInvoiceURL))
+
+	return nil
+}

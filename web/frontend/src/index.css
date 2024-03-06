@@ -1,0 +1,24 @@
+/* The code allows the bulma sidebar to be full height. Special thanks to: https://codepen.io/jalediaz/pen/JjoXJao */
+.is-fullheight {
+    min-height: 100vh;
+}
+
+/*
+The following code will prevent bouncing behaviour.
+Special thanks: https://stackoverflow.com/a/65871351
+*/
+body {
+    overflow: hidden;
+}
+
+/*
+The following code will make the button element full width when the user is
+running in a small screen size (like a mobile device).
+Special thanks: https://github.com/jgthms/bulma/issues/695
+*/
+@media screen and (max-width: 768px), print {
+    .button.is-fullwidth-mobile {
+        display: flex;
+        width: 100%;
+    }
+}

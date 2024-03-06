@@ -1,0 +1,428 @@
+{
+  "visit-history": [
+    {
+        "id":1,
+        "day": "Monday",
+        "time": "10:00 AM",
+        "teacher": "John Doe",
+        "paymentMethod": "Credit Card",
+        "classType": "Mathematics",
+        "status": "Pending",
+        "web": "Online",
+        "paymentRef": "#123456"
+        
+      },
+      {
+        "id":2,
+        "day": "Tuesday",
+        "time": "2:30 PM",
+        "teacher": "Jane Smith",
+        "paymentMethod": "PayPal",
+        "classType": "English",
+        "status": "Enrolled",
+        "web": "On-site",
+        "paymentRef": "#789012"        
+      },
+      {
+        "id":3,
+        "day": "Tuesday",
+        "time": "2:30 PM",
+        "teacher": "Jane Smith",
+        "paymentMethod": "PayPal",
+        "classType": "English",
+        "status": "Enrolled",
+        "web": "On-site",
+        "paymentRef": "#789012"
+      },
+      {
+        "id":4,
+        "day": "Tuesday",
+        "time": "2:30 PM",
+        "teacher": "Jane Smith",
+        "paymentMethod": "PayPal",
+        "classType": "English",
+        "status": "Enrolled",
+        "web": "On-site",
+        "paymentRef": "#789012"
+      },
+      {
+        "id":5,
+        "day": "Tuesday",
+        "time": "2:30 PM",
+        "teacher": "Jane Smith",
+        "paymentMethod": "PayPal",
+        "classType": "English",
+        "status": "Enrolled",
+        "web": "On-site",
+        "paymentRef": "#789012"
+      },
+      {
+        "id":6,
+        "day": "Tuesday",
+        "time": "2:30 PM",
+        "teacher": "Jane Smith",
+        "paymentMethod": "PayPal",
+        "classType": "English",
+        "status": "Enrolled",
+        "web": "On-site",
+        "paymentRef": "#789012"
+      }
+  ],
+  "purchase-history": [
+    {
+      "id": 1,
+      "invoiceNumber": "INV987654",
+      "paymentDate": "2023-07-11T11:43:49.085Z",
+      "description": "Product XYZ",
+      "color": "Blue",
+      "size": "Large",
+      "status": 1,
+      "location": "Store Y",
+      "paymentMethod": "Credit Card",
+      "price": "$39.99",
+      "quantity": 3,
+      "tax": "$5.25",
+      "amountPaid": "$129.72"
+    },    
+    {
+      "id": 2,
+      "invoiceNumber": "INV123456",
+      "paymentDate": "2023-07-16T11:43:49.085Z",
+      "description": "Product A",
+      "color": "Red",
+      "size": "Medium",
+      "status": 2,
+      "location": "Store X",
+      "paymentMethod": "Credit Card",
+      "price": "$29.99",
+      "quantity": 2,
+      "tax": "$4.5",
+      "amountPaid": "$64.98"
+    },    
+    {
+      "id": 3,
+      "invoiceNumber": "INV789012",
+      "paymentDate": "2023-07-19T11:43:49.085Z",
+      "description": "Product ABC",
+      "color": "Green",
+      "size": "Small",
+      "status": 3,
+      "location": "Store Z",
+      "paymentMethod": "PayPal",
+      "price": "$19.95",
+      "quantity": 1,
+      "tax": "$2.99",
+      "amountPaid": "$22.94"
+    },
+    {
+      "id": 4,
+      "invoiceNumber": "INV246813",
+      "paymentDate": "2023-07-20T11:43:49.085Z",
+      "description": "Product PQR",
+      "color": "Black",
+      "size": "Small",
+      "status": 4,
+      "location": "Warehouse W",
+      "paymentMethod": "Debit Card",
+      "price": "$45.50",
+      "quantity": 1,
+      "tax": "$3.25",
+      "amountPaid": "$48.75"
+    },
+    {
+      "id": 5,
+      "invoiceNumber": "INV135790",
+      "paymentDate": "2023-07-22T11:43:49.085Z",
+      "description": "Product LMN",
+      "color": "Yellow",
+      "size": "Large",
+      "status": 5,
+      "location": "Store A",
+      "paymentMethod": "Cash",
+      "price": "$24.99",
+      "quantity": 4,
+      "tax": "$2.00",
+      "amountPaid": "$106.96"
+    }    
+  ],
+  "classes-and-events": [
+    {
+      "id":1,
+      "title":"7 Day Trial (Local Residents Only)",
+      "subTitle": "Join us for 7-day sweat dripping, heart-pumping fun!",
+      "expirationDate": "7 days from first use",
+      "price": "$35.00",
+      "category": "Functional Team Training"
+    },
+    {
+      "id":2,
+      "title":"Drop In",
+      "subTitle": "Any day. Any time.",
+      "price": "$30.00",
+      "category": "Functional Team Training"
+    },
+    {
+      "id":3,
+      "title":"10 Classes",
+      "expirationDate": "2023-12-05",
+      "price": "$265.00",
+      "category": "Other Team"
+    },
+    {
+      "id":4,
+      "title":"20 Classes",
+      "subTitle": "Train with us when it works for you! Passes are valid for 6 months from date of purchase.",
+      "expirationDate": "2023-08-15",
+      "price": "$495.00",
+      "category": "Other Team"
+    }
+  ],
+  "class-schedules": [
+      {
+        "day": "Mon",
+        "date": "July 3, 2023",
+        "classes": [
+          {
+            "startTime": "8:00 am EDT",
+            "className": "Abacus",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "9:00 am EDT",
+            "className": "Abacus",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "10:00 am EDT",
+            "className": "Abacus",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          }
+        ]
+      },
+      {
+        "day": "Tue",
+        "date": "July 4, 2023",
+        "classes": [
+          {
+            "startTime": "5:15 am EDT",
+            "className": "Liberty",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "6:15 am EDT",
+            "className": "Liberty",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "7:15 am EDT",
+            "className": "Liberty",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "9:30 am EDT",
+            "className": "Liberty",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "12:30 pm EDT",
+            "className": "Liberty",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "5:00 pm EDT",
+            "className": "Liberty",
+            "teacher": "Robert Stinson",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "6:00 pm EDT",
+            "className": "Liberty",
+            "teacher": "Robert Stinson",
+            "duration": "45 minutes"
+          }
+        ]
+      },
+      {
+        "day": "Wed",
+        "date": "July 5, 2023",
+        "classes": [
+          {
+            "startTime": "5:15 am EDT",
+            "className": "Abacus",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "6:15 am EDT",
+            "className": "Abacus",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "7:15 am EDT",
+            "className": "Abacus",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "9:30 am EDT",
+            "className": "Abacus",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "12:30 pm EDT",
+            "className": "Abacus",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "6:00 pm EDT",
+            "className": "Abacus",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "7:00 pm EDT",
+            "className": "Abacus",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          }
+        ]
+      },
+      {
+        "day": "Thu",
+        "date": "July 6, 2023",
+        "classes": [
+          {
+            "startTime": "5:15 am EDT",
+            "className": "Romans",
+            "teacher": "Amanda Taylor",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "6:15 am EDT",
+            "className": "Romans",
+            "teacher": "Amanda Taylor",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "7:15 am EDT",
+            "className": "Romans",
+            "teacher": "Amanda Taylor",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "9:30 am EDT",
+            "className": "Romans",
+            "teacher": "Daniel Morales",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "12:30 pm EDT",
+            "className": "Romans",
+            "teacher": "Robert Stinson",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "5:00 pm EDT",
+            "className": "Romans",
+            "teacher": "Robert Stinson",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "6:00 pm EDT",
+            "className": "Romans",
+            "teacher": "Robert Stinson",
+            "duration": "45 minutes"
+          }
+        ]
+      },
+      {
+        "day": "Fri",
+        "date": "July 7, 2023",
+        "classes": [
+          {
+            "startTime": "5:15 am EDT",
+            "className": "T10",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "6:15 am EDT",
+            "className": "T10",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "7:15 am EDT",
+            "className": "T10",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "9:30 am EDT",
+            "className": "T10",
+            "teacher": "Robert Stinson",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "12:30 pm EDT",
+            "className": "T10",
+            "teacher": "Robert Stinson",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "5:00 pm EDT",
+            "className": "T10",
+            "teacher": "NIKOL Shkolnikov",
+            "duration": "45 minutes"
+          }
+        ]
+      },
+      {
+        "day": "Sat",
+        "date": "July 8, 2023",
+        "classes": [
+          {
+            "startTime": "9:00 am EDT",
+            "className": "F45 Track",
+            "teacher": "Team F45 Riverbend-Byron",
+            "duration": "45 minutes"
+          }
+        ]
+      },
+      {
+        "day": "Sun",
+        "date": "July 9, 2023",
+        "classes": [
+          {
+            "startTime": "8:00 am EDT",
+            "className": "Panther",
+            "teacher": "Amanda Taylor",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "9:00 am EDT",
+            "className": "Panther",
+            "teacher": "Amanda Taylor",
+            "duration": "45 minutes"
+          },
+          {
+            "startTime": "10:00 am EDT",
+            "className": "Panther",
+            "teacher": "Amanda Taylor",
+            "duration": "45 minutes"
+          }
+        ]
+      }
+  ]
+}

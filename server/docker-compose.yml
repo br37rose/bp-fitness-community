@@ -1,0 +1,108 @@
+# HOW TO USE:
+# $ docker-compose -p bp8fitness -f docker-compose.yml up   #
+#
+
+version: '3.8'
+services:
+  caddy:
+    container_name: bp8fitnesscommunity_backend_app_caddy
+    image: 'caddy:2-alpine'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - '$PWD/Caddyfile:/etc/caddy/Caddyfile'
+      - 'caddy_data:/data'
+      - 'caddy_config:/config'
+    networks:
+      - web
+      - caddy_internal
+
+  # The purpose of this service is to store our application data.
+  db:
+    container_name: bp8fitnesscommunity_mongodb
+    image: mongo:6.0.5-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    networks:
+      - caddy_internal
+
+  # The main application.
+  app:
+    container_name: bp8fitnesscommunity_backend_app_app
+    image: 'bci-innovation-labs/bp8fitnesscommunity-backend:latest'
+    stdin_open: true
+    restart: unless-stopped
+    environment:
+        BP8_BACKEND_IP: 0.0.0.0
+        BP8_BACKEND_PORT: 8000
+        BP8_BACKEND_HMAC_SECRET: ${BP8_BACKEND_HMAC_SECRET}
+        BP8_BACKEND_HAS_DEBUGGING: ${BP8_BACKEND_HAS_DEBUGGING}
+        BP8_BACKEND_DB_URI: ${BP8_BACKEND_DB_URI}
+        BP8_BACKEND_DB_NAME: ${BP8_BACKEND_DB_NAME}
+        BP8_BACKEND_CACHE_URI: ${BP8_BACKEND_CACHE_URI}
+        BP8_BACKEND_AWS_ACCESS_KEY: ${BP8_BACKEND_AWS_ACCESS_KEY}
+        BP8_BACKEND_AWS_SECRET_KEY: ${BP8_BACKEND_AWS_SECRET_KEY}
+        BP8_BACKEND_AWS_ENDPOINT: ${BP8_BACKEND_AWS_ENDPOINT}
+        BP8_BACKEND_AWS_REGION: ${BP8_BACKEND_AWS_REGION}
+        BP8_BACKEND_AWS_BUCKET_NAME: ${BP8_BACKEND_AWS_BUCKET_NAME}
+        BP8_BACKEND_INITIAL_ROOT_ADMIN_ID: ${BP8_BACKEND_INITIAL_ROOT_ADMIN_ID}
+        BP8_BACKEND_INITIAL_ROOT_ADMIN_EMAIL: ${BP8_BACKEND_INITIAL_ROOT_ADMIN_EMAIL} # Required email for root admin when project starts up
+        BP8_BACKEND_INITIAL_ROOT_ADMIN_PASSWORD: ${BP8_BACKEND_INITIAL_ROOT_ADMIN_PASSWORD} # Required password for root admin when project starts up
+        BP8_BACKEND_INITIAL_ORG_ID: ${BP8_BACKEND_INITIAL_ORG_ID}
+        BP8_BACKEND_INITIAL_ORG_NAME: ${BP8_BACKEND_INITIAL_ORG_NAME}
+        BP8_BACKEND_INITIAL_ORG_BRANCH_ID: ${BP8_BACKEND_INITIAL_ORG_BRANCH_ID}
+        BP8_BACKEND_INITIAL_ORG_ADMIN_EMAIL: ${BP8_BACKEND_INITIAL_ORG_ADMIN_EMAIL}
+        BP8_BACKEND_INITIAL_ORG_ADMIN_PASSWORD: ${BP8_BACKEND_INITIAL_ORG_ADMIN_PASSWORD}
+        BP8_BACKEND_INITIAL_ORG_TRAINER_EMAIL: ${BP8_BACKEND_INITIAL_ORG_TRAINER_EMAIL}
+        BP8_BACKEND_INITIAL_ORG_TRAINER_PASSWORD: ${BP8_BACKEND_INITIAL_ORG_TRAINER_PASSWORD}
+        BP8_BACKEND_INITIAL_ORG_MEMBER_EMAIL: ${BP8_BACKEND_INITIAL_ORG_MEMBER_EMAIL}
+        BP8_BACKEND_INITIAL_ORG_MEMBER_PASSWORD: ${BP8_BACKEND_INITIAL_ORG_MEMBER_PASSWORD}
+        BP8_BACKEND_API_DOMAIN_NAME: ${BP8_BACKEND_API_DOMAIN_NAME}
+        BP8_BACKEND_APP_DOMAIN_NAME: ${BP8_BACKEND_APP_DOMAIN_NAME}
+        AWS_ACCESS_KEY: ${BP8_BACKEND_AWS_ACCESS_KEY} # AWS SDK requires this exact name.
+        AWS_SECRET_KEY: ${BP8_BACKEND_AWS_SECRET_KEY} # AWS SDK requires this exact name.
+        AWS_REGION: ${BP8_BACKEND_AWS_REGION}         # AWS SDK requires this exact name.
+        BP8_BACKEND_PDF_BUILDER_CBFF_TEMPLATE_FILE_PATH: ${BP8_BACKEND_PDF_BUILDER_CBFF_TEMPLATE_FILE_PATH}
+        BP8_BACKEND_PDF_BUILDER_DATA_DIRECTORY_PATH: ${BP8_BACKEND_PDF_BUILDER_DATA_DIRECTORY_PATH} # The directory to save our generated PDF files before we upload to S3.
+        BP8_BACKEND_MAILGUN_API_KEY: ${BP8_BACKEND_MAILGUN_API_KEY}
+        BP8_BACKEND_MAILGUN_DOMAIN: ${BP8_BACKEND_MAILGUN_DOMAIN}
+        BP8_BACKEND_MAILGUN_API_BASE: ${BP8_BACKEND_MAILGUN_API_BASE}
+        BP8_BACKEND_MAILGUN_SENDER_EMAIL: ${BP8_BACKEND_MAILGUN_SENDER_EMAIL}
+        BP8_BACKEND_MAILGUN_MAINTENANCE_EMAIL: ${BP8_BACKEND_MAILGUN_MAINTENANCE_EMAIL}
+        BP8_BACKEND_PAYMENT_PROCESSOR_SECRET_KEY: ${BP8_BACKEND_PAYMENT_PROCESSOR_SECRET_KEY}
+        BP8_BACKEND_PAYMENT_PROCESSOR_PUBLIC_KEY: ${BP8_BACKEND_PAYMENT_PROCESSOR_PUBLIC_KEY}
+        BP8_BACKEND_PAYMENT_PROCESSOR_WEBHOOK_SECRET_KEY: ${BP8_BACKEND_PAYMENT_PROCESSOR_WEBHOOK_SECRET_KEY}
+        BP8_BACKEND_OPENAI_API_KEY: ${BP8_BACKEND_OPENAI_API_KEY}
+        BP8_BACKEND_OPENAI_ORGANIZATION_KEY: ${BP8_BACKEND_OPENAI_ORGANIZATION_KEY}
+        BP8_BACKEND_FITBIT_APP_REGISTRATION_SUCCESS_REDIRECT_URL: ${BP8_BACKEND_FITBIT_APP_REGISTRATION_SUCCESS_REDIRECT_URL}
+        BP8_BACKEND_APP_ENABLE_2FA_ON_REGISTRATION: ${BP8_BACKEND_APP_ENABLE_2FA_ON_REGISTRATION}
+    depends_on:
+      - db
+    links:
+      - db
+    volumes:
+      - app_data:/
+    networks:
+      - caddy_internal
+
+networks:
+  web:
+    external: true
+  caddy_internal:
+    external: false
+    driver: bridge
+
+volumes:
+  app_data:
+    external: true
+  mongodb_data:
+    external: true
+  caddy_data:
+    external: true
+  caddy_config:
+    external: true

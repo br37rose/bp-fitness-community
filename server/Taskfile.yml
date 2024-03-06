@@ -1,0 +1,61 @@
+version: '3'
+
+tasks:
+  startbasic:
+    desc: (DEPRECATED) Start the backend in developer mode without any replica set configuration and thus basic instance
+    cmds:
+      - docker-compose -p bp8fitnesscommunity_backend_app -f dev.docker-compose.yml up
+
+  startnode:
+    desc: (NOT RECOMMENDED) Start the backend in developer mode with single-node mongodb
+    cmds:
+      - docker-compose -p bp8fitnesscommunity_backend_app -f dev.single-node.docker-compose.yml up
+
+  start:
+    desc: (RECOMMENDED) Start the backend in developer mode with a mongodb cluster of 3 servers - primary, secondary, and arbitor
+    cmds:
+      - docker-compose -p bp8fitnesscommunity_backend_app -f dev.cluster.docker-compose.yml up
+
+  end:
+    desc: Stop the backend in developer mode
+    cmds:
+      - docker-compose -p bp8fitnesscommunity_backend_app -f dev.docker-compose.yml down
+
+  console:
+    desc: Open console in (developer mode) running backend
+    cmds:
+      - docker exec -it bp8fitnesscommunity_backend_app bash
+
+  stripelogin:
+    desc: "Connect your local stripe CLI to a specific account."
+    cmds:
+      - stripe login
+
+  stripewebhook:
+    desc: "Start the stripe listen command and point it to our server so we can test out webhooks for development. Note: You need to have stripe installed on your computer."
+    cmds:
+      - stripe listen --forward-to=localhost:8000/api/v1/public/stripe-webhook
+
+  striperesend:
+    desc: "Stripe will resend a particular webhook event. Example of running this task: `task striperesend -- evt_1NsUFHH2wIbBWH08QipiWfOI`"
+    cmds:
+      - stripe events resend {{.CLI_ARGS}}
+
+  ngrok:
+    cmds:
+    - ngrok http 8000
+
+  wire:
+    desc: Generate new compile-time dependency injection file, called `wire_gen.go`, which is needed by our app.
+    cmds:
+      - go run github.com/google/wire/cmd/wire
+
+  clean:
+    cmds:
+      - go clean -cache
+      - go clean -modcache
+
+  osxlisten:
+    desc: "See what apps apps are running and listing to what ports. Aftwords use for example: kill -9 4097"
+    cmds:
+      - sudo lsof -nPi -sTCP:LISTEN
