@@ -6,9 +6,10 @@ tasks:
     cmds:
       - npm run start:dev
 
+  # Note: Only executed by devops team.
   buildprod:
     desc: "build the project into a production artifact (for production usage only)"
     cmds:
       - npm run build:prod
-      - cp -Rf ./build/* ../bp8fitnesscommunity-frontend-static
+      - cp -Rf ./build/* ../../../../bp8fitnesscommunity-frontend-static
       - rm -Rf ./build
