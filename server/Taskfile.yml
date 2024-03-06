@@ -59,3 +59,23 @@ tasks:
     desc: "See what apps apps are running and listing to what ports. Aftwords use for example: kill -9 4097"
     cmds:
       - sudo lsof -nPi -sTCP:LISTEN
+
+  # Note: Only executed by devops team.
+  dockerlogin:
+    desc: Command will log in your developer's machine with the private docker registry.
+    cmds:
+      -  docker login registry.digitalocean.com
+
+  # Note: Only executed by devops team.
+  dockerlogout:
+    desc: Command will log out of the private docker registry. (Important step if you are using other private docker registries)
+    cmds:
+      - docker logout registry.digitalocean.com
+
+  # Note: Only executed by devops team.
+  dockerdeploy:
+    desc: Command will build the production container of this backend server and deploy to the private docker registry
+    cmds:
+      - docker build -f Dockerfile --rm -t registry.digitalocean.com/bci/bp8fitnesscommunity-backend:latest --platform linux/amd64 .
+      - docker tag registry.digitalocean.com/bci/bp8fitnesscommunity-backend:latest registry.digitalocean.com/bci/bp8fitnesscommunity-backend:latest
+      - docker push registry.digitalocean.com/bci/bp8fitnesscommunity-backend:latest
