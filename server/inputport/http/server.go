@@ -16,6 +16,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/gateway"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/googlefitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/invoice"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/member"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -57,6 +58,7 @@ type httpInputPort struct {
 	FitnessPlan            *fitnessplan.Handler
 	NutritionPlan          *nutritionplan.Handler
 	FitBitApp              *fitbitapp.Handler
+	GoogleFitApp           *googlefitapp.Handler
 	DataPoint              *datapoint.Handler
 	AggregatePoint         *aggregatepoint.Handler
 	RankPoint              *rankpoint.Handler
@@ -82,6 +84,7 @@ func NewInputPort(
 	strpp *strpp.Handler,
 	ff *fitnessplan.Handler,
 	np *nutritionplan.Handler,
+	gfa *googlefitapp.Handler,
 	fba *fitbitapp.Handler,
 	dp *datapoint.Handler,
 	ap *aggregatepoint.Handler,
@@ -125,6 +128,7 @@ func NewInputPort(
 		FitnessPlan:            ff,
 		NutritionPlan:          np,
 		FitBitApp:              fba,
+		GoogleFitApp:           gfa,
 		DataPoint:              dp,
 		AggregatePoint:         ap,
 		RankPoint:              rp,
@@ -358,6 +362,19 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.FitBitApp.Auth(w, r)
 	case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "subscriber":
 		port.FitBitApp.Subscriber(w, r)
+
+		// --- GOOGLE FIT --- //
+	case n == 3 && p[1] == "v1" && p[2] == "google-login":
+		port.GoogleFitApp.GetGoogleLoginURL(w, r)
+	case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "google" && p[4] == "auth":
+		port.GoogleFitApp.GoogleCallback(w, r)
+
+	// case n == 4 && p[1] == "v1" && p[2] == "fitbit" && p[3] == "simulators":
+	// 	port.FitBitApp.CreateSimulator(w, r)
+	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "auth":
+	// 	port.FitBitApp.Auth(w, r)
+	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "subscriber":
+	// 	port.FitBitApp.Subscriber(w, r)
 
 	// --- DATA POINT --- //
 	case n == 3 && p[1] == "v1" && p[2] == "data-points" && r.Method == http.MethodGet:

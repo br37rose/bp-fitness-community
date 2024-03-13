@@ -7,6 +7,7 @@ import (
 	"github.com/google/wire"
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
+	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
@@ -29,6 +30,8 @@ import (
 	fitnessplan_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	fitnessplan_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	gateway_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
+	googlefitapp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
+	googlefitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	inv_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
 	inv_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
 	member_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/member/controller"
@@ -62,6 +65,7 @@ import (
 	fitbitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	fitnessplan_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	gateway_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/gateway"
+	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/googlefitapp"
 	inv_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/invoice"
 	member_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/member"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -100,6 +104,7 @@ func InitializeEvent() Application {
 		password.NewProvider,
 		mongodb_p.NewProvider,
 		mongodbcache.NewCache,
+		gcp_a.NewAdapter,
 		openai.NewOpenAIConnector,
 		s3_storage.NewStorage,
 		stripe.NewPaymentProcessor,
@@ -133,6 +138,8 @@ func InitializeEvent() Application {
 		fbd_s.NewDatastore,
 		fitbitapp_s.NewDatastore,
 		fitbitapp_c.NewController,
+		googlefitapp_s.NewDatastore,
+		googlefitapp_c.NewController,
 		strpayproc_c.NewController,
 		dp_s.NewDatastore,
 		dp_c.NewController,
@@ -157,6 +164,7 @@ func InitializeEvent() Application {
 		fitnessplan_http.NewHandler,
 		nutritionplan_http.NewHandler,
 		fitbitapp_http.NewHandler,
+		googlefitapp_http.NewHandler,
 		dp_http.NewHandler,
 		ap_http.NewHandler,
 		rp_http.NewHandler,

@@ -7,7 +7,7 @@ import { useRecoilState } from 'recoil';
 
 import RedirectURL from "../../../Hooks/RedirectURL";
 import { getAccountDetailAPI } from "../../../API/Account";
-import { getFitBitDeviceRegistrationURLAPI, postFitBitAppCreateSimulatorAPI } from "../../../API/Wearable";
+import { getGoogleFitRegistrationURLAPI, postFitBitAppCreateSimulatorAPI } from "../../../API/Wearable";
 import { topAlertMessageState, topAlertStatusState, currentUserState } from "../../../AppState";
 import { SUBSCRIPTION_STATUS_WITH_EMPTY_OPTIONS, SUBSCRIPTION_TINTERVAL_WITH_EMPTY_OPTIONS } from "../../../Constants/FieldOptions";
 import FormErrorBox from "../../Reusable/FormErrorBox";
@@ -55,7 +55,7 @@ function AccountWearableTechLaunchpad() {
     const onRegisterClick = (e) => {
         setFetching(true);
         setErrors({});
-        getFitBitDeviceRegistrationURLAPI(
+        getGoogleFitRegistrationURLAPI(
             onRegistrationSuccess,
             onRegistrationError,
             onRegistrationDone
@@ -182,7 +182,7 @@ function AccountWearableTechLaunchpad() {
             <div className="columns">
                 <div className="column">
                     {/* Subtitle */}
-                    <p class="title is-6"><FontAwesomeIcon className="fas" icon={faHeartPulse} />&nbsp;FitBit Fitness Tracker</p>
+                    <p class="title is-6"><FontAwesomeIcon className="fas" icon={faHeartPulse} />&nbsp;Google Fit Fitness Tracker</p>
                     <hr />
 
                     {/* Empty list */}
@@ -193,7 +193,7 @@ function AccountWearableTechLaunchpad() {
                                 &nbsp;No Connection
                             </p>
                             <p className="subtitle">
-                                Your FitBit fitness tracker is not connected with us.{" "}
+                                Your Google Fit fitness tracker is not connected with us.{" "}
                                 <b>
                                     <Link click={onRegisterClick}>Click here&nbsp;<FontAwesomeIcon className="mdi" icon={faArrowUpRightFromSquare} /> </Link>
                                 </b>{" "}
@@ -211,15 +211,15 @@ function AccountWearableTechLaunchpad() {
                         </div>
                     </section>}
 
-                    {/* FitBit */}
+                    {/* Google Fit */}
                     {currentUser.primaryHealthTrackingDeviceType === 1 && <section className="hero has-background-white-ter">
                         <div className="hero-body">
                             <p className="title">
                                 <FontAwesomeIcon className="fas" icon={faHeartPulse} />
-                                &nbsp;FitBit Connected
+                                &nbsp;Google Fit Connected
                             </p>
                             <p className="subtitle">
-                                Your FitBit fitness tracker is connected with us.{" "}
+                                Your Google Fit fitness tracker is connected with us.{" "}
                             </p>
                         </div>
                     </section>}
@@ -232,7 +232,7 @@ function AccountWearableTechLaunchpad() {
                 </div>
                 <div class="column is-half has-text-right">
                     {currentUser.primaryHealthTrackingDeviceType === 0 && <button onClick={onRegisterClick} class="button is-medium is-success is-fullwidth-mobile" type="button">
-                        Register My FitBit&nbsp;<FontAwesomeIcon className="fas" icon={faArrowUpRightFromSquare} />
+                        Register My Google Fit&nbsp;<FontAwesomeIcon className="fas" icon={faArrowUpRightFromSquare} />
                     </button>}
                 </div>
             </div>

@@ -15,8 +15,9 @@ type Conf struct {
 	Emailer          mailgunConfig
 	PaymentProcessor paymentProcessorConfig
 	AI               openAIConfig
-	FitBitApp        fitbitAppConfig
+	FitBitApp        fitbitAppConfig // Deprecated
 	// OURARingApp      ouraRingAppConfig // Developers note: Add in future.
+	GoogleAPI googleApiAppConfig // Deprecated
 }
 
 type serverConf struct {
@@ -83,16 +84,26 @@ type openAIConfig struct {
 	OrganizationKey string `env:"BP8_BACKEND_OPENAI_ORGANIZATION_KEY,required"`
 }
 
-type fitbitAppConfig struct {
+type fitbitAppConfig struct { // DEPRECATED
 	ClientID                       string `env:"BP8_BACKEND_FITBIT_APP_CLIENT_ID,required"`
 	ClientSecret                   string `env:"BP8_BACKEND_FITBIT_APP_CLIENT_SECRET,required"`
 	SubscriberVerificationCode     string `env:"BP8_BACKEND_FITBIT_APP_SUBSCRIBER_VERIFICATION_CODE,required"`
 	RegistrationSuccessRedirectURL string `env:"BP8_BACKEND_FITBIT_APP_REGISTRATION_SUCCESS_REDIRECT_URL,required"`
 }
 
-type ouraRingAppConfig struct {
+type ouraRingAppConfig struct { // DEPRECATED
 	ClientID     string `env:"BP8_BACKEND_OURA_RING_APP_CLIENT_ID,required"`
 	ClientSecret string `env:"BP8_BACKEND_OURA_RING_APP_CLIENT_SECRET,required"`
+}
+
+type googleApiAppConfig struct {
+	ClientID                string `env:"BP8_BACKEND_GOOGLE_API_CLIENT_ID,required"`
+	ProjectID               string `env:"BP8_BACKEND_GOOGLE_API_PROJECT_ID,required"`
+	AuthURI                 string `env:"BP8_BACKEND_GOOGLE_API_AUTH_URI,required"`
+	TokenURI                string `env:"BP8_BACKEND_GOOGLE_API_TOKEN_URI,required"`
+	AuthProviderX509CertURL string `env:"BP8_BACKEND_GOOGLE_API_AUTH_PROVIDER_X509_CERT_URL,required"`
+	ClientSecret            string `env:"BP8_BACKEND_GOOGLE_API_CLIENT_SECRET,required"`
+	RedirectURI             string `env:"BP8_BACKEND_GOOGLE_API_REDIRECT_URI,required"`
 }
 
 func New() *Conf {
