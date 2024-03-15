@@ -31,9 +31,10 @@ import (
 	controller13 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	datastore14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	controller15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
 	datastore16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	httptransport2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	controller12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
 	datastore12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
 	controller6 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/member/controller"
@@ -66,7 +67,6 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/exercise"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/gateway"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/invoice"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/member"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -115,7 +115,7 @@ func InitializeEvent() Application {
 	organizationStorer := datastore3.NewDatastore(conf, slogLogger, client)
 	gatewayController := controller.NewController(conf, slogLogger, provider, jwtProvider, passwordProvider, cacher, s3Storager, client, kmutexProvider, templatedEmailer, paymentProcessor, rankPointStorer, userStorer, organizationStorer)
 	middlewareMiddleware := middleware.NewMiddleware(conf, slogLogger, provider, timeProvider, jwtProvider, gatewayController)
-	handler := gateway.NewHandler(slogLogger, gatewayController)
+	handler := httptransport.NewHandler(slogLogger, gatewayController)
 	userController := controller2.NewController(conf, slogLogger, provider, client, passwordProvider, userStorer)
 	userHandler := user.NewHandler(slogLogger, userController)
 	organizationController := controller3.NewController(conf, slogLogger, provider, passwordProvider, s3Storager, client, templatedEmailer, organizationStorer, userStorer)
@@ -162,7 +162,7 @@ func InitializeEvent() Application {
 	dataPointStorer := datastore17.NewDatastore(conf, slogLogger, client)
 	aggregatePointStorer := datastore18.NewDatastore(conf, slogLogger, client)
 	googleFitAppController := controller15.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, googleCloudPlatformAdapter, organizationStorer, googleFitAppStorer, userStorer, dataPointStorer, aggregatePointStorer)
-	httptransportHandler := httptransport.NewHandler(slogLogger, googleFitAppController)
+	httptransportHandler := httptransport2.NewHandler(slogLogger, googleFitAppController)
 	fitBitAppStorer := datastore19.NewDatastore(conf, slogLogger, client)
 	fitBitDatumStorer := datastore20.NewDatastore(conf, slogLogger, client)
 	fitBitAppController := controller16.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer, aggregatePointStorer)

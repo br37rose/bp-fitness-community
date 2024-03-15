@@ -1,4 +1,4 @@
-package gateway
+package httptransport
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package gateway
+package httptransport
 
 import (
 	gateway_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"

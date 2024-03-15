@@ -7,6 +7,7 @@ import (
 
 	"github.com/rs/cors"
 
+	gateway_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/aggregatepoint"
@@ -16,7 +17,6 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/exercise"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/gateway"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/invoice"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/member"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -42,7 +42,7 @@ type httpInputPort struct {
 	Logger                 *slog.Logger
 	Server                 *http.Server
 	Middleware             middleware.Middleware
-	Gateway                *gateway.Handler
+	Gateway                *gateway_http.Handler
 	User                   *user.Handler
 	Organization           *organization.Handler
 	Tag                    *tag.Handler
@@ -69,7 +69,7 @@ func NewInputPort(
 	configp *config.Conf,
 	loggerp *slog.Logger,
 	mid middleware.Middleware,
-	gh *gateway.Handler,
+	gh *gateway_http.Handler,
 	cu *user.Handler,
 	org *organization.Handler,
 	tag *tag.Handler,
