@@ -16,20 +16,20 @@ import (
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	invoice_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
 	member_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/member/httptransport"
+	nutritionplan_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/nutritionplan/httptransport"
+	offer_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/offer/httptransport"
+	organization_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/httptransport"
+	strpp "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/paymentprocessor/httptransport/stripe"
+	rankpoint_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/httptransport"
+	tag_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
+	user_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/httptransport"
+	videocategory_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocategory/httptransport"
+	videocollection_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocollection/httptransport"
+	videocontent_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/nutritionplan"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/offer"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/organization"
-	strpp "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/paymentprocessor/stripe"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/rankpoint"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/tag"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/user"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/videocategory"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/videocollection"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/videocontent"
 )
 
 type InputPortServer interface {
@@ -43,25 +43,25 @@ type httpInputPort struct {
 	Server                 *http.Server
 	Middleware             middleware.Middleware
 	Gateway                *gateway_http.Handler
-	User                   *user.Handler
-	Organization           *organization.Handler
-	Tag                    *tag.Handler
+	User                   *user_http.Handler
+	Organization           *organization_http.Handler
+	Tag                    *tag_http.Handler
 	Exercise               *exercise_http.Handler
 	Member                 *member_http.Handler
 	Attachment             *attachment_http.Handler
-	VideoCategory          *videocategory.Handler
-	VideoCollection        *videocollection.Handler
-	VideoContent           *videocontent.Handler
-	Offer                  *offer.Handler
+	VideoCategory          *videocategory_http.Handler
+	VideoCollection        *videocollection_http.Handler
+	VideoContent           *videocontent_http.Handler
+	Offer                  *offer_http.Handler
 	Invoice                *invoice_http.Handler
 	StripePaymentProcessor *strpp.Handler
 	FitnessPlan            *fitnessplan.Handler
-	NutritionPlan          *nutritionplan.Handler
+	NutritionPlan          *nutritionplan_http.Handler
 	FitBitApp              *fitbitapp.Handler
 	GoogleFitApp           *googlefitapp_http.Handler
 	DataPoint              *datapoint_http.Handler
 	AggregatePoint         *aggregatepoint_http.Handler
-	RankPoint              *rankpoint.Handler
+	RankPoint              *rankpoint_http.Handler
 	Biometric              *biometric_http.Handler
 }
 
@@ -70,25 +70,25 @@ func NewInputPort(
 	loggerp *slog.Logger,
 	mid middleware.Middleware,
 	gh *gateway_http.Handler,
-	cu *user.Handler,
-	org *organization.Handler,
-	tag *tag.Handler,
+	cu *user_http.Handler,
+	org *organization_http.Handler,
+	tag *tag_http.Handler,
 	exc *exercise_http.Handler,
 	mem *member_http.Handler,
 	att *attachment_http.Handler,
-	vc *videocategory.Handler,
-	vcol *videocollection.Handler,
-	vcon *videocontent.Handler,
-	off *offer.Handler,
+	vc *videocategory_http.Handler,
+	vcol *videocollection_http.Handler,
+	vcon *videocontent_http.Handler,
+	off *offer_http.Handler,
 	inv *invoice_http.Handler,
 	strpp *strpp.Handler,
 	ff *fitnessplan.Handler,
-	np *nutritionplan.Handler,
+	np *nutritionplan_http.Handler,
 	gfa *googlefitapp_http.Handler,
 	fba *fitbitapp.Handler,
 	dp *datapoint_http.Handler,
 	ap *aggregatepoint_http.Handler,
-	rp *rankpoint.Handler,
+	rp *rankpoint_http.Handler,
 	bio *biometric_http.Handler,
 ) InputPortServer {
 	// Initialize the ServeMux.
