@@ -210,6 +210,11 @@ type User struct {
 	// `FitBitApp` domain.
 	FitBitAppID primitive.ObjectID `bson:"fitbit_app_id" json:"-"`
 
+	// GoogleFitAppID is the unique identifier of the fitbit authorized device in
+	// our system. The authorized device information is found in the the
+	// `FitBitApp` domain.
+	GoogleFitAppID primitive.ObjectID `bson:"googlefit_app_id" json:"-"`
+
 	// PrimaryHealthTrackingDeviceType indicates what primary health tracking device the
 	// user is using with our system.
 	PrimaryHealthTrackingDeviceType int8 `bson:"primary_health_tracking_device_type" json:"primary_health_tracking_device_type"`

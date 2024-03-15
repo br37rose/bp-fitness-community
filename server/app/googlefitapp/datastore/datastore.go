@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"golang.org/x/oauth2"
 
 	c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 )
@@ -41,13 +42,12 @@ type GoogleFitApp struct {
 	AuthType int8 `bson:"auth_type" json:"auth_type"`
 
 	// Errors indicates what error was returned by GoogleFit web-services.
-	Errors        string    `bson:"errors" json:"errors,omitempty"`
-	Scope         string    `bson:"scope" json:"scope,omitempty"`
-	TokenType     string    `bson:"token_type" json:"token_type,omitempty"`
-	AccessToken   string    `bson:"access_token" json:"access_token,omitempty"`
-	ExpiresIn     int64     `bson:"expires_in" json:"expires_in"`
-	RefreshToken  string    `bson:"refresh_token" json:"refresh_token,omitempty"`
-	ExpireTime    time.Time `bson:"expire_time" json:"expire_time,omitempty"`
+	Errors string `bson:"errors" json:"errors,omitempty"`
+
+	// The token returned through the successful oAuth exchange for the user.
+	Token *oauth2.Token `bson:"token" json:"token,omitempty"`
+
+	// The last time we made a fetch to Google API.
 	LastFetchedAt time.Time `bson:"last_fetched_at" json:"last_fetched_at,omitempty"`
 
 	HeartRateMetricID  primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`
@@ -72,7 +72,7 @@ type GoogleFitAppListFilter struct {
 }
 
 type GoogleFitAppListResult struct {
-	Results     []*GoogleFitApp       `json:"results"`
+	Results     []*GoogleFitApp    `json:"results"`
 	NextCursor  primitive.ObjectID `json:"next_cursor"`
 	HasNextPage bool               `json:"has_next_page"`
 }
