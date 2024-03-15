@@ -7,18 +7,18 @@ import (
 
 	"github.com/rs/cors"
 
+	aggregatepoint_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/httptransport"
+	attachment_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/httptransport"
+	biometric_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/biometric/httptransport"
+	datapoint_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/httptransport"
+	exercise_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
 	gateway_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	invoice_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
+	member_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/member/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/aggregatepoint"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/attachment"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/biometric"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/datapoint"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/exercise"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/invoice"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/member"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/nutritionplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/offer"
@@ -46,23 +46,23 @@ type httpInputPort struct {
 	User                   *user.Handler
 	Organization           *organization.Handler
 	Tag                    *tag.Handler
-	Exercise               *exercise.Handler
-	Member                 *member.Handler
-	Attachment             *attachment.Handler
+	Exercise               *exercise_http.Handler
+	Member                 *member_http.Handler
+	Attachment             *attachment_http.Handler
 	VideoCategory          *videocategory.Handler
 	VideoCollection        *videocollection.Handler
 	VideoContent           *videocontent.Handler
 	Offer                  *offer.Handler
-	Invoice                *invoice.Handler
+	Invoice                *invoice_http.Handler
 	StripePaymentProcessor *strpp.Handler
 	FitnessPlan            *fitnessplan.Handler
 	NutritionPlan          *nutritionplan.Handler
 	FitBitApp              *fitbitapp.Handler
 	GoogleFitApp           *googlefitapp_http.Handler
-	DataPoint              *datapoint.Handler
-	AggregatePoint         *aggregatepoint.Handler
+	DataPoint              *datapoint_http.Handler
+	AggregatePoint         *aggregatepoint_http.Handler
 	RankPoint              *rankpoint.Handler
-	Biometric              *biometric.Handler
+	Biometric              *biometric_http.Handler
 }
 
 func NewInputPort(
@@ -73,23 +73,23 @@ func NewInputPort(
 	cu *user.Handler,
 	org *organization.Handler,
 	tag *tag.Handler,
-	exc *exercise.Handler,
-	mem *member.Handler,
-	att *attachment.Handler,
+	exc *exercise_http.Handler,
+	mem *member_http.Handler,
+	att *attachment_http.Handler,
 	vc *videocategory.Handler,
 	vcol *videocollection.Handler,
 	vcon *videocontent.Handler,
 	off *offer.Handler,
-	inv *invoice.Handler,
+	inv *invoice_http.Handler,
 	strpp *strpp.Handler,
 	ff *fitnessplan.Handler,
 	np *nutritionplan.Handler,
 	gfa *googlefitapp_http.Handler,
 	fba *fitbitapp.Handler,
-	dp *datapoint.Handler,
-	ap *aggregatepoint.Handler,
+	dp *datapoint_http.Handler,
+	ap *aggregatepoint_http.Handler,
 	rp *rankpoint.Handler,
-	bio *biometric.Handler,
+	bio *biometric_http.Handler,
 ) InputPortServer {
 	// Initialize the ServeMux.
 	mux := http.NewServeMux()

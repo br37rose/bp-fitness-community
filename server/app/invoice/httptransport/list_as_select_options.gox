@@ -1,0 +1,44 @@
+package httptransport
+
+import (
+	"encoding/json"
+	"net/http"
+
+	sub_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+func (h *Handler) ListAsSelectOptionsByBranchID(w http.ResponseWriter, r *http.Request, bid string) {
+	ctx := r.Context()
+
+	branchID, err := primitive.ObjectIDFromHex(bid)
+	if err != nil {
+		httperror.ResponseError(w, err)
+		return
+	}
+
+	f := &sub_s.WorkoutProgramTypeListFilter{
+		PageSize: 1_000_000,
+		// LastID:    "",
+		SortField:       "_id",
+		ExcludeArchived: true,
+		BranchID:        branchID,
+	}
+
+	// Perform our database operation.
+	m, err := h.Controller.ListAsSelectOptionByFilter(ctx, f)
+	if err != nil {
+		httperror.ResponseError(w, err)
+		return
+	}
+
+	MarshalListAsSelectOptionResponse(m, w)
+}
+
+func MarshalListAsSelectOptionResponse(res []*sub_s.WorkoutProgramTypeAsSelectOption, w http.ResponseWriter) {
+	if err := json.NewEncoder(w).Encode(&res); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}

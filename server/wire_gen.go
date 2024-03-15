@@ -16,15 +16,20 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/templatedemailer"
 	controller18 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/controller"
 	datastore18 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
+	httptransport8 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/httptransport"
 	controller7 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/controller"
 	datastore5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/datastore"
+	httptransport4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/httptransport"
 	controller20 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/biometric/controller"
+	httptransport9 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/biometric/httptransport"
 	controller17 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/controller"
 	datastore17 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
+	httptransport7 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/httptransport"
 	datastore6 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/equipment/datastore"
 	datastore13 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/eventlog/datastore"
 	controller5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/controller"
 	datastore7 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
+	httptransport2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
 	controller16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/controller"
 	datastore19 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/datastore"
 	datastore20 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitdatum/datastore"
@@ -34,10 +39,12 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	controller15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
 	datastore16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
-	httptransport2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	httptransport6 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	controller12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
 	datastore12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
+	httptransport5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
 	controller6 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/member/controller"
+	httptransport3 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/member/httptransport"
 	controller14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/nutritionplan/controller"
 	datastore15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/nutritionplan/datastore"
 	controller11 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/offer/controller"
@@ -60,15 +67,8 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/aggregatepoint"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/attachment"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/biometric"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/datapoint"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/exercise"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/invoice"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/member"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/nutritionplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/offer"
@@ -128,11 +128,11 @@ func InitializeEvent() Application {
 	exerciseStorer := datastore7.NewDatastore(conf, slogLogger, client)
 	offerStorer := datastore8.NewDatastore(conf, slogLogger, client)
 	exerciseController := controller5.NewController(conf, slogLogger, provider, kmutexProvider, s3Storager, client, attachmentStorer, equipmentStorer, exerciseStorer, offerStorer, userStorer)
-	exerciseHandler := exercise.NewHandler(slogLogger, exerciseController)
+	httptransportHandler := httptransport2.NewHandler(slogLogger, exerciseController)
 	memberController := controller6.NewController(conf, slogLogger, provider, s3Storager, passwordProvider, paymentProcessor, client, organizationStorer, rankPointStorer, userStorer)
-	memberHandler := member.NewHandler(slogLogger, memberController)
+	handler2 := httptransport3.NewHandler(slogLogger, memberController)
 	attachmentController := controller7.NewController(conf, slogLogger, provider, s3Storager, client, emailer, attachmentStorer, exerciseStorer, userStorer)
-	attachmentHandler := attachment.NewHandler(attachmentController)
+	handler3 := httptransport4.NewHandler(attachmentController)
 	videoCategoryStorer := datastore9.NewDatastore(conf, slogLogger, client)
 	videoCategoryController := controller8.NewController(conf, slogLogger, provider, s3Storager, emailer, client, videoCategoryStorer, exerciseStorer, userStorer)
 	videocategoryHandler := videocategory.NewHandler(slogLogger, videoCategoryController)
@@ -146,7 +146,7 @@ func InitializeEvent() Application {
 	offerHandler := offer.NewHandler(slogLogger, offerontroller)
 	invoiceStorer := datastore12.NewDatastore(conf, slogLogger, client)
 	invoiceController := controller12.NewController(conf, slogLogger, provider, client, organizationStorer, invoiceStorer)
-	invoiceHandler := invoice.NewHandler(slogLogger, invoiceController)
+	handler4 := httptransport5.NewHandler(slogLogger, invoiceController)
 	eventLogStorer := datastore13.NewDatastore(conf, slogLogger, client)
 	stripePaymentProcessorController := stripe2.NewController(conf, slogLogger, provider, s3Storager, passwordProvider, emailer, templatedEmailer, paymentProcessor, organizationStorer, userStorer, invoiceStorer, offerStorer, eventLogStorer)
 	stripeHandler := stripe3.NewHandler(slogLogger, stripePaymentProcessorController)
@@ -162,20 +162,20 @@ func InitializeEvent() Application {
 	dataPointStorer := datastore17.NewDatastore(conf, slogLogger, client)
 	aggregatePointStorer := datastore18.NewDatastore(conf, slogLogger, client)
 	googleFitAppController := controller15.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, googleCloudPlatformAdapter, organizationStorer, googleFitAppStorer, userStorer, dataPointStorer, aggregatePointStorer)
-	httptransportHandler := httptransport2.NewHandler(slogLogger, googleFitAppController)
+	handler5 := httptransport6.NewHandler(slogLogger, googleFitAppController)
 	fitBitAppStorer := datastore19.NewDatastore(conf, slogLogger, client)
 	fitBitDatumStorer := datastore20.NewDatastore(conf, slogLogger, client)
 	fitBitAppController := controller16.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer, aggregatePointStorer)
 	fitbitappHandler := fitbitapp.NewHandler(slogLogger, fitBitAppController)
 	dataPointController := controller17.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer)
-	datapointHandler := datapoint.NewHandler(slogLogger, dataPointController)
+	handler6 := httptransport7.NewHandler(slogLogger, dataPointController)
 	aggregatePointController := controller18.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer, aggregatePointStorer)
-	aggregatepointHandler := aggregatepoint.NewHandler(slogLogger, aggregatePointController)
+	handler7 := httptransport8.NewHandler(slogLogger, aggregatePointController)
 	rankPointController := controller19.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	rankpointHandler := rankpoint.NewHandler(slogLogger, rankPointController)
 	biometricController := controller20.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
-	biometricHandler := biometric.NewHandler(slogLogger, biometricController)
-	inputPortServer := http.NewInputPort(conf, slogLogger, middlewareMiddleware, handler, userHandler, organizationHandler, tagHandler, exerciseHandler, memberHandler, attachmentHandler, videocategoryHandler, videocollectionHandler, videocontentHandler, offerHandler, invoiceHandler, stripeHandler, fitnessplanHandler, nutritionplanHandler, httptransportHandler, fitbitappHandler, datapointHandler, aggregatepointHandler, rankpointHandler, biometricHandler)
+	handler8 := httptransport9.NewHandler(slogLogger, biometricController)
+	inputPortServer := http.NewInputPort(conf, slogLogger, middlewareMiddleware, handler, userHandler, organizationHandler, tagHandler, httptransportHandler, handler2, handler3, videocategoryHandler, videocollectionHandler, videocontentHandler, offerHandler, handler4, stripeHandler, fitnessplanHandler, nutritionplanHandler, handler5, fitbitappHandler, handler6, handler7, rankpointHandler, handler8)
 	crontabInputPortServer := crontab.NewInputPort(conf, slogLogger, userController, fitBitAppController, aggregatePointController, rankPointController)
 	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer)
 	return application
