@@ -16,8 +16,8 @@ type Conf struct {
 	PaymentProcessor paymentProcessorConfig
 	AI               openAIConfig
 	FitBitApp        fitbitAppConfig // Deprecated
-	// OURARingApp      ouraRingAppConfig // Developers note: Add in future.
-	GoogleAPI googleApiAppConfig // Deprecated
+	// OURARingApp  // Deprecated
+	GoogleCloudPlatform googleCloudPlatformAppConfig // Deprecated
 }
 
 type serverConf struct {
@@ -96,15 +96,15 @@ type ouraRingAppConfig struct { // DEPRECATED
 	ClientSecret string `env:"BP8_BACKEND_OURA_RING_APP_CLIENT_SECRET,required"`
 }
 
-type googleApiAppConfig struct {
-	ClientID                 string `env:"BP8_BACKEND_GOOGLE_API_CLIENT_ID,required"`
-	ProjectID                string `env:"BP8_BACKEND_GOOGLE_API_PROJECT_ID,required"`
-	AuthURI                  string `env:"BP8_BACKEND_GOOGLE_API_AUTH_URI,required"`
-	TokenURI                 string `env:"BP8_BACKEND_GOOGLE_API_TOKEN_URI,required"`
-	AuthProviderX509CertURL  string `env:"BP8_BACKEND_GOOGLE_API_AUTH_PROVIDER_X509_CERT_URL,required"`
-	ClientSecret             string `env:"BP8_BACKEND_GOOGLE_API_CLIENT_SECRET,required"`
-	AuthorizationRedirectURI string `env:"BP8_BACKEND_GOOGLE_API_AUTHORIZATION_REDIRECT_URI,required"`
-	SuccessRedirectURI       string `env:"BP8_BACKEND_GOOGLE_API_SUCCESS_REDIRECT_URL,required"`
+type googleCloudPlatformAppConfig struct {
+	ClientID                 string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_CLIENT_ID,required"`
+	ProjectID                string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_PROJECT_ID,required"`
+	AuthURI                  string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTH_URI,required"`
+	TokenURI                 string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_TOKEN_URI,required"`
+	AuthProviderX509CertURL  string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTH_PROVIDER_X509_CERT_URL,required"`
+	ClientSecret             string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_CLIENT_SECRET,required"`
+	AuthorizationRedirectURI string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTHORIZATION_REDIRECT_URI,required"`
+	SuccessRedirectURI       string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_SUCCESS_REDIRECT_URL,required"`
 }
 
 func New() *Conf {
