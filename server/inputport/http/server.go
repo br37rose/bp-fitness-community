@@ -7,6 +7,7 @@ import (
 
 	"github.com/rs/cors"
 
+	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/aggregatepoint"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/attachment"
@@ -16,7 +17,6 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/gateway"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/googlefitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/invoice"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/member"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -58,7 +58,7 @@ type httpInputPort struct {
 	FitnessPlan            *fitnessplan.Handler
 	NutritionPlan          *nutritionplan.Handler
 	FitBitApp              *fitbitapp.Handler
-	GoogleFitApp           *googlefitapp.Handler
+	GoogleFitApp           *googlefitapp_http.Handler
 	DataPoint              *datapoint.Handler
 	AggregatePoint         *aggregatepoint.Handler
 	RankPoint              *rankpoint.Handler
@@ -84,7 +84,7 @@ func NewInputPort(
 	strpp *strpp.Handler,
 	ff *fitnessplan.Handler,
 	np *nutritionplan.Handler,
-	gfa *googlefitapp.Handler,
+	gfa *googlefitapp_http.Handler,
 	fba *fitbitapp.Handler,
 	dp *datapoint.Handler,
 	ap *aggregatepoint.Handler,

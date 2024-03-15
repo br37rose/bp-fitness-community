@@ -1,4 +1,4 @@
-package googlefitapp
+package httptransport
 
 import (
 	"log/slog"
