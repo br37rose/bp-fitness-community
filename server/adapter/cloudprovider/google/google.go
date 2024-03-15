@@ -26,9 +26,9 @@ func NewAdapter(cfg *c.Conf, logger *slog.Logger, dbClient *mongo_client.Client)
 	logger.Debug("google cloud platform connecting...")
 
 	googleLoginConfig := oauth2.Config{
-		RedirectURL:  cfg.GoogleAPI.AuthorizationRedirectURI,
-		ClientID:     cfg.GoogleAPI.ClientID,
-		ClientSecret: cfg.GoogleAPI.ClientSecret,
+		RedirectURL:  cfg.GoogleCloudPlatform.AuthorizationRedirectURI,
+		ClientID:     cfg.GoogleCloudPlatform.ClientID,
+		ClientSecret: cfg.GoogleCloudPlatform.ClientSecret,
 		Scopes: []string{
 			"https://www.googleapis.com/auth/fitness.activity.read",
 			"https://www.googleapis.com/auth/fitness.blood_glucose.read",

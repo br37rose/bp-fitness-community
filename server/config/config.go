@@ -7,17 +7,17 @@ import (
 )
 
 type Conf struct {
-	AppServer        serverConf
-	DB               dbConfig
-	Cache            cacheConfig
-	AWS              awsConfig
-	PDFBuilder       pdfBuilderConfig
-	Emailer          mailgunConfig
-	PaymentProcessor paymentProcessorConfig
-	AI               openAIConfig
-	FitBitApp        fitbitAppConfig // Deprecated
+	AppServer           serverConf
+	DB                  dbConfig
+	Cache               cacheConfig
+	AWS                 awsConfig
+	PDFBuilder          pdfBuilderConfig
+	Emailer             mailgunConfig
+	PaymentProcessor    paymentProcessorConfig
+	AI                  openAIConfig
+	GoogleCloudPlatform googleCloudPlatformAppConfig
+	FitBitApp           fitbitAppConfig // Deprecated
 	// OURARingApp  // Deprecated
-	GoogleCloudPlatform googleCloudPlatformAppConfig // Deprecated
 }
 
 type serverConf struct {
