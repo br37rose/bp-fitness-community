@@ -7,6 +7,7 @@ import (
 
 	agg_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/controller"
 	fba_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/controller"
+	googlefitapp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	rank_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	user_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
@@ -25,6 +26,7 @@ type crontabInputPort struct {
 	FitBitAppController      fba_c.FitBitAppController
 	AggregatePointController agg_c.AggregatePointController
 	RankPointController      rank_c.RankPointController
+	GoogleFitAppCrontab      googlefitapp_cron.GoogleFitAppCrontaber
 }
 
 func NewInputPort(
@@ -34,6 +36,7 @@ func NewInputPort(
 	fbaContr fba_c.FitBitAppController,
 	aggContr agg_c.AggregatePointController,
 	rankContr rank_c.RankPointController,
+	gfaCron googlefitapp_cron.GoogleFitAppCrontaber,
 ) InputPortServer {
 	// Initialize.
 
@@ -48,6 +51,7 @@ func NewInputPort(
 		FitBitAppController:      fbaContr,
 		AggregatePointController: aggContr,
 		RankPointController:      rankContr,
+		GoogleFitAppCrontab:      gfaCron,
 	}
 
 	return p

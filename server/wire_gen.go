@@ -38,6 +38,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	controller15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	datastore16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	httptransport14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	controller12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
@@ -75,7 +76,7 @@ import (
 	datastore11 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/datastore"
 	httptransport10 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
+	crontab2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
@@ -176,7 +177,8 @@ func InitializeEvent() Application {
 	biometricController := controller20.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	handler17 := httptransport18.NewHandler(slogLogger, biometricController)
 	inputPortServer := http.NewInputPort(conf, slogLogger, middlewareMiddleware, handler, httptransportHandler, handler2, handler3, handler4, handler5, handler6, handler7, handler8, handler9, handler10, handler11, stripeHandler, fitnessplanHandler, handler12, handler13, fitbitappHandler, handler14, handler15, handler16, handler17)
-	crontabInputPortServer := crontab.NewInputPort(conf, slogLogger, userController, fitBitAppController, aggregatePointController, rankPointController)
+	googleFitAppCrontaber := crontab.NewCrontab(slogLogger, googleFitAppController)
+	crontabInputPortServer := crontab2.NewInputPort(conf, slogLogger, userController, fitBitAppController, aggregatePointController, rankPointController, googleFitAppCrontaber)
 	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer)
 	return application
 }
