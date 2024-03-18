@@ -124,6 +124,13 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 		return err
 	}
 
+	// DEVELOPERS NOTE:
+	// We must be able to handle two cases:
+	// (1) User never registered before and thus we need to create a record
+	//     in the database for this registration.
+	// (2) Or user has previously registered and we simply need to update
+	//     record to handle this login again behaviour.
+
 	// Get previous record to update or create a new record.
 	gfa, err := impl.GoogleFitAppStorer.GetByUserID(sessCtx, u.ID)
 	if err != nil {

@@ -35,6 +35,10 @@ func (impl *googleFitAppCrontaberImpl) PullDataFromGoogleJob() error {
 }
 
 func (impl *googleFitAppCrontaberImpl) pullDataFromGoogle(ctx context.Context, gfaID primitive.ObjectID) error {
+	// Lock this google fit app
+	impl.Kmutex.Lockf("googlefitapp_%v", gfaID.Hex())
+	defer impl.Kmutex.Unlockf("googlefitapp_%v", gfaID.Hex())
+
 	// Get our database record.
 	gfa, err := impl.GoogleFitAppStorer.GetByID(ctx, gfaID)
 	if err != nil {
