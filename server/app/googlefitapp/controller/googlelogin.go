@@ -36,7 +36,7 @@ func (impl *GoogleFitAppControllerImpl) GetGoogleLoginURL(ctx context.Context) (
 	// // previousl saved, else do nothing.
 	impl.CodeVerifierMap[userID] = oauthState
 
-	googleFitURL := impl.GCP.GenerateAuthCodeURL(oauthState)
+	googleFitURL := impl.GCP.OAuth2GenerateAuthCodeURL(oauthState)
 
 	impl.Logger.Debug("generated authorization url",
 		slog.Any("authorization_url", googleFitURL),

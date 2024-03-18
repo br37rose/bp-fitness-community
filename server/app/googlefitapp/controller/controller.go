@@ -12,8 +12,6 @@ import (
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
 	googlefitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
-
-	// googlefitdatum_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatum/datastore"
 	organization_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"

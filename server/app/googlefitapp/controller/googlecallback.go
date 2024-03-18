@@ -88,7 +88,7 @@ func (impl *GoogleFitAppControllerImpl) GoogleCallback(ctx context.Context, stat
 }
 
 func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo.SessionContext, userID primitive.ObjectID, code string) error {
-	token, err := impl.GCP.ExchangeCode(code)
+	token, err := impl.GCP.OAuth2ExchangeCode(code)
 	if err != nil {
 		impl.Logger.Error("google callback failed exchanging code",
 			slog.String("user_id", userID.Hex()),
@@ -135,25 +135,26 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 	}
 	if gfa == nil {
 		gfa = &gfa_ds.GoogleFitApp{
-			ID:                 primitive.NewObjectID(),
-			UserFirstName:      u.FirstName,
-			UserLastName:       u.LastName,
-			UserName:           u.Name,
-			UserLexicalName:    u.LexicalName,
-			UserID:             u.ID,
-			Status:             gfa_ds.StatusActive,
-			CreatedAt:          time.Now(),
-			ModifiedAt:         time.Now(),
-			OrganizationID:     u.OrganizationID,
-			OrganizationName:   u.OrganizationName,
-			AuthType:           gfa_ds.AuthTypeOAuth2,
-			Errors:             "",
-			Token:              token,
-			LastFetchedAt:      time.Date(2014, 1, 1, 00, 00, 00, 000000000, time.UTC), // 2013-01-01 00:00:00.00 UTC
-			HeartRateMetricID:  primitive.NewObjectID(),
-			StepsCountMetricID: primitive.NewObjectID(),
-			IsTestMode:         false,
-			SimulatorAlgorithm: "",
+			ID:                       primitive.NewObjectID(),
+			UserFirstName:            u.FirstName,
+			UserLastName:             u.LastName,
+			UserName:                 u.Name,
+			UserLexicalName:          u.LexicalName,
+			UserID:                   u.ID,
+			Status:                   gfa_ds.StatusActive,
+			CreatedAt:                time.Now(),
+			ModifiedAt:               time.Now(),
+			OrganizationID:           u.OrganizationID,
+			OrganizationName:         u.OrganizationName,
+			AuthType:                 gfa_ds.AuthTypeOAuth2,
+			Errors:                   "",
+			Token:                    token,
+			LastFetchedAt:            time.Date(2014, 1, 1, 00, 00, 00, 000000000, time.UTC), // 2013-01-01 00:00:00.00 UTC
+			HeartRateMetricID:        primitive.NewObjectID(),
+			StepsCountMetricID:       primitive.NewObjectID(),
+			IsTestMode:               false,
+			SimulatorAlgorithm:       "",
+			RequiresGoogleLoginAgain: false,
 		}
 		if err := impl.GoogleFitAppStorer.Create(sessCtx, gfa); err != nil {
 			impl.Logger.Error("failed creating google fit app in database",

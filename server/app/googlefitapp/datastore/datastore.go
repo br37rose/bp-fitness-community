@@ -55,6 +55,10 @@ type GoogleFitApp struct {
 
 	IsTestMode         bool   `bson:"is_test_mode" json:"is_test_mode"`
 	SimulatorAlgorithm string `bson:"simulator_algorithm,omitempty" json:"simulator_algorithm,omitempty"`
+
+	// RequiresGoogleLoginAgain indicates whether the user must log in again
+	// into Google for whatever reason to re-authorize our app.
+	RequiresGoogleLoginAgain bool `bson:"requires_google_login_again" json:"requires_google_login_again"`
 }
 
 type GoogleFitAppListFilter struct {

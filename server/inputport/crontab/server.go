@@ -120,6 +120,8 @@ func (port *crontabInputPort) Run() {
 	// port.RankThisISOWeek()
 	// port.RankThisMonth()
 	// port.RankThisYear()
+	//
+	port.GoogleFitAppCrontab.PullDataFromGoogleJob() //TODO: Comment out when ready.
 }
 
 func (port *crontabInputPort) Shutdown() {
