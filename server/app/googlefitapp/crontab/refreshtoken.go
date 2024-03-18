@@ -102,5 +102,9 @@ func (impl *googleFitAppCrontaberImpl) refreshTokenFromGoogle(ctx context.Contex
 		err := fmt.Errorf("google fit app authenticated client does not exist for token: %v", gfa.Token)
 		return err
 	}
+	impl.Logger.Debug("refreshed token successfully",
+		slog.String("gfa_id", gfaID.Hex()),
+		slog.String("user_id", gfa.UserID.Hex()),
+	)
 	return nil
 }

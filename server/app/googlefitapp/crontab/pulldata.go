@@ -133,5 +133,9 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogle(ctx context.Context, g
 	}
 	log.Println("-->", dataset)
 
+	impl.Logger.Debug("pulled data successfully",
+		slog.String("gfa_id", gfaID.Hex()),
+		slog.String("user_id", gfa.UserID.Hex()),
+	)
 	return nil
 }
