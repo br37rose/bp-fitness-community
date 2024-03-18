@@ -217,7 +217,8 @@ type User struct {
 
 	// PrimaryHealthTrackingDeviceType indicates what primary health tracking device the
 	// user is using with our system.
-	PrimaryHealthTrackingDeviceType int8 `bson:"primary_health_tracking_device_type" json:"primary_health_tracking_device_type"`
+	PrimaryHealthTrackingDeviceType               int8 `bson:"primary_health_tracking_device_type" json:"primary_health_tracking_device_type"`
+	PrimaryHealthTrackingDeviceRequiresLoginAgain bool `bson:"primary_health_tracking_device_requires_login_again" json:"primary_health_tracking_device_requires_login_again"`
 
 	// HeartRateMetricID is the unique identification used to tie the user's
 	// heart rate data to.

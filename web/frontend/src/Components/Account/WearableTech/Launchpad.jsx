@@ -57,18 +57,18 @@ import FormTextOptionRow from "../../Reusable/FormTextOptionRow";
 import Layout from "../../Menu/Layout";
 
 function AccountWearableTechLaunchpad() {
-    ////
-    //// URL Parameters.
-    ////
+  ////
+  //// URL Parameters.
+  ////
 
-    const [searchParams] = useSearchParams(); // Special thanks via https://stackoverflow.com/a/65451140
+  const [searchParams] = useSearchParams(); // Special thanks via https://stackoverflow.com/a/65451140
 
-    // DEVELOPERS NOTE:
-    // This url parameter is set to `true` from the backend when the oAuth2.0
-    // authorization was successfull between BP8 Fitness Community and Google.
-    // Use this variable to notify the user they have successfully registered
-    // their Google Fit with us.
-    const wasGoogleFitRegistered = searchParams.get("google_fit_registered");
+  // DEVELOPERS NOTE:
+  // This url parameter is set to `true` from the backend when the oAuth2.0
+  // authorization was successfull between BP8 Fitness Community and Google.
+  // Use this variable to notify the user they have successfully registered
+  // their Google Fit with us.
+  const wasGoogleFitRegistered = searchParams.get("google_fit_registered");
 
   ////
   //// Global state.
@@ -93,6 +93,8 @@ function AccountWearableTechLaunchpad() {
   ////
 
   const onRegisterClick = (e) => {
+    e.preventDefault();
+    console.log("onRegisterClick: Clicked");
     setFetching(true);
     setErrors({});
     getGoogleFitRegistrationURLAPI(
@@ -220,13 +222,16 @@ function AccountWearableTechLaunchpad() {
 
   return (
     <div>
-      {wasGoogleFitRegistered && <>
-        <article class="message is-success">
-        <div class="message-body">
-        You have successfully registered your <strong>Google Fit</strong> with us!
-        </div>
-        </article>
-      </>}
+      {wasGoogleFitRegistered && (
+        <>
+          <article class="message is-success">
+            <div class="message-body">
+              You have successfully registered your <strong>Google Fit</strong>{" "}
+              with us!
+            </div>
+          </article>
+        </>
+      )}
 
       <div className="columns">
         <div className="column">
@@ -294,17 +299,44 @@ function AccountWearableTechLaunchpad() {
 
           {/* Google Fit */}
           {currentUser.primaryHealthTrackingDeviceType === 1 && (
-            <section className="hero has-background-white-ter">
-              <div className="hero-body">
-                <p className="title">
-                  <FontAwesomeIcon className="fas" icon={faHeartPulse} />
-                  &nbsp;Google Fit Connected
-                </p>
-                <p className="subtitle">
-                  Your Google Fit fitness tracker is connected with us.{" "}
-                </p>
-              </div>
-            </section>
+            <>
+              {currentUser.primaryHealthTrackingDeviceRequiresLoginAgain ? (
+                <section className="hero has-background-white-ter">
+                  <div className="hero-body">
+                    <p className="title">
+                      <FontAwesomeIcon className="fas" icon={faHeartPulse} />
+                      &nbsp;Authentication Required
+                    </p>
+                    <p className="subtitle">
+                      Your Google Fit fitness tracker requires you to login
+                      again.{" "}
+                      <b>
+                        <Link onClick={onRegisterClick}>
+                          Click here&nbsp;
+                          <FontAwesomeIcon
+                            className="mdi"
+                            icon={faArrowUpRightFromSquare}
+                          />{" "}
+                        </Link>
+                      </b>{" "}
+                      to get login again and meet the requirements of Google.
+                    </p>
+                  </div>
+                </section>
+              ) : (
+                <section className="hero has-background-white-ter">
+                  <div className="hero-body">
+                    <p className="title">
+                      <FontAwesomeIcon className="fas" icon={faHeartPulse} />
+                      &nbsp;Google Fit Connected
+                    </p>
+                    <p className="subtitle">
+                      Your Google Fit fitness tracker is connected with us.{" "}
+                    </p>
+                  </div>
+                </section>
+              )}
+            </>
           )}
         </div>
       </div>

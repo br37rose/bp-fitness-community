@@ -177,7 +177,7 @@ func InitializeEvent() Application {
 	biometricController := controller20.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, fitBitAppStorer, userStorer, fitBitDatumStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	handler17 := httptransport18.NewHandler(slogLogger, biometricController)
 	inputPortServer := http.NewInputPort(conf, slogLogger, middlewareMiddleware, handler, httptransportHandler, handler2, handler3, handler4, handler5, handler6, handler7, handler8, handler9, handler10, handler11, stripeHandler, fitnessplanHandler, handler12, handler13, fitbitappHandler, handler14, handler15, handler16, handler17)
-	googleFitAppCrontaber := crontab.NewCrontab(slogLogger, googleCloudPlatformAdapter, googleFitAppStorer, googleFitAppController)
+	googleFitAppCrontaber := crontab.NewCrontab(slogLogger, googleCloudPlatformAdapter, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab2.NewInputPort(conf, slogLogger, userController, fitBitAppController, aggregatePointController, rankPointController, googleFitAppCrontaber)
 	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer)
 	return application

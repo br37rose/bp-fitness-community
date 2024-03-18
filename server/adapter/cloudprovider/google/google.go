@@ -23,7 +23,7 @@ type GoogleCloudPlatformAdapter interface {
 	OAuth2GenerateAuthCodeURL(oauthState string) string
 	OAuth2ExchangeCode(code string) (*oauth2.Token, error)
 
-	NewHTTPClientFromToken(token *oauth2.Token) *http.Client
+	NewHTTPClientFromToken(token *oauth2.Token, callback func(*oauth2.Token)) (*http.Client, error)
 	NewFitnessStoreFromClient(client *http.Client) (*fitness.Service, error)
 	NotAggregatedDatasets(svc *fitness.Service, minTime, maxTime time.Time, dataType string) ([]*fitness.Dataset, error)
 }
@@ -78,8 +78,19 @@ func (gcp *gcpAdapter) OAuth2ExchangeCode(code string) (*oauth2.Token, error) {
 // token. The token will auto-refresh as necessary. The underlying
 // HTTP transport will be obtained using the provided context.
 // The returned client and its Transport should not be modified.
-func (gcp *gcpAdapter) NewHTTPClientFromToken(token *oauth2.Token) *http.Client {
-	return gcp.GoogleOauthConfig.Client(context.Background(), token)
+func (gcp *gcpAdapter) NewHTTPClientFromToken(token *oauth2.Token, callback func(*oauth2.Token)) (*http.Client, error) {
+
+	tokenSource := gcp.GoogleOauthConfig.TokenSource(context.TODO(), token)
+	newToken, err := tokenSource.Token()
+	if err != nil {
+		return nil, err
+	}
+
+	if newToken.AccessToken != token.AccessToken {
+		callback(newToken)
+	}
+
+	return oauth2.NewClient(context.TODO(), tokenSource), nil
 }
 
 func (gcp *gcpAdapter) NewFitnessStoreFromClient(client *http.Client) (*fitness.Service, error) {
