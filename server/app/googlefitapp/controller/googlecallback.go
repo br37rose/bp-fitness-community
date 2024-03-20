@@ -157,6 +157,7 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 			Errors:                   "",
 			Token:                    token,
 			LastFetchedAt:            time.Date(2014, 1, 1, 00, 00, 00, 000000000, time.UTC), // 2014-01-01 00:00:00.00 UTC
+			StepCountDeltaMetricID: primitive.NewObjectID(),
 			HydrationMetricID:        primitive.NewObjectID(),
 			HeartRateMetricID:        primitive.NewObjectID(),
 			StepsCountMetricID:       primitive.NewObjectID(),

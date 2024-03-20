@@ -132,6 +132,11 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	//// Get various data.
 	////
 
+	if err := impl.pullStepCountDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling step count delta data from google",
+			slog.Any("error", err))
+		return err
+	}
 	if err := impl.pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling hydration data from google",
 			slog.Any("error", err))

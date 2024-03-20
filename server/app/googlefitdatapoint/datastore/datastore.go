@@ -32,8 +32,9 @@ type GoogleFitDataPoint struct {
 	EndAt   time.Time `bson:"end_at" json:"end_at"`
 
 	// Hydration data provided by `Google Fit`.
-	Hydration    *gcp_a.HydrationStruct    `bson:"hydration,omitempty" json:"hydration,omitempty"`
-	HeartRateBPM *gcp_a.HeartRateBPMStruct `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
+	StepCountDelta *gcp_a.StepCountDeltaStruct `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
+	Hydration        *gcp_a.HydrationStruct        `bson:"hydration,omitempty" json:"hydration,omitempty"`
+	HeartRateBPM     *gcp_a.HeartRateBPMStruct     `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
 
 	// Error is the error response content provided by `Google Fit` when making the API call.
 	Error string `bson:"errors" json:"errors"`

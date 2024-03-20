@@ -43,6 +43,12 @@ type Calories struct {
 	Amount    float64   `json:"amount"`
 }
 
+type StepCountDeltaStruct struct {
+	Amount    int       `json:"amount"`
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+}
+
 type HeartRateBPMStruct struct {
 	Amount    int       `json:"amount"`
 	StartTime time.Time `json:"start_time"`
