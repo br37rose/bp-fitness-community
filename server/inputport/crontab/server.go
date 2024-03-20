@@ -126,6 +126,7 @@ func (port *crontabInputPort) Run() {
 	// port.RankThisMonth()
 	// port.RankThisYear()
 	//
+	port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob() //TODO: Comment out when ready.
 	port.GoogleFitAppCrontab.PullDataFromGoogleJob() //TODO: Comment out when ready.
 }
 

@@ -2,6 +2,7 @@ package crontab
 
 import (
 	"context"
+	"time"
 	"fmt"
 	"log/slog"
 
@@ -12,7 +13,6 @@ import (
 
 func (impl *googleFitAppCrontaberImpl) RefreshTokensFromGoogleJob() error {
 	ctx := context.Background()
-	impl.Logger.Debug("refreshing tokens from google")
 	gfaIDs, err := impl.GoogleFitAppStorer.ListPhysicalIDsByStatus(ctx, gfa_ds.StatusActive)
 	if err != nil {
 		impl.Logger.Error("failed listing google fit apps by status",
@@ -33,6 +33,9 @@ func (impl *googleFitAppCrontaberImpl) refreshTokenFromGoogle(ctx context.Contex
 	// Lock this google fit app
 	impl.Kmutex.Lockf("googlefitapp_%v", gfaID.Hex())
 	defer impl.Kmutex.Unlockf("googlefitapp_%v", gfaID.Hex())
+
+	impl.Logger.Debug("checking gfa",
+		slog.String("gfa_id", gfaID.Hex()),)
 
 	// Get our database record.
 	gfa, err := impl.GoogleFitAppStorer.GetByID(ctx, gfaID)
@@ -102,9 +105,15 @@ func (impl *googleFitAppCrontaberImpl) refreshTokenFromGoogle(ctx context.Contex
 		err := fmt.Errorf("google fit app authenticated client does not exist for token: %v", gfa.Token)
 		return err
 	}
-	impl.Logger.Debug("refreshed token successfully",
+
+	expiryDur := time.Since(gfa.Token.Expiry)
+	expiryDurInMins := expiryDur.Hours()*60*(-1)
+
+	impl.Logger.Debug("checked gfa is ok",
 		slog.String("gfa_id", gfaID.Hex()),
 		slog.String("user_id", gfa.UserID.Hex()),
+		slog.Time("token_expiry", gfa.Token.Expiry),
+		slog.Float64("token_mins_unitl_expiry", expiryDurInMins),
 	)
 	return nil
 }

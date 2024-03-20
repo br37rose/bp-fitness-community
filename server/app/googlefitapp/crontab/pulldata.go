@@ -5,16 +5,18 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"net/http"
 	"time"
 
-	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
+	"google.golang.org/api/fitness/v1"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/oauth2"
+
+	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 )
 
 func (impl *googleFitAppCrontaberImpl) PullDataFromGoogleJob() error {
 	ctx := context.Background()
-	impl.Logger.Debug("pulling data from google cloud platform...")
 	gfaIDs, err := impl.GoogleFitAppStorer.ListPhysicalIDsByStatus(ctx, gfa_ds.StatusActive)
 	if err != nil {
 		impl.Logger.Error("failed listing google fit apps by status",
@@ -22,10 +24,7 @@ func (impl *googleFitAppCrontaberImpl) PullDataFromGoogleJob() error {
 		return err
 	}
 	for _, gfaID := range gfaIDs {
-		impl.Logger.Debug("processing google fit app",
-			slog.String("gfa_id", gfaID.Hex()),
-		)
-		if err := impl.pullDataFromGoogle(ctx, gfaID); err != nil {
+		if err := impl.pullDataFromGoogleWithGfaID(ctx, gfaID); err != nil {
 			impl.Logger.Error("failed pulling data for google fit app",
 				slog.Any("error", err))
 			return err
@@ -34,7 +33,7 @@ func (impl *googleFitAppCrontaberImpl) PullDataFromGoogleJob() error {
 	return nil
 }
 
-func (impl *googleFitAppCrontaberImpl) pullDataFromGoogle(ctx context.Context, gfaID primitive.ObjectID) error {
+func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaID(ctx context.Context, gfaID primitive.ObjectID) error {
 	// Lock this google fit app
 	impl.Kmutex.Lockf("googlefitapp_%v", gfaID.Hex())
 	defer impl.Kmutex.Unlockf("googlefitapp_%v", gfaID.Hex())
@@ -50,6 +49,11 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogle(ctx context.Context, g
 		err := fmt.Errorf("google fit app does not exist for id: %s", gfaID.Hex())
 		return err
 	}
+
+	impl.Logger.Debug("starting...",
+		slog.String("gfa_id", gfaID.Hex()),
+		slog.String("user_id", gfa.UserID.Hex()),
+	)
 
 	// Authenticated http client for a specific user's account. Note: No need
 	// for refresh token handling as it's already handled!
@@ -108,7 +112,13 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogle(ctx context.Context, g
 		return err
 	}
 
-	// Load up the Google Fitness Store.
+	return impl.pullDataFromGoogleWithGfaAndClient(ctx, gfa, client)
+}
+
+func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx context.Context, gfa *gfa_ds.GoogleFitApp, client *http.Client) error {
+	////
+	//// Load up the Google Fitness Store.
+	////
 
 	svc, err := impl.GCP.NewFitnessStoreFromClient(client)
 	if err != nil {
@@ -120,6 +130,31 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogle(ctx context.Context, g
 		err := fmt.Errorf("google fit app fitness store is empty for token: %v", gfa.Token)
 		return err
 	}
+
+	////
+	//// Get various data.
+	////
+
+	if err := impl.pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling hydration data from google",
+			slog.Any("error", err))
+		return err
+	}
+	//TODO: Impl more...
+
+	////
+	//// Keep track of last fetch time.
+	////
+
+	//TODO: Impl.
+
+	return nil
+}
+
+
+func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling hydration data",
+		slog.String("gfa_id", gfa.ID.Hex()),)
 
 	// Get data
 	maxTime := time.Now()
@@ -133,9 +168,13 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogle(ctx context.Context, g
 	}
 	log.Println("-->", dataset)
 
-	impl.Logger.Debug("pulled data successfully",
-		slog.String("gfa_id", gfaID.Hex()),
+	impl.Logger.Debug("finished successfully",
+		slog.String("gfa_id", gfa.ID.Hex()),
 		slog.String("user_id", gfa.UserID.Hex()),
 	)
+
+	impl.Logger.Debug("pulled hydration data",
+		slog.String("gfa_id", gfa.ID.Hex()),)
+
 	return nil
 }
