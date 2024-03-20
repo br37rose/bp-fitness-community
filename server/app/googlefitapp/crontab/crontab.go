@@ -2,6 +2,7 @@ package crontab
 
 import (
 	"log/slog"
+	"time"
 
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	googlefitapp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
@@ -42,4 +43,14 @@ func NewCrontab(
 		GoogleFitAppController: c,
 		UserStorer:             usr_storer,
 	}
+}
+
+// NanosToTime converts Unix nanos to time.Time. Special thanks to: https://github.com/bronnika/devto-google-fit/blob/main/google-api/init.go#L49
+func NanosToTime(t int64) time.Time {
+	return time.Unix(0, t)
+}
+
+// TimeToNanos coverts time.Time to Unix nanos. Special thanks to: https://github.com/bronnika/devto-google-fit/blob/main/google-api/init.go#L54
+func TimeToNanos(time2 time.Time) int64 {
+	return time2.UnixNano()
 }

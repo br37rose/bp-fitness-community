@@ -3,12 +3,9 @@ package crontab
 import (
 	"context"
 	"fmt"
-	"log"
 	"log/slog"
 	"net/http"
-	"time"
 
-	"google.golang.org/api/fitness/v1"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/oauth2"
 
@@ -147,34 +144,6 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	////
 
 	//TODO: Impl.
-
-	return nil
-}
-
-
-func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling hydration data",
-		slog.String("gfa_id", gfa.ID.Hex()),)
-
-	// Get data
-	maxTime := time.Now()
-	minTime := gfa.LastFetchedAt
-	dataType := "hydration"
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, dataType)
-	if err != nil {
-		impl.Logger.Error("failed listing hydration",
-			slog.Any("error", err))
-		return err
-	}
-	log.Println("-->", dataset)
-
-	impl.Logger.Debug("finished successfully",
-		slog.String("gfa_id", gfa.ID.Hex()),
-		slog.String("user_id", gfa.UserID.Hex()),
-	)
-
-	impl.Logger.Debug("pulled hydration data",
-		slog.String("gfa_id", gfa.ID.Hex()),)
 
 	return nil
 }

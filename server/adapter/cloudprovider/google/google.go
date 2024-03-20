@@ -44,16 +44,17 @@ func NewAdapter(cfg *c.Conf, logger *slog.Logger, dbClient *mongo_client.Client)
 		ClientID:     cfg.GoogleCloudPlatform.ClientID,
 		ClientSecret: cfg.GoogleCloudPlatform.ClientSecret,
 		Scopes: []string{
-			"https://www.googleapis.com/auth/fitness.activity.read",
-			"https://www.googleapis.com/auth/fitness.blood_glucose.read",
-			"https://www.googleapis.com/auth/fitness.blood_pressure.read",
-			"https://www.googleapis.com/auth/fitness.body.read",
-			"https://www.googleapis.com/auth/fitness.heart_rate.read",
-			"https://www.googleapis.com/auth/fitness.body_temperature.read",
-			"https://www.googleapis.com/auth/fitness.location.read",
-			"https://www.googleapis.com/auth/fitness.nutrition.read",
-			"https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
-			"https://www.googleapis.com/auth/fitness.sleep.read",
+			fitness.FitnessActivityReadScope,
+			fitness.FitnessBloodGlucoseReadScope,
+			fitness.FitnessBloodPressureReadScope,
+			fitness.FitnessBodyReadScope,
+			fitness.FitnessBodyTemperatureReadScope,
+			fitness.FitnessHeartRateReadScope,
+			fitness.FitnessLocationReadScope,
+			fitness.FitnessNutritionReadScope,
+			fitness.FitnessOxygenSaturationReadScope,
+			fitness.FitnessSleepReadScope,
+			// fitness.FitnessReproductiveHealthReadScope, // Not now...
 		},
 		Endpoint: google.Endpoint,
 	}
@@ -101,7 +102,6 @@ func (gcp *gcpAdapter) NewHTTPClientFromToken(token *oauth2.Token, callback func
 	return oauth2.NewClient(context.Background(), tokenSource), nil
 }
 
-
 func (gcp *gcpAdapter) NewTokenFromExistingToken(token *oauth2.Token) (*oauth2.Token, error) {
 	tokenSource := gcp.GoogleOauthConfig.TokenSource(context.Background(), token)
 	return tokenSource.Token()
@@ -112,6 +112,10 @@ func (gcp *gcpAdapter) NewFitnessStoreFromClient(client *http.Client) (*fitness.
 	return fitness.NewService(ctx, option.WithHTTPClient(client))
 }
 
+// NotAggregatedDatasets function calls `Google Fit` to lookup data for specific type.
+// Special thanks to:
+// (1) https://github.com/bronnika/devto-google-fit/blob/a85098882047ff1e647d49905ddedd7e2425e31a/google-api/get.go#L198
+// (2) https://dev.to/bronnika/working-with-google-fit-api-using-go-package-fitness-58bn
 func (gcp *gcpAdapter) NotAggregatedDatasets(svc *fitness.Service, minTime, maxTime time.Time, dataType string) ([]*fitness.Dataset, error) {
 	ds, err := svc.Users.DataSources.List("me").DataTypeName("com.google." + dataType).Do()
 	if err != nil {
