@@ -172,10 +172,12 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 			return err
 		}
 
-		impl.Logger.Debug("created google fit app")
+		impl.Logger.Debug("created new google fit app")
 	} else {
 		gfa.Token = token
 		gfa.RequiresGoogleLoginAgain = false
+		gfa.Status = gfa_ds.StatusActive
+		gfa.Errors = ""
 		if err := impl.GoogleFitAppStorer.UpdateByID(sessCtx, gfa); err != nil {
 			impl.Logger.Error("failed updating google fit app in database",
 				slog.String("user_id", userID.Hex()),
@@ -184,7 +186,7 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 				slog.Any("error", err))
 			return err
 		}
-		impl.Logger.Debug("updated google fit app")
+		impl.Logger.Debug("updated existing google fit app")
 	}
 
 	// Update our user with our new Google Fit registration / login.

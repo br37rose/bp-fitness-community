@@ -24,6 +24,9 @@ type GoogleCloudPlatformAdapter interface {
 	OAuth2ExchangeCode(code string) (*oauth2.Token, error)
 
 	NewHTTPClientFromToken(token *oauth2.Token, callback func(*oauth2.Token)) (*http.Client, error)
+
+	NewTokenFromExistingToken(token *oauth2.Token) (*oauth2.Token, error)
+
 	NewFitnessStoreFromClient(client *http.Client) (*fitness.Service, error)
 	NotAggregatedDatasets(svc *fitness.Service, minTime, maxTime time.Time, dataType string) ([]*fitness.Dataset, error)
 }
@@ -67,7 +70,12 @@ func (gcp *gcpAdapter) Shutdown() {
 }
 
 func (gcp *gcpAdapter) OAuth2GenerateAuthCodeURL(oauthState string) string {
-	return gcp.GoogleOauthConfig.AuthCodeURL(oauthState)
+	// DEVELOPERS NOTE:
+	// - `oauth2.AccessTypeOffline` is an important variable to set as it tells google to return a `refresh token` every time, else google will only return the `refresh token` once when our app gets first registered.
+	// - If we do not use `oauth2.AccessTypeOffline` then the refresh token is provided to our application ONCE and never again! The only way we can get the refresh token is by the user deleting our app from their google profile and attempting again to register our app with their account.
+	// - For more details see on how refresh tokens work see the following link via https://medium.com/starthinker/google-oauth-2-0-access-token-and-refresh-token-explained-cccf2fc0a6d9.
+	// - See the following link for an example of refresh tokens working via https://github.com/kbehouse/oauth2/blob/master/google_offline_other_client.go.
+	return gcp.GoogleOauthConfig.AuthCodeURL(oauthState, oauth2.AccessTypeOffline)
 }
 
 func (gcp *gcpAdapter) OAuth2ExchangeCode(code string) (*oauth2.Token, error) {
@@ -80,7 +88,7 @@ func (gcp *gcpAdapter) OAuth2ExchangeCode(code string) (*oauth2.Token, error) {
 // The returned client and its Transport should not be modified.
 func (gcp *gcpAdapter) NewHTTPClientFromToken(token *oauth2.Token, callback func(*oauth2.Token)) (*http.Client, error) {
 
-	tokenSource := gcp.GoogleOauthConfig.TokenSource(context.TODO(), token)
+	tokenSource := gcp.GoogleOauthConfig.TokenSource(context.Background(), token)
 	newToken, err := tokenSource.Token()
 	if err != nil {
 		return nil, err
@@ -90,7 +98,13 @@ func (gcp *gcpAdapter) NewHTTPClientFromToken(token *oauth2.Token, callback func
 		callback(newToken)
 	}
 
-	return oauth2.NewClient(context.TODO(), tokenSource), nil
+	return oauth2.NewClient(context.Background(), tokenSource), nil
+}
+
+
+func (gcp *gcpAdapter) NewTokenFromExistingToken(token *oauth2.Token) (*oauth2.Token, error) {
+	tokenSource := gcp.GoogleOauthConfig.TokenSource(context.Background(), token)
+	return tokenSource.Token()
 }
 
 func (gcp *gcpAdapter) NewFitnessStoreFromClient(client *http.Client) (*fitness.Service, error) {

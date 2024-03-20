@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"log/slog"
 
-	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/oauth2"
+
+	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 )
 
 func (impl *googleFitAppCrontaberImpl) RefreshTokensFromGoogleJob() error {
@@ -108,6 +109,32 @@ func (impl *googleFitAppCrontaberImpl) refreshTokenFromGoogle(ctx context.Contex
 
 	expiryDur := time.Since(gfa.Token.Expiry)
 	expiryDurInMins := expiryDur.Hours()*60*(-1)
+
+	// Check to see if the token is approaching expiration date and if so then fetch a new one.
+	// Note: This is a manual attempt by us and should be taken care of automatically by `oauth2` library.
+	if expiryDurInMins <= 5 {
+		impl.Logger.Debug("gfa token needs refreshing, attempting now...",
+			slog.String("gfa_id", gfaID.Hex()),
+			slog.String("user_id", gfa.UserID.Hex()),
+			slog.Time("token_expiry", gfa.Token.Expiry),
+			slog.Float64("token_mins_unitl_expiry", expiryDurInMins),
+		)
+
+		newTok, err := impl.GCP.NewTokenFromExistingToken(gfa.Token)
+		if err != nil {
+			impl.Logger.Error("failed getting new token from existing token",
+				slog.Any("error", err))
+			return err
+		}
+		gfa.Token = newTok
+		if err := impl.GoogleFitAppStorer.UpdateByID(ctx, gfa); err != nil {
+			impl.Logger.Error("failed updating google fit app in database",
+				slog.Any("error", err))
+		}
+
+		expiryDur = time.Since(newTok.Expiry)
+		expiryDurInMins = expiryDur.Hours()*60*(-1)
+	}
 
 	impl.Logger.Debug("checked gfa is ok",
 		slog.String("gfa_id", gfaID.Hex()),
