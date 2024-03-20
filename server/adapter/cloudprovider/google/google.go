@@ -3,7 +3,6 @@ package google
 import (
 	"context"
 	"fmt"
-	"log"
 	"log/slog"
 	"net/http"
 	"time"
@@ -115,11 +114,11 @@ func (gcp *gcpAdapter) NewFitnessStoreFromClient(client *http.Client) (*fitness.
 func (gcp *gcpAdapter) NotAggregatedDatasets(svc *fitness.Service, minTime, maxTime time.Time, dataType string) ([]*fitness.Dataset, error) {
 	ds, err := svc.Users.DataSources.List("me").DataTypeName("com.google." + dataType).Do()
 	if err != nil {
-		log.Println("Unable to retrieve user's data sources:", err)
+		// log.Println("Unable to retrieve user's data sources:", err)
 		return nil, err
 	}
 	if len(ds.DataSource) == 0 {
-		log.Println("You have no data sources to explore.")
+		// log.Println("You have no data sources to explore.")
 		return nil, err
 	}
 
@@ -129,7 +128,7 @@ func (gcp *gcpAdapter) NotAggregatedDatasets(svc *fitness.Service, minTime, maxT
 		setID := fmt.Sprintf("%v-%v", minTime.UnixNano(), maxTime.UnixNano())
 		data, err := svc.Users.DataSources.Datasets.Get("me", d.DataStreamId, setID).Do()
 		if err != nil {
-			log.Println("Unable to retrieve dataset:", err.Error())
+			// log.Println("Unable to retrieve dataset:", err.Error())
 			return nil, err
 		}
 		dataset = append(dataset, data)
