@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling hydration dataset",
+func (impl *googleFitAppCrontaberImpl) pullHeartRateDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling heart rate (bpm) dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,34 +23,34 @@ func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitn
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameHydration)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameHeartRateBPM)
 	if err != nil {
-		impl.Logger.Error("failed listing hydration dataset",
+		impl.Logger.Error("failed listing heart rate (bpm) dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty hydration dataset",
+		impl.Logger.Warn("pulled empty heart rate (bpm) dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled hydration dataset",
+	impl.Logger.Debug("pulled heart rate (bpm) dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	hydrationDataset := gcp_a.ParseHydration(dataset)
+	heartRateDataset := gcp_a.ParseHeartRateBPM(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, hydrationDatapoint := range hydrationDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameHydration, hydrationDatapoint.StartTime, hydrationDatapoint.EndTime)
+	for _, heartRateDatapoint := range heartRateDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameHeartRateBPM, heartRateDatapoint.StartTime, heartRateDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
@@ -59,27 +59,27 @@ func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitn
 		if !exists {
 			dp := &dp_ds.GoogleFitDataPoint{
 				ID:              primitive.NewObjectID(),
-				DataTypeName:    gcp_a.DataTypeNameHydration,
+				DataTypeName:    gcp_a.DataTypeNameHeartRateBPM, // This is a `Google Fit` specific identifier.
 				Status:          dp_ds.StatusQueued,
 				UserID:          gfa.UserID,
 				UserName:        gfa.UserName,
 				UserLexicalName: gfa.UserLexicalName,
 				GoogleFitAppID:  gfa.ID,
 				MetricID:        gfa.HydrationMetricID,
-				StartAt:         hydrationDatapoint.StartTime,
-				EndAt:           hydrationDatapoint.EndTime,
-				Hydration:       &hydrationDatapoint,
+				StartAt:         heartRateDatapoint.StartTime,
+				EndAt:           heartRateDatapoint.EndTime,
+				HeartRateBPM:    &heartRateDatapoint,
 				Error:           "",
 				CreatedAt:       time.Now(),
 				ModifiedAt:      time.Now(),
 				OrganizationID:  gfa.OrganizationID,
 			}
 			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for hydration into database",
+				impl.Logger.Error("failed inserting google fit data point for heart rate (bpm) into database",
 					slog.Any("error", err))
 				return err
 			}
-			impl.Logger.Debug("inserted hydration data point",
+			impl.Logger.Debug("inserted heart rate (bpm) data point",
 				slog.Any("dp", dp))
 		}
 	}

@@ -137,6 +137,12 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 			slog.Any("error", err))
 		return err
 	}
+	if err := impl.pullHeartRateDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling heart rate dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+
 	//TODO: Impl more...
 
 	////
