@@ -6,6 +6,7 @@ import (
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	googlefitapp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
+	googlefitdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 )
@@ -17,12 +18,13 @@ type GoogleFitAppCrontaber interface {
 
 // Handler Creates http request handler
 type googleFitAppCrontaberImpl struct {
-	Logger                 *slog.Logger
-	Kmutex                 kmutex.Provider
-	GCP                    gcp_a.GoogleCloudPlatformAdapter
-	GoogleFitAppStorer     gfa_ds.GoogleFitAppStorer
-	GoogleFitAppController googlefitapp_c.GoogleFitAppController
-	UserStorer             user_s.UserStorer
+	Logger                   *slog.Logger
+	Kmutex                   kmutex.Provider
+	GCP                      gcp_a.GoogleCloudPlatformAdapter
+	GoogleFitDataPointStorer googlefitdp_s.GoogleFitDataPointStorer
+	GoogleFitAppStorer       gfa_ds.GoogleFitAppStorer
+	GoogleFitAppController   googlefitapp_c.GoogleFitAppController
+	UserStorer               user_s.UserStorer
 }
 
 // NewHandler Constructor
@@ -30,16 +32,18 @@ func NewCrontab(
 	loggerp *slog.Logger,
 	kmutexp kmutex.Provider,
 	gcpa gcp_a.GoogleCloudPlatformAdapter,
+	dp googlefitdp_s.GoogleFitDataPointStorer,
 	gfa_storer gfa_ds.GoogleFitAppStorer,
 	c googlefitapp_c.GoogleFitAppController,
 	usr_storer user_s.UserStorer,
 ) GoogleFitAppCrontaber {
 	return &googleFitAppCrontaberImpl{
-		Logger:                 loggerp,
-		Kmutex:                 kmutexp,
-		GCP:                    gcpa,
-		GoogleFitAppStorer:     gfa_storer,
-		GoogleFitAppController: c,
-		UserStorer:             usr_storer,
+		Logger:                   loggerp,
+		Kmutex:                   kmutexp,
+		GCP:                      gcpa,
+		GoogleFitDataPointStorer: dp,
+		GoogleFitAppStorer:       gfa_storer,
+		GoogleFitAppController:   c,
+		UserStorer:               usr_storer,
 	}
 }

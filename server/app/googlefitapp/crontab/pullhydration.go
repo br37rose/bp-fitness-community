@@ -5,10 +5,12 @@ import (
 	"log/slog"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/api/fitness/v1"
 
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
+	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
 func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
@@ -40,13 +42,48 @@ func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitn
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	hydration := gcp_a.ParseHydration(dataset)
-	impl.Logger.Debug("parsed hydration data",
-		slog.Any("data", hydration))
+	hydrationDataset := gcp_a.ParseHydration(dataset)
+	// impl.Logger.Debug("parsed hydration data",
+	// 	slog.Any("hydrationDataset", hydrationDataset))
 
 	////
 	//// Save into our database.
 	////
+
+	for _, hydrationDatapoint := range hydrationDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, hydrationDatapoint.StartTime, hydrationDatapoint.EndTime)
+		if err != nil {
+			impl.Logger.Error("failed checking google fit datapoint by composite key",
+				slog.Any("error", err))
+			return err
+		}
+		if !exists {
+			dp := &dp_ds.GoogleFitDataPoint{
+				ID:              primitive.NewObjectID(),
+				DataTypeName:    "com.google.hydration", // This is a `Google Fit` specific identifier.
+				Status:          dp_ds.StatusQueued,
+				UserID:          gfa.UserID,
+				UserName:        gfa.UserName,
+				UserLexicalName: gfa.UserLexicalName,
+				GoogleFitAppID:  gfa.ID,
+				MetricID:        gfa.HydrationMetricID,
+				StartAt:         hydrationDatapoint.StartTime,
+				EndAt:           hydrationDatapoint.EndTime,
+				Hydration:       &hydrationDatapoint,
+				Error:           "",
+				CreatedAt:       time.Now(),
+				ModifiedAt:      time.Now(),
+				OrganizationID:  gfa.OrganizationID,
+			}
+			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+				impl.Logger.Error("failed inserting google fit data point for hydration into database",
+					slog.Any("error", err))
+				return err
+			}
+			impl.Logger.Debug("inserted hydration data point",
+				slog.Any("dp", dp))
+		}
+	}
 
 	return nil
 }

@@ -14,6 +14,7 @@ func ParseHydration(datasets []*fitness.Dataset) []HydrationStruct {
 	for _, ds := range datasets {
 		var value float64
 		for _, p := range ds.Point {
+			// fmt.Println(p.DataTypeName)
 			for _, v := range p.Value {
 				valueString := fmt.Sprintf("%.3f", v.FpVal)
 				value, _ = strconv.ParseFloat(valueString, 64)

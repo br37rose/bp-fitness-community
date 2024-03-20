@@ -50,6 +50,7 @@ type GoogleFitApp struct {
 	// The last time we made a fetch to Google API.
 	LastFetchedAt time.Time `bson:"last_fetched_at" json:"last_fetched_at,omitempty"`
 
+	HydrationMetricID  primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`
 	HeartRateMetricID  primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`
 	StepsCountMetricID primitive.ObjectID `bson:"steps_count_metric_id" json:"steps_count_metric_id,omitempty"`
 

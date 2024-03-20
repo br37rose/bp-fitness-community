@@ -40,6 +40,7 @@ import (
 	googlefitapp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	googlefitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	googlefitdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	inv_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
 	inv_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
 	inv_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
@@ -139,6 +140,7 @@ func InitializeEvent() Application {
 		fbd_s.NewDatastore,
 		fitbitapp_s.NewDatastore,
 		fitbitapp_c.NewController,
+		googlefitdp_s.NewDatastore,
 		googlefitapp_s.NewDatastore,
 		googlefitapp_c.NewController,
 		strpayproc_c.NewController,
