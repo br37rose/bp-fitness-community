@@ -14,7 +14,7 @@ import (
 )
 
 func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling hydration data",
+	impl.Logger.Debug("pulling hydration dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -26,32 +26,32 @@ func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitn
 	dataType := "hydration" // Note: This is a `Google Fit` specific constant.
 	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, dataType)
 	if err != nil {
-		impl.Logger.Error("failed listing hydration",
+		impl.Logger.Error("failed listing hydration dataset",
 			slog.Any("error", err))
 		return err
 	}
 
-	impl.Logger.Debug("pulled hydration data",
-		slog.String("gfa_id", gfa.ID.Hex()))
-
 	if len(dataset) == 0 {
+		impl.Logger.Warn("pulled empty hydration dataset",
+			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
+
+	impl.Logger.Debug("pulled hydration dataset",
+		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
 	hydrationDataset := gcp_a.ParseHydration(dataset)
-	// impl.Logger.Debug("parsed hydration data",
-	// 	slog.Any("hydrationDataset", hydrationDataset))
 
 	////
 	//// Save into our database.
 	////
 
 	for _, hydrationDatapoint := range hydrationDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, hydrationDatapoint.StartTime, hydrationDatapoint.EndTime)
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, "com.google.hydration", hydrationDatapoint.StartTime, hydrationDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))

@@ -70,7 +70,7 @@ type GoogleFitDataPointListResult struct {
 
 // GoogleFitDataPointStorer Interface for organization.
 type GoogleFitDataPointStorer interface {
-	CheckIfExistsByCompositeKey(ctx context.Context, userID primitive.ObjectID, startAt time.Time, endAt time.Time) (bool, error)
+	CheckIfExistsByCompositeKey(ctx context.Context, userID primitive.ObjectID, dataTypeName string, startAt time.Time, endAt time.Time) (bool, error)
 	Create(ctx context.Context, m *GoogleFitDataPoint) error
 	// GetByID(ctx context.Context, id primitive.ObjectID) (*GoogleFitDataPoint, error)
 	// GetByUserID(ctx context.Context, userID primitive.ObjectID) (*GoogleFitDataPoint, error)
@@ -117,6 +117,12 @@ func NewDatastore(appCfg *c.Conf, loggerp *slog.Logger, client *mongo.Client) Go
 		{Keys: bson.D{{Key: "start_at", Value: 1}}},
 		{Keys: bson.D{{Key: "status", Value: 1}}},
 		{Keys: bson.D{{Key: "type", Value: 1}}},
+		{Keys: bson.D{
+			{"user_id", "text"},
+			{"data_type_name", "text"},
+			{"start_at", "text"},
+			{"end_at", "text"},
+		}},
 		// {Keys: bson.D{
 		// 	{"name", "text"},
 		// 	{"lexical_name", "text"},
