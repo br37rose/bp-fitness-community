@@ -6,7 +6,6 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
-	"strconv"
 	"time"
 
 	mongo_client "go.mongodb.org/mongo-driver/mongo"
@@ -22,11 +21,8 @@ type GoogleCloudPlatformAdapter interface {
 	Shutdown()
 	OAuth2GenerateAuthCodeURL(oauthState string) string
 	OAuth2ExchangeCode(code string) (*oauth2.Token, error)
-
 	NewHTTPClientFromToken(token *oauth2.Token, callback func(*oauth2.Token)) (*http.Client, error)
-
 	NewTokenFromExistingToken(token *oauth2.Token) (*oauth2.Token, error)
-
 	NewFitnessStoreFromClient(client *http.Client) (*fitness.Service, error)
 	NotAggregatedDatasets(svc *fitness.Service, minTime, maxTime time.Time, dataType string) ([]*fitness.Dataset, error)
 }
@@ -141,42 +137,4 @@ func (gcp *gcpAdapter) NotAggregatedDatasets(svc *fitness.Service, minTime, maxT
 
 	return dataset, nil
 
-}
-
-const (
-	layout        = "Jan 2, 2006 at 3:04pm" // for time.Format
-	nanosPerMilli = 1e6
-) // Special thanks: https://github.com/googleapis/google-api-go-client/blob/main/examples/fitness.go#L18C1-L21C2
-
-// millisToTime converts Unix millis to time.Time.
-func millisToTime(t int64) time.Time {
-	// Special thanks: https://github.com/googleapis/google-api-go-client/blob/main/examples/fitness.go#L36
-	return time.Unix(0, t*nanosPerMilli)
-}
-
-type HydrationStruct struct {
-	Amount    int       `json:"amount"`
-	StartTime time.Time `json:"start_time"`
-	EndTime   time.Time `json:"end_time"`
-}
-
-func ParseHydration(datasets []*fitness.Dataset) []HydrationStruct {
-	var data []HydrationStruct
-
-	for _, ds := range datasets {
-		var value float64
-		for _, p := range ds.Point {
-			for _, v := range p.Value {
-				valueString := fmt.Sprintf("%.3f", v.FpVal)
-				value, _ = strconv.ParseFloat(valueString, 64)
-			}
-			var row HydrationStruct
-			row.StartTime = millisToTime(p.StartTimeNanos)
-			row.EndTime = millisToTime(p.EndTimeNanos)
-			// liters to milliliters
-			row.Amount = int(value * 1000)
-			data = append(data, row)
-		}
-	}
-	return data
 }
