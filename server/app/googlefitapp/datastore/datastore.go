@@ -50,12 +50,13 @@ type GoogleFitApp struct {
 	// The last time we made a fetch to Google API.
 	LastFetchedAt time.Time `bson:"last_fetched_at" json:"last_fetched_at,omitempty"`
 
-	CaloriesBurnedMetricID primitive.ObjectID `bson:"calories_burned_metric_id" json:"calories_burned_metric_id,omitempty"`
-	PowerMetricID          primitive.ObjectID `bson:"power_metric_id" json:"power_metric_id,omitempty"`
-	StepCountDeltaMetricID primitive.ObjectID `bson:"step_count_delta_metric_id" json:"step_count_delta_metric_id,omitempty"`
-	HydrationMetricID      primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`
-	HeartRateMetricID      primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`
-	StepsCountMetricID     primitive.ObjectID `bson:"steps_count_metric_id" json:"steps_count_metric_id,omitempty"`
+	ActivitySegmentMetricID primitive.ObjectID `bson:"activity_segment_metric_id" json:"activity_segment_metric_id,omitempty"`
+	CaloriesBurnedMetricID  primitive.ObjectID `bson:"calories_burned_metric_id" json:"calories_burned_metric_id,omitempty"`
+	PowerMetricID           primitive.ObjectID `bson:"power_metric_id" json:"power_metric_id,omitempty"`
+	StepCountDeltaMetricID  primitive.ObjectID `bson:"step_count_delta_metric_id" json:"step_count_delta_metric_id,omitempty"`
+	HydrationMetricID       primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`
+	HeartRateMetricID       primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`
+	StepsCountMetricID      primitive.ObjectID `bson:"steps_count_metric_id" json:"steps_count_metric_id,omitempty"`
 
 	IsTestMode         bool   `bson:"is_test_mode" json:"is_test_mode"`
 	SimulatorAlgorithm string `bson:"simulator_algorithm,omitempty" json:"simulator_algorithm,omitempty"`
