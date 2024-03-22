@@ -51,6 +51,7 @@ type GoogleFitApp struct {
 	LastFetchedAt time.Time `bson:"last_fetched_at" json:"last_fetched_at,omitempty"`
 
 	CaloriesBurnedMetricID primitive.ObjectID `bson:"calories_burned_metric_id" json:"calories_burned_metric_id,omitempty"`
+	PowerMetricID          primitive.ObjectID `bson:"power_metric_id" json:"power_metric_id,omitempty"`
 	StepCountDeltaMetricID primitive.ObjectID `bson:"step_count_delta_metric_id" json:"step_count_delta_metric_id,omitempty"`
 	HydrationMetricID      primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`
 	HeartRateMetricID      primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`

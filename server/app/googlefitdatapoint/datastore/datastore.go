@@ -33,6 +33,7 @@ type GoogleFitDataPoint struct {
 
 	// Hydration data provided by `Google Fit`.
 	CaloriesBurned *gcp_a.CaloriesBurnedStruct `bson:"calories_burned,omitempty" json:"calories_burned,omitempty"`
+	Power          *gcp_a.PowerStruct          `bson:"power,omitempty" json:"power,omitempty"`
 	StepCountDelta *gcp_a.StepCountDeltaStruct `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
 	Hydration      *gcp_a.HydrationStruct      `bson:"hydration,omitempty" json:"hydration,omitempty"`
 	HeartRateBPM   *gcp_a.HeartRateBPMStruct   `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`

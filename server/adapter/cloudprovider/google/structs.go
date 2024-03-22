@@ -43,6 +43,13 @@ type CaloriesBurnedStruct struct {
 	Amount    float64   `json:"amount"`
 }
 
+// Power defines the power type provided by `Google Fit`.
+type PowerStruct struct {
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+	Amount    float64   `json:"amount"`
+}
+
 type StepCountDeltaStruct struct {
 	Amount    int       `json:"amount"`
 	StartTime time.Time `json:"start_time"`
