@@ -149,7 +149,11 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: Cycling pedaling cadence
+	if err := impl.pullCyclingPedalingCadenceDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling cycling pedaling cadence dataset from google",
+			slog.Any("error", err))
+		return err
+	}
 	// TODO: Cycling pedaling cumulative
 	// TODO: Heart Points
 	// TODO: Move Minutes

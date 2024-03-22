@@ -52,6 +52,13 @@ type CaloriesBurnedStruct struct {
 	Amount    float64   `bson:"amount,omitempty" json:"amount"`
 }
 
+// CyclingPedalingCadence defines the power type provided by `Google Fit`.
+type CyclingPedalingCadenceStruct struct {
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+	Amount    float64   `bson:"amount,omitempty" json:"amount"`
+}
+
 // Power defines the power type provided by `Google Fit`.
 type PowerStruct struct {
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
