@@ -38,6 +38,13 @@ type ActivitySegmentStruct struct {
 	EndTime           time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
 
+// BasalMetabolicRate defines the power type provided by `Google Fit`.
+type BasalMetabolicRateStruct struct {
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+	Amount    float64   `bson:"amount,omitempty" json:"amount"`
+}
+
 // Calories defines the calories burned type provided by `Google Fit`.
 type CaloriesBurnedStruct struct {
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
