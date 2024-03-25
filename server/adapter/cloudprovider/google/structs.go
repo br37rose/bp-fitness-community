@@ -66,6 +66,13 @@ type CyclingPedalingCumulativeStruct struct {
 	Revolutions int       `bson:"revolutions,omitempty" json:"revolutions"`
 }
 
+// HeartPoints defines the power type provided by `Google Fit`.
+type HeartPointsStruct struct {
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+	Amount    float64   `bson:"amount,omitempty" json:"amount"`
+}
+
 // Power defines the power type provided by `Google Fit`.
 type PowerStruct struct {
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`

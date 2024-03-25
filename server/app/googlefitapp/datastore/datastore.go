@@ -55,6 +55,7 @@ type GoogleFitApp struct {
 	CaloriesBurnedMetricID            primitive.ObjectID `bson:"calories_burned_metric_id" json:"calories_burned_metric_id,omitempty"`
 	CyclingPedalingCadenceMetricID    primitive.ObjectID `bson:"cycling_pedaling_cadence_metric_id" json:"cycling_pedaling_cadence_metric_id,omitempty"`
 	CyclingPedalingCumulativeMetricID primitive.ObjectID `bson:"cycling_pedaling_cumulative_metric_id" json:"cycling_pedaling_cumulative_metric_id,omitempty"`
+	HeartPointsMetricID               primitive.ObjectID `bson:"heart_points_id" json:"heart_points_id,omitempty"`
 	PowerMetricID                     primitive.ObjectID `bson:"power_metric_id" json:"power_metric_id,omitempty"`
 	StepCountDeltaMetricID            primitive.ObjectID `bson:"step_count_delta_metric_id" json:"step_count_delta_metric_id,omitempty"`
 	HydrationMetricID                 primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`

@@ -159,7 +159,11 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: Heart Points
+	if err := impl.pullHeartPointsDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling heart points dataset from google",
+			slog.Any("error", err))
+		return err
+	}
 	// TODO: Move Minutes
 	if err := impl.pullPowerDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling power dataset from google",
