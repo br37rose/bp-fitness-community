@@ -14,7 +14,7 @@ import (
 )
 
 func (impl *googleFitAppCrontaberImpl) pullCyclingPedalingCadenceDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling power dataset",
+	impl.Logger.Debug("pulling cycling pedaling cadence dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -25,38 +25,38 @@ func (impl *googleFitAppCrontaberImpl) pullCyclingPedalingCadenceDataFromGoogleW
 	minTime := gfa.LastFetchedAt
 	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameCyclingPedalingCadence)
 	if err != nil {
-		impl.Logger.Error("failed listing power dataset",
+		impl.Logger.Error("failed listing cycling pedaling cadence dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty power dataset",
+		impl.Logger.Warn("pulled empty cycling pedaling cadence dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled power dataset",
+	impl.Logger.Debug("pulled cycling pedaling cadence dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	powerDataset := gcp_a.ParseCyclingPedalingCadence(dataset)
+	ds := gcp_a.ParseCyclingPedalingCadence(dataset)
 
 	// impl.Logger.Debug("",
 	// 	slog.String("gfa_id", gfa.ID.Hex()),
 	// 	slog.Any("dataset", dataset),
-	// 	slog.Any("powerDataset", powerDataset),
+	// 	slog.Any("dataset", dataset),
 	// )
 
 	////
 	//// Save into our database.
 	////
 
-	for _, powerDatapoint := range powerDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameCyclingPedalingCadence, powerDatapoint.StartTime, powerDatapoint.EndTime)
+	for _, datapoint := range ds {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameCyclingPedalingCadence, datapoint.StartTime, datapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
@@ -72,20 +72,20 @@ func (impl *googleFitAppCrontaberImpl) pullCyclingPedalingCadenceDataFromGoogleW
 				UserLexicalName:        gfa.UserLexicalName,
 				GoogleFitAppID:         gfa.ID,
 				MetricID:               gfa.CyclingPedalingCadenceMetricID,
-				StartAt:                powerDatapoint.StartTime,
-				EndAt:                  powerDatapoint.EndTime,
-				CyclingPedalingCadence: &powerDatapoint,
+				StartAt:                datapoint.StartTime,
+				EndAt:                  datapoint.EndTime,
+				CyclingPedalingCadence: &datapoint,
 				Error:                  "",
 				CreatedAt:              time.Now(),
 				ModifiedAt:             time.Now(),
 				OrganizationID:         gfa.OrganizationID,
 			}
 			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for power into database",
+				impl.Logger.Error("failed inserting google fit data point for ycling pedaling cadence into database",
 					slog.Any("error", err))
 				return err
 			}
-			impl.Logger.Debug("inserted power data point",
+			impl.Logger.Debug("inserted cycling pedaling cadence data point",
 				slog.Any("dp", dp))
 		}
 	}
