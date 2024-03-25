@@ -70,7 +70,14 @@ type CyclingPedalingCumulativeStruct struct {
 type HeartPointsStruct struct {
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
-	Amount    float64   `bson:"amount,omitempty" json:"amount"`
+	Intensity float64   `bson:"intensity,omitempty" json:"intensity"`
+}
+
+// MoveMinutesStruct defines the power type provided by `Google Fit`.
+type MoveMinutesStruct struct {
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+	Duration  int       `bson:"duration,omitempty" json:"duration"`
 }
 
 // Power defines the power type provided by `Google Fit`.

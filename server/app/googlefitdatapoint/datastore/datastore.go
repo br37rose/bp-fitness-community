@@ -37,6 +37,7 @@ type GoogleFitDataPoint struct {
 	CyclingPedalingCadence    *gcp_a.CyclingPedalingCadenceStruct    `bson:"cycling_pedaling_cadence,omitempty" json:"cycling_pedaling_cadence,omitempty"`
 	CyclingPedalingCumulative *gcp_a.CyclingPedalingCumulativeStruct `bson:"cycling_pedaling_cumulative,omitempty" json:"cycling_pedaling_cumulative,omitempty"`
 	HeartPoints               *gcp_a.HeartPointsStruct               `bson:"heart_points,omitempty" json:"heart_points,omitempty"`
+	MoveMinutes               *gcp_a.MoveMinutesStruct               `bson:"move_minutes,omitempty" json:"move_minutes,omitempty"`
 	Power                     *gcp_a.PowerStruct                     `bson:"power,omitempty" json:"power,omitempty"`
 	StepCountDelta            *gcp_a.StepCountDeltaStruct            `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
 	Hydration                 *gcp_a.HydrationStruct                 `bson:"hydration,omitempty" json:"hydration,omitempty"`
