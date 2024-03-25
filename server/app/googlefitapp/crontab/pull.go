@@ -174,7 +174,11 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: Step count cadence
+	if err := impl.pullStepCountCadenceDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling step count cadence dataset from google",
+			slog.Any("error", err))
+		return err
+	}
 	if err := impl.pullStepCountDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling step count delta data from google",
 			slog.Any("error", err))
@@ -201,9 +205,9 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	}
 	// TODO: ...
 
-	////
-	//// Keep track of last fetch time.
-	////
+	//
+	// Keep track of last fetch time.
+	//
 
 	//TODO: Impl. when finished above.
 

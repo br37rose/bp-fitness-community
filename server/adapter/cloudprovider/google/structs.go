@@ -93,6 +93,12 @@ type StepCountDeltaStruct struct {
 	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
 
+type StepCountCadenceStruct struct {
+	Amount    int       `bson:"amount,omitempty" json:"amount"`
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+}
+
 type HeartRateBPMStruct struct {
 	Amount    int       `bson:"amount,omitempty" json:"amount"`
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
