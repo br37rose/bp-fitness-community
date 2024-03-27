@@ -951,6 +951,15 @@ func getIntValue(locationValue []*fitness.ValueMapValEntry, key string) int {
 	return 0
 }
 
+func getFloat64Value(locationValue []*fitness.ValueMapValEntry, key string) float64 {
+	for _, entry := range locationValue {
+		if entry.Key == key {
+			return entry.Value.FpVal
+		}
+	}
+	return 0.0
+}
+
 func ParseBloodGlucose(datasets []*fitness.Dataset) []BloodGlucoseStruct {
 	var data []BloodGlucoseStruct
 
@@ -963,6 +972,8 @@ func ParseBloodGlucose(datasets []*fitness.Dataset) []BloodGlucoseStruct {
 			// Loop over the values in the dataset point
 			for _, value := range point.Value {
 				if bloodGlucoseValue := value.MapVal; bloodGlucoseValue != nil {
+					//TODO: IMPLEMENT THE CODE BELOW...
+
 					fmt.Println("bloodGlucoseValue:", bloodGlucoseValue)
 
 					// Extract latitude, longitude, accuracy, and altitude from the locationValue
@@ -976,6 +987,45 @@ func ParseBloodGlucose(datasets []*fitness.Dataset) []BloodGlucoseStruct {
 						StartTime:         startTime,
 						EndTime:           endTime,
 						BloodGlucoseLevel: bloodGlucoseLevel,
+						// Longitude: longitude,
+						// Accuracy:  accuracy,
+						// Altitude:  altitude,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}
+
+func ParseBloodPressure(datasets []*fitness.Dataset) []BloodPressureStruct {
+	var data []BloodPressureStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if bloodPressureValue := value.MapVal; bloodPressureValue != nil {
+					//TODO: IMPLEMENT THE CODE BELOW...
+
+					fmt.Println("bloodPressureValue:", bloodPressureValue)
+
+					// Extract latitude, longitude, accuracy, and altitude from the locationValue
+					systolic := getFloat64Value(bloodPressureValue, "systolic")
+					// longitude := getLocationValue(locationValue, "longitude")
+					// accuracy := getLocationValue(locationValue, "accuracy")
+					// altitude := getLocationValue(locationValue, "altitude")
+
+					// Create a new BloodPressureStruct and append it to the data slice
+					data = append(data, BloodPressureStruct{
+						StartTime: startTime,
+						EndTime:   endTime,
+						Systolic:  systolic,
 						// Longitude: longitude,
 						// Accuracy:  accuracy,
 						// Altitude:  altitude,
