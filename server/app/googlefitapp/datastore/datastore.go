@@ -64,6 +64,7 @@ type GoogleFitApp struct {
 	CyclingWheelRevolutionRPMMetricID        primitive.ObjectID `bson:"cycling_wheel_revolution_rpm_metric_id" json:"cycling_wheel_revolution_rpm_metric_id,omitempty"`
 	CyclingWheelRevolutionCumulativeMetricID primitive.ObjectID `bson:"cycling_wheel_revolution_cumulative_metric_id" json:"cycling_wheel_revolution_cumulative_metric_id,omitempty"`
 	DistanceDeltaMetricID                    primitive.ObjectID `bson:"distance_delta_metric_id" json:"distance_delta_metric_id,omitempty"`
+	LocationSampleMetricID                   primitive.ObjectID `bson:"location_sample_metric_id" json:"location_sample_metric_id,omitempty"`
 	HydrationMetricID                        primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`
 	HeartRateMetricID                        primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`
 	StepsCountMetricID                       primitive.ObjectID `bson:"steps_count_metric_id" json:"steps_count_metric_id,omitempty"`

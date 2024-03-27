@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"google.golang.org/api/fitness/v1"
 )
@@ -758,6 +759,41 @@ func ParseDistanceDelta(datasets []*fitness.Dataset) []DistanceDeltaStruct {
 			data = append(data, row)
 		}
 	}
+	return data
+}
+
+func ParseLocationSample(datasets []*fitness.Dataset) []LocationSampleStruct {
+	var data []LocationSampleStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if locationValue, ok := value.(*fitness.MapValue); ok {
+					// Extract latitude, longitude, accuracy, and altitude from the locationValue
+					latitude := locationValue.Get("latitude").GetFPVal()
+					longitude := locationValue.Get("longitude").GetFPVal()
+					accuracy := locationValue.Get("accuracy").GetFPVal()
+					altitude := locationValue.Get("altitude").GetFPVal()
+
+					// Create a new LocationSampleStruct and append it to the data slice
+					data = append(data, LocationSampleStruct{
+						StartTime: startTime,
+						EndTime:   endTime,
+						Latitude:  latitude,
+						Longitude: longitude,
+						Accuracy:  accuracy,
+						Altitude:  altitude,
+					})
+				}
+			}
+		}
+	}
+
 	return data
 }
 
