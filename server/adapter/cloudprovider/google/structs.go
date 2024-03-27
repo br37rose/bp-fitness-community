@@ -111,6 +111,39 @@ type WorkoutStruct struct {
 	EndTime           time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
 
+type CyclingWheelRevolutionStruct struct {
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+	RPM       float64   `bson:"rpm,omitempty" json:"rpm"` // RPM
+}
+
+type CyclingWheelRevolutionCumulativeStruct struct {
+	StartTime   time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime     time.Time `bson:"end_time,omitempty" json:"end_time"`
+	Revolutions float64   `bson:"revolutions,omitempty" json:"revolutions"` // Count
+}
+
+type DistanceDeltaStruct struct {
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+	Distance  float64   `bson:"distance,omitempty" json:"distance"` // Meters
+}
+
+type LocationSampleStruct struct {
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+	Latitude  float64   `bson:"latitude,omitempty" json:"latitude"`   // Degrees
+	Longitude float64   `bson:"longitude,omitempty" json:"longitude"` // Degrees
+	Accuracy  float64   `bson:"accuracy,omitempty" json:"accuracy"`   // Meters
+	Altitude  float64   `bson:"altitude,omitempty" json:"altitude"`   // Meters
+}
+
+type SpeedStruct struct {
+	Speed     int       `bson:"speed,omitempty" json:"speed"` // Meters per second
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+}
+
 type HeartRateBPMStruct struct {
 	BPM       int       `bson:"bpm,omitempty" json:"bpm"` // bpm
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
