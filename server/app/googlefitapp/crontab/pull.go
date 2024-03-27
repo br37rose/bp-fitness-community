@@ -225,14 +225,20 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
-	if err := impl.pullNutritionDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling hydration data from google",
+	// if err := impl.pullNutritionDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling hydration data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	//
+	// // --- Health --- //
+
+	if err := impl.pullBloodGlucoseDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling blood glucose data from google",
 			slog.Any("error", err))
 		return err
 	}
-	//
-	// // --- Health --- //
-	//
+
 	// // TODO: ...
 	// if err := impl.pullHeartRateDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 	// 	impl.Logger.Error("failed pulling heart rate dataset from google",

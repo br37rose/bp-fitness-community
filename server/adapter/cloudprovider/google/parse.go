@@ -941,3 +941,49 @@ func ParseNutrition(datasets []*fitness.Dataset) []NutritionStruct {
 	}
 	return data
 }
+
+func getIntValue(locationValue []*fitness.ValueMapValEntry, key string) int {
+	for _, entry := range locationValue {
+		if entry.Key == key {
+			return int(entry.Value.FpVal)
+		}
+	}
+	return 0
+}
+
+func ParseBloodGlucose(datasets []*fitness.Dataset) []BloodGlucoseStruct {
+	var data []BloodGlucoseStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if bloodGlucoseValue := value.MapVal; bloodGlucoseValue != nil {
+					fmt.Println("bloodGlucoseValue:", bloodGlucoseValue)
+
+					// Extract latitude, longitude, accuracy, and altitude from the locationValue
+					bloodGlucoseLevel := getIntValue(bloodGlucoseValue, "blood glucose level ")
+					// longitude := getLocationValue(locationValue, "longitude")
+					// accuracy := getLocationValue(locationValue, "accuracy")
+					// altitude := getLocationValue(locationValue, "altitude")
+
+					// Create a new BloodGlucoseStruct and append it to the data slice
+					data = append(data, BloodGlucoseStruct{
+						StartTime:         startTime,
+						EndTime:           endTime,
+						BloodGlucoseLevel: bloodGlucoseLevel,
+						// Longitude: longitude,
+						// Accuracy:  accuracy,
+						// Altitude:  altitude,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}
