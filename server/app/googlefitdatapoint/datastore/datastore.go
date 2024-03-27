@@ -41,6 +41,7 @@ type GoogleFitDataPoint struct {
 	Power                     *gcp_a.PowerStruct                     `bson:"power,omitempty" json:"power,omitempty"`
 	StepCountDelta            *gcp_a.StepCountDeltaStruct            `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
 	StepCountCadence          *gcp_a.StepCountCadenceStruct          `bson:"step_count_cadence,omitempty" json:"step_count_cadence,omitempty"`
+	Workout                   *gcp_a.WorkoutStruct                   `bson:"workout,omitempty" json:"workout,omitempty"`
 	Hydration                 *gcp_a.HydrationStruct                 `bson:"hydration,omitempty" json:"hydration,omitempty"`
 	HeartRateBPM              *gcp_a.HeartRateBPMStruct              `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
 

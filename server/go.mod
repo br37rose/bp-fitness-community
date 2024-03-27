@@ -12,7 +12,7 @@ require (
 	github.com/bartmika/timekit v0.0.0-20240126215021-2cf1c9a07052
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/faabiosr/cachego v0.22.1
-	github.com/google/wire v0.5.0
+	github.com/google/wire v0.6.0
 	github.com/im7mortal/kmutex v1.0.1
 	github.com/joeshaw/envdecode v0.0.0-20200121155833-099f1fc765bd
 	github.com/mailgun/mailgun-go/v4 v4.11.1
@@ -60,7 +60,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
-	github.com/google/subcommands v1.0.1 // indirect
+	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.2 // indirect
@@ -85,13 +85,13 @@ require (
 	go.opentelemetry.io/otel v1.24.0 // indirect
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
-	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.6.0 // indirect
+	golang.org/x/tools v0.17.0 // indirect
 	google.golang.org/api v0.170.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240311132316-a219d84964c2 // indirect
