@@ -197,14 +197,16 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
-	if err := impl.pullCyclingWheelRevolutionCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling cycling wheel revolution cumulative dataset from google",
+	// if err := impl.pullCyclingWheelRevolutionCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling cycling wheel revolution cumulative dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	if err := impl.pullDistanceDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling distance delta dataset from google",
 			slog.Any("error", err))
 		return err
 	}
-
-	// TODO: Cycling wheel revolution cumulative
-	// TODO: Distance delta
 	// TODO: Location sample
 
 	// // --- Nutrition --- //

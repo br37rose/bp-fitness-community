@@ -44,6 +44,7 @@ type GoogleFitDataPoint struct {
 	Workout                          *gcp_a.WorkoutStruct                          `bson:"workout,omitempty" json:"workout,omitempty"`
 	CyclingWheelRevolutionRPM        *gcp_a.CyclingWheelRevolutionRPMStruct        `bson:"cycling_wheel_revolution_rpm,omitempty" json:"cycling_wheel_revolution_rpm,omitempty"`
 	CyclingWheelRevolutionCumulative *gcp_a.CyclingWheelRevolutionCumulativeStruct `bson:"cycling_wheel_revolution_cumulative,omitempty" json:"cycling_wheel_revolution_cumulative,omitempty"`
+	DistanceDelta                    *gcp_a.DistanceDeltaStruct                    `bson:"distance_delta,omitempty" json:"distance_delta,omitempty"`
 	Hydration                        *gcp_a.HydrationStruct                        `bson:"hydration,omitempty" json:"hydration,omitempty"`
 	HeartRateBPM                     *gcp_a.HeartRateBPMStruct                     `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
 
