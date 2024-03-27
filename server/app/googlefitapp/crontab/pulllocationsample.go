@@ -43,14 +43,14 @@ func (impl *googleFitAppCrontaberImpl) pullLocationSampleDataFromGoogleWithGfaAn
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	activityDataset := gcp_a.ParseLocationSample(dataset)
+	locationSampleDataset := gcp_a.ParseLocationSample(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, activitySegmentDatapoint := range activityDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameLocationSample, activitySegmentDatapoint.StartTime, activitySegmentDatapoint.EndTime)
+	for _, locationSampleSegmentDatapoint := range locationSampleDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameLocationSample, locationSampleSegmentDatapoint.StartTime, locationSampleSegmentDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
@@ -66,16 +66,16 @@ func (impl *googleFitAppCrontaberImpl) pullLocationSampleDataFromGoogleWithGfaAn
 				UserLexicalName: gfa.UserLexicalName,
 				GoogleFitAppID:  gfa.ID,
 				MetricID:        gfa.LocationSampleMetricID,
-				StartAt:         activitySegmentDatapoint.StartTime,
-				EndAt:           activitySegmentDatapoint.EndTime,
-				LocationSample:  &activitySegmentDatapoint,
+				StartAt:         locationSampleSegmentDatapoint.StartTime,
+				EndAt:           locationSampleSegmentDatapoint.EndTime,
+				LocationSample:  &locationSampleSegmentDatapoint,
 				Error:           "",
 				CreatedAt:       time.Now(),
 				ModifiedAt:      time.Now(),
 				OrganizationID:  gfa.OrganizationID,
 			}
 			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for activity into database",
+				impl.Logger.Error("failed inserting google fit data point for locationSample into database",
 					slog.Any("error", err))
 				return err
 			}

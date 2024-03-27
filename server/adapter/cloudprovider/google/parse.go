@@ -762,6 +762,15 @@ func ParseDistanceDelta(datasets []*fitness.Dataset) []DistanceDeltaStruct {
 	return data
 }
 
+func getLocationValue(locationValue []*fitness.ValueMapValEntry, key string) float64 {
+	for _, entry := range locationValue {
+		if entry.Key == key {
+			return entry.Value.FpVal
+		}
+	}
+	return 0.0
+}
+
 func ParseLocationSample(datasets []*fitness.Dataset) []LocationSampleStruct {
 	var data []LocationSampleStruct
 
@@ -773,12 +782,12 @@ func ParseLocationSample(datasets []*fitness.Dataset) []LocationSampleStruct {
 
 			// Loop over the values in the dataset point
 			for _, value := range point.Value {
-				if locationValue, ok := value.(*fitness.MapValue); ok {
+				if locationValue := value.MapVal; locationValue != nil {
 					// Extract latitude, longitude, accuracy, and altitude from the locationValue
-					latitude := locationValue.Get("latitude").GetFPVal()
-					longitude := locationValue.Get("longitude").GetFPVal()
-					accuracy := locationValue.Get("accuracy").GetFPVal()
-					altitude := locationValue.Get("altitude").GetFPVal()
+					latitude := getLocationValue(locationValue, "latitude")
+					longitude := getLocationValue(locationValue, "longitude")
+					accuracy := getLocationValue(locationValue, "accuracy")
+					altitude := getLocationValue(locationValue, "altitude")
 
 					// Create a new LocationSampleStruct and append it to the data slice
 					data = append(data, LocationSampleStruct{
