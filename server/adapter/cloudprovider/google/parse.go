@@ -672,7 +672,7 @@ func ParseHydration(datasets []*fitness.Dataset) []HydrationStruct {
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
 			// liters to milliliters
-			row.Amount = int(value * 1000)
+			row.Volume = int(value * 1000)
 			data = append(data, row)
 		}
 	}
