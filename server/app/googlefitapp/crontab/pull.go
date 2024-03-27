@@ -212,11 +212,11 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
-	if err := impl.pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling speed dataset from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling speed dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 
 	// // --- Nutrition --- //
 	//
@@ -225,7 +225,11 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
-	// // TODO: Nutrition
+	if err := impl.pullNutritionDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling hydration data from google",
+			slog.Any("error", err))
+		return err
+	}
 	//
 	// // --- Health --- //
 	//

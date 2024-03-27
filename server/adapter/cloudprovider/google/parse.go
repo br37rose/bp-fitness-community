@@ -917,3 +917,27 @@ func ParseHydration(datasets []*fitness.Dataset) []HydrationStruct {
 	}
 	return data
 }
+
+// Special thanks to: https://github.com/bronnika/devto-google-fit/blob/main/google-api/parse.go#L124
+func ParseNutrition(datasets []*fitness.Dataset) []NutritionStruct {
+	var data []NutritionStruct
+
+	for _, ds := range datasets {
+		for _, p := range ds.Point {
+			var row NutritionStruct
+			for _, mapVal := range p.Value[0].MapVal {
+				// there we can get more data (s.t. fat, carbs, protein, etc.) if it exists
+				if mapVal.Key == NutrientCalories {
+					row.Calories = int(mapVal.Value.FpVal)
+				}
+			}
+			row.Type = MealType[int(p.Value[1].IntVal)]
+			row.Name = p.Value[2].StringVal
+			row.StartTime = NanosToTime(p.StartTimeNanos)
+			row.EndTime = NanosToTime(p.EndTimeNanos)
+
+			data = append(data, row)
+		}
+	}
+	return data
+}
