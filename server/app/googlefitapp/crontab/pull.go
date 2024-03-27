@@ -192,8 +192,13 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 
 	// --- Location --- //
 
-	if err := impl.pullCyclingWheelRevolutionRPMDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling cycling wheel revolution rpm dataset from google",
+	// if err := impl.pullCyclingWheelRevolutionRPMDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling cycling wheel revolution rpm dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	if err := impl.pullCyclingWheelRevolutionCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling cycling wheel revolution cumulative dataset from google",
 			slog.Any("error", err))
 		return err
 	}

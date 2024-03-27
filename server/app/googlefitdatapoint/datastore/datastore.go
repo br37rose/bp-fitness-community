@@ -31,20 +31,21 @@ type GoogleFitDataPoint struct {
 	StartAt time.Time `bson:"start_at" json:"start_at"`
 	EndAt   time.Time `bson:"end_at" json:"end_at"`
 
-	ActivitySegment           *gcp_a.ActivitySegmentStruct           `bson:"activity_segment,omitempty" json:"activity_segment,omitempty"`
-	BasalMetabolicRate        *gcp_a.BasalMetabolicRateStruct        `bson:"basal_metabolic_rate,omitempty" json:"basal_metabolic_rate,omitempty"`
-	CaloriesBurned            *gcp_a.CaloriesBurnedStruct            `bson:"calories_burned,omitempty" json:"calories_burned,omitempty"`
-	CyclingPedalingCadence    *gcp_a.CyclingPedalingCadenceStruct    `bson:"cycling_pedaling_cadence,omitempty" json:"cycling_pedaling_cadence,omitempty"`
-	CyclingPedalingCumulative *gcp_a.CyclingPedalingCumulativeStruct `bson:"cycling_pedaling_cumulative,omitempty" json:"cycling_pedaling_cumulative,omitempty"`
-	HeartPoints               *gcp_a.HeartPointsStruct               `bson:"heart_points,omitempty" json:"heart_points,omitempty"`
-	MoveMinutes               *gcp_a.MoveMinutesStruct               `bson:"move_minutes,omitempty" json:"move_minutes,omitempty"`
-	Power                     *gcp_a.PowerStruct                     `bson:"power,omitempty" json:"power,omitempty"`
-	StepCountDelta            *gcp_a.StepCountDeltaStruct            `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
-	StepCountCadence          *gcp_a.StepCountCadenceStruct          `bson:"step_count_cadence,omitempty" json:"step_count_cadence,omitempty"`
-	Workout                   *gcp_a.WorkoutStruct                   `bson:"workout,omitempty" json:"workout,omitempty"`
-	CyclingWheelRevolutionRPM *gcp_a.CyclingWheelRevolutionRPMStruct `bson:"cycling_wheel_revolution_rpm,omitempty" json:"cycling_wheel_revolution_rpm,omitempty"`
-	Hydration                 *gcp_a.HydrationStruct                 `bson:"hydration,omitempty" json:"hydration,omitempty"`
-	HeartRateBPM              *gcp_a.HeartRateBPMStruct              `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
+	ActivitySegment                  *gcp_a.ActivitySegmentStruct                  `bson:"activity_segment,omitempty" json:"activity_segment,omitempty"`
+	BasalMetabolicRate               *gcp_a.BasalMetabolicRateStruct               `bson:"basal_metabolic_rate,omitempty" json:"basal_metabolic_rate,omitempty"`
+	CaloriesBurned                   *gcp_a.CaloriesBurnedStruct                   `bson:"calories_burned,omitempty" json:"calories_burned,omitempty"`
+	CyclingPedalingCadence           *gcp_a.CyclingPedalingCadenceStruct           `bson:"cycling_pedaling_cadence,omitempty" json:"cycling_pedaling_cadence,omitempty"`
+	CyclingPedalingCumulative        *gcp_a.CyclingPedalingCumulativeStruct        `bson:"cycling_pedaling_cumulative,omitempty" json:"cycling_pedaling_cumulative,omitempty"`
+	HeartPoints                      *gcp_a.HeartPointsStruct                      `bson:"heart_points,omitempty" json:"heart_points,omitempty"`
+	MoveMinutes                      *gcp_a.MoveMinutesStruct                      `bson:"move_minutes,omitempty" json:"move_minutes,omitempty"`
+	Power                            *gcp_a.PowerStruct                            `bson:"power,omitempty" json:"power,omitempty"`
+	StepCountDelta                   *gcp_a.StepCountDeltaStruct                   `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
+	StepCountCadence                 *gcp_a.StepCountCadenceStruct                 `bson:"step_count_cadence,omitempty" json:"step_count_cadence,omitempty"`
+	Workout                          *gcp_a.WorkoutStruct                          `bson:"workout,omitempty" json:"workout,omitempty"`
+	CyclingWheelRevolutionRPM        *gcp_a.CyclingWheelRevolutionRPMStruct        `bson:"cycling_wheel_revolution_rpm,omitempty" json:"cycling_wheel_revolution_rpm,omitempty"`
+	CyclingWheelRevolutionCumulative *gcp_a.CyclingWheelRevolutionCumulativeStruct `bson:"cycling_wheel_revolution_cumulative,omitempty" json:"cycling_wheel_revolution_cumulative,omitempty"`
+	Hydration                        *gcp_a.HydrationStruct                        `bson:"hydration,omitempty" json:"hydration,omitempty"`
+	HeartRateBPM                     *gcp_a.HeartRateBPMStruct                     `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
 
 	// Error is the error response content provided by `Google Fit` when making the API call.
 	Error string `bson:"errors" json:"errors"`
