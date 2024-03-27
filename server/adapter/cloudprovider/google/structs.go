@@ -111,7 +111,7 @@ type WorkoutStruct struct {
 	EndTime           time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
 
-type CyclingWheelRevolutionStruct struct {
+type CyclingWheelRevolutionRPMStruct struct {
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
 	RPM       float64   `bson:"rpm,omitempty" json:"rpm"` // RPM

@@ -61,6 +61,7 @@ type GoogleFitApp struct {
 	StepCountDeltaMetricID            primitive.ObjectID `bson:"step_count_delta_metric_id" json:"step_count_delta_metric_id,omitempty"`
 	StepCountCadenceMetricID          primitive.ObjectID `bson:"step_count_cadence_metric_id" json:"step_count_cadence_metric_id,omitempty"`
 	WorkoutMetricID                   primitive.ObjectID `bson:"workout_metric_id" json:"workout_metric_id,omitempty"` // is deprecated.
+	CyclingWheelRevolutionRPMMetricID primitive.ObjectID `bson:"cycling_wheel_revolution_rpm_metric_id" json:"cycling_wheel_revolution_rpm_metric_id,omitempty"`
 	HydrationMetricID                 primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`
 	HeartRateMetricID                 primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`
 	StepsCountMetricID                primitive.ObjectID `bson:"steps_count_metric_id" json:"steps_count_metric_id,omitempty"`

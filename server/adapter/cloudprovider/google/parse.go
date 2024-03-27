@@ -611,6 +611,56 @@ func ParseWorkout(datasets []*fitness.Dataset) []WorkoutStruct {
 	return data
 }
 
+func ParseCyclingWheelRevolutionRPM(datasets []*fitness.Dataset) []CyclingWheelRevolutionRPMStruct {
+	var data []CyclingWheelRevolutionRPMStruct
+	// fmt.Println("datasets:", datasets)
+
+	for _, ds := range datasets {
+		// fmt.Println("---> ds:", ds)
+		// fmt.Println("---> ds.DataSourceId:", ds.DataSourceId)
+		// fmt.Println("---> ds.MaxEndTimeNs:", ds.MaxEndTimeNs)
+		// fmt.Println("---> ds.MinStartTimeNs:", ds.MinStartTimeNs)
+		// fmt.Println("---> ds.NextPageToken:", ds.NextPageToken)
+		// fmt.Println("---> ds.Point:", ds.Point)
+		// fmt.Println("---> ds.ForceSendFields:", ds.ForceSendFields)
+		// fmt.Println("---> ds.NullFields:", ds.NullFields)
+
+		var value float64
+		for _, p := range ds.Point {
+			// // For debugging purposes only.
+			// fmt.Println("--- ---> ComputationTimeMillis:", p.ComputationTimeMillis)
+			// fmt.Println("--- ---> DataTypeName:", p.DataTypeName)
+			// fmt.Println("--- ---> EndTimeNanos:", p.EndTimeNanos)
+			// fmt.Println("--- ---> ModifiedTimeMillis:", p.ModifiedTimeMillis)
+			// fmt.Println("--- ---> OriginDataSourceId:", p.OriginDataSourceId)
+			// fmt.Println("--- ---> StartTimeNanos:", p.StartTimeNanos)
+			// fmt.Println("--- ---> Value[parent]:", p.Value)
+			// fmt.Println("--- ---> ForceSendFields:", p.ForceSendFields)
+			// fmt.Println("--- ---> NullFields:", p.NullFields)
+			// fmt.Println()
+
+			for _, v := range p.Value {
+				// // For debugging purposes only.
+				// fmt.Println("--- --- ---> v:FpVal:", v.FpVal)
+				// fmt.Println("--- --- ---> v:IntVal:", v.IntVal)
+				// fmt.Println("--- --- ---> v:MapVal:", v.MapVal)
+				// fmt.Println("--- --- ---> v:StringVal:", v.StringVal)
+				// fmt.Println("--- --- ---> v:ForceSendFields:", v.ForceSendFields)
+				// fmt.Println("--- --- ---> v:NullFields:", v.NullFields)
+				valueString := fmt.Sprintf("%.3f", v.FpVal)
+				value, _ = strconv.ParseFloat(valueString, 64)
+			}
+			var row CyclingWheelRevolutionRPMStruct
+			row.StartTime = NanosToTime(p.StartTimeNanos)
+			row.EndTime = NanosToTime(p.EndTimeNanos)
+			row.RPM = value
+
+			data = append(data, row)
+		}
+	}
+	return data
+}
+
 // ParseHeartRateBPM function converts the `Google Fit` heart rate (bpm) data into usable format for our app.
 func ParseHeartRateBPM(datasets []*fitness.Dataset) []HeartRateBPMStruct {
 	var data []HeartRateBPMStruct

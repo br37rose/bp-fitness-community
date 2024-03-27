@@ -13,7 +13,7 @@ const (
 	DataTypeShortNameStepCountDelta            = "step_count.delta"            // https://developers.google.com/fit/datatypes/activity#step_count_delta
 	DataTypeShortNameWorkout                   = "activity.exercise"           //https://developers.google.com/fit/datatypes/activity#workout
 
-	DataTypeShortNameCyclingWheelRevolution           = "cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
+	DataTypeShortNameCyclingWheelRevolutionRPM        = "cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
 	DataTypeShortNameCyclingWheelRevolutionCumulative = "cycling.wheel_revolution.cumulative" // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_cumulative
 	DataTypeShortNameDistanceDelta                    = "distance.delta"                      // https://developers.google.com/fit/datatypes/location#distance_delta
 	DataTypeShortNameLocationSample                   = "location.sample"                     // https://developers.google.com/fit/datatypes/location#location_sample
@@ -51,7 +51,7 @@ const (
 	DataTypeNameStepCountDelta            = "com.google.step_count.delta"            // https://developers.google.com/fit/datatypes/activity#step_count_delta
 	DataTypeNameWorkout                   = "com.google.activity.exercise"           //https://developers.google.com/fit/datatypes/activity#workout
 
-	DataTypeNameCyclingWheelRevolution           = "com.google.cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
+	DataTypeNameCyclingWheelRevolutionRPM        = "com.google.cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
 	DataTypeNameCyclingWheelRevolutionCumulative = "com.google.cycling.wheel_revolution.cumulative" // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_cumulative
 	DataTypeNameDistanceDelta                    = "com.google.distance.delta"                      // https://developers.google.com/fit/datatypes/location#distance_delta
 	DataTypeNameLocationSample                   = "com.google.location.sample"                     // https://developers.google.com/fit/datatypes/location#location_sample
