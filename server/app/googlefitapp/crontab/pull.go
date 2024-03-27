@@ -207,12 +207,16 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
-	if err := impl.pullLocationSampleDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling location sample dataset from google",
+	// if err := impl.pullLocationSampleDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling location sample dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	if err := impl.pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling speed dataset from google",
 			slog.Any("error", err))
 		return err
 	}
-	//TODO: Speed
 
 	// // --- Nutrition --- //
 	//
