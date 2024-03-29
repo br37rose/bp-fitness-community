@@ -139,7 +139,7 @@ type LocationSampleStruct struct {
 }
 
 type SpeedStruct struct {
-	Speed     int       `bson:"speed,omitempty" json:"speed"` // Meters per second
+	Speed     float64   `bson:"speed,omitempty" json:"speed"` // Meters per second
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
 }

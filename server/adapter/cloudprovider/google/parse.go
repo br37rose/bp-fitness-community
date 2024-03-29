@@ -800,43 +800,47 @@ func ParseLocationSample(datasets []*fitness.Dataset) []LocationSampleStruct {
 func ParseSpeed(datasets []*fitness.Dataset) []SpeedStruct {
 	var data []SpeedStruct
 
-	for _, ds := range datasets {
-		var value float64
-		for _, p := range ds.Point {
-			// // For debugging purposes only.
-			// fmt.Println("ComputationTimeMillis:", p.ComputationTimeMillis)
-			// fmt.Println("DataTypeName:", p.DataTypeName)
-			// fmt.Println("EndTimeNanos:", p.EndTimeNanos)
-			// fmt.Println("ModifiedTimeMillis:", p.ModifiedTimeMillis)
-			// fmt.Println("OriginDataSourceId:", p.OriginDataSourceId)
-			// fmt.Println("StartTimeNanos:", p.StartTimeNanos)
-			// fmt.Println("Value[parent]:", p.Value)
-			// for _, v := range p.Value {
-			// 	fmt.Println("Value[child]:", v)
-			// }
-			// fmt.Println("ForceSendFields:", p.ForceSendFields)
-			// fmt.Println("NullFields:", p.NullFields)
-			// fmt.Println()
+	// fmt.Println("Speed: datasets:", datasets)
 
-			for _, v := range p.Value {
-				// // For debugging purposes only.
-				// fmt.Println("v:FpVal:", v.FpVal)
-				// fmt.Println("v:IntVal:", v.IntVal)
-				// fmt.Println("v:MapVal:", v.MapVal)
-				// fmt.Println("v:StringVal:", v.StringVal)
-				// fmt.Println("v:ForceSendFields:", v.ForceSendFields)
-				// fmt.Println("v:NullFields:", v.NullFields)
+	for _, dataset := range datasets {
 
-				valueString := fmt.Sprintf("%.3f", v.FpVal)
-				value, _ = strconv.ParseFloat(valueString, 64)
+		// fmt.Println("Speed: dataset:", dataset)
+		// fmt.Println("Speed: datasets: DataSourceId:", dataset.DataSourceId)
+		// fmt.Println("Speed: datasets: MaxEndTimeNs:", dataset.MaxEndTimeNs)
+		// fmt.Println("Speed: datasets: MinStartTimeNs:", dataset.MinStartTimeNs)
+		// fmt.Println("Speed: datasets: NextPageToken:", dataset.NextPageToken)
+		// fmt.Println("Speed: datasets: Point:", dataset.Point)
+		// fmt.Println("Speed: datasets: ForceSendFields:", dataset.ForceSendFields)
+		// fmt.Println("Speed: datasets: NullFields:", dataset.NullFields)
+
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// fmt.Println("Speed: point:", point)
+			// fmt.Println("Speed: len(point.Value):", len(point.Value))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				// fmt.Println("Speed: Value:", value)
+				// fmt.Println("Speed: Value.FpVal:", value.FpVal)
+				// fmt.Println("Speed: Value.IntVal:", value.IntVal)
+				// fmt.Println("Speed: Value.MapVal:", value.MapVal)
+				// fmt.Println("Speed: Value.StringVal:", value.StringVal)
+				// fmt.Println("Speed: Value.ForceSendFields:", value.ForceSendFields)
+				// fmt.Println("Speed: Value.NullFields:", value.NullFields)
+
+				// Create a new WeightStruct and append it to the data slice
+				data = append(data, SpeedStruct{
+					StartTime: startTime,
+					EndTime:   endTime,
+					Speed:     value.FpVal,
+				})
 			}
-			var row SpeedStruct
-			row.StartTime = NanosToTime(p.StartTimeNanos)
-			row.EndTime = NanosToTime(p.EndTimeNanos)
-			row.Speed = int(value)
-			data = append(data, row)
 		}
 	}
+
 	return data
 }
 
@@ -1174,37 +1178,6 @@ func ParseOxygenSaturation(datasets []*fitness.Dataset) []OxygenSaturationStruct
 					OxygenSaturationMeasurementMethod: oxygenSaturationMeasurementMethod.IntVal,
 				})
 			}
-
-			// // Loop over the values in the dataset point
-			// for _, value := range point.Value {
-			// 	fmt.Println("OxygenSaturation: Value:", value)
-			// 	fmt.Println("OxygenSaturation: Value.FpVal:", value.FpVal)
-			// 	fmt.Println("OxygenSaturation: Value.IntVal:", value.IntVal)
-			// 	fmt.Println("OxygenSaturation: Value.MapVal:", value.MapVal)
-			// 	fmt.Println("OxygenSaturation: Value.StringVal:", value.StringVal)
-			// 	fmt.Println("OxygenSaturation: Value.ForceSendFields:", value.ForceSendFields)
-			// 	fmt.Println("OxygenSaturation: Value.NullFields:", value.NullFields)
-			//
-			// 	if dpValue := value.MapVal; dpValue != nil {
-			//
-			// 		oxygenSaturation := getFloat64Value(dpValue, "oxygen_saturation")
-			// 		supplementalOxygenFlowRate := getFloat64Value(dpValue, "supplemental_oxygen_flow_rate")
-			// 		oxygenTherapyAdministrationMode := getIntValue(dpValue, "oxygen_therapy_administration_mode")
-			// 		oxygenSaturationSystem := getIntValue(dpValue, "oxygen_saturation_system")
-			// 		oxygenSaturationMeasurementMethod := getIntValue(dpValue, "oxygen_saturation_measurement_method")
-			//
-			// 		// Create a new OxygenSaturationStruct and append it to the data slice
-			// 		data = append(data, OxygenSaturationStruct{
-			// 			StartTime:                         startTime,
-			// 			EndTime:                           endTime,
-			// 			OxygenSaturation:                  oxygenSaturation,
-			// 			SupplementalOxygenFlowRate:        supplementalOxygenFlowRate,
-			// 			OxygenTherapyAdministrationMode:   oxygenTherapyAdministrationMode,
-			// 			OxygenSaturationSystem:            oxygenSaturationSystem,
-			// 			OxygenSaturationMeasurementMethod: oxygenSaturationMeasurementMethod,
-			// 		})
-			// 	}
-			// }
 		}
 	}
 
@@ -1277,23 +1250,4 @@ func ParseWeight(datasets []*fitness.Dataset) []WeightStruct {
 	}
 
 	return data
-}
-
-func getIntValue(locationValue []*fitness.ValueMapValEntry, key string) int {
-	for _, entry := range locationValue {
-		fmt.Println("-->", entry)
-		if entry.Key == key {
-			return int(entry.Value.FpVal)
-		}
-	}
-	return 0
-}
-
-func getFloat64Value(locationValue []*fitness.ValueMapValEntry, key string) float64 {
-	for _, entry := range locationValue {
-		if entry.Key == key {
-			return entry.Value.FpVal
-		}
-	}
-	return 0.0
 }
