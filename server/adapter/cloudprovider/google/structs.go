@@ -144,12 +144,6 @@ type SpeedStruct struct {
 	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
 
-type HeartRateBPMStruct struct {
-	BPM       int       `bson:"bpm,omitempty" json:"bpm"` // bpm
-	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
-	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
-}
-
 // HydrationStruct defines the hydration data type provided by `Google Fit`. Special thanks to https://github.com/bronnika/devto-google-fit/blob/main/models/models.go#L52C1-L56C2
 type HydrationStruct struct {
 	Volume    int       `bson:"volume,omitempty" json:"volume"` // liters
@@ -208,4 +202,16 @@ type BodyTemperatureStruct struct {
 	MeasurementLocation int       `bson:"measurement_location,omitempty" json:"measurement_location" default:"0"`
 	StartTime           time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime             time.Time `bson:"end_time,omitempty" json:"end_time"`
+}
+
+type HeartRateBPMStruct struct {
+	BPM       int       `bson:"bpm,omitempty" json:"bpm"` // bpm
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+}
+
+type HeightStruct struct {
+	Height    float64   `bson:"height,omitempty" json:"height"`
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
 }

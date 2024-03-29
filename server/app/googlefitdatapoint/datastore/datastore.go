@@ -54,6 +54,7 @@ type GoogleFitDataPoint struct {
 	BodyFatPercentage                *gcp_a.BodyFatPercentageStruct                `bson:"body_fat_percentage,omitempty" json:"body_fat_percentage,omitempty"`
 	BodyTemperature                  *gcp_a.BodyTemperatureStruct                  `bson:"body_temperature,omitempty" json:"body_temperature,omitempty"`
 	HeartRateBPM                     *gcp_a.HeartRateBPMStruct                     `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
+	Height                           *gcp_a.HeightStruct                           `bson:"height,omitempty" json:"height,omitempty"`
 
 	// Error is the error response content provided by `Google Fit` when making the API call.
 	Error string `bson:"errors" json:"errors"`

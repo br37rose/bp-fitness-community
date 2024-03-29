@@ -1091,3 +1091,32 @@ func ParseBodyTemperature(datasets []*fitness.Dataset) []BodyTemperatureStruct {
 
 	return data
 }
+
+func ParseHeight(datasets []*fitness.Dataset) []HeightStruct {
+	var data []HeightStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if bodyTemperatureValue := value.MapVal; bodyTemperatureValue != nil {
+
+					height := getFloat64Value(bodyTemperatureValue, "height")
+
+					// Create a new HeightStruct and append it to the data slice
+					data = append(data, HeightStruct{
+						StartTime: startTime,
+						EndTime:   endTime,
+						Height:    height,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}
