@@ -180,7 +180,7 @@ type NutritionStruct struct {
 }
 
 type BloodGlucoseStruct struct {
-	BloodGlucoseLevel       int       `bson:"blood_glucose_level,omitempty" json:"blood_glucose_level" default:"0"`
+	BloodGlucoseLevel       float64   `bson:"blood_glucose_level,omitempty" json:"blood_glucose_level" default:"0"`
 	MealType                int       `bson:"meal_type,omitempty" json:"meal_type" default:"0"`
 	TemporalRelationToSleep int       `bson:"temporal_relation_to_sleep,omitempty" json:"temporal_relation_to_sleep" default:"0"`
 	SpecimenSource          int       `bson:"specimen_source,omitempty" json:"specimen_source" default:"0"`
