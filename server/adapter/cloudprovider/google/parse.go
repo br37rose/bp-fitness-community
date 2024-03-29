@@ -1183,19 +1183,24 @@ func ParseWeight(datasets []*fitness.Dataset) []WeightStruct {
 			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
 			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
 
+			// fmt.Println("weight: point:", point)
+
 			// Loop over the values in the dataset point
 			for _, value := range point.Value {
-				if dpValue := value.MapVal; dpValue != nil {
+				// fmt.Println("weight: Value:", value)
+				// fmt.Println("weight: Value.FpVal:", value.FpVal)
+				// fmt.Println("weight: Value.IntVal:", value.IntVal)
+				// fmt.Println("weight: Value.MapVal:", value.MapVal)
+				// fmt.Println("weight: Value.StringVal:", value.StringVal)
+				// fmt.Println("weight: Value.ForceSendFields:", value.ForceSendFields)
+				// fmt.Println("weight: Value.NullFields:", value.NullFields)
 
-					weight := getFloat64Value(dpValue, "weight")
-
-					// Create a new WeightStruct and append it to the data slice
-					data = append(data, WeightStruct{
-						StartTime: startTime,
-						EndTime:   endTime,
-						Weight:    weight,
-					})
-				}
+				// Create a new WeightStruct and append it to the data slice
+				data = append(data, WeightStruct{
+					StartTime: startTime,
+					EndTime:   endTime,
+					Weight:    value.FpVal,
+				})
 			}
 		}
 	}

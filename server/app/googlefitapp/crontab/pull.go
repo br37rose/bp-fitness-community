@@ -268,16 +268,16 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
-	if err := impl.pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling sleep data from google",
-			slog.Any("error", err))
-		return err
-	}
-	// if err := impl.pullWeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-	// 	impl.Logger.Error("failed pulling weight data from google",
+	// if err := impl.pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling sleep data from google",
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
+	if err := impl.pullWeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling weight data from google",
+			slog.Any("error", err))
+		return err
+	}
 
 	//
 	// Keep track of last fetch time.
