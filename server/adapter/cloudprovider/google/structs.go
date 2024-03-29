@@ -103,7 +103,7 @@ type StepCountCadenceStruct struct {
 type WorkoutStruct struct {
 	Exercise          int       `bson:"exercise,omitempty" json:"exercise"`
 	Repetitions       int       `bson:"repetitions,omitempty" json:"repetitions"`
-	ResistanceType    int       `bson:"resistance_type ,omitempty" json:"resistance_type"`
+	ResistanceType    int       `bson:"resistance_type,omitempty" json:"resistance_type"`
 	Resistance        float64   `bson:"resistance,omitempty" json:"resistance"`
 	DurationInMinutes int       `bson:"duration_in_minutes,omitempty" json:"duration_in_minutes"`
 	DurationInHours   int       `bson:"duration_in_hours,omitempty" json:"duration_in_hours"`
@@ -198,8 +198,8 @@ type BodyFatPercentageStruct struct {
 }
 
 type BodyTemperatureStruct struct {
-	BodyTemperature     float64   `bson:"body_temperature ,omitempty" json:"body_temperature" default:"0"`
-	MeasurementLocation int       `bson:"measurement_location,omitempty" json:"measurement_location" default:"0"`
+	BodyTemperature     float64   `bson:"body_temperature,omitempty" json:"body_temperature" default:"0"`
+	MeasurementLocation int64     `bson:"measurement_location,omitempty" json:"measurement_location" default:"0"`
 	StartTime           time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime             time.Time `bson:"end_time,omitempty" json:"end_time"`
 }

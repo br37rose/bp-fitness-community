@@ -1043,17 +1043,26 @@ func ParseBodyTemperature(datasets []*fitness.Dataset) []BodyTemperatureStruct {
 			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
 			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
 
-			// Loop over the values in the dataset point
-			for _, value := range point.Value {
-				if bodyTemperatureValue := value.MapVal; bodyTemperatureValue != nil {
+			for _, point := range dataset.Point {
+				// // Extract relevant fields from the dataset point
+				// startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+				// endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+				// // fmt.Println("BodyTemperature: Point:", point)
 
-					bodyTemperature := getFloat64Value(bodyTemperatureValue, "body_temperature")
+				if len(point.Value) > 1 {
+					bodyTemperature := point.Value[0]
+					// fmt.Println("BodyTemperature: point.Value[0]:", bodyTemperature)
+					measurementLocation := point.Value[1]
+					// // fmt.Println("BodyTemperature: point.Value[1]:", measurementLocation)
 
-					// Create a new BodyTemperatureStruct and append it to the data slice
+					//
+					// Create a new BodyTemperature and append it to the data slice
+					//
 					data = append(data, BodyTemperatureStruct{
-						StartTime:       startTime,
-						EndTime:         endTime,
-						BodyTemperature: bodyTemperature,
+						StartTime:           startTime,
+						EndTime:             endTime,
+						BodyTemperature:     bodyTemperature.FpVal,
+						MeasurementLocation: measurementLocation.IntVal,
 					})
 				}
 			}
@@ -1118,7 +1127,7 @@ func ParseOxygenSaturation(datasets []*fitness.Dataset) []OxygenSaturationStruct
 			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
 			// fmt.Println("OxygenSaturation: Point:", point)
 
-			if len(point.Value) > 1 {
+			if len(point.Value) > 3 {
 				oxygenSaturation := point.Value[0]
 				// fmt.Println("OxygenSaturation: point.Value[0]:", oxygenSaturation)
 				supplementalOxygenFlowRate := point.Value[1]
