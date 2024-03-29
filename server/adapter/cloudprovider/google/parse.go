@@ -935,32 +935,40 @@ func ParseBloodGlucose(datasets []*fitness.Dataset) []BloodGlucoseStruct {
 	var data []BloodGlucoseStruct
 
 	for _, dataset := range datasets {
+		// fmt.Println("OxygenSaturation: DataSourceId:", dataset.DataSourceId)
+		// fmt.Println("OxygenSaturation: MaxEndTimeNs:", dataset.MaxEndTimeNs)
+		// fmt.Println("OxygenSaturation: MinStartTimeNs:", dataset.MinStartTimeNs)
+		// fmt.Println("OxygenSaturation: NextPageToken:", dataset.NextPageToken)
+		// fmt.Println("OxygenSaturation: ForceSendFields:", dataset.ForceSendFields)
+		// fmt.Println("OxygenSaturation: NullFields:", dataset.NullFields)
+
 		for _, point := range dataset.Point {
 			// Extract relevant fields from the dataset point
 			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
 			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+			// fmt.Println("OxygenSaturation: Point:", point)
 
-			// Loop over the values in the dataset point
-			for _, value := range point.Value {
-				if bloodGlucoseValue := value.MapVal; bloodGlucoseValue != nil {
-					fmt.Println("ParseBloodGlucose: bloodGlucoseValue:", bloodGlucoseValue)
+			if len(point.Value) > 4 {
+				bloodGlucoseLevel := point.Value[0]
+				// fmt.Println("BloodGlucose: point.Value[0]: bloodGlucoseLevel:", bloodGlucoseLevel)
+				mealType := point.Value[1]
+				// fmt.Println("BloodGlucose: point.Value[1]: mealType:", mealType)
+				temporalRelationToSleep := point.Value[2]
+				// fmt.Println("BloodGlucose: point.Value[2]: temporalRelationToSleep:", temporalRelationToSleep)
+				specimenSource := point.Value[3]
+				// fmt.Println("OxygenSaturation: point.Value[3]: specimenSource:", specimenSource)
 
-					// Extract latitude, longitude, accuracy, and altitude from the locationValue
-					bloodGlucoseLevel := getFloat64Value(bloodGlucoseValue, "blood_glucose_level ")
-					temporalRelationToSleep := getIntValue(bloodGlucoseValue, "temporal_relation_to_sleep")
-					mealType := getIntValue(bloodGlucoseValue, "meal_type")
-					specimenSource := getIntValue(bloodGlucoseValue, "specimen_source")
-
-					// Create a new BloodGlucoseStruct and append it to the data slice
-					data = append(data, BloodGlucoseStruct{
-						StartTime:               startTime,
-						EndTime:                 endTime,
-						BloodGlucoseLevel:       bloodGlucoseLevel,
-						TemporalRelationToSleep: temporalRelationToSleep,
-						MealType:                mealType,
-						SpecimenSource:          specimenSource,
-					})
-				}
+				//
+				// Create a new BloodGlucoseStruct and append it to the data slice
+				//
+				data = append(data, BloodGlucoseStruct{
+					StartTime:               startTime,
+					EndTime:                 endTime,
+					BloodGlucoseLevel:       bloodGlucoseLevel.FpVal,
+					MealType:                mealType.IntVal,
+					TemporalRelationToSleep: temporalRelationToSleep.IntVal,
+					SpecimenSource:          specimenSource.IntVal,
+				})
 			}
 		}
 	}

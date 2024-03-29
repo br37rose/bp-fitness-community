@@ -175,9 +175,9 @@ type NutritionStruct struct {
 
 type BloodGlucoseStruct struct {
 	BloodGlucoseLevel       float64   `bson:"blood_glucose_level,omitempty" json:"blood_glucose_level" default:"0"`
-	MealType                int       `bson:"meal_type,omitempty" json:"meal_type" default:"0"`
-	TemporalRelationToSleep int       `bson:"temporal_relation_to_sleep,omitempty" json:"temporal_relation_to_sleep" default:"0"`
-	SpecimenSource          int       `bson:"specimen_source,omitempty" json:"specimen_source" default:"0"`
+	MealType                int64     `bson:"meal_type,omitempty" json:"meal_type" default:"0"`
+	TemporalRelationToSleep int64     `bson:"temporal_relation_to_sleep,omitempty" json:"temporal_relation_to_sleep" default:"0"`
+	SpecimenSource          int64     `bson:"specimen_source,omitempty" json:"specimen_source" default:"0"`
 	StartTime               time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime                 time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
