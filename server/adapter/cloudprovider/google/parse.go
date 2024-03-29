@@ -1120,3 +1120,40 @@ func ParseHeight(datasets []*fitness.Dataset) []HeightStruct {
 
 	return data
 }
+
+func ParseOxygenSaturation(datasets []*fitness.Dataset) []OxygenSaturationStruct {
+	var data []OxygenSaturationStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if dpValue := value.MapVal; dpValue != nil {
+
+					oxygenSaturation := getFloat64Value(dpValue, "oxygen_saturation")
+					supplementalOxygenFlowRate := getFloat64Value(dpValue, "supplemental_oxygen_flow_rate")
+					oxygenTherapyAdministrationMode := getIntValue(dpValue, "oxygen_therapy_administration_mode")
+					oxygenSaturationSystem := getIntValue(dpValue, "oxygen_saturation_system")
+					oxygenSaturationMeasurementMethod := getIntValue(dpValue, "oxygen_saturation_measurement_method")
+
+					// Create a new OxygenSaturationStruct and append it to the data slice
+					data = append(data, OxygenSaturationStruct{
+						StartTime:                         startTime,
+						EndTime:                           endTime,
+						OxygenSaturation:                  oxygenSaturation,
+						SupplementalOxygenFlowRate:        supplementalOxygenFlowRate,
+						OxygenTherapyAdministrationMode:   oxygenTherapyAdministrationMode,
+						OxygenSaturationSystem:            oxygenSaturationSystem,
+						OxygenSaturationMeasurementMethod: oxygenSaturationMeasurementMethod,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}

@@ -215,3 +215,13 @@ type HeightStruct struct {
 	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
+
+type OxygenSaturationStruct struct {
+	OxygenSaturation                  float64   `bson:"oxygen_saturation,omitempty" json:"oxygen_saturation"`
+	SupplementalOxygenFlowRate        float64   `bson:"supplemental_oxygen_flow_rate,omitempty" json:"supplemental_oxygen_flow_rate"`
+	OxygenTherapyAdministrationMode   int       `bson:"oxygen_therapy_administration_mode,omitempty" json:"oxygen_therapy_administration_mode"`
+	OxygenSaturationSystem            int       `bson:"oxygen_saturation_system,omitempty" json:"oxygen_saturation_system"`
+	OxygenSaturationMeasurementMethod int       `bson:"oxygen_saturation_measurement_method ,omitempty" json:"oxygen_saturation_measurement_method"`
+	StartTime                         time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime                           time.Time `bson:"end_time,omitempty" json:"end_time"`
+}

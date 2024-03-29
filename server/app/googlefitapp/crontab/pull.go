@@ -258,8 +258,13 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	// 		slog.Any("error", err))
 	// 	return err
 	// }
-	if err := impl.pullHeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling height data from google",
+	// if err := impl.pullHeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling height data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	if err := impl.pullOxygenSaturationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling oxygen saturation data from google",
 			slog.Any("error", err))
 		return err
 	}
