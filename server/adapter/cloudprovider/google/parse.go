@@ -1107,33 +1107,75 @@ func ParseOxygenSaturation(datasets []*fitness.Dataset) []OxygenSaturationStruct
 	var data []OxygenSaturationStruct
 
 	for _, dataset := range datasets {
+		// fmt.Println("OxygenSaturation: DataSourceId:", dataset.DataSourceId)
+		// fmt.Println("OxygenSaturation: MaxEndTimeNs:", dataset.MaxEndTimeNs)
+		// fmt.Println("OxygenSaturation: MinStartTimeNs:", dataset.MinStartTimeNs)
+		// fmt.Println("OxygenSaturation: NextPageToken:", dataset.NextPageToken)
+		// fmt.Println("OxygenSaturation: ForceSendFields:", dataset.ForceSendFields)
+		// fmt.Println("OxygenSaturation: NullFields:", dataset.NullFields)
+
 		for _, point := range dataset.Point {
 			// Extract relevant fields from the dataset point
 			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
 			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+			// fmt.Println("OxygenSaturation: Point:", point)
 
-			// Loop over the values in the dataset point
-			for _, value := range point.Value {
-				if dpValue := value.MapVal; dpValue != nil {
+			if len(point.Value) > 1 {
+				oxygenSaturation := point.Value[0]
+				// fmt.Println("OxygenSaturation: point.Value[0]:", oxygenSaturation)
+				supplementalOxygenFlowRate := point.Value[1]
+				// fmt.Println("OxygenSaturation: point.Value[1]:", supplementalOxygenFlowRate)
+				oxygenTherapyAdministrationMode := point.Value[2]
+				// fmt.Println("OxygenSaturation: point.Value[2]:", oxygenTherapyAdministrationMode)
+				oxygenSaturationSystem := point.Value[3]
+				// fmt.Println("OxygenSaturation: point.Value[3]:", oxygenSaturationSystem)
+				oxygenSaturationMeasurementMethod := point.Value[4]
+				// fmt.Println("OxygenSaturation: point.Value[4]:", oxygenSaturationMeasurementMethod)
 
-					oxygenSaturation := getFloat64Value(dpValue, "oxygen_saturation")
-					supplementalOxygenFlowRate := getFloat64Value(dpValue, "supplemental_oxygen_flow_rate")
-					oxygenTherapyAdministrationMode := getIntValue(dpValue, "oxygen_therapy_administration_mode")
-					oxygenSaturationSystem := getIntValue(dpValue, "oxygen_saturation_system")
-					oxygenSaturationMeasurementMethod := getIntValue(dpValue, "oxygen_saturation_measurement_method")
-
-					// Create a new OxygenSaturationStruct and append it to the data slice
-					data = append(data, OxygenSaturationStruct{
-						StartTime:                         startTime,
-						EndTime:                           endTime,
-						OxygenSaturation:                  oxygenSaturation,
-						SupplementalOxygenFlowRate:        supplementalOxygenFlowRate,
-						OxygenTherapyAdministrationMode:   oxygenTherapyAdministrationMode,
-						OxygenSaturationSystem:            oxygenSaturationSystem,
-						OxygenSaturationMeasurementMethod: oxygenSaturationMeasurementMethod,
-					})
-				}
+				//
+				// Create a new OxygenSaturationStruct and append it to the data slice
+				//
+				data = append(data, OxygenSaturationStruct{
+					StartTime:                         startTime,
+					EndTime:                           endTime,
+					OxygenSaturation:                  oxygenSaturation.FpVal,
+					SupplementalOxygenFlowRate:        supplementalOxygenFlowRate.FpVal,
+					OxygenTherapyAdministrationMode:   oxygenTherapyAdministrationMode.IntVal,
+					OxygenSaturationSystem:            oxygenSaturationSystem.IntVal,
+					OxygenSaturationMeasurementMethod: oxygenSaturationMeasurementMethod.IntVal,
+				})
 			}
+
+			// // Loop over the values in the dataset point
+			// for _, value := range point.Value {
+			// 	fmt.Println("OxygenSaturation: Value:", value)
+			// 	fmt.Println("OxygenSaturation: Value.FpVal:", value.FpVal)
+			// 	fmt.Println("OxygenSaturation: Value.IntVal:", value.IntVal)
+			// 	fmt.Println("OxygenSaturation: Value.MapVal:", value.MapVal)
+			// 	fmt.Println("OxygenSaturation: Value.StringVal:", value.StringVal)
+			// 	fmt.Println("OxygenSaturation: Value.ForceSendFields:", value.ForceSendFields)
+			// 	fmt.Println("OxygenSaturation: Value.NullFields:", value.NullFields)
+			//
+			// 	if dpValue := value.MapVal; dpValue != nil {
+			//
+			// 		oxygenSaturation := getFloat64Value(dpValue, "oxygen_saturation")
+			// 		supplementalOxygenFlowRate := getFloat64Value(dpValue, "supplemental_oxygen_flow_rate")
+			// 		oxygenTherapyAdministrationMode := getIntValue(dpValue, "oxygen_therapy_administration_mode")
+			// 		oxygenSaturationSystem := getIntValue(dpValue, "oxygen_saturation_system")
+			// 		oxygenSaturationMeasurementMethod := getIntValue(dpValue, "oxygen_saturation_measurement_method")
+			//
+			// 		// Create a new OxygenSaturationStruct and append it to the data slice
+			// 		data = append(data, OxygenSaturationStruct{
+			// 			StartTime:                         startTime,
+			// 			EndTime:                           endTime,
+			// 			OxygenSaturation:                  oxygenSaturation,
+			// 			SupplementalOxygenFlowRate:        supplementalOxygenFlowRate,
+			// 			OxygenTherapyAdministrationMode:   oxygenTherapyAdministrationMode,
+			// 			OxygenSaturationSystem:            oxygenSaturationSystem,
+			// 			OxygenSaturationMeasurementMethod: oxygenSaturationMeasurementMethod,
+			// 		})
+			// 	}
+			// }
 		}
 	}
 
