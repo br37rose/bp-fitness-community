@@ -98,10 +98,10 @@ type ouraRingAppConfig struct { // DEPRECATED
 
 type googleCloudPlatformAppConfig struct {
 	ClientID                 string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_CLIENT_ID,required"`
-	ProjectID                string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_PROJECT_ID,required"`
-	AuthURI                  string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTH_URI,required"`
-	TokenURI                 string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_TOKEN_URI,required"`
-	AuthProviderX509CertURL  string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTH_PROVIDER_X509_CERT_URL,required"`
+	// ProjectID                string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_PROJECT_ID,required"`
+	// AuthURI                  string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTH_URI,required"`
+	// TokenURI                 string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_TOKEN_URI,required"`
+	// AuthProviderX509CertURL  string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTH_PROVIDER_X509_CERT_URL,required"`
 	ClientSecret             string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_CLIENT_SECRET,required"`
 	AuthorizationRedirectURI string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTHORIZATION_REDIRECT_URI,required"`
 	SuccessRedirectURI       string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_SUCCESS_REDIRECT_URL,required"`
