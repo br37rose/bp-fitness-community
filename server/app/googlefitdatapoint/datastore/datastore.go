@@ -57,6 +57,7 @@ type GoogleFitDataPoint struct {
 	Height                           *gcp_a.HeightStruct                           `bson:"height,omitempty" json:"height,omitempty"`
 	Sleep                            *gcp_a.SleepStruct                            `bson:"sleep,omitempty" json:"sleep,omitempty"`
 	OxygenSaturation                 *gcp_a.OxygenSaturationStruct                 `bson:"oxygen_saturation,omitempty" json:"oxygen_saturation,omitempty"`
+	Weight                           *gcp_a.WeightStruct                           `bson:"weight,omitempty" json:"weight,omitempty"`
 
 	// Error is the error response content provided by `Google Fit` when making the API call.
 	Error string `bson:"errors" json:"errors"`

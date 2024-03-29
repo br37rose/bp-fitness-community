@@ -231,3 +231,9 @@ type SleepStruct struct {
 	StartTime        time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime          time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
+
+type WeightStruct struct {
+	Weight    float64   `bson:"weight,omitempty" json:"weight"`
+	StartTime time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime   time.Time `bson:"end_time,omitempty" json:"end_time"`
+}

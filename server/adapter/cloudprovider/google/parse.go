@@ -1186,3 +1186,32 @@ func ParseSleep(datasets []*fitness.Dataset) []SleepStruct {
 
 	return data
 }
+
+func ParseWeight(datasets []*fitness.Dataset) []WeightStruct {
+	var data []WeightStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if dpValue := value.MapVal; dpValue != nil {
+
+					weight := getFloat64Value(dpValue, "weight")
+
+					// Create a new WeightStruct and append it to the data slice
+					data = append(data, WeightStruct{
+						StartTime: startTime,
+						EndTime:   endTime,
+						Weight:    weight,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}

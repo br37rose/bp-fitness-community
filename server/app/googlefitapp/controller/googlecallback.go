@@ -160,7 +160,7 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 			CaloriesBurnedMetricID:   primitive.NewObjectID(),
 			StepCountDeltaMetricID:   primitive.NewObjectID(),
 			HydrationMetricID:        primitive.NewObjectID(),
-			HeartRateMetricID:        primitive.NewObjectID(),
+			HeartRateBPMMetricID:     primitive.NewObjectID(),
 			StepsCountMetricID:       primitive.NewObjectID(),
 			IsTestMode:               false,
 			SimulatorAlgorithm:       "",
@@ -195,7 +195,7 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 	// Update our user with our new Google Fit registration / login.
 	u.PrimaryHealthTrackingDeviceType = u_s.UserPrimaryHealthTrackingDeviceTypeFitBit
 	u.PrimaryHealthTrackingDeviceRequiresLoginAgain = false
-	u.PrimaryHealthTrackingDeviceHeartRateMetricID = gfa.HeartRateMetricID
+	u.PrimaryHealthTrackingDeviceHeartRateMetricID = gfa.HeartRateBPMMetricID
 	u.PrimaryHealthTrackingDeviceStepsCountMetricID = gfa.StepsCountMetricID
 	u.GoogleFitAppID = gfa.ID
 	u.ModifiedAt = time.Now()
