@@ -1011,7 +1011,6 @@ func ParseBloodPressure(datasets []*fitness.Dataset) []BloodPressureStruct {
 				if bloodPressureValue := value.MapVal; bloodPressureValue != nil {
 					fmt.Println("ParseBloodPressure: bloodPressureValue:", bloodPressureValue)
 
-					// Extract latitude, longitude, accuracy, and altitude from the locationValue
 					systolic := getFloat64Value(bloodPressureValue, "systolic")
 					diastolic := getFloat64Value(bloodPressureValue, "diastolic")
 					bodyPosition := getIntValue(bloodPressureValue, "body_position")
@@ -1025,6 +1024,36 @@ func ParseBloodPressure(datasets []*fitness.Dataset) []BloodPressureStruct {
 						Diastolic:           diastolic,
 						BodyPosition:        bodyPosition,
 						MeasurementLocation: measurementLocation,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}
+
+func ParseBodyFatPercentage(datasets []*fitness.Dataset) []BodyFatPercentageStruct {
+	var data []BodyFatPercentageStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if bloodPressureValue := value.MapVal; bloodPressureValue != nil {
+					fmt.Println("ParseBodyFatPercentage: bloodPressureValue:", bloodPressureValue)
+
+					percentage := getFloat64Value(bloodPressureValue, "percentage")
+
+					// Create a new BodyFatPercentageStruct and append it to the data slice
+					data = append(data, BodyFatPercentageStruct{
+						StartTime:  startTime,
+						EndTime:    endTime,
+						Percentage: percentage,
 					})
 				}
 			}

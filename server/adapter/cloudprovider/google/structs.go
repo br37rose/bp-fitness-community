@@ -196,3 +196,9 @@ type BloodPressureStruct struct {
 	StartTime           time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime             time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
+
+type BodyFatPercentageStruct struct {
+	Percentage float64   `bson:"percentage,omitempty" json:"percentage" default:"0"`
+	StartTime  time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime    time.Time `bson:"end_time,omitempty" json:"end_time"`
+}
