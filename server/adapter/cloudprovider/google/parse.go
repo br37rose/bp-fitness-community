@@ -1157,3 +1157,32 @@ func ParseOxygenSaturation(datasets []*fitness.Dataset) []OxygenSaturationStruct
 
 	return data
 }
+
+func ParseSleep(datasets []*fitness.Dataset) []SleepStruct {
+	var data []SleepStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if dpValue := value.MapVal; dpValue != nil {
+
+					sleepSegmentType := getIntValue(dpValue, "sleep_segment_type")
+
+					// Create a new SleepStruct and append it to the data slice
+					data = append(data, SleepStruct{
+						StartTime:        startTime,
+						EndTime:          endTime,
+						SleepSegmentType: sleepSegmentType,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}

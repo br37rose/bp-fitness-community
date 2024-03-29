@@ -225,3 +225,9 @@ type OxygenSaturationStruct struct {
 	StartTime                         time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime                           time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
+
+type SleepStruct struct {
+	SleepSegmentType int       `bson:"sleep_segment_type,omitempty" json:"sleep_segment_type"`
+	StartTime        time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime          time.Time `bson:"end_time,omitempty" json:"end_time"`
+}
