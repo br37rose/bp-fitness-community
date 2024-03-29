@@ -128,7 +128,6 @@ func ParseBasalMetabolicRate(datasets []*fitness.Dataset) []BasalMetabolicRateSt
 			var row BasalMetabolicRateStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Calories = float64(value)
 			data = append(data, row)
 		}
@@ -172,7 +171,6 @@ func ParseCaloriesBurned(datasets []*fitness.Dataset) []CaloriesBurnedStruct {
 			var row CaloriesBurnedStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Calories = float64(value)
 			data = append(data, row)
 		}
@@ -226,7 +224,6 @@ func ParseCyclingPedalingCadence(datasets []*fitness.Dataset) []CyclingPedalingC
 			var row CyclingPedalingCadenceStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.RPM = float64(value)
 			data = append(data, row)
 		}
@@ -280,7 +277,6 @@ func ParseCyclingPedalingCumulative(datasets []*fitness.Dataset) []CyclingPedali
 			var row CyclingPedalingCumulativeStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Revolutions = int(value)
 			data = append(data, row)
 		}
@@ -334,7 +330,6 @@ func ParseHeartPoints(datasets []*fitness.Dataset) []HeartPointsStruct {
 			var row HeartPointsStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Intensity = float64(value)
 			data = append(data, row)
 		}
@@ -388,7 +383,6 @@ func ParseMoveMinutes(datasets []*fitness.Dataset) []MoveMinutesStruct {
 			var row MoveMinutesStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Duration = int(value)
 			data = append(data, row)
 		}
@@ -442,7 +436,6 @@ func ParsePower(datasets []*fitness.Dataset) []PowerStruct {
 			var row PowerStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Watts = float64(value)
 			data = append(data, row)
 		}
@@ -486,7 +479,6 @@ func ParseStepCountDelta(datasets []*fitness.Dataset) []StepCountDeltaStruct {
 			var row StepCountDeltaStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Steps = int(value)
 			data = append(data, row)
 		}
@@ -530,7 +522,6 @@ func ParseStepCountCadence(datasets []*fitness.Dataset) []StepCountCadenceStruct
 			var row StepCountCadenceStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.RPM = int(value)
 			data = append(data, row)
 		}
@@ -842,7 +833,6 @@ func ParseSpeed(datasets []*fitness.Dataset) []SpeedStruct {
 			var row SpeedStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.Speed = int(value)
 			data = append(data, row)
 		}
@@ -887,7 +877,6 @@ func ParseHeartRateBPM(datasets []*fitness.Dataset) []HeartRateBPMStruct {
 			var row HeartRateBPMStruct
 			row.StartTime = NanosToTime(p.StartTimeNanos)
 			row.EndTime = NanosToTime(p.EndTimeNanos)
-			// liters to milliliters
 			row.BPM = int(value)
 			data = append(data, row)
 		}
@@ -1085,17 +1074,26 @@ func ParseHeight(datasets []*fitness.Dataset) []HeightStruct {
 
 			// Loop over the values in the dataset point
 			for _, value := range point.Value {
-				if bodyTemperatureValue := value.MapVal; bodyTemperatureValue != nil {
+				// fmt.Println("weight: Value:", value)
+				// fmt.Println("weight: Value.FpVal:", value.FpVal)
+				// fmt.Println("weight: Value.IntVal:", value.IntVal)
+				// fmt.Println("weight: Value.MapVal:", value.MapVal)
+				// fmt.Println("weight: Value.StringVal:", value.StringVal)
+				// fmt.Println("weight: Value.ForceSendFields:", value.ForceSendFields)
+				// fmt.Println("weight: Value.NullFields:", value.NullFields)
 
-					height := getFloat64Value(bodyTemperatureValue, "height")
+				valueString := fmt.Sprintf("%.2f", value.FpVal)
+				v, _ := strconv.ParseFloat(valueString, 64)
 
-					// Create a new HeightStruct and append it to the data slice
-					data = append(data, HeightStruct{
-						StartTime: startTime,
-						EndTime:   endTime,
-						Height:    height,
-					})
-				}
+				// Conver to centimeters
+				heightInCentimeters := float64(v * 100)
+
+				// Create a new WeightStruct and append it to the data slice
+				data = append(data, HeightStruct{
+					StartTime: startTime,
+					EndTime:   endTime,
+					Height:    heightInCentimeters,
+				})
 			}
 		}
 	}
