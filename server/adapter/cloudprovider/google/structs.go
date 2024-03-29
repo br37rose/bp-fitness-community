@@ -185,8 +185,8 @@ type BloodGlucoseStruct struct {
 type BloodPressureStruct struct {
 	Systolic            float64   `bson:"systolic,omitempty" json:"systolic" default:"0"`
 	Diastolic           float64   `bson:"diastolic,omitempty" json:"diastolic" default:"0"`
-	BodyPosition        int       `bson:"body_position,omitempty" json:"body_position" default:"0"`
-	MeasurementLocation int       `bson:"measurement_location,omitempty" json:"measurement_location" default:"0"`
+	BodyPosition        int64     `bson:"body_position,omitempty" json:"body_position" default:"0"`
+	MeasurementLocation int64     `bson:"measurement_location,omitempty" json:"measurement_location" default:"0"`
 	StartTime           time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime             time.Time `bson:"end_time,omitempty" json:"end_time"`
 }

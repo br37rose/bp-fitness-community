@@ -972,31 +972,41 @@ func ParseBloodPressure(datasets []*fitness.Dataset) []BloodPressureStruct {
 	var data []BloodPressureStruct
 
 	for _, dataset := range datasets {
+		// fmt.Println("OxygenSaturation: DataSourceId:", dataset.DataSourceId)
+		// fmt.Println("OxygenSaturation: MaxEndTimeNs:", dataset.MaxEndTimeNs)
+		// fmt.Println("OxygenSaturation: MinStartTimeNs:", dataset.MinStartTimeNs)
+		// fmt.Println("OxygenSaturation: NextPageToken:", dataset.NextPageToken)
+		// fmt.Println("OxygenSaturation: ForceSendFields:", dataset.ForceSendFields)
+		// fmt.Println("OxygenSaturation: NullFields:", dataset.NullFields)
+
 		for _, point := range dataset.Point {
 			// Extract relevant fields from the dataset point
 			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
 			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+			// fmt.Println("OxygenSaturation: Point:", point)
 
-			// Loop over the values in the dataset point
-			for _, value := range point.Value {
-				if bloodPressureValue := value.MapVal; bloodPressureValue != nil {
-					fmt.Println("ParseBloodPressure: bloodPressureValue:", bloodPressureValue)
+			if len(point.Value) > 3 {
+				systolic := point.Value[0]
+				// fmt.Println("BloodPressure: point.Value[0]: systolic:", systolic)
+				diastolic := point.Value[1]
+				// fmt.Println("BloodPressure: point.Value[1]: diastolic:", diastolic)
+				bodyPosition := point.Value[2]
+				// fmt.Println("BloodPressure: point.Value[2]: bodyPosition:", bodyPosition)
+				measurementLocation := point.Value[3]
+				// fmt.Println("OxygenSaturation: point.Value[3]: measurementLocation:", measurementLocation)
 
-					systolic := getFloat64Value(bloodPressureValue, "systolic")
-					diastolic := getFloat64Value(bloodPressureValue, "diastolic")
-					bodyPosition := getIntValue(bloodPressureValue, "body_position")
-					measurementLocation := getIntValue(bloodPressureValue, "body_position")
-
-					// Create a new BloodPressureStruct and append it to the data slice
-					data = append(data, BloodPressureStruct{
-						StartTime:           startTime,
-						EndTime:             endTime,
-						Systolic:            systolic,
-						Diastolic:           diastolic,
-						BodyPosition:        bodyPosition,
-						MeasurementLocation: measurementLocation,
-					})
-				}
+				//
+				// Create a new BloodPressureStruct and append it to the data slice
+				//
+				data = append(data, BloodPressureStruct{
+					StartTime:           startTime,
+					EndTime:             endTime,
+					Systolic:            systolic.FpVal,
+					Diastolic:           diastolic.FpVal,
+					BodyPosition:        bodyPosition.IntVal,
+					MeasurementLocation: measurementLocation.IntVal,
+					// OxygenSaturationMeasurementMethod: oxygenSaturationMeasurementMethod.IntVal,
+				})
 			}
 		}
 	}
