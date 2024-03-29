@@ -942,24 +942,6 @@ func ParseNutrition(datasets []*fitness.Dataset) []NutritionStruct {
 	return data
 }
 
-func getIntValue(locationValue []*fitness.ValueMapValEntry, key string) int {
-	for _, entry := range locationValue {
-		if entry.Key == key {
-			return int(entry.Value.FpVal)
-		}
-	}
-	return 0
-}
-
-func getFloat64Value(locationValue []*fitness.ValueMapValEntry, key string) float64 {
-	for _, entry := range locationValue {
-		if entry.Key == key {
-			return entry.Value.FpVal
-		}
-	}
-	return 0.0
-}
-
 func ParseBloodGlucose(datasets []*fitness.Dataset) []BloodGlucoseStruct {
 	var data []BloodGlucoseStruct
 
@@ -1167,19 +1149,24 @@ func ParseSleep(datasets []*fitness.Dataset) []SleepStruct {
 			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
 			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
 
+			// fmt.Println("sleep: point:", point)
+
 			// Loop over the values in the dataset point
 			for _, value := range point.Value {
-				if dpValue := value.MapVal; dpValue != nil {
+				// fmt.Println("sleep: Value:", value)
+				// fmt.Println("sleep: Value.FpVal:", value.FpVal)
+				// fmt.Println("sleep: Value.IntVal:", value.IntVal)
+				// fmt.Println("sleep: Value.MapVal:", value.MapVal)
+				// fmt.Println("sleep: Value.StringVal:", value.StringVal)
+				// fmt.Println("sleep: Value.ForceSendFields:", value.ForceSendFields)
+				// fmt.Println("sleep: Value.NullFields:", value.NullFields)
 
-					sleepSegmentType := getIntValue(dpValue, "sleep_segment_type")
-
-					// Create a new SleepStruct and append it to the data slice
-					data = append(data, SleepStruct{
-						StartTime:        startTime,
-						EndTime:          endTime,
-						SleepSegmentType: sleepSegmentType,
-					})
-				}
+				// Create a new SleepStruct and append it to the data slice
+				data = append(data, SleepStruct{
+					StartTime:        startTime,
+					EndTime:          endTime,
+					SleepSegmentType: int(value.IntVal),
+				})
 			}
 		}
 	}
@@ -1214,4 +1201,23 @@ func ParseWeight(datasets []*fitness.Dataset) []WeightStruct {
 	}
 
 	return data
+}
+
+func getIntValue(locationValue []*fitness.ValueMapValEntry, key string) int {
+	for _, entry := range locationValue {
+		fmt.Println("-->", entry)
+		if entry.Key == key {
+			return int(entry.Value.FpVal)
+		}
+	}
+	return 0
+}
+
+func getFloat64Value(locationValue []*fitness.ValueMapValEntry, key string) float64 {
+	for _, entry := range locationValue {
+		if entry.Key == key {
+			return entry.Value.FpVal
+		}
+	}
+	return 0.0
 }

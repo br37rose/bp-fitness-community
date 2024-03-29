@@ -44,12 +44,12 @@ func (impl *googleFitAppCrontaberImpl) pullSleepDataFromGoogleWithGfaAndFitnessS
 	////
 
 	sleepDataset := gcp_a.ParseSleep(dataset)
-	//
-	// impl.Logger.Debug("",
-	// 	slog.String("gfa_id", gfa.ID.Hex()),
-	// 	slog.Any("dataset", dataset),
-	// 	slog.Any("sleepDataset", sleepDataset),
-	// )
+
+	impl.Logger.Debug("",
+		slog.String("gfa_id", gfa.ID.Hex()),
+		slog.Any("dataset", dataset),
+		slog.Any("sleepDataset", sleepDataset),
+	)
 
 	////
 	//// Save into our database.
