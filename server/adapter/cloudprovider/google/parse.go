@@ -1044,16 +1044,45 @@ func ParseBodyFatPercentage(datasets []*fitness.Dataset) []BodyFatPercentageStru
 
 			// Loop over the values in the dataset point
 			for _, value := range point.Value {
-				if bloodPressureValue := value.MapVal; bloodPressureValue != nil {
-					fmt.Println("ParseBodyFatPercentage: bloodPressureValue:", bloodPressureValue)
+				if bodyFatPercentage := value.MapVal; bodyFatPercentage != nil {
+					fmt.Println("ParseBodyFatPercentage: bodyFatPercentage:", bodyFatPercentage)
 
-					percentage := getFloat64Value(bloodPressureValue, "percentage")
+					percentage := getFloat64Value(bodyFatPercentage, "percentage")
 
 					// Create a new BodyFatPercentageStruct and append it to the data slice
 					data = append(data, BodyFatPercentageStruct{
 						StartTime:  startTime,
 						EndTime:    endTime,
 						Percentage: percentage,
+					})
+				}
+			}
+		}
+	}
+
+	return data
+}
+
+func ParseBodyTemperature(datasets []*fitness.Dataset) []BodyTemperatureStruct {
+	var data []BodyTemperatureStruct
+
+	for _, dataset := range datasets {
+		for _, point := range dataset.Point {
+			// Extract relevant fields from the dataset point
+			startTime := time.Unix(0, point.StartTimeNanos*int64(time.Millisecond))
+			endTime := time.Unix(0, point.EndTimeNanos*int64(time.Millisecond))
+
+			// Loop over the values in the dataset point
+			for _, value := range point.Value {
+				if bodyTemperatureValue := value.MapVal; bodyTemperatureValue != nil {
+
+					bodyTemperature := getFloat64Value(bodyTemperatureValue, "body_temperature")
+
+					// Create a new BodyTemperatureStruct and append it to the data slice
+					data = append(data, BodyTemperatureStruct{
+						StartTime:       startTime,
+						EndTime:         endTime,
+						BodyTemperature: bodyTemperature,
 					})
 				}
 			}

@@ -202,3 +202,10 @@ type BodyFatPercentageStruct struct {
 	StartTime  time.Time `bson:"start_time,omitempty" json:"start_time"`
 	EndTime    time.Time `bson:"end_time,omitempty" json:"end_time"`
 }
+
+type BodyTemperatureStruct struct {
+	BodyTemperature     float64   `bson:"body_temperature ,omitempty" json:"body_temperature" default:"0"`
+	MeasurementLocation int       `bson:"measurement_location,omitempty" json:"measurement_location" default:"0"`
+	StartTime           time.Time `bson:"start_time,omitempty" json:"start_time"`
+	EndTime             time.Time `bson:"end_time,omitempty" json:"end_time"`
+}

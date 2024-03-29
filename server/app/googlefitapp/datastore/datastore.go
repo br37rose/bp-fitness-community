@@ -71,6 +71,7 @@ type GoogleFitApp struct {
 	BloodGlucoseMetricID                     primitive.ObjectID `bson:"blood_glucose_metric_id" json:"blood_glucose_metric_id,omitempty"`
 	BloodPressureMetricID                    primitive.ObjectID `bson:"blood_pressure_metric_id" json:"blood_pressure_metric_id,omitempty"`
 	BodyFatPercentageMetricID                primitive.ObjectID `bson:"body_fat_percentage_metric_id" json:"body_fat_percentage_metric_id,omitempty"`
+	BodyTemperatureMetricID                  primitive.ObjectID `bson:"body_temperature_percentage_metric_id" json:"body_temperature_percentage_metric_id,omitempty"`
 	HeartRateMetricID                        primitive.ObjectID `bson:"heart_rate_metric_id" json:"heart_rate_metric_id,omitempty"`
 	StepsCountMetricID                       primitive.ObjectID `bson:"steps_count_metric_id" json:"steps_count_metric_id,omitempty"`
 
