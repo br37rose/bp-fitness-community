@@ -1,0 +1,53 @@
+// Fonts
+$font-primary: "Azonix", sans-serif;
+$font-secondary: "Open Sans", sans-serif;
+
+// Colors
+$color-main: #d7c278; // Gold
+$color-light-shade: #ffffff; // White
+$color-dark-shade: #735827; // Darker shade of Gold
+$color-accent1: #b9aa8a; // Desaturated version of Gold
+$color-accent2: #000000;
+$color-shadow: rgba(0, 0, 0, 0.75);
+
+// Links
+$color-link1: #002366;
+$color-link2: #004225;
+$color-link3: #8B0000;
+$color-link4: #735827d1;
+
+// Shades
+$color-green-shades: (
+    #3cb371,
+    #2e8b57,
+    #008000
+);
+$color-yellow-shades: (
+    #ffd700,
+    #ffa500,
+    #ff8c00
+);
+$color-blue-shades: (
+    #1e90ff,
+    #4169e1,
+    #0074d9
+);
+$color-red-shades: (
+    #ff0000,
+    #b22222,
+    #dc143c
+);
+
+// Bulma Overrides
+$family-primary: $font-primary;
+$family-secondary: $font-secondary;
+$body-background-color: $color-light-shade;
+$primary: $color-main;
+$link: $color-dark-shade;
+$link-hover: $color-link4;
+$info: $color-dark-shade;
+$success: nth($color-green-shades, 1);
+$warning: nth($color-yellow-shades, 1);
+$danger: nth($color-red-shades, 1);
+$dark: $color-accent2;
+$text: $color-accent2;

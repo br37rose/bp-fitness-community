@@ -1,0 +1,4 @@
+@import 'mixins'; // Import mixins if needed for font-face mixin
+
+@include font-face("Azonix", "../fonts/Azonix.otf", "opentype");
+@include font-face("Open Sans", "../fonts/OpenSans.ttf", "truetype");
