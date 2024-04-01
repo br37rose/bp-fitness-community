@@ -29,9 +29,6 @@ import (
 	exercise_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/controller"
 	exercise_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	exercise_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
-	fitbitapp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/controller"
-	fitbitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/datastore"
-	fbd_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitdatum/datastore"
 	fitnessplan_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	fitnessplan_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	gateway_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
@@ -78,7 +75,6 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
-	fitbitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	fitnessplan_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
@@ -137,9 +133,6 @@ func InitializeEvent() Application {
 		fitnessplan_c.NewController,
 		nutritionplan_s.NewDatastore,
 		nutritionplan_c.NewController,
-		fbd_s.NewDatastore,
-		fitbitapp_s.NewDatastore,
-		fitbitapp_c.NewController,
 		googlefitdp_s.NewDatastore,
 		googlefitapp_s.NewDatastore,
 		googlefitapp_c.NewController,
@@ -166,7 +159,6 @@ func InitializeEvent() Application {
 		inv_http.NewHandler,
 		fitnessplan_http.NewHandler,
 		nutritionplan_http.NewHandler,
-		fitbitapp_http.NewHandler,
 		googlefitapp_http.NewHandler,
 		googlefitapp_cron.NewCrontab,
 		dp_http.NewHandler,

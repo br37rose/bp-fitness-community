@@ -11,8 +11,6 @@ import (
 	s3_storage "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/storage/s3"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
-	fitbitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/datastore"
-	fitbitdatum_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitdatum/datastore"
 	organization_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/datastore"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
@@ -40,8 +38,6 @@ type RankPointControllerImpl struct {
 	CodeVerifierMap      map[primitive.ObjectID]string
 	Kmutex               kmutex.Provider
 	OrganizationStorer   organization_s.OrganizationStorer
-	FitBitAppStorer      fitbitapp_s.FitBitAppStorer
-	FitBitDatumStorer    fitbitdatum_s.FitBitDatumStorer
 	UserStorer           user_s.UserStorer
 	DataPointStorer      dp_s.DataPointStorer
 	AggregatePointStorer ap_s.AggregatePointStorer
@@ -57,9 +53,7 @@ func NewController(
 	kmutexp kmutex.Provider,
 	s3 s3_storage.S3Storager,
 	org_storer organization_s.OrganizationStorer,
-	fba_storer fitbitapp_s.FitBitAppStorer,
 	usr_storer user_s.UserStorer,
-	fbd_storer fitbitdatum_s.FitBitDatumStorer,
 	dp_storer dp_s.DataPointStorer,
 	ap_storer ap_s.AggregatePointStorer,
 	rp_storer rp_s.RankPointStorer,
@@ -74,8 +68,6 @@ func NewController(
 		Kmutex:               kmutexp,
 		S3:                   s3,
 		OrganizationStorer:   org_storer,
-		FitBitAppStorer:      fba_storer,
-		FitBitDatumStorer:    fbd_storer,
 		UserStorer:           usr_storer,
 		DataPointStorer:      dp_storer,
 		AggregatePointStorer: ap_storer,

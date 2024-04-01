@@ -6,7 +6,6 @@ import (
 	"github.com/mileusna/crontab"
 
 	agg_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/controller"
-	fba_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/controller"
 	googlefitapp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	rank_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	user_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/controller"
@@ -23,7 +22,6 @@ type crontabInputPort struct {
 	Logger                   *slog.Logger
 	Crontab                  *crontab.Crontab
 	UserController           user_c.UserController
-	FitBitAppController      fba_c.FitBitAppController
 	AggregatePointController agg_c.AggregatePointController
 	RankPointController      rank_c.RankPointController
 	GoogleFitAppCrontab      googlefitapp_cron.GoogleFitAppCrontaber
@@ -33,7 +31,6 @@ func NewInputPort(
 	configp *config.Conf,
 	loggerp *slog.Logger,
 	usrContr user_c.UserController,
-	fbaContr fba_c.FitBitAppController,
 	aggContr agg_c.AggregatePointController,
 	rankContr rank_c.RankPointController,
 	gfaCron googlefitapp_cron.GoogleFitAppCrontaber,
@@ -48,7 +45,6 @@ func NewInputPort(
 		Logger:                   loggerp,
 		Crontab:                  ctab,
 		UserController:           usrContr,
-		FitBitAppController:      fbaContr,
 		AggregatePointController: aggContr,
 		RankPointController:      rankContr,
 		GoogleFitAppCrontab:      gfaCron,
@@ -76,8 +72,8 @@ func (port *crontabInputPort) Run() {
 	// port.Crontab.MustAddJob("* * * * *", port.processAllActiveSimulators) // every minute
 	//----------------------------------------------------------------------------
 
-	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob) // every minute
-	port.Crontab.MustAddJob("*/5 * * * *", port.GoogleFitAppCrontab.PullDataFromGoogleJob)    // every 5 minutes
+	// port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob) // every minute TOOD: ADD BACK WHEN READY
+	// port.Crontab.MustAddJob("*/5 * * * *", port.GoogleFitAppCrontab.PullDataFromGoogleJob)    // every 5 minutes TOOD: ADD BACK WHEN READY
 
 	// The following section will include code that takes the raw data points
 	port.Crontab.MustAddJob("* * * * *", port.AggregateThisHour)    // every minute
@@ -125,9 +121,9 @@ func (port *crontabInputPort) Run() {
 	// port.RankThisISOWeek()
 	// port.RankThisMonth()
 	// port.RankThisYear()
-	//
-	port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob() //TODO: Comment out when ready.
-	port.GoogleFitAppCrontab.PullDataFromGoogleJob() //TODO: Comment out when ready.
+
+	// port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob() //TODO: Comment out when ready.
+	// port.GoogleFitAppCrontab.PullDataFromGoogleJob()      //TODO: Comment out when ready.
 }
 
 func (port *crontabInputPort) Shutdown() {

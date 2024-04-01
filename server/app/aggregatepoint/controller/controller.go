@@ -10,8 +10,6 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
-	fitbitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/datastore"
-	fitbitdatum_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitdatum/datastore"
 	organization_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
@@ -44,8 +42,6 @@ type AggregatePointControllerImpl struct {
 	CodeVerifierMap      map[primitive.ObjectID]string
 	Kmutex               kmutex.Provider
 	OrganizationStorer   organization_s.OrganizationStorer
-	FitBitAppStorer      fitbitapp_s.FitBitAppStorer
-	FitBitDatumStorer    fitbitdatum_s.FitBitDatumStorer
 	UserStorer           user_s.UserStorer
 	DataPointStorer      dp_s.DataPointStorer
 	AggregatePointStorer ap_s.AggregatePointStorer
@@ -59,9 +55,7 @@ func NewController(
 	cache mongodbcache.Cacher,
 	kmutexp kmutex.Provider,
 	org_storer organization_s.OrganizationStorer,
-	fba_storer fitbitapp_s.FitBitAppStorer,
 	usr_storer user_s.UserStorer,
-	fbd_storer fitbitdatum_s.FitBitDatumStorer,
 	dp_storer dp_s.DataPointStorer,
 	ap_storer ap_s.AggregatePointStorer,
 ) AggregatePointController {
@@ -74,8 +68,6 @@ func NewController(
 		CodeVerifierMap:      make(map[primitive.ObjectID]string, 0),
 		Kmutex:               kmutexp,
 		OrganizationStorer:   org_storer,
-		FitBitAppStorer:      fba_storer,
-		FitBitDatumStorer:    fbd_storer,
 		UserStorer:           usr_storer,
 		DataPointStorer:      dp_storer,
 		AggregatePointStorer: ap_storer,
