@@ -33,6 +33,7 @@ import {
   faDumbbell,
   faVideoCamera,
   faLeaf,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { faFreeCodeCamp } from "@fortawesome/free-brands-svg-icons";
 import { useRecoilState } from "recoil";
@@ -48,6 +49,8 @@ import PageLoadingContent from "../Reusable/PageLoadingContent";
 import { formatDateStringWithTimezone } from "../../Helpers/timeUtility";
 import AverageAndTimeComparison from "../Reusable/AverageDateAndTimeComparison";
 import Layout from "../Menu/Layout";
+import OnBoardingQuestionWizard from "../Reusable/Wizard/Wizard";
+import { Title, SelectableOption, Card } from '../Reusable/Wizard/Questions';
 
 
 function MemberDashboard() {
@@ -67,6 +70,263 @@ function MemberDashboard() {
   const [datum, setDatum] = useState("");
   const [isFetching, setFetching] = useState(false);
   const [isComingSoon, setComingSoon] = useState(true);
+
+  const [answers, setAnswers] = useState({});
+
+  useEffect(() => {
+    console.log(answers);
+    // Perform any action here when selectedCards changes
+    // For example, calling an API based on the new selection
+  }, [answers]);
+
+  // Define your imgUrl and ageRanges here
+  const cardsData = [
+    { id: 1, imgUrl: 'https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728', ageRange: '18-29', type: 'age' },
+    { id: 2, imgUrl: 'https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728', ageRange: '30-39', type: 'age' },
+    { id: 3, imgUrl: 'https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728', ageRange: '40-49', type: 'age' },
+    { id: 4, imgUrl: 'https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728', ageRange: '50+', type: 'age' }
+  ];
+
+  const options = [
+    'Build muscle & strength',
+    'Lose weight',
+    'Improve mobility',
+    'Develop flexibility',
+    'Improve overall fitness',
+    'Try new ways'
+  ];
+
+  const experienceOptions = [
+    'I struggle to gain weight or muscle',
+    'I gain and lose weight easily',
+    'I gain weight fast but lose it slowly'
+  ];
+
+  const handleSelect = (questionId, selectedId) => {
+    // Find if the current question allows multiple selections
+    const isMultiSelect = questionsData.find(question => question.questionId === questionId)?.isMultiSelect;
+
+    setAnswers(prevAnswers => {
+      // If it's a multi-select question
+      if (isMultiSelect) {
+        // If the selectedId already exists, remove it, otherwise add it
+        const currentSelections = prevAnswers[questionId] || [];
+        const newSelections = currentSelections.includes(selectedId)
+          ? currentSelections.filter(id => id !== selectedId)
+          : [...currentSelections, selectedId];
+        return { ...prevAnswers, [questionId]: newSelections };
+      } else {
+        // For single-select, simply set the selectedId
+        return { ...prevAnswers, [questionId]: selectedId };
+      }
+    });
+  };
+
+
+  const questionsData = [
+    {
+      questionId: 1,
+      isMultiSelect: false,
+      content: () => (
+        <div>
+          <Title
+            text="CALISTHENICS WORKOUT PLAN"
+            subtitle="ACCORDING TO YOUR AGE"
+            quizTime="1-MINUTE QUIZ"
+          />
+          <div className="columns is-multiline">
+            {cardsData.map(card => (
+              <Card
+                key={card.id}
+                id={card.id}
+                card={card}
+                imgUrl={card.imgUrl}
+                selected={
+                  Array.isArray(answers[1])
+                    ? answers[1].includes(card.id)
+                    : answers[1] === card.id
+                }
+                onSelect={() => handleSelect(1, card.id)}
+                buttonText="Age"
+              />
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    {
+      questionId: 2,
+      isMultiSelect: false,
+      content: () => (
+        <div className="columns is-vcentered">
+          <div className="column">
+            <div className="column is-half is-offset-one-quarter">
+              <h1 className="title is-size-3 has-text-link has-text-left">150 million people</h1>
+              <h2 className="subtitle is-size-5 has-text-left has-text-white">have chosen BP8 Fitness</h2>
+            </div>
+          </div>
+          <div className="column">
+            <figure className="image">
+              <img
+                src="https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728"
+                alt="Fitness"
+              />
+            </figure>
+          </div>
+        </div>
+      )
+    },
+    {
+      questionId: 3,
+      isMultiSelect: true,
+      content: () => (
+        <>
+          <Title subtitle="What is your main goal?" />
+          <div className="columns">
+            <div className="column">
+              {options.map((option) => (
+                <SelectableOption
+                  key={option}
+                  option={option}
+                  isSelected={answers[3]?.includes(option)}
+                  onSelect={() => handleSelect(3, option)}
+                />
+              ))}
+            </div>
+            <div className="column">
+              <figure className="image">
+                <img
+                  src="https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728"
+                  alt="Fitness"
+                  style={{ maxHeight: '80vh' }}
+                />
+              </figure>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      questionId: 4,
+      title: "CALISTHENICS WORKOUT PLAN",
+      subtitle: "ACCORDING TO YOUR AGE",
+      quizTime: "1-MINUTE QUIZ",
+      isMultiSelect: true,
+      content: () => (
+        <div>
+          <Title
+            subtitle="WHAT IS YOUR BODY GOAL?"
+          />
+          <div className="columns">
+            {cardsData.map((card, index) => (
+              <Card
+                key={index}
+                id={card.id}
+                card={card}
+                imgUrl={card.imgUrl}
+                selected={
+                  Array.isArray(answers[4])
+                    ? answers[4].includes(card.id)
+                    : answers[4] === card.id
+                }
+                onSelect={() => handleSelect(4, card.id)}
+                buttonText="Age"
+              />
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    {
+      questionId: 5,
+      isMultiSelect: true,
+      content: () => (
+        <div>
+          <Title
+            subtitle="HOW WOULD YOU DESCRIBE YOUR PHYSICAL BUILD?"
+          />
+          <div className="columns">
+            {cardsData.map((card, index) => (
+              <Card
+                key={index}
+                id={card.id}
+                card={card}
+                imgUrl={card.imgUrl}
+                selected={
+                  Array.isArray(answers[5])
+                    ? answers[5].includes(card.id)
+                    : answers[5] === card.id
+                }
+                onSelect={() => handleSelect(5, card.id)}
+                buttonText="Age"
+              />
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    {
+      questionId: 6,
+      isMultiSelect: true,
+      content: () => (
+        <div>
+          <Title subtitle="What is your experience with fitness?" />
+          <div className="columns">
+            <div className="column">
+              {experienceOptions.map((option) => (
+                <SelectableOption
+                  key={option}
+                  option={option}
+                  isSelected={answers[6]?.includes(option)}
+                  onSelect={() => handleSelect(6, option)}
+                />
+              ))}
+            </div>
+            <div className="column">
+              <figure className="image">
+                <img
+                  src="https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728"
+                  alt="Fitness"
+                  style={{ maxHeight: '80vh' }}
+                />
+              </figure>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      questionId: 7,
+      isMultiSelect: true,
+      content: () => (
+        <div>
+          <Title subtitle="How long ago were you in the best shape of your life?" />
+          <div className="columns">
+            <div className="column">
+              {experienceOptions.map((option) => (
+                <SelectableOption
+                  key={option}
+                  option={option}
+                  isSelected={answers[7]?.includes(option)}
+                  onSelect={() => handleSelect(7, option)}
+                />
+              ))}
+            </div>
+            <div className="column">
+              <figure className="image">
+                <img
+                  src="https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728"
+                  alt="Fitness"
+                  style={{ maxHeight: '80vh' }}
+                />
+              </figure>
+            </div>
+          </div>
+        </div>
+      ),
+    }
+  ];
+
 
   ////
   //// Event handling.
@@ -152,6 +412,10 @@ function MemberDashboard() {
 
   return (
     <Layout breadcrumbItems={breadcrumbItems}>
+
+      {/* Wizard Component */}
+      <OnBoardingQuestionWizard questions={questionsData} />
+
       <div className="box">
         <div className="columns">
           <div className="column">

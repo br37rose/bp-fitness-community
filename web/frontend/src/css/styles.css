@@ -6,16 +6,10 @@
   font-family: "Open Sans";
   src: url("../fonts/OpenSans.ttf") format("truetype"); }
 
-/* The code allows the bulma sidebar to be full height. Special thanks to: https://codepen.io/jalediaz/pen/JjoXJao */
-.is-fullheight {
-  min-height: 100vh; }
-
-/*
-The following code will prevent bouncing behaviour.
-Special thanks: https://stackoverflow.com/a/65871351
-*/
 body {
-  overflow: hidden; }
+  font-family: "Open Sans", sans-serif;
+  overflow: hidden;
+  background-color: #ffffff; }
 
 .topbar {
   position: fixed;
@@ -48,35 +42,41 @@ p {
   font-family: "Open Sans", sans-serif;
   color: #000000; }
 
+.is-fullheight {
+  min-height: 100vh; }
+
+.is-fullwidth {
+  width: 100% !important; }
+
 .playing-video {
   position: relative; }
-  .playing-video > div {
-    position: relative; }
-    .playing-video > div .fa-play {
-      font-size: 2rem;
-      color: #fff;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1; }
-    .playing-video > div:hover .fa-play {
-      opacity: 0.7; }
-    .playing-video > div:after {
-      content: 'Currently Playing';
-      color: #fff;
-      font-size: 1rem;
-      text-align: center;
-      position: absolute;
-      top: 65%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1; }
   .playing-video img {
     filter: brightness(30%);
     object-fit: cover; }
-  .playing-video h5 {
-    margin-top: 10px; }
+  .playing-video > div {
+    position: relative; }
+  .playing-video .fa-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: #ffffff; }
+    .playing-video .fa-play:hover {
+      opacity: 0.7; }
+  .playing-video:after {
+    content: 'Currently Playing';
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    font-size: 1rem;
+    color: #ffffff;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 65%; }
 
 .graph-box {
   width: 100%;
@@ -106,18 +106,21 @@ p {
   .container .overlay {
     position: absolute;
     bottom: 0;
-    background: black;
     background: rgba(0, 0, 0, 0.5);
     color: #f1f1f1;
     width: 100%;
     transition: 0.5s ease;
     opacity: 0;
-    color: white;
-    font-size: 20px;
     padding: 20px;
-    text-align: center; }
+    text-align: center;
+    font-size: 20px; }
     .container .overlay:hover {
       opacity: 1; }
+
+.modal-card-head .progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0; }
 
 .table thead th {
   font-family: "Azonix", sans-serif; }
@@ -138,20 +141,11 @@ p {
   width: 53px;
   height: 53px; }
 
-@media screen and (max-width: 575px) {
-  .table-container {
-    max-width: 100%;
-    width: auto;
-    overflow-x: auto; } }
-
 .figure-img {
-  display: block;
   width: 64px;
-  /* Width of the container */
   height: 64px;
-  /* Height of the container, equal to width for a circle */
+  display: block;
   overflow: hidden;
-  /* Ensures the image doesn't break out of the border-radius */
   border-radius: 50%;
   /* This will make the container round */ }
   .figure-img img {
@@ -177,91 +171,6 @@ p {
 .custom-hero {
   width: auto; }
 
-/* Desktop specific styles */
-@media screen and (min-width: 1024px) {
-  .custom-hero {
-    height: 500px; } }
-
-/* Mobile specific styles for flexible height */
-@media screen and (max-width: 1023px) {
-  .custom-hero {
-    height: auto;
-    /* Flexible height for mobile devices */ } }
-
-.bowl {
-  position: relative;
-  border-radius: 50%;
-  width: 150px;
-  height: 150px;
-  box-shadow: inset 0 -5px 0 0 rgba(0, 0, 0, 0.5), inset 0 -20px 5px 0 rgba(0, 0, 0, 0.2), inset -15px 0 5px 0 rgba(0, 0, 0, 0.1), inset 15px 0 5px 0 rgba(0, 0, 0, 0.1);
-  background: radial-gradient(ellipse at center, transparent 0%, transparent 76%, rgba(0, 0, 0, 0.65) 100%);
-  margin: 20px; }
-  .bowl:before, .bowl:after,
-  .bowl .inner {
-    border-radius: 50%;
-    width: 150px;
-    height: 150px; }
-  .bowl:before,
-  .bowl .inner {
-    background: radial-gradient(ellipse at center, transparent 0%, transparent 76%, rgba(0, 0, 0, 0.65) 100%);
-    position: absolute;
-    overflow: hidden;
-    box-shadow: inset 0 -5px 0 0 rgba(0, 0, 0, 0.5), inset 0 -20px 5px 0 rgba(0, 0, 0, 0.2), inset -15px 0 5px 0 rgba(0, 0, 0, 0.1), inset 15px 0 5px 0 rgba(0, 0, 0, 0.1); }
-  .bowl:before {
-    background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(0, 0, 0, 0.65) 81%, black 100%);
-    z-index: 2; }
-  .bowl:after {
-    content: "";
-    width: 60px;
-    height: 5px;
-    background: #039be4;
-    box-shadow: inset 0 0 10px 0 #000;
-    position: absolute;
-    left: 50%;
-    margin-left: -30px;
-    bottom: 0;
-    z-index: 2; }
-  .bowl .inner {
-    overflow: hidden;
-    backface-visibility: hidden;
-    transform: translate3d(0, 0, 0); }
-    .bowl .inner:before, .bowl .inner:after {
-      content: "";
-      border-radius: 50%;
-      position: absolute;
-      background: rgba(255, 255, 255, 0.2);
-      z-index: 2; }
-    .bowl .inner:before {
-      width: 20px;
-      height: 20px;
-      right: 40%;
-      top: 60%; }
-    .bowl .inner:after {
-      width: 20px;
-      height: 40px;
-      right: 30%;
-      top: 15%;
-      transform: rotate(-20deg); }
-  .bowl .fill {
-    animation: fillAction 4s cubic-bezier(0.2, 0.6, 0.8, 0.4) forwards; }
-  .bowl .waveShape {
-    animation: waveAction 0.5s linear infinite;
-    width: 300px;
-    height: 150px;
-    fill: #039be4; }
-
-@keyframes fillAction {
-  0% {
-    transform: translate(0, 150px); }
-  100% {
-    transform: translate(0, 10px); } }
-
-@keyframes waveAction {
-  0% {
-    transform: translate(-150px, 0); }
-  100% {
-    transform: translate(0, 0); } }
-
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
@@ -272,7 +181,7 @@ p {
   -moz-appearance: none;
   -webkit-appearance: none;
   align-items: center;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 4px;
   box-shadow: none;
   display: inline-flex;
@@ -280,10 +189,10 @@ p {
   height: 2.5em;
   justify-content: flex-start;
   line-height: 1.5;
-  padding-bottom: calc(0.5em - 2px);
-  padding-left: calc(0.75em - 2px);
-  padding-right: calc(0.75em - 2px);
-  padding-top: calc(0.5em - 2px);
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(0.75em - 1px);
+  padding-right: calc(0.75em - 1px);
+  padding-top: calc(0.5em - 1px);
   position: relative;
   vertical-align: top; }
   .button:focus, .input:focus, .textarea:focus, .select select:focus, .file-cta:focus,
@@ -671,14 +580,14 @@ a.box:active {
 .button {
   background-color: white;
   border-color: #dbdbdb;
-  border-width: 2px;
+  border-width: 1px;
   color: #363636;
   cursor: pointer;
   justify-content: center;
-  padding-bottom: calc(0.5em - 2px);
+  padding-bottom: calc(0.5em - 1px);
   padding-left: 1em;
   padding-right: 1em;
-  padding-top: calc(0.5em - 2px);
+  padding-top: calc(0.5em - 1px);
   text-align: center;
   white-space: nowrap; }
   .button strong {
@@ -687,14 +596,14 @@ a.box:active {
     height: 1.5em;
     width: 1.5em; }
   .button .icon:first-child:not(:last-child) {
-    margin-left: calc(-0.5em - 2px);
+    margin-left: calc(-0.5em - 1px);
     margin-right: 0.25em; }
   .button .icon:last-child:not(:first-child) {
     margin-left: 0.25em;
-    margin-right: calc(-0.5em - 2px); }
+    margin-right: calc(-0.5em - 1px); }
   .button .icon:first-child:last-child {
-    margin-left: calc(-0.5em - 2px);
-    margin-right: calc(-0.5em - 2px); }
+    margin-left: calc(-0.5em - 1px);
+    margin-right: calc(-0.5em - 1px); }
   .button:hover, .button.is-hovered {
     border-color: #b5b5b5;
     color: #735827d1; }
@@ -2447,7 +2356,7 @@ a.tag:hover {
 /* Bulma Form */
 .input, .textarea, .select select {
   background-color: white;
-  border-color: #d7c278;
+  border-color: #dbdbdb;
   border-radius: 4px;
   color: #363636; }
   .input::-moz-placeholder, .textarea::-moz-placeholder, .select select::-moz-placeholder {
@@ -2498,7 +2407,7 @@ a.tag:hover {
       color: rgba(122, 122, 122, 0.3); }
 
 .input, .textarea {
-  box-shadow: none;
+  box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
   max-width: 100%;
   width: 100%; }
   .input[readonly], .textarea[readonly] {
@@ -2559,8 +2468,8 @@ a.tag:hover {
 
 .input.is-rounded {
   border-radius: 9999px;
-  padding-left: calc(calc(0.75em - 2px) + 0.375em);
-  padding-right: calc(calc(0.75em - 2px) + 0.375em); }
+  padding-left: calc(calc(0.75em - 1px) + 0.375em);
+  padding-right: calc(calc(0.75em - 1px) + 0.375em); }
 
 .input.is-static {
   background-color: transparent;
@@ -2573,7 +2482,7 @@ a.tag:hover {
   display: block;
   max-width: 100%;
   min-width: 100%;
-  padding: calc(0.75em - 2px);
+  padding: calc(0.75em - 1px);
   resize: vertical; }
   .textarea:not([rows]) {
     max-height: 40em;

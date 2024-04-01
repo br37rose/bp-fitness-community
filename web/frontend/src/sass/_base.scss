@@ -1,0 +1,43 @@
+@import 'variables'; // Import variables for access to fonts, colors, etc.
+
+body {
+    font-family: $family-secondary;
+    overflow: hidden;
+    background-color: $body-background-color;
+}
+
+.topbar {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: 1000;
+}
+
+.title,
+.heading,
+.modal-card-title,
+.menu-label {
+    font-family: $family-primary; // Apply the primary font to headings
+    color: $text;
+}
+
+.subtitle,
+.label,
+.help,
+.input,
+.button,
+.menu-list,
+.message,
+.modal-card-body,
+.level-item,
+.content {
+    font-family: $family-secondary; // Apply the secondary font to subtitles
+    color: $text;
+}
+
+// Apply the secondary font to regular paragraphs
+p {
+    font-family: $family-secondary;
+    color: $text;
+}

@@ -40,7 +40,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "css-build": "node-sass --omit-source-map-url src/sass/styles.scss src/css/styles.css",
+    "css-build": "node-sass --omit-source-map-url src/sass/main.scss src/css/styles.css",
     "css-watch": "npm run css-build -- --watch",
     "start": "env-cmd -f ./environments/.dev.env react-scripts start",
     "build": "react-scripts build",

@@ -71,7 +71,7 @@ import MemberDashboard from "./Components/Member/Dashboard";
 import TwoFactorAuthenticationWizardStep1 from "./Components/Gateway/2FA/Step1";
 import TwoFactorAuthenticationWizardStep2 from "./Components/Gateway/2FA/Step2";
 import TwoFactorAuthenticationWizardStep3 from "./Components/Gateway/2FA/Step3";
-import TwoFactorAuthenticationValidateOnLogin  from "./Components/Gateway/2FA/ValidateOnLogin";
+import TwoFactorAuthenticationValidateOnLogin from "./Components/Gateway/2FA/ValidateOnLogin";
 import LogoutRedirector from "./Components/Gateway/LogoutRedirector";
 import Login from "./Components/Gateway/Login";
 import Register from "./Components/Gateway/Register";
@@ -232,8 +232,8 @@ function AppRoute() {
                                     <Route exact path="/account/change-password" element={<AccountChangePassword />} />
                                     <Route exact path="/account/subscription" element={<AccountSubscriptionDetailAndCancel />} />
                                     <Route exact path="/account/subscription/invoices" element={<AccountInvoiceList />} />
-                                    <Route exact path="/account/2fa" element={<AccountTwoFactorAuthenticationDetail/>}/>
-                                    <Route exact path="/account/2fa/enable" element={<AccountEnableTwoFactorAuthentication/>}/>
+                                    <Route exact path="/account/2fa" element={<AccountTwoFactorAuthenticationDetail />} />
+                                    <Route exact path="/account/2fa/enable" element={<AccountEnableTwoFactorAuthentication />} />
 
                                     {/*
                                         -----------------------------------------------
@@ -243,10 +243,10 @@ function AppRoute() {
                                     <Route exact path="/register" element={<Register />} />
                                     <Route exact path="/register-successful" element={<RegisterSuccessful />} />
                                     <Route exact path="/login" element={<Login />} />
-                                    <Route exact path="/login/2fa/step-1" element={<TwoFactorAuthenticationWizardStep1/>}/>
-                                    <Route exact path="/login/2fa/step-2" element={<TwoFactorAuthenticationWizardStep2/>}/>
-                                    <Route exact path="/login/2fa/step-3" element={<TwoFactorAuthenticationWizardStep3/>}/>
-                                    <Route exact path="/login/2fa" element={<TwoFactorAuthenticationValidateOnLogin/>}/>
+                                    <Route exact path="/login/2fa/step-1" element={<TwoFactorAuthenticationWizardStep1 />} />
+                                    <Route exact path="/login/2fa/step-2" element={<TwoFactorAuthenticationWizardStep2 />} />
+                                    <Route exact path="/login/2fa/step-3" element={<TwoFactorAuthenticationWizardStep3 />} />
+                                    <Route exact path="/login/2fa" element={<TwoFactorAuthenticationValidateOnLogin />} />
                                     <Route exact path="/logout" element={<LogoutRedirector />} />
                                     <Route exact path="/verify" element={<EmailVerification />} />
                                     <Route exact path="/forgot-password" element={<ForgotPassword />} />

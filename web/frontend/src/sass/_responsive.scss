@@ -1,0 +1,17 @@
+@media screen and (max-width: 575px) {
+    .table-container {
+        overflow-x: auto;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .custom-hero {
+        height: 500px;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    .custom-hero {
+        height: auto;
+    }
+}

@@ -1,0 +1,167 @@
+// _components.scss
+@import 'variables';
+@import 'mixins';
+
+.playing-video {
+    position: relative;
+
+    img {
+        filter: brightness(30%);
+        object-fit: cover;
+    }
+
+    &>div {
+        position: relative;
+    }
+
+    .fa-play {
+        @include absolute-center;
+        font-size: 2rem;
+        color: $color-light-shade;
+
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+
+    &:after {
+        content: 'Currently Playing';
+        @include shadow-box($color-shadow);
+        font-size: 1rem;
+        color: $color-light-shade;
+        text-align: center;
+        @include absolute-center;
+        top: 65%;
+    }
+}
+
+.graph-box {
+    width: 100%;
+    margin: 0 auto;
+
+    .main-box {
+        width: auto;
+        border-radius: 10px;
+        padding: 20px;
+        @include shadow-box($color-shadow);
+        margin: 0 auto;
+    }
+
+    .graphs {
+        background: linear-gradient(180deg, $color-light-shade 0%, $primary 15%);
+        width: 100%;
+        border-radius: 10px;
+        padding: 20px;
+
+        h1 {
+            font-size: 40px;
+        }
+    }
+
+    .line-graph-box {
+        height: 200px;
+    }
+}
+
+.container {
+    position: relative;
+    width: 50%;
+    max-width: 300px;
+
+    // The overlay effect - lays on top of the container and over the image
+    .overlay {
+        @include overlay-style;
+        font-size: 20px;
+
+        // When you mouse over the container, fade in the overlay title
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.modal-card-head {
+    .progress-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+.table {
+
+    // Apply the primary font to table titles
+    thead {
+        th {
+            font-family: $family-primary;
+        }
+    }
+
+    // Apply the secondary font to table subtitles
+    tbody {
+        td {
+            font-family: $family-secondary;
+        }
+    }
+}
+
+.table-main {
+    table {
+        width: 100%;
+    }
+
+    tbody {
+        tr:hover {
+            background-color: #fafafa;
+        }
+
+        td:nth-last-child(1) {
+            background: linear-gradient(to bottom, $primary, $primary);
+        }
+    }
+
+    .board_info {
+        img {
+            @include img-size(53px, 53px);
+        }
+    }
+}
+
+.figure-img {
+    @include img-size(64px, 64px);
+    display: block;
+    overflow: hidden;
+    border-radius: 50%;
+
+    /* This will make the container round */
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* This will cover the area without stretching the image */
+    }
+}
+
+.media {
+    .icon {
+        background: linear-gradient(180deg, $color-light-shade 0%, $primary 15%);
+        border-radius: 50%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 3em;
+        height: 3em;
+    }
+
+    @media screen and (max-width: 768px) {
+        .media-content {
+            overflow-x: unset !important;
+        }
+    }
+
+}
+
+/* Custom styles for the hero boxes */
+.custom-hero {
+    width: auto;
+}

@@ -1,9 +1,9 @@
 import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue
+    RecoilRoot,
+    atom,
+    selector,
+    useRecoilState,
+    useRecoilValue
 } from 'recoil';
 import { recoilPersist } from 'recoil-persist'
 
@@ -14,20 +14,25 @@ import { recoilPersist } from 'recoil-persist'
 // Control whether the hamburer menu icon was clicked or not. This state is
 // needed by 'TopNavigation' an 'SideNavigation' components.
 export const onHamburgerClickedState = atom({
-  key: 'onHamburgerClicked', // unique ID (with respect to other atoms/selectors)
-  default: false, // default value (aka initial value)
+    key: 'onHamburgerClicked', // unique ID (with respect to other atoms/selectors)
+    default: false, // default value (aka initial value)
 });
 
 // Control what message to display at the top as a banner in the app.
 export const topAlertMessageState = atom({
-  key: 'topBannerAlertMessage',
-  default: "",
+    key: 'topBannerAlertMessage',
+    default: "",
 });
 
 // Control what type of message to display at the top as a banner in the app.
 export const topAlertStatusState = atom({
-  key: 'topBannerAlertStatus',
-  default: "success",
+    key: 'topBannerAlertStatus',
+    default: "success",
+});
+
+export const quizAnswersState = atom({
+    key: 'quizAnswersState', // unique ID (with respect to other atoms/selectors)
+    default: {}, // default value (aka initial value)
 });
 
 ////
@@ -39,27 +44,27 @@ export const topAlertStatusState = atom({
 
 const { persistAtom } = recoilPersist()
 export const currentUserState = atom({
-  key: 'currentUser',
-  default: null,
-  effects_UNSTABLE: [persistAtom],
+    key: 'currentUser',
+    default: null,
+    effects_UNSTABLE: [persistAtom],
 });
 
 export const currentOTPResponseState = atom({
-  key: 'currentOTPResponse',
-  default: null,
-  effects_UNSTABLE: [persistAtom],
+    key: 'currentOTPResponse',
+    default: null,
+    effects_UNSTABLE: [persistAtom],
 });
 
 export const workoutProgramDetailState = atom({
-  key: 'workoutProgramDetail',
-  default: null,
-  effects_UNSTABLE: [persistAtom],
+    key: 'workoutProgramDetail',
+    default: null,
+    effects_UNSTABLE: [persistAtom],
 });
 
 export const currentWorkoutSessionState = atom({
-  key: 'currentWorkoutSession',
-  default: null,
-  effects_UNSTABLE: [persistAtom],
+    key: 'currentWorkoutSession',
+    default: null,
+    effects_UNSTABLE: [persistAtom],
 });
 
 // --- Offers --- //
