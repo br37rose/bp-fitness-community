@@ -59,7 +59,7 @@ func (impl *GoogleFitAppControllerImpl) GoogleCallback(ctx context.Context, stat
 				////
 				//// End transaction with success.
 				////
-				return &GoogleCallbackResponse{URL: impl.Config.FitBitApp.RegistrationSuccessRedirectURL}, nil
+				return &GoogleCallbackResponse{URL: impl.Config.GoogleCloudPlatform.SuccessRedirectURI}, nil
 			}
 		}
 
