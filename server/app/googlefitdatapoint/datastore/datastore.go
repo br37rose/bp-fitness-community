@@ -85,6 +85,7 @@ type GoogleFitDataPointListFilter struct {
 	ExcludeArchived bool
 	SearchText      string
 	Status          int8
+	DataTypeNames   []string
 }
 
 type GoogleFitDataPointListResult struct {
@@ -106,6 +107,7 @@ type GoogleFitDataPointStorer interface {
 	// ListByFilter(ctx context.Context, m *GoogleFitDataPointListFilter) (*GoogleFitDataPointListResult, error)
 	// ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointListFilter) ([]*GoogleFitDataPointAsSelectOption, error)
 	ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointListResult, error)
+	ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error)
 	// DeleteByID(ctx context.Context, id primitive.ObjectID) error
 	// CheckIfExistsByNameInOrgBranch(ctx context.Context, name string, orgID primitive.ObjectID, branchID primitive.ObjectID) (bool, error)
 	// // //TODO: Add more...

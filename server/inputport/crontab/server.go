@@ -74,6 +74,7 @@ func (port *crontabInputPort) Run() {
 
 	// port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob) // every minute TOOD: ADD BACK WHEN READY
 	// port.Crontab.MustAddJob("*/5 * * * *", port.GoogleFitAppCrontab.PullDataFromGoogleJob)    // every 5 minutes TOOD: ADD BACK WHEN READY
+	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.ProcessQueuedDataTask) // every minute
 
 	// The following section will include code that takes the raw data points
 	port.Crontab.MustAddJob("* * * * *", port.AggregateThisHour)    // every minute
@@ -124,6 +125,7 @@ func (port *crontabInputPort) Run() {
 
 	// port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob() //TODO: Comment out when ready.
 	// port.GoogleFitAppCrontab.PullDataFromGoogleJob()      //TODO: Comment out when ready.
+	port.GoogleFitAppCrontab.ProcessQueuedDataTask() //TODO: Comment out when ready.
 }
 
 func (port *crontabInputPort) Shutdown() {
