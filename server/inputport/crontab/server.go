@@ -67,7 +67,7 @@ func (port *crontabInputPort) Run() {
 	// // The following section will include fitbit web-services interaction
 	// // related background tasks that are important for fetching or simulating
 	// // fitbit data.
-	// port.Crontab.MustAddJob("*/15 * * * *", port.pullFitBitAppRawData)    // every 15 minutes
+	// port.Crontab.MustAddJob("*/15 * * * *", port.pullGoogleFitAppRawData)    // every 15 minutes
 	// port.Crontab.MustAddJob("*/5 * * * *", port.processAllQueuedData)     // every 5 minutes
 	// port.Crontab.MustAddJob("* * * * *", port.processAllActiveSimulators) // every minute
 	//----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ func (port *crontabInputPort) Run() {
 
 	// // (For debugging purposes only)
 	// // Run the following code on startup of the application.
-	// port.pullFitBitAppRawData()
+	// port.pullGoogleFitAppRawData()
 	// port.processAllQueuedData()
 	// port.processAllActiveSimulators()
 
@@ -120,7 +120,7 @@ func (port *crontabInputPort) Run() {
 	// port.AggregateLastMonth()
 	// port.AggregateThisYear()
 	// port.AggregateLastYear()
-	// port.RankToday()
+	port.RankToday()
 	// port.RankThisISOWeek()
 	// port.RankThisMonth()
 	// port.RankThisYear()

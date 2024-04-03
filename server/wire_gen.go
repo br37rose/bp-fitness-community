@@ -166,7 +166,7 @@ func InitializeEvent() Application {
 	googleFitDataPointStorer := datastore19.NewDatastore(conf, slogLogger, client)
 	aggregatePointController := controller17.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, userStorer, googleFitAppStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer)
 	handler15 := httptransport16.NewHandler(slogLogger, aggregatePointController)
-	rankPointController := controller18.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, userStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
+	rankPointController := controller18.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, userStorer, googleFitAppStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	handler16 := httptransport17.NewHandler(slogLogger, rankPointController)
 	biometricController := controller19.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, userStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	handler17 := httptransport18.NewHandler(slogLogger, biometricController)
