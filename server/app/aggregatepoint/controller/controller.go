@@ -10,7 +10,8 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
-	googlefitdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
+	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
+	gfdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	organization_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
@@ -44,7 +45,8 @@ type AggregatePointControllerImpl struct {
 	Kmutex                   kmutex.Provider
 	OrganizationStorer       organization_s.OrganizationStorer
 	UserStorer               user_s.UserStorer
-	GoogleFitDataPointStorer googlefitdp_s.GoogleFitDataPointStorer
+	GoogleFitAppStorer       gfa_ds.GoogleFitAppStorer
+	GoogleFitDataPointStorer gfdp_s.GoogleFitDataPointStorer
 	DataPointStorer          dp_s.DataPointStorer
 	AggregatePointStorer     ap_s.AggregatePointStorer
 }
@@ -58,7 +60,8 @@ func NewController(
 	kmutexp kmutex.Provider,
 	org_storer organization_s.OrganizationStorer,
 	usr_storer user_s.UserStorer,
-	gfdp_storer googlefitdp_s.GoogleFitDataPointStorer,
+	gfa_storer gfa_ds.GoogleFitAppStorer,
+	gfdp_storer gfdp_s.GoogleFitDataPointStorer,
 	dp_storer dp_s.DataPointStorer,
 	ap_storer ap_s.AggregatePointStorer,
 ) AggregatePointController {
@@ -72,6 +75,7 @@ func NewController(
 		Kmutex:                   kmutexp,
 		OrganizationStorer:       org_storer,
 		UserStorer:               usr_storer,
+		GoogleFitAppStorer:       gfa_storer,
 		GoogleFitDataPointStorer: gfdp_storer,
 		DataPointStorer:          dp_storer,
 		AggregatePointStorer:     ap_storer,

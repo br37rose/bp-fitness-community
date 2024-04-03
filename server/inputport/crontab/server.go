@@ -83,12 +83,14 @@ func (port *crontabInputPort) Run() {
 	port.Crontab.MustAddJob("* * * * *", port.AggregateYesterday)   // every minute
 	port.Crontab.MustAddJob("* * * * *", port.AggregateThisISOWeek) // every minute
 	port.Crontab.MustAddJob("* * * * *", port.AggregateLastISOWeek) // every minute
-	port.Crontab.MustAddJob("* * * * *", port.AggregateThisMonth)   // every hour
-	port.Crontab.MustAddJob("* * * * *", port.AggregateLastMonth)   // every hour
-	port.Crontab.MustAddJob("* * * * *", port.AggregateThisYear)    // every hour
-	port.Crontab.MustAddJob("* * * * *", port.AggregateLastYear)    // every hour
 
-	// The code below is commented out until we need to use it for performance reasons.
+	// TODO: Comment the following when going live.
+	port.Crontab.MustAddJob("* * * * *", port.AggregateThisMonth) // every hour
+	port.Crontab.MustAddJob("* * * * *", port.AggregateLastMonth) // every hour
+	port.Crontab.MustAddJob("* * * * *", port.AggregateThisYear)  // every hour
+	port.Crontab.MustAddJob("* * * * *", port.AggregateLastYear)  // every hour
+
+	// TODO: The code below is commented out until we need to use it for performance reasons.
 	// port.Crontab.MustAddJob("0 * * * *", port.AggregateThisMonth)   // every hour
 	// port.Crontab.MustAddJob("0 * * * *", port.AggregateLastMonth)   // every hour
 	// port.Crontab.MustAddJob("0 0 * * 0", port.AggregateThisYear)    // every sunday (Code via https://www.linuxshelltips.com/cron-run-every-sunday-at-midnight/)

@@ -48,10 +48,10 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 				slog.Any("error", err))
 			return err
 		}
-		// // For debugging purposes only.
-		// impl.Logger.Debug("created aggregate point",
-		// 	slog.String("metric_id", metricID.Hex()),
-		// 	slog.Int("period", int(period)))
+		// For debugging purposes only.
+		impl.Logger.Debug("created aggregate point",
+			slog.String("metric_id", metricID.Hex()),
+			slog.Int("period", int(period)))
 	} else {
 		// CASE 2 OF 2: Update
 		ap.MetricID = metricID
@@ -68,10 +68,10 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 				slog.Any("error", err))
 			return err
 		}
-		// // For debugging purposes only.
-		// impl.Logger.Debug("updated aggregate point",
-		// 	slog.String("metric_id", metricID.Hex()),
-		// 	slog.Int("period", int(period)))
+		// For debugging purposes only.
+		impl.Logger.Debug("updated aggregate point",
+			slog.String("metric_id", metricID.Hex()),
+			slog.Int("period", int(period)))
 	}
 	return nil
 }

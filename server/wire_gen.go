@@ -164,7 +164,7 @@ func InitializeEvent() Application {
 	dataPointController := controller16.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, userStorer, dataPointStorer)
 	handler14 := httptransport15.NewHandler(slogLogger, dataPointController)
 	googleFitDataPointStorer := datastore19.NewDatastore(conf, slogLogger, client)
-	aggregatePointController := controller17.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, userStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer)
+	aggregatePointController := controller17.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, userStorer, googleFitAppStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer)
 	handler15 := httptransport16.NewHandler(slogLogger, aggregatePointController)
 	rankPointController := controller18.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, userStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	handler16 := httptransport17.NewHandler(slogLogger, rankPointController)
