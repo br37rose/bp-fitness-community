@@ -9,10 +9,9 @@ import (
 	"github.com/bartmika/timekit"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
-	// fba_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitbitapp/datastore"
 )
 
-func (impl *AggregatePointControllerImpl) AggregateLastMonthForAllActiveFitBitApps(ctx context.Context) error {
+func (impl *AggregatePointControllerImpl) AggregateLastMonthForAllActiveGoogleFitApps(ctx context.Context) error {
 	res, err := impl.GoogleFitAppStorer.ListIDsByStatus(ctx, gfa_ds.StatusActive)
 	if err != nil {
 		impl.Logger.Error("failed listing by active status",

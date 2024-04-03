@@ -355,11 +355,11 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 	case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "google" && p[4] == "auth":
 		port.GoogleFitApp.GoogleCallback(w, r)
 
-	// case n == 4 && p[1] == "v1" && p[2] == "fitbit" && p[3] == "simulators":
+	// case n == 4 && p[1] == "v1" && p[2] == "googlefit" && p[3] == "simulators":
 	// 	port.FitBitApp.CreateSimulator(w, r)
-	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "auth":
+	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "googlefit" && p[4] == "auth":
 	// 	port.FitBitApp.Auth(w, r)
-	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "subscriber":
+	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "googlefit" && p[4] == "subscriber":
 	// 	port.FitBitApp.Subscriber(w, r)
 
 	// --- DATA POINT --- //

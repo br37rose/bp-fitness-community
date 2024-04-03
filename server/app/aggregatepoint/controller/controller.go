@@ -22,16 +22,16 @@ import (
 // AggregatePointController Interface for organization business logic controller.
 type AggregatePointController interface {
 	ListByFilter(ctx context.Context, f *ap_s.AggregatePointPaginationListFilter) (*ap_s.AggregatePointPaginationListResult, error)
-	AggregateThisHourForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastHourForAllActiveFitBitApps(ctx context.Context) error
-	AggregateTodayForAllActiveFitBitApps(ctx context.Context) error
-	AggregateYesterdayForAllActiveFitBitApps(ctx context.Context) error
-	AggregateThisISOWeekForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastISOWeekForAllActiveFitBitApps(ctx context.Context) error
-	AggregateThisMonthForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastMonthForAllActiveFitBitApps(ctx context.Context) error
-	AggregateThisYearForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastYearForAllActiveFitBitApps(ctx context.Context) error
+	AggregateThisHourForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastHourForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateTodayForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateYesterdayForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateThisISOWeekForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastISOWeekForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateThisMonthForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastMonthForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateThisYearForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastYearForAllActiveGoogleFitApps(ctx context.Context) error
 	GetSummary(ctx context.Context, userID primitive.ObjectID) (*AggregatePointSummaryResponse, error)
 }
 

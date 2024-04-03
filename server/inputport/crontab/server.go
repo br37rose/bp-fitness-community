@@ -64,10 +64,10 @@ func (port *crontabInputPort) Run() {
 	// port.Crontab.MustAddJob("* * * * *", port.ping)                 // every minute
 
 	//----------------------------------------------------------------------------
-	// // The following section will include fitbit web-services interaction
-	// // related background tasks that are important for fetching or simulating
-	// // fitbit data.
-	// port.Crontab.MustAddJob("*/15 * * * *", port.pullGoogleFitAppRawData)    // every 15 minutes
+	// The following section will include Google Fit web-services interaction
+	// related background tasks that are important for fetching or simulating
+	// Google Fit data.
+	// port.Crontab.MustAddJob("*/15 * * * *", port.pullGoogleFitAppRawData) // every 15 minutes
 	// port.Crontab.MustAddJob("*/5 * * * *", port.processAllQueuedData)     // every 5 minutes
 	// port.Crontab.MustAddJob("* * * * *", port.processAllActiveSimulators) // every minute
 	//----------------------------------------------------------------------------

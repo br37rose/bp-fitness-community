@@ -11,7 +11,7 @@ import (
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 )
 
-func (impl *AggregatePointControllerImpl) AggregateThisYearForAllActiveFitBitApps(ctx context.Context) error {
+func (impl *AggregatePointControllerImpl) AggregateThisYearForAllActiveGoogleFitApps(ctx context.Context) error {
 	res, err := impl.GoogleFitAppStorer.ListIDsByStatus(ctx, gfa_ds.StatusActive)
 	if err != nil {
 		impl.Logger.Error("failed listing by active status",
