@@ -133,7 +133,10 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	//// Get various data.
 	////
 
-	// Variable used to track the latest fetch time we've done.
+	// Variable used to track the latest fetch time we've done. Take the time
+	// at this moment and then hold onto it. There will be time delay for
+	// running all of the calls below. Afterwords we will save this variables
+	// time as the most recent time of our fetch.
 	lastFetchedAt := time.Now()
 
 	// --- Activity --- //

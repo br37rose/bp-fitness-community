@@ -9,6 +9,7 @@ import (
 	"github.com/bartmika/timekit"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (impl *AggregatePointControllerImpl) AggregateLastHourForAllActiveGoogleFitApps(ctx context.Context) error {
@@ -48,10 +49,68 @@ func (impl *AggregatePointControllerImpl) AggregateLastHourForAllActiveGoogleFit
 		// 	slog.Any("start", start),
 		// 	slog.Any("end", end))
 
-		if err := impl.aggregateForMetric(ctx, gfa.HeartRateBPMMetricID, ap_s.PeriodHour, start, end); err != nil {
-			impl.Logger.Error("failed aggregating",
-				slog.Any("google_fit_app_id", gfaID),
-				slog.Any("error", err))
+		// DEVELOPERS NOTE:
+		// The following code below will aggregate health tracker sensor data
+		// for the following data types our device supports.
+
+		/*
+			################
+			DEVELOPERS NOTE:
+			################
+			THE FOLLOWING CONSTANTS ARE THE HEALTH TRACKER SENSORS OUR CODE SUPPORTS WHICH
+			ARE MARKED WITH THE `[DONE]` TEXT.
+
+			- - - - - - - - - - - - - - - - - - - - - - - - - - -
+			DataTypeNameActivitySegment
+			DataTypeNameBasalMetabolicRate
+			DataTypeNameCaloriesBurned        [DONE]
+			DataTypeNameCyclingPedalingCadence
+			DataTypeNameCyclingPedalingCumulative
+			DataTypeNameHeartPoints
+			DataTypeNameMoveMinutes
+			DataTypeNamePower
+			DataTypeNameStepCountCadence
+			DataTypeNameStepCountDelta        [DONE]
+			DataTypeNameWorkout
+			- - - - - - - - - - - - - - - - - - - - - - - - - - -
+			DataTypeNameCyclingWheelRevolutionRPM
+			DataTypeNameCyclingWheelRevolutionCumulative
+			DataTypeNameDistanceDelta
+			DataTypeNameLocationSample
+			DataTypeNameSpeed
+			- - - - - - - - - - - - - - - - - - - - - - - - - - -
+			DataTypeNameHydration
+			DataTypeNameNutrition
+			- - - - - - - - - - - - - - - - - - - - - - - - - - -
+			DataTypeNameBloodGlucose
+			DataTypeNameBloodPressure
+			DataTypeNameBodyFatPercentage
+			DataTypeNameBodyTemperature
+			DataTypeNameCervicalMucus
+			DataTypeNameCervicalPosition
+			DataTypeNameHeartRateBPM     [DONE]
+			DataTypeNameHeight
+			DataTypeNameMenstruation
+			DataTypeNameOvulationTest
+			DataTypeNameOxygenSaturation
+			DataTypeNameSleep
+			DataTypeNameVaginalSpotting
+			DataTypeNameWeight
+			- - -
+		*/
+		metricIDs := []primitive.ObjectID{
+			gfa.CaloriesBurnedMetricID,
+			gfa.StepCountDeltaMetricID,
+			gfa.HeartRateBPMMetricID,
+		}
+
+		for _, metricID := range metricIDs {
+			if err := impl.aggregateForMetric(ctx, metricID, ap_s.PeriodHour, start, end); err != nil {
+				impl.Logger.Error("failed aggregating",
+					slog.Any("google_fit_app_id", gfaID),
+					slog.Any("metric_id", metricID),
+					slog.Any("error", err))
+			}
 		}
 	}
 	return nil

@@ -134,51 +134,51 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 	//// Heart Rate
 	////
 
-	if !u.PrimaryHealthTrackingDeviceHeartRateMetricID.IsZero() {
-		if err := impl.generateSummaryForHR(ctx, u, res); err != nil {
-			impl.Logger.Error("failed generating my summary data for heart rate",
-				slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-				slog.Any("error", err))
-			return nil, err
-		}
-		if err := impl.generateSummaryDataForHR(ctx, u, res); err != nil {
-			impl.Logger.Error("failed generating my summary data for heart rate",
-				slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-				slog.Any("error", err))
-			return nil, err
-		}
-		if err := impl.generateSummaryRankingsForHR(ctx, u, res); err != nil {
-			impl.Logger.Error("failed generating my summary rankings for heart rate",
-				slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-				slog.Any("error", err))
-			return nil, err
-		}
-	}
-
-	////
-	//// Step Count
-	////
-
-	if !u.PrimaryHealthTrackingDeviceStepsCountMetricID.IsZero() {
-		if err := impl.generateSummaryForStepCounter(ctx, u, res); err != nil {
-			impl.Logger.Error("failed generating my summary rankings for steps counter",
-				slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
-				slog.Any("error", err))
-			return nil, err
-		}
-		if err := impl.generateSummaryDataForStepsCounter(ctx, u, res); err != nil {
-			impl.Logger.Error("failed generating my summary rankings for steps counter",
-				slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
-				slog.Any("error", err))
-			return nil, err
-		}
-		if err := impl.generateSummaryRankingsForStepsCounter(ctx, u, res); err != nil {
-			impl.Logger.Error("failed generating my summary rankings for steps counter",
-				slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
-				slog.Any("error", err))
-			return nil, err
-		}
-	}
+	// if !u.PrimaryHealthTrackingDeviceHeartRateMetricID.IsZero() {
+	// 	if err := impl.generateSummaryForHR(ctx, u, res); err != nil {
+	// 		impl.Logger.Error("failed generating my summary data for heart rate",
+	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+	// 			slog.Any("error", err))
+	// 		return nil, err
+	// 	}
+	// 	if err := impl.generateSummaryDataForHR(ctx, u, res); err != nil {
+	// 		impl.Logger.Error("failed generating my summary data for heart rate",
+	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+	// 			slog.Any("error", err))
+	// 		return nil, err
+	// 	}
+	// 	if err := impl.generateSummaryRankingsForHR(ctx, u, res); err != nil {
+	// 		impl.Logger.Error("failed generating my summary rankings for heart rate",
+	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+	// 			slog.Any("error", err))
+	// 		return nil, err
+	// 	}
+	// }
+	//
+	// ////
+	// //// Step Count
+	// ////
+	//
+	// if !u.PrimaryHealthTrackingDeviceStepsCountMetricID.IsZero() {
+	// 	if err := impl.generateSummaryForStepCounter(ctx, u, res); err != nil {
+	// 		impl.Logger.Error("failed generating my summary rankings for steps counter",
+	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
+	// 			slog.Any("error", err))
+	// 		return nil, err
+	// 	}
+	// 	if err := impl.generateSummaryDataForStepsCounter(ctx, u, res); err != nil {
+	// 		impl.Logger.Error("failed generating my summary rankings for steps counter",
+	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
+	// 			slog.Any("error", err))
+	// 		return nil, err
+	// 	}
+	// 	if err := impl.generateSummaryRankingsForStepsCounter(ctx, u, res); err != nil {
+	// 		impl.Logger.Error("failed generating my summary rankings for steps counter",
+	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
+	// 			slog.Any("error", err))
+	// 		return nil, err
+	// 	}
+	// }
 
 	return res, nil
 }

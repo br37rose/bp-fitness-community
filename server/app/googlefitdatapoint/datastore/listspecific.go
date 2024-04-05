@@ -28,3 +28,15 @@ func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatusInDataTypeNames(ctx c
 	}
 	return impl.ListByFilter(ctx, f)
 }
+
+func (impl GoogleFitDataPointStorerImpl) ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error) {
+	f := &GoogleFitDataPointListFilter{
+		Cursor:        primitive.NilObjectID,
+		PageSize:      1_000_000_000,
+		SortField:     "_id",
+		SortOrder:     1,
+		Status:        StatusActive,
+		DataTypeNames: dataTypeNames,
+	}
+	return impl.ListByFilter(ctx, f)
+}

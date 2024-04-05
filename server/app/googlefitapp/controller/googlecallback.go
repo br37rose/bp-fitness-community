@@ -167,7 +167,6 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 			PowerMetricID:                            primitive.NewObjectID(),
 			StepCountDeltaMetricID:                   primitive.NewObjectID(),
 			StepCountCadenceMetricID:                 primitive.NewObjectID(),
-			StepsCountMetricID:                       primitive.NewObjectID(),
 			WorkoutMetricID:                          primitive.NewObjectID(),
 			CyclingWheelRevolutionRPMMetricID:        primitive.NewObjectID(),
 			CyclingWheelRevolutionCumulativeMetricID: primitive.NewObjectID(),
@@ -185,10 +184,9 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 			OxygenSaturationMetricID:                 primitive.NewObjectID(),
 			SleepMetricID:                            primitive.NewObjectID(),
 			WeightMetricID:                           primitive.NewObjectID(),
-
-			IsTestMode:               false,
-			SimulatorAlgorithm:       "",
-			RequiresGoogleLoginAgain: false,
+			IsTestMode:                               false,
+			SimulatorAlgorithm:                       "",
+			RequiresGoogleLoginAgain:                 false,
 		}
 		if err := impl.GoogleFitAppStorer.Create(sessCtx, gfa); err != nil {
 			impl.Logger.Error("failed creating google fit app in database",
@@ -198,8 +196,43 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 				slog.Any("error", err))
 			return err
 		}
-
 		impl.Logger.Debug("created new google fit app")
+
+		// Make a copy of all our Google Fit App to the user's account so the
+		// user can take advantage of this throughout our app. This copy only
+		// happens once when the user registers for the first time, not when
+		// the re-login again.
+		u.PrimaryHealthTrackingDevice = &u_s.PrimaryHealthTrackingDevice{
+			GoogleFitAppID:                           gfa.ID,
+			ActivitySegmentMetricID:                  gfa.ActivitySegmentMetricID,
+			BasalMetabolicRateMetricID:               gfa.BasalMetabolicRateMetricID,
+			CaloriesBurnedMetricID:                   gfa.CaloriesBurnedMetricID,
+			CyclingPedalingCadenceMetricID:           gfa.CyclingPedalingCadenceMetricID,
+			CyclingPedalingCumulativeMetricID:        gfa.CyclingPedalingCumulativeMetricID,
+			HeartPointsMetricID:                      gfa.HeartPointsMetricID,
+			MoveMinutesMetricID:                      gfa.MoveMinutesMetricID,
+			PowerMetricID:                            gfa.PowerMetricID,
+			StepCountDeltaMetricID:                   gfa.StepCountDeltaMetricID,
+			StepCountCadenceMetricID:                 gfa.StepCountCadenceMetricID,
+			WorkoutMetricID:                          gfa.WorkoutMetricID,
+			CyclingWheelRevolutionRPMMetricID:        gfa.CyclingWheelRevolutionRPMMetricID,
+			CyclingWheelRevolutionCumulativeMetricID: gfa.CyclingWheelRevolutionCumulativeMetricID,
+			DistanceDeltaMetricID:                    gfa.DistanceDeltaMetricID,
+			LocationSampleMetricID:                   gfa.LocationSampleMetricID,
+			SpeedMetricID:                            gfa.SpeedMetricID,
+			HydrationMetricID:                        gfa.HydrationMetricID,
+			NutritionMetricID:                        gfa.NutritionMetricID,
+			BloodGlucoseMetricID:                     gfa.BloodGlucoseMetricID,
+			BloodPressureMetricID:                    gfa.BloodPressureMetricID,
+			BodyFatPercentageMetricID:                gfa.BodyFatPercentageMetricID,
+			BodyTemperatureMetricID:                  gfa.BodyTemperatureMetricID,
+			HeartRateBPMMetricID:                     gfa.HeartRateBPMMetricID,
+			HeightMetricID:                           gfa.HeightMetricID,
+			OxygenSaturationMetricID:                 gfa.OxygenSaturationMetricID,
+			SleepMetricID:                            gfa.SleepMetricID,
+			WeightMetricID:                           gfa.WeightMetricID,
+		}
+		impl.Logger.Debug("made copy of new google fit app with user account")
 	} else {
 		gfa.Token = token
 		gfa.RequiresGoogleLoginAgain = false
@@ -219,9 +252,6 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 	// Update our user with our new Google Fit registration / login.
 	u.PrimaryHealthTrackingDeviceType = u_s.UserPrimaryHealthTrackingDeviceTypeGoogleFit
 	u.PrimaryHealthTrackingDeviceRequiresLoginAgain = false
-	u.PrimaryHealthTrackingDeviceHeartRateMetricID = gfa.HeartRateBPMMetricID
-	u.PrimaryHealthTrackingDeviceStepsCountMetricID = gfa.StepsCountMetricID
-	u.GoogleFitAppID = gfa.ID
 	u.ModifiedAt = time.Now()
 	if err := impl.UserStorer.UpdateByID(sessCtx, u); err != nil {
 		impl.Logger.Error("failed updating user by id",

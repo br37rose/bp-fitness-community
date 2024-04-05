@@ -45,8 +45,50 @@ const (
 	SubscriptionStatusTrialing                    = "trialing"
 	SubscriptionStatusUnpaid                      = "unpaid"
 	UserPrimaryHealthTrackingDeviceTypeNone       = 0
-	UserPrimaryHealthTrackingDeviceTypeGoogleFit     = 1
+	UserPrimaryHealthTrackingDeviceTypeGoogleFit  = 1
 )
+
+// PrimaryHealthTrackingDevice represents the health tracker the user has
+// enabled on their person. The fields in this structure are primary keys to
+// the various health sensors the device supports. If any primary key here
+// is zero then the health tracker decice does not support that sensor. The
+// fields in here are also a copy from the `GoogleFitApp` entity and this
+// applications maintains a one-to-one relationship with that model, therefore,
+// if anything changes in `GoogleFitApp` then this user's entity will update.
+type PrimaryHealthTrackingDevice struct {
+	// GoogleFitAppID is the unique identifier of the Google fit authorized device in
+	// our system. The authorized device information is found in the the
+	// `FitBitApp` domain.
+	GoogleFitAppID primitive.ObjectID `bson:"googlefit_app_id" json:"-"`
+
+	ActivitySegmentMetricID                  primitive.ObjectID `bson:"activity_segment_metric_id" json:"activity_segment_metric_id,omitempty"`
+	BasalMetabolicRateMetricID               primitive.ObjectID `bson:"basal_metabolic_rate_metric_id" json:"basal_metabolic_rate_metric_id,omitempty"`
+	CaloriesBurnedMetricID                   primitive.ObjectID `bson:"calories_burned_metric_id" json:"calories_burned_metric_id,omitempty"`
+	CyclingPedalingCadenceMetricID           primitive.ObjectID `bson:"cycling_pedaling_cadence_metric_id" json:"cycling_pedaling_cadence_metric_id,omitempty"`
+	CyclingPedalingCumulativeMetricID        primitive.ObjectID `bson:"cycling_pedaling_cumulative_metric_id" json:"cycling_pedaling_cumulative_metric_id,omitempty"`
+	HeartPointsMetricID                      primitive.ObjectID `bson:"heart_points_id" json:"heart_points_id,omitempty"`
+	MoveMinutesMetricID                      primitive.ObjectID `bson:"move_minutes_metric_id" json:"move_minutes_metric_id,omitempty"`
+	PowerMetricID                            primitive.ObjectID `bson:"power_metric_id" json:"power_metric_id,omitempty"`
+	StepCountDeltaMetricID                   primitive.ObjectID `bson:"step_count_delta_metric_id" json:"step_count_delta_metric_id,omitempty"`
+	StepCountCadenceMetricID                 primitive.ObjectID `bson:"step_count_cadence_metric_id" json:"step_count_cadence_metric_id,omitempty"`
+	WorkoutMetricID                          primitive.ObjectID `bson:"workout_metric_id" json:"workout_metric_id,omitempty"` // is deprecated.
+	CyclingWheelRevolutionRPMMetricID        primitive.ObjectID `bson:"cycling_wheel_revolution_rpm_metric_id" json:"cycling_wheel_revolution_rpm_metric_id,omitempty"`
+	CyclingWheelRevolutionCumulativeMetricID primitive.ObjectID `bson:"cycling_wheel_revolution_cumulative_metric_id" json:"cycling_wheel_revolution_cumulative_metric_id,omitempty"`
+	DistanceDeltaMetricID                    primitive.ObjectID `bson:"distance_delta_metric_id" json:"distance_delta_metric_id,omitempty"`
+	LocationSampleMetricID                   primitive.ObjectID `bson:"location_sample_metric_id" json:"location_sample_metric_id,omitempty"`
+	SpeedMetricID                            primitive.ObjectID `bson:"speed_metric_id" json:"speed_metric_id,omitempty"`
+	HydrationMetricID                        primitive.ObjectID `bson:"hydration_metric_id" json:"hydration_metric_id,omitempty"`
+	NutritionMetricID                        primitive.ObjectID `bson:"nutrition_metric_id" json:"nutrition_metric_id,omitempty"`
+	BloodGlucoseMetricID                     primitive.ObjectID `bson:"blood_glucose_metric_id" json:"blood_glucose_metric_id,omitempty"`
+	BloodPressureMetricID                    primitive.ObjectID `bson:"blood_pressure_metric_id" json:"blood_pressure_metric_id,omitempty"`
+	BodyFatPercentageMetricID                primitive.ObjectID `bson:"body_fat_percentage_metric_id" json:"body_fat_percentage_metric_id,omitempty"`
+	BodyTemperatureMetricID                  primitive.ObjectID `bson:"body_temperature_percentage_metric_id" json:"body_temperature_percentage_metric_id,omitempty"`
+	HeartRateBPMMetricID                     primitive.ObjectID `bson:"heart_rate_bpm_metric_id" json:"heart_rate_bpm_metric_id,omitempty"`
+	HeightMetricID                           primitive.ObjectID `bson:"height_metric_id" json:"height_metric_id,omitempty"`
+	OxygenSaturationMetricID                 primitive.ObjectID `bson:"oxygen_saturation_metric_id" json:"oxygen_saturation_metric_id,omitempty"`
+	SleepMetricID                            primitive.ObjectID `bson:"sleep_metric_id" json:"sleep_metric_id,omitempty"`
+	WeightMetricID                           primitive.ObjectID `bson:"weight_metric_id" json:"weight_metric_id,omitempty"`
+}
 
 // UserLite struct represents the current user but minimal view which is enough
 // for the user to utilize the frontend. To get further detailed view then we
@@ -93,13 +135,7 @@ type UserLite struct {
 	// user is using with our system.
 	PrimaryHealthTrackingDeviceType int8 `bson:"primary_health_tracking_device_type" json:"primary_health_tracking_device_type"`
 
-	// HeartRateMetricID is the unique identification used to tie the user's
-	// heart rate data to.
-	PrimaryHealthTrackingDeviceHeartRateMetricID primitive.ObjectID `bson:"primary_health_tracking_device_heart_rate_metric_id" json:"primary_health_tracking_device_heart_rate_metric_id,omitempty"`
-
-	// StepsCountMetricID is the unique identification used to tie the user's
-	// steps count data to.
-	PrimaryHealthTrackingDeviceStepsCountMetricID primitive.ObjectID `bson:"primary_health_tracking_device_steps_count_metric_id" json:"primary_health_tracking_device_steps_count_metric_id,omitempty"`
+	PrimaryHealthTrackingDevice *PrimaryHealthTrackingDevice `bson:"primary_health_tracking_device" json:"primary_health_tracking_device"`
 
 	// Tags stores all the user created tags for the user's account.
 	Tags []*UserTag `bson:"tags" json:"tags"`
@@ -212,16 +248,15 @@ type User struct {
 
 	// PrimaryHealthTrackingDeviceType indicates what primary health tracking device the
 	// user is using with our system.
-	PrimaryHealthTrackingDeviceType               int8 `bson:"primary_health_tracking_device_type" json:"primary_health_tracking_device_type"`
+	PrimaryHealthTrackingDeviceType int8 `bson:"primary_health_tracking_device_type" json:"primary_health_tracking_device_type"`
+
+	// PrimaryHealthTrackingDeviceRequiresLoginAgain indicates whether the user
+	// must login through the third-party authentication to be granted access
+	// again to their health data by the third-party health data provider.
 	PrimaryHealthTrackingDeviceRequiresLoginAgain bool `bson:"primary_health_tracking_device_requires_login_again" json:"primary_health_tracking_device_requires_login_again"`
 
-	// HeartRateMetricID is the unique identification used to tie the user's
-	// heart rate data to.
-	PrimaryHealthTrackingDeviceHeartRateMetricID primitive.ObjectID `bson:"primary_health_tracking_device_heart_rate_metric_id" json:"primary_health_tracking_device_heart_rate_metric_id,omitempty"`
-
-	// StepsCountMetricID is the unique identification used to tie the user's
-	// steps count data to.
-	PrimaryHealthTrackingDeviceStepsCountMetricID primitive.ObjectID `bson:"primary_health_tracking_device_steps_count_metric_id" json:"primary_health_tracking_device_steps_count_metric_id,omitempty"`
+	// PrimaryHealthTrackingDevice is the device the user has enabled.
+	PrimaryHealthTrackingDevice *PrimaryHealthTrackingDevice `bson:"primary_health_tracking_device" json:"primary_health_tracking_device"`
 
 	AvatarObjectExpiry time.Time `bson:"avatar_object_expiry" json:"avatar_object_expiry"`
 	AvatarObjectURL    string    `bson:"avatar_object_url" json:"avatar_object_url"`
@@ -407,14 +442,13 @@ func ToUserLite(u *User) *UserLite {
 		PaymentProcessorName:            u.PaymentProcessorName,
 		StripeSubscription:              u.StripeSubscription,
 		PrimaryHealthTrackingDeviceType: u.PrimaryHealthTrackingDeviceType,
-		PrimaryHealthTrackingDeviceHeartRateMetricID:  u.PrimaryHealthTrackingDeviceHeartRateMetricID,
-		PrimaryHealthTrackingDeviceStepsCountMetricID: u.PrimaryHealthTrackingDeviceStepsCountMetricID,
-		Tags:               u.Tags,
-		AvatarObjectExpiry: u.AvatarObjectExpiry,
-		AvatarObjectURL:    u.AvatarObjectURL,
-		AvatarObjectKey:    u.AvatarObjectKey,
-		AvatarFileType:     u.AvatarFileType,
-		AvatarFileName:     u.AvatarFileName,
+		PrimaryHealthTrackingDevice:     u.PrimaryHealthTrackingDevice,
+		Tags:                            u.Tags,
+		AvatarObjectExpiry:              u.AvatarObjectExpiry,
+		AvatarObjectURL:                 u.AvatarObjectURL,
+		AvatarObjectKey:                 u.AvatarObjectKey,
+		AvatarFileType:                  u.AvatarFileType,
+		AvatarFileName:                  u.AvatarFileName,
 	}
 }
 

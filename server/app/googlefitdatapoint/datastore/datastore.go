@@ -108,6 +108,7 @@ type GoogleFitDataPointStorer interface {
 	// ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointListFilter) ([]*GoogleFitDataPointAsSelectOption, error)
 	ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointListResult, error)
 	ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error)
+	ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error)
 	// DeleteByID(ctx context.Context, id primitive.ObjectID) error
 	// CheckIfExistsByNameInOrgBranch(ctx context.Context, name string, orgID primitive.ObjectID, branchID primitive.ObjectID) (bool, error)
 	// // //TODO: Add more...
