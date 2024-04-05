@@ -73,10 +73,10 @@ func (port *crontabInputPort) Run() {
 	// port.AggregateLastMonth()
 	// port.AggregateThisYear()
 	// port.AggregateLastYear()
-	// port.RankToday() //TODO: Comment out when ready.
-	// port.RankThisISOWeek() //TODO: Comment out when ready.
-	// port.RankThisMonth() //TODO: Comment out when ready.
-	// port.RankThisYear() //TODO: Comment out when ready.
+	// port.RankToday()
+	// port.RankThisISOWeek()
+	// port.RankThisMonth()
+	// port.RankThisYear()
 
 	port.Logger.Info("Crontab server running")
 
@@ -116,10 +116,10 @@ func (port *crontabInputPort) Run() {
 
 	// Leaderboard Ranking
 	// // The following section will enable the ranking system for the different periods of the year.
-	// port.Crontab.MustAddJob("* * * * *", port.RankToday)       // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.RankThisISOWeek) // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.RankThisMonth)   // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.RankThisYear)    // every minute
+	port.Crontab.MustAddJob("* * * * *", port.RankToday)       // every minute
+	port.Crontab.MustAddJob("* * * * *", port.RankThisISOWeek) // every minute
+	port.Crontab.MustAddJob("* * * * *", port.RankThisMonth)   // every minute
+	port.Crontab.MustAddJob("* * * * *", port.RankThisYear)    // every minute
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------

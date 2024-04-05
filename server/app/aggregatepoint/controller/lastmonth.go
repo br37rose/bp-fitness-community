@@ -99,6 +99,7 @@ func (impl *AggregatePointControllerImpl) AggregateLastMonthForAllActiveGoogleFi
 			gfa.CaloriesBurnedMetricID,
 			gfa.StepCountDeltaMetricID,
 			gfa.HeartRateBPMMetricID,
+			//TODO: Add more health sensors here...
 		}
 		for _, metricID := range metricIDs {
 			if err := impl.aggregateForMetric(ctx, metricID, ap_s.PeriodMonth, start, end); err != nil {

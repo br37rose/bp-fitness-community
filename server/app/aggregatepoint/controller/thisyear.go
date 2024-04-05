@@ -91,6 +91,7 @@ func (impl *AggregatePointControllerImpl) AggregateThisYearForAllActiveGoogleFit
 			gfa.CaloriesBurnedMetricID,
 			gfa.StepCountDeltaMetricID,
 			gfa.HeartRateBPMMetricID,
+			//TODO: Add more health sensors here...
 		}
 		for _, metricID := range metricIDs {
 			if err := impl.aggregateForMetric(ctx, metricID, ap_s.PeriodYear, start, end); err != nil {

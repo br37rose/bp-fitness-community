@@ -96,6 +96,7 @@ func (impl *AggregatePointControllerImpl) AggregateThisISOWeekForAllActiveGoogle
 			gfa.CaloriesBurnedMetricID,
 			gfa.StepCountDeltaMetricID,
 			gfa.HeartRateBPMMetricID,
+			//TODO: Add more health sensors here...
 		}
 		for _, metricID := range metricIDs {
 			if err := impl.aggregateForMetric(ctx, metricID, ap_s.PeriodWeek, start, end); err != nil {

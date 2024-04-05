@@ -100,6 +100,7 @@ func (impl *AggregatePointControllerImpl) AggregateYesterdayForAllActiveGoogleFi
 			gfa.CaloriesBurnedMetricID,
 			gfa.StepCountDeltaMetricID,
 			gfa.HeartRateBPMMetricID,
+			//TODO: Add more health sensors here...
 		}
 		for _, metricID := range metricIDs {
 			if err := impl.aggregateForMetric(ctx, metricID, ap_s.PeriodDay, start, end); err != nil {

@@ -102,6 +102,7 @@ func (impl *AggregatePointControllerImpl) AggregateLastHourForAllActiveGoogleFit
 			gfa.CaloriesBurnedMetricID,
 			gfa.StepCountDeltaMetricID,
 			gfa.HeartRateBPMMetricID,
+			//TODO: Add more health sensors here...
 		}
 
 		for _, metricID := range metricIDs {

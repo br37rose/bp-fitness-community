@@ -9,6 +9,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
+	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 )
@@ -26,11 +27,13 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 
 		// Pick the metric ID based on metric type selected.
 		var metricID primitive.ObjectID
-		switch metricType {
-		case rp_s.MetricTypeHeartRate:
+		switch metricType { //TODO: Add more health sensors here...
+		case gcp_a.DataTypeKeyCaloriesBurned:
+			metricID = gfa.CaloriesBurnedMetricID
+		case gcp_a.DataTypeKeyStepCountDelta:
+			metricID = gfa.StepCountDeltaMetricID
+		case gcp_a.DataTypeKeyHeartRateBPM:
 			metricID = gfa.HeartRateBPMMetricID
-			// case rp_s.MetricTypeActivitySteps:
-			// 	metricID = gfa.StepsCountMetricID
 		default:
 			err := fmt.Errorf("does not exist for metric type: %v", metricType)
 			impl.Logger.Error("",
