@@ -31,14 +31,33 @@ type GoogleFitDataPoint struct {
 	StartAt time.Time `bson:"start_at" json:"start_at"`
 	EndAt   time.Time `bson:"end_at" json:"end_at"`
 
-	ActivitySegment        *gcp_a.ActivitySegmentStruct        `bson:"activity_segment,omitempty" json:"activity_segment,omitempty"`
-	BasalMetabolicRate     *gcp_a.BasalMetabolicRateStruct     `bson:"basal_metabolic_rate,omitempty" json:"basal_metabolic_rate,omitempty"`
-	CaloriesBurned         *gcp_a.CaloriesBurnedStruct         `bson:"calories_burned,omitempty" json:"calories_burned,omitempty"`
-	CyclingPedalingCadence *gcp_a.CyclingPedalingCadenceStruct `bson:"cycling_pedaling_cadence,omitempty" json:"cycling_pedaling_cadence,omitempty"`
-	Power                  *gcp_a.PowerStruct                  `bson:"power,omitempty" json:"power,omitempty"`
-	StepCountDelta         *gcp_a.StepCountDeltaStruct         `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
-	Hydration              *gcp_a.HydrationStruct              `bson:"hydration,omitempty" json:"hydration,omitempty"`
-	HeartRateBPM           *gcp_a.HeartRateBPMStruct           `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
+	ActivitySegment                  *gcp_a.ActivitySegmentStruct                  `bson:"activity_segment,omitempty" json:"activity_segment,omitempty"`
+	BasalMetabolicRate               *gcp_a.BasalMetabolicRateStruct               `bson:"basal_metabolic_rate,omitempty" json:"basal_metabolic_rate,omitempty"`
+	CaloriesBurned                   *gcp_a.CaloriesBurnedStruct                   `bson:"calories_burned,omitempty" json:"calories_burned,omitempty"`
+	CyclingPedalingCadence           *gcp_a.CyclingPedalingCadenceStruct           `bson:"cycling_pedaling_cadence,omitempty" json:"cycling_pedaling_cadence,omitempty"`
+	CyclingPedalingCumulative        *gcp_a.CyclingPedalingCumulativeStruct        `bson:"cycling_pedaling_cumulative,omitempty" json:"cycling_pedaling_cumulative,omitempty"`
+	HeartPoints                      *gcp_a.HeartPointsStruct                      `bson:"heart_points,omitempty" json:"heart_points,omitempty"`
+	MoveMinutes                      *gcp_a.MoveMinutesStruct                      `bson:"move_minutes,omitempty" json:"move_minutes,omitempty"`
+	Power                            *gcp_a.PowerStruct                            `bson:"power,omitempty" json:"power,omitempty"`
+	StepCountDelta                   *gcp_a.StepCountDeltaStruct                   `bson:"step_count_delta,omitempty" json:"step_count_delta,omitempty"`
+	StepCountCadence                 *gcp_a.StepCountCadenceStruct                 `bson:"step_count_cadence,omitempty" json:"step_count_cadence,omitempty"`
+	Workout                          *gcp_a.WorkoutStruct                          `bson:"workout,omitempty" json:"workout,omitempty"`
+	CyclingWheelRevolutionRPM        *gcp_a.CyclingWheelRevolutionRPMStruct        `bson:"cycling_wheel_revolution_rpm,omitempty" json:"cycling_wheel_revolution_rpm,omitempty"`
+	CyclingWheelRevolutionCumulative *gcp_a.CyclingWheelRevolutionCumulativeStruct `bson:"cycling_wheel_revolution_cumulative,omitempty" json:"cycling_wheel_revolution_cumulative,omitempty"`
+	DistanceDelta                    *gcp_a.DistanceDeltaStruct                    `bson:"distance_delta,omitempty" json:"distance_delta,omitempty"`
+	LocationSample                   *gcp_a.LocationSampleStruct                   `bson:"location_sample,omitempty" json:"location_sample,omitempty"`
+	Speed                            *gcp_a.SpeedStruct                            `bson:"speed,omitempty" json:"speed,omitempty"`
+	Hydration                        *gcp_a.HydrationStruct                        `bson:"hydration,omitempty" json:"hydration,omitempty"`
+	Nutrition                        *gcp_a.NutritionStruct                        `bson:"nutrition,omitempty" json:"nutrition,omitempty"`
+	BloodGlucose                     *gcp_a.BloodGlucoseStruct                     `bson:"blood_glucose,omitempty" json:"blood_glucose,omitempty"`
+	BloodPressure                    *gcp_a.BloodPressureStruct                    `bson:"blood_pressure,omitempty" json:"blood_pressure,omitempty"`
+	BodyFatPercentage                *gcp_a.BodyFatPercentageStruct                `bson:"body_fat_percentage,omitempty" json:"body_fat_percentage,omitempty"`
+	BodyTemperature                  *gcp_a.BodyTemperatureStruct                  `bson:"body_temperature,omitempty" json:"body_temperature,omitempty"`
+	HeartRateBPM                     *gcp_a.HeartRateBPMStruct                     `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
+	Height                           *gcp_a.HeightStruct                           `bson:"height,omitempty" json:"height,omitempty"`
+	Sleep                            *gcp_a.SleepStruct                            `bson:"sleep,omitempty" json:"sleep,omitempty"`
+	OxygenSaturation                 *gcp_a.OxygenSaturationStruct                 `bson:"oxygen_saturation,omitempty" json:"oxygen_saturation,omitempty"`
+	Weight                           *gcp_a.WeightStruct                           `bson:"weight,omitempty" json:"weight,omitempty"`
 
 	// Error is the error response content provided by `Google Fit` when making the API call.
 	Error string `bson:"errors" json:"errors"`
@@ -66,6 +85,7 @@ type GoogleFitDataPointListFilter struct {
 	ExcludeArchived bool
 	SearchText      string
 	Status          int8
+	DataTypeNames   []string
 }
 
 type GoogleFitDataPointListResult struct {
@@ -87,6 +107,7 @@ type GoogleFitDataPointStorer interface {
 	// ListByFilter(ctx context.Context, m *GoogleFitDataPointListFilter) (*GoogleFitDataPointListResult, error)
 	// ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointListFilter) ([]*GoogleFitDataPointAsSelectOption, error)
 	ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointListResult, error)
+	ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error)
 	// DeleteByID(ctx context.Context, id primitive.ObjectID) error
 	// CheckIfExistsByNameInOrgBranch(ctx context.Context, name string, orgID primitive.ObjectID, branchID primitive.ObjectID) (bool, error)
 	// // //TODO: Add more...

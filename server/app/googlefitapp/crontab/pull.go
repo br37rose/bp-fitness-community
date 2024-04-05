@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/oauth2"
@@ -132,6 +133,9 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 	//// Get various data.
 	////
 
+	// Variable used to track the latest fetch time we've done.
+	lastFetchedAt := time.Now()
+
 	// --- Activity --- //
 
 	if err := impl.pullActivitySegmentDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
@@ -154,21 +158,69 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: Cycling pedaling cumulative
-	// TODO: Heart Points
-	// TODO: Move Minutes
+	if err := impl.pullCyclingPedalingCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling cycling pedaling cumulative dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullHeartPointsDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling heart points dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullMoveMinutesDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling move minutes dataset from google",
+			slog.Any("error", err))
+		return err
+	}
 	if err := impl.pullPowerDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling power dataset from google",
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: Step count cadence
+	if err := impl.pullStepCountCadenceDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling step count cadence dataset from google",
+			slog.Any("error", err))
+		return err
+	}
 	if err := impl.pullStepCountDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling step count delta data from google",
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: Workout
+	if err := impl.pullWorkoutDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling workout dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+
+	// --- Location --- //
+
+	if err := impl.pullCyclingWheelRevolutionRPMDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling cycling wheel revolution rpm dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullCyclingWheelRevolutionCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling cycling wheel revolution cumulative dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullDistanceDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling distance delta dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullLocationSampleDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling location sample dataset from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling speed dataset from google",
+			slog.Any("error", err))
+		return err
+	}
 
 	// --- Nutrition --- //
 
@@ -177,23 +229,70 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx co
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: Nutrition
+	if err := impl.pullNutritionDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling hydration data from google",
+			slog.Any("error", err))
+		return err
+	}
 
 	// --- Health --- //
 
-	// TODO: ...
+	if err := impl.pullBloodGlucoseDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling blood glucose data from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullBloodPressureDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling blood pressure data from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullBodyFatPercentageDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling body fat percentage data from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullBodyTemperatureDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling body temperature data from google",
+			slog.Any("error", err))
+		return err
+	}
 	if err := impl.pullHeartRateDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling heart rate dataset from google",
 			slog.Any("error", err))
 		return err
 	}
-	// TODO: ...
+	if err := impl.pullHeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling height data from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullOxygenSaturationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling oxygen saturation data from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling sleep data from google",
+			slog.Any("error", err))
+		return err
+	}
+	if err := impl.pullWeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+		impl.Logger.Error("failed pulling weight data from google",
+			slog.Any("error", err))
+		return err
+	}
 
-	////
-	//// Keep track of last fetch time.
-	////
+	//
+	// Keep track of last fetch time.
+	//
 
-	//TODO: Impl. when finished above.
+	gfa.LastFetchedAt = lastFetchedAt
+	if err := impl.GoogleFitAppStorer.UpdateByID(ctx, gfa); err != nil {
+		impl.Logger.Error("failed pulling weight data from google",
+			slog.Any("error", err))
+		return err
+	}
 
 	return nil
 }

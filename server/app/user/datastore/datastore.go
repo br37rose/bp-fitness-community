@@ -45,7 +45,7 @@ const (
 	SubscriptionStatusTrialing                    = "trialing"
 	SubscriptionStatusUnpaid                      = "unpaid"
 	UserPrimaryHealthTrackingDeviceTypeNone       = 0
-	UserPrimaryHealthTrackingDeviceTypeFitBit     = 1
+	UserPrimaryHealthTrackingDeviceTypeGoogleFit     = 1
 )
 
 // UserLite struct represents the current user but minimal view which is enough
@@ -205,12 +205,7 @@ type User struct {
 	// OfferMembershipRank is unique identifier to specify this offer's value in the ranking system, higher is better.
 	OfferMembershipRank int `bson:"offer_membership_rank" json:"offer_membership_rank"`
 
-	// FitBitAppID is the unique identifier of the fitbit authorized device in
-	// our system. The authorized device information is found in the the
-	// `FitBitApp` domain.
-	FitBitAppID primitive.ObjectID `bson:"fitbit_app_id" json:"-"`
-
-	// GoogleFitAppID is the unique identifier of the fitbit authorized device in
+	// GoogleFitAppID is the unique identifier of the Google fit authorized device in
 	// our system. The authorized device information is found in the the
 	// `FitBitApp` domain.
 	GoogleFitAppID primitive.ObjectID `bson:"googlefit_app_id" json:"-"`

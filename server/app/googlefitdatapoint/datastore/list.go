@@ -32,6 +32,12 @@ func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *Go
 	if f.ExcludeArchived {
 		filter["status"] = bson.M{"$ne": StatusArchived} // Do not list archived items! This code
 	}
+	if f.Status > 0 {
+		filter["status"] = f.Status
+	}
+	if len(f.DataTypeNames) > 0 {
+		filter["data_type_name"] = bson.M{"$in": f.DataTypeNames}
+	}
 
 	impl.Logger.Debug("listing filter:",
 		slog.Any("filter", filter))

@@ -18,7 +18,7 @@ func (impl GoogleFitDataPointStorerImpl) UpdateByID(ctx context.Context, m *Goog
 	_, err := impl.Collection.UpdateOne(ctx, filter, update)
 	if err != nil {
 		impl.Logger.Error("database update by id error", slog.Any("error", err))
+		return err
 	}
-
 	return nil
 }

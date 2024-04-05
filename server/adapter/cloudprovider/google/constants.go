@@ -7,13 +7,13 @@ const (
 	DataTypeShortNameCyclingPedalingCadence    = "cycling.pedaling.cadence"    // https://developers.google.com/fit/datatypes/activity#cycling_pedaling_cadence
 	DataTypeShortNameCyclingPedalingCumulative = "cycling.pedaling.cumulative" // https://developers.google.com/fit/datatypes/activity#cycling_pedaling_cumulative
 	DataTypeShortNameHeartPoints               = "heart_minutes"               // https://developers.google.com/fit/datatypes/activity#heart_points
-	DataTypeShortNameeMoveMinutes              = "active_minutes"              // https://developers.google.com/fit/datatypes/activity#move_minutes
+	DataTypeShortNameMoveMinutes               = "active_minutes"              // https://developers.google.com/fit/datatypes/activity#move_minutes
 	DataTypeShortNamePower                     = "power.sample"                // https://developers.google.com/fit/datatypes/activity#power
 	DataTypeShortNameStepCountCadence          = "step_count.cadence"          //https://developers.google.com/fit/datatypes/activity#step_count_cadence
 	DataTypeShortNameStepCountDelta            = "step_count.delta"            // https://developers.google.com/fit/datatypes/activity#step_count_delta
 	DataTypeShortNameWorkout                   = "activity.exercise"           //https://developers.google.com/fit/datatypes/activity#workout
 
-	DataTypeShortNameCyclingWheelRevolution           = "cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
+	DataTypeShortNameCyclingWheelRevolutionRPM        = "cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
 	DataTypeShortNameCyclingWheelRevolutionCumulative = "cycling.wheel_revolution.cumulative" // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_cumulative
 	DataTypeShortNameDistanceDelta                    = "distance.delta"                      // https://developers.google.com/fit/datatypes/location#distance_delta
 	DataTypeShortNameLocationSample                   = "location.sample"                     // https://developers.google.com/fit/datatypes/location#location_sample
@@ -45,13 +45,13 @@ const (
 	DataTypeNameCyclingPedalingCadence    = "com.google.cycling.pedaling.cadence"    // https://developers.google.com/fit/datatypes/activity#cycling_pedaling_cadence
 	DataTypeNameCyclingPedalingCumulative = "com.google.cycling.pedaling.cumulative" // https://developers.google.com/fit/datatypes/activity#cycling_pedaling_cumulative
 	DataTypeNameHeartPoints               = "com.google.heart_minutes"               // https://developers.google.com/fit/datatypes/activity#heart_points
-	DataTypeNameeMoveMinutes              = "com.google.active_minutes"              // https://developers.google.com/fit/datatypes/activity#move_minutes
+	DataTypeNameMoveMinutes               = "com.google.active_minutes"              // https://developers.google.com/fit/datatypes/activity#move_minutes
 	DataTypeNamePower                     = "com.google.power.sample"                // https://developers.google.com/fit/datatypes/activity#power
 	DataTypeNameStepCountCadence          = "com.google.step_count.cadence"          // https://developers.google.com/fit/datatypes/activity#step_count_cadence
 	DataTypeNameStepCountDelta            = "com.google.step_count.delta"            // https://developers.google.com/fit/datatypes/activity#step_count_delta
 	DataTypeNameWorkout                   = "com.google.activity.exercise"           //https://developers.google.com/fit/datatypes/activity#workout
 
-	DataTypeNameCyclingWheelRevolution           = "com.google.cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
+	DataTypeNameCyclingWheelRevolutionRPM        = "com.google.cycling.wheel_revolution.rpm"        // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
 	DataTypeNameCyclingWheelRevolutionCumulative = "com.google.cycling.wheel_revolution.cumulative" // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_cumulative
 	DataTypeNameDistanceDelta                    = "com.google.distance.delta"                      // https://developers.google.com/fit/datatypes/location#distance_delta
 	DataTypeNameLocationSample                   = "com.google.location.sample"                     // https://developers.google.com/fit/datatypes/location#location_sample

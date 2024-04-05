@@ -59,7 +59,7 @@ func (impl *GoogleFitAppControllerImpl) GoogleCallback(ctx context.Context, stat
 				////
 				//// End transaction with success.
 				////
-				return &GoogleCallbackResponse{URL: impl.Config.FitBitApp.RegistrationSuccessRedirectURL}, nil
+				return &GoogleCallbackResponse{URL: impl.Config.GoogleCloudPlatform.SuccessRedirectURI}, nil
 			}
 		}
 
@@ -142,26 +142,50 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 	}
 	if gfa == nil {
 		gfa = &gfa_ds.GoogleFitApp{
-			ID:                       primitive.NewObjectID(),
-			UserFirstName:            u.FirstName,
-			UserLastName:             u.LastName,
-			UserName:                 u.Name,
-			UserLexicalName:          u.LexicalName,
-			UserID:                   u.ID,
-			Status:                   gfa_ds.StatusActive,
-			CreatedAt:                time.Now(),
-			ModifiedAt:               time.Now(),
-			OrganizationID:           u.OrganizationID,
-			OrganizationName:         u.OrganizationName,
-			AuthType:                 gfa_ds.AuthTypeOAuth2,
-			Errors:                   "",
-			Token:                    token,
-			LastFetchedAt:            time.Date(2014, 1, 1, 00, 00, 00, 000000000, time.UTC), // 2014-01-01 00:00:00.00 UTC
-			CaloriesBurnedMetricID:   primitive.NewObjectID(),
-			StepCountDeltaMetricID:   primitive.NewObjectID(),
-			HydrationMetricID:        primitive.NewObjectID(),
-			HeartRateMetricID:        primitive.NewObjectID(),
-			StepsCountMetricID:       primitive.NewObjectID(),
+			ID:                                       primitive.NewObjectID(),
+			UserFirstName:                            u.FirstName,
+			UserLastName:                             u.LastName,
+			UserName:                                 u.Name,
+			UserLexicalName:                          u.LexicalName,
+			UserID:                                   u.ID,
+			Status:                                   gfa_ds.StatusActive,
+			CreatedAt:                                time.Now(),
+			ModifiedAt:                               time.Now(),
+			OrganizationID:                           u.OrganizationID,
+			OrganizationName:                         u.OrganizationName,
+			AuthType:                                 gfa_ds.AuthTypeOAuth2,
+			Errors:                                   "",
+			Token:                                    token,
+			LastFetchedAt:                            time.Date(2014, 1, 1, 00, 00, 00, 000000000, time.UTC), // 2014-01-01 00:00:00.00 UTC
+			ActivitySegmentMetricID:                  primitive.NewObjectID(),
+			BasalMetabolicRateMetricID:               primitive.NewObjectID(),
+			CaloriesBurnedMetricID:                   primitive.NewObjectID(),
+			CyclingPedalingCadenceMetricID:           primitive.NewObjectID(),
+			CyclingPedalingCumulativeMetricID:        primitive.NewObjectID(),
+			HeartPointsMetricID:                      primitive.NewObjectID(),
+			MoveMinutesMetricID:                      primitive.NewObjectID(),
+			PowerMetricID:                            primitive.NewObjectID(),
+			StepCountDeltaMetricID:                   primitive.NewObjectID(),
+			StepCountCadenceMetricID:                 primitive.NewObjectID(),
+			StepsCountMetricID:                       primitive.NewObjectID(),
+			WorkoutMetricID:                          primitive.NewObjectID(),
+			CyclingWheelRevolutionRPMMetricID:        primitive.NewObjectID(),
+			CyclingWheelRevolutionCumulativeMetricID: primitive.NewObjectID(),
+			DistanceDeltaMetricID:                    primitive.NewObjectID(),
+			LocationSampleMetricID:                   primitive.NewObjectID(),
+			SpeedMetricID:                            primitive.NewObjectID(),
+			HydrationMetricID:                        primitive.NewObjectID(),
+			NutritionMetricID:                        primitive.NewObjectID(),
+			BloodGlucoseMetricID:                     primitive.NewObjectID(),
+			BloodPressureMetricID:                    primitive.NewObjectID(),
+			BodyFatPercentageMetricID:                primitive.NewObjectID(),
+			BodyTemperatureMetricID:                  primitive.NewObjectID(),
+			HeartRateBPMMetricID:                     primitive.NewObjectID(),
+			HeightMetricID:                           primitive.NewObjectID(),
+			OxygenSaturationMetricID:                 primitive.NewObjectID(),
+			SleepMetricID:                            primitive.NewObjectID(),
+			WeightMetricID:                           primitive.NewObjectID(),
+
 			IsTestMode:               false,
 			SimulatorAlgorithm:       "",
 			RequiresGoogleLoginAgain: false,
@@ -193,9 +217,9 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 	}
 
 	// Update our user with our new Google Fit registration / login.
-	u.PrimaryHealthTrackingDeviceType = u_s.UserPrimaryHealthTrackingDeviceTypeFitBit
+	u.PrimaryHealthTrackingDeviceType = u_s.UserPrimaryHealthTrackingDeviceTypeGoogleFit
 	u.PrimaryHealthTrackingDeviceRequiresLoginAgain = false
-	u.PrimaryHealthTrackingDeviceHeartRateMetricID = gfa.HeartRateMetricID
+	u.PrimaryHealthTrackingDeviceHeartRateMetricID = gfa.HeartRateBPMMetricID
 	u.PrimaryHealthTrackingDeviceStepsCountMetricID = gfa.StepsCountMetricID
 	u.GoogleFitAppID = gfa.ID
 	u.ModifiedAt = time.Now()

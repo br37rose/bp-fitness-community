@@ -27,7 +27,6 @@ import (
 	videocollection_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocollection/httptransport"
 	videocontent_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitbitapp"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
 )
@@ -57,7 +56,6 @@ type httpInputPort struct {
 	StripePaymentProcessor *strpp.Handler
 	FitnessPlan            *fitnessplan.Handler
 	NutritionPlan          *nutritionplan_http.Handler
-	FitBitApp              *fitbitapp.Handler
 	GoogleFitApp           *googlefitapp_http.Handler
 	DataPoint              *datapoint_http.Handler
 	AggregatePoint         *aggregatepoint_http.Handler
@@ -85,7 +83,6 @@ func NewInputPort(
 	ff *fitnessplan.Handler,
 	np *nutritionplan_http.Handler,
 	gfa *googlefitapp_http.Handler,
-	fba *fitbitapp.Handler,
 	dp *datapoint_http.Handler,
 	ap *aggregatepoint_http.Handler,
 	rp *rankpoint_http.Handler,
@@ -127,7 +124,6 @@ func NewInputPort(
 		StripePaymentProcessor: strpp,
 		FitnessPlan:            ff,
 		NutritionPlan:          np,
-		FitBitApp:              fba,
 		GoogleFitApp:           gfa,
 		DataPoint:              dp,
 		AggregatePoint:         ap,
@@ -353,27 +349,17 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 	case n == 4 && p[1] == "v1" && p[2] == "nutrition-plan" && r.Method == http.MethodPut:
 		port.NutritionPlan.UpdateByID(w, r, p[3])
 
-	// --- FITBIT --- //
-	case n == 3 && p[1] == "v1" && p[2] == "fitbit-app-registration":
-		port.FitBitApp.GetRegistrationURL(w, r)
-	case n == 4 && p[1] == "v1" && p[2] == "fitbit" && p[3] == "simulators":
-		port.FitBitApp.CreateSimulator(w, r)
-	case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "auth":
-		port.FitBitApp.Auth(w, r)
-	case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "subscriber":
-		port.FitBitApp.Subscriber(w, r)
-
 		// --- GOOGLE FIT --- //
 	case n == 3 && p[1] == "v1" && p[2] == "google-login":
 		port.GoogleFitApp.GetGoogleLoginURL(w, r)
 	case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "google" && p[4] == "auth":
 		port.GoogleFitApp.GoogleCallback(w, r)
 
-	// case n == 4 && p[1] == "v1" && p[2] == "fitbit" && p[3] == "simulators":
+	// case n == 4 && p[1] == "v1" && p[2] == "googlefit" && p[3] == "simulators":
 	// 	port.FitBitApp.CreateSimulator(w, r)
-	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "auth":
+	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "googlefit" && p[4] == "auth":
 	// 	port.FitBitApp.Auth(w, r)
-	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "fitbit" && p[4] == "subscriber":
+	// case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "googlefit" && p[4] == "subscriber":
 	// 	port.FitBitApp.Subscriber(w, r)
 
 	// --- DATA POINT --- //

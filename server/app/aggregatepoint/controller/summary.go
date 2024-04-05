@@ -77,7 +77,7 @@ func (impl *AggregatePointControllerImpl) GetSummary(ctx context.Context, userID
 			slog.String("user_id", uid.Hex()),
 			slog.Any("error", err))
 		return nil, err
-	case u_d.UserPrimaryHealthTrackingDeviceTypeFitBit:
+	case u_d.UserPrimaryHealthTrackingDeviceTypeGoogleFit:
 		// Do nothing except continue execution of this function...
 	default:
 		impl.Logger.Error("user has unsupported health tracker", slog.String("user_id", uid.Hex()))

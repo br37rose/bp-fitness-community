@@ -65,7 +65,7 @@ func (impl *googleFitAppCrontaberImpl) pullHeartRateDataFromGoogleWithGfaAndFitn
 				UserName:        gfa.UserName,
 				UserLexicalName: gfa.UserLexicalName,
 				GoogleFitAppID:  gfa.ID,
-				MetricID:        gfa.HydrationMetricID,
+				MetricID:        gfa.HeartRateBPMMetricID,
 				StartAt:         heartRateDatapoint.StartTime,
 				EndAt:           heartRateDatapoint.EndTime,
 				HeartRateBPM:    &heartRateDatapoint,
