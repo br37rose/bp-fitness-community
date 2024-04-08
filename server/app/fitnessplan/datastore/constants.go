@@ -1,10 +1,12 @@
 package datastore
 
 const (
-	StatusQueued   = 1
-	StatusActive   = 2
-	StatusArchived = 3
-	StatusError    = 4
+	StatusQueued     = 1
+	StatusActive     = 2
+	StatusArchived   = 3
+	StatusError      = 4
+	StatusInProgress = 5
+	StatusPending    = 6
 
 	GenderOther  = 1
 	GenderMale   = 2
@@ -113,4 +115,10 @@ var GoalMap = map[int8]string{
 var WorkoutPreferenceMap = map[int8]string{
 	1: "Full-Body Workout",
 	2: "HIIT",
+}
+
+var GenderMap = map[int8]string{
+	1: "Other",
+	2: "Male",
+	3: "Female",
 }

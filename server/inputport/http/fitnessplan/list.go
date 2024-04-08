@@ -14,10 +14,11 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	f := &sub_s.FitnessPlanListFilter{
-		Cursor:    primitive.NilObjectID,
-		PageSize:  25,
-		SortField: "_id",
-		SortOrder: 1, // 1=ascending | -1=descending
+		Cursor:     primitive.NilObjectID,
+		PageSize:   25,
+		SortField:  "_id",
+		SortOrder:  1, // 1=ascending | -1=descending
+		StatusList: make([]int8, 0),
 	}
 
 	// Here is where you extract url parameters.
@@ -75,7 +76,7 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	if statusStr != "" {
 		status, _ := strconv.ParseInt(statusStr, 10, 64)
 		if status != 0 {
-			f.Status = int8(status)
+			f.StatusList = []int8{int8(status)}
 		}
 	}
 

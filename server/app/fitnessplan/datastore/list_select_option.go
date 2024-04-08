@@ -31,8 +31,8 @@ func (impl FitnessPlanStorerImpl) ListAsSelectOptionByFilter(ctx context.Context
 		SetSort(bson.D{{sortField, sortOrder}})
 
 	// Add filter conditions to the query
-	if f.Status != 0 {
-		query["status"] = f.Status
+	if len(f.StatusList) > 0 {
+		query["status"] = bson.M{"$in": f.StatusList}
 	}
 	if len(f.ExerciseNames) > 0 {
 		// Use the $in operator to filter documents where ExerciseNames contains any of the provided names

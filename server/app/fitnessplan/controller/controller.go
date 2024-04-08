@@ -10,7 +10,9 @@ import (
 	mg "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	openai "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	s3_storage "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/storage/s3"
+	exercise_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/controller"
 	exercise_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
+
 	domain "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	fitnessplan_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
@@ -42,6 +44,7 @@ type FitnessPlanControllerImpl struct {
 	FitnessPlanStorer fitnessplan_s.FitnessPlanStorer
 	UserStorer        user_s.UserStorer
 	ExerciseStorer    exercise_s.ExerciseStorer
+	ExcerciseContr    exercise_d.ExerciseController
 }
 
 func NewController(
@@ -56,6 +59,7 @@ func NewController(
 	org_storer fitnessplan_s.FitnessPlanStorer,
 	ex_storer exercise_s.ExerciseStorer,
 	usr_storer user_s.UserStorer,
+	ex_contr exercise_d.ExerciseController,
 ) FitnessPlanController {
 	s := &FitnessPlanControllerImpl{
 		Config:            appCfg,
@@ -69,6 +73,7 @@ func NewController(
 		FitnessPlanStorer: org_storer,
 		UserStorer:        usr_storer,
 		ExerciseStorer:    ex_storer,
+		ExcerciseContr:    ex_contr,
 	}
 	s.Logger.Debug("fitnessplan controller initialization started...")
 	s.Logger.Debug("fitnessplan controller initialized")

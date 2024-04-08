@@ -1,10 +1,10 @@
 export const PAGINATION_LIMIT = 250;
 
-export const ROOT_ROLE_ID = 1
-export const ADMIN_ROLE_ID = 2
-export const TRAINER_ROLE_ID = 3
-export const MEMBER_ROLE_ID = 4
-export const ANONYMOUS_ROLE_ID = 0
+export const ROOT_ROLE_ID = 1;
+export const ADMIN_ROLE_ID = 2;
+export const TRAINER_ROLE_ID = 3;
+export const MEMBER_ROLE_ID = 4;
+export const ANONYMOUS_ROLE_ID = 0;
 
 export const EXERCISE_VIDEO_TYPE_SIMPLE_STORAGE_SERVER = 1;
 export const EXERCISE_VIDEO_TYPE_YOUTUBE = 2;
@@ -42,10 +42,12 @@ export const WORKOUT_INTENSITY_LOW = 1;
 export const WORKOUT_INTENSITY_MEDIUM = 2;
 export const WORKOUT_INTENSITY_HIGH = 3;
 
-export const FITNESS_GOAL_STATUS_QUEUED   = 1
-export const FITNESS_GOAL_STATUS_ACTIVE  = 2
-export const FITNESS_GOAL_STATUS_ARCHIVED = 3
-export const FITNESS_GOAL_STATUS_ERROR    = 4
+export const FITNESS_GOAL_STATUS_QUEUED = 1;
+export const FITNESS_GOAL_STATUS_ACTIVE = 2;
+export const FITNESS_GOAL_STATUS_ARCHIVED = 3;
+export const FITNESS_GOAL_STATUS_ERROR = 4;
+export const FITNESS_GOAL_STATUS_IN_PROGRESS = 5;
+export const FITNESS_GOAL_STATUS_PENDING = 6;
 
 export const FITNESS_GOAL_WEIGHT_LOSS = 1;
 export const FITNESS_GOAL_MUSCLE_MASS_OR_STRENGTH = 2;
@@ -71,8 +73,8 @@ export const RANK_POINT_FUNCTION_COUNT = 3;
 export const RANK_POINT_FUNCTION_MIN = 4;
 export const RANK_POINT_FUNCTION_MAX = 5;
 
-export const RANK_POINT_METRIC_TYPE_HEART_RATE = 1   // MetricTypeHeartRate      = 1
-export const RANK_POINT_METRIC_TYPE_STEP_COUNTER = 2 // MetricTypeActivitySteps  = 2
+export const RANK_POINT_METRIC_TYPE_HEART_RATE = 1; // MetricTypeHeartRate      = 1
+export const RANK_POINT_METRIC_TYPE_STEP_COUNTER = 2; // MetricTypeActivitySteps  = 2
 // MetricTypeActivityCalaries     = 3
 // MetricTypeActivityDistance     = 4
 // MetricTypeActivityElevation    = 5
