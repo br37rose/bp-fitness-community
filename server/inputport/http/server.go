@@ -14,6 +14,7 @@ import (
 	exercise_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
 	gateway_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	googlefitdp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/httptransport"
 	invoice_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
 	member_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/member/httptransport"
 	nutritionplan_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/nutritionplan/httptransport"
@@ -37,30 +38,31 @@ type InputPortServer interface {
 }
 
 type httpInputPort struct {
-	Config                 *config.Conf
-	Logger                 *slog.Logger
-	Server                 *http.Server
-	Middleware             middleware.Middleware
-	Gateway                *gateway_http.Handler
-	User                   *user_http.Handler
-	Organization           *organization_http.Handler
-	Tag                    *tag_http.Handler
-	Exercise               *exercise_http.Handler
-	Member                 *member_http.Handler
-	Attachment             *attachment_http.Handler
-	VideoCategory          *videocategory_http.Handler
-	VideoCollection        *videocollection_http.Handler
-	VideoContent           *videocontent_http.Handler
-	Offer                  *offer_http.Handler
-	Invoice                *invoice_http.Handler
-	StripePaymentProcessor *strpp.Handler
-	FitnessPlan            *fitnessplan.Handler
-	NutritionPlan          *nutritionplan_http.Handler
-	GoogleFitApp           *googlefitapp_http.Handler
-	DataPoint              *datapoint_http.Handler
-	AggregatePoint         *aggregatepoint_http.Handler
-	RankPoint              *rankpoint_http.Handler
-	Biometric              *biometric_http.Handler
+	Config                   *config.Conf
+	Logger                   *slog.Logger
+	Server                   *http.Server
+	Middleware               middleware.Middleware
+	Gateway                  *gateway_http.Handler
+	User                     *user_http.Handler
+	Organization             *organization_http.Handler
+	Tag                      *tag_http.Handler
+	Exercise                 *exercise_http.Handler
+	Member                   *member_http.Handler
+	Attachment               *attachment_http.Handler
+	VideoCategory            *videocategory_http.Handler
+	VideoCollection          *videocollection_http.Handler
+	VideoContent             *videocontent_http.Handler
+	Offer                    *offer_http.Handler
+	Invoice                  *invoice_http.Handler
+	StripePaymentProcessor   *strpp.Handler
+	FitnessPlan              *fitnessplan.Handler
+	NutritionPlan            *nutritionplan_http.Handler
+	GoogleFitDataPointStorer *googlefitdp_http.Handler
+	GoogleFitApp             *googlefitapp_http.Handler
+	DataPoint                *datapoint_http.Handler
+	AggregatePoint           *aggregatepoint_http.Handler
+	RankPoint                *rankpoint_http.Handler
+	Biometric                *biometric_http.Handler
 }
 
 func NewInputPort(
@@ -82,6 +84,7 @@ func NewInputPort(
 	strpp *strpp.Handler,
 	ff *fitnessplan.Handler,
 	np *nutritionplan_http.Handler,
+	gfdp *googlefitdp_http.Handler,
 	gfa *googlefitapp_http.Handler,
 	dp *datapoint_http.Handler,
 	ap *aggregatepoint_http.Handler,
@@ -105,30 +108,31 @@ func NewInputPort(
 
 	// Create our HTTP server controller.
 	p := &httpInputPort{
-		Config:                 configp,
-		Logger:                 loggerp,
-		Middleware:             mid,
-		Gateway:                gh,
-		User:                   cu,
-		Organization:           org,
-		Tag:                    tag,
-		Exercise:               exc,
-		Member:                 mem,
-		Attachment:             att,
-		VideoCategory:          vc,
-		VideoCollection:        vcol,
-		VideoContent:           vcon,
-		Server:                 srv,
-		Offer:                  off,
-		Invoice:                inv,
-		StripePaymentProcessor: strpp,
-		FitnessPlan:            ff,
-		NutritionPlan:          np,
-		GoogleFitApp:           gfa,
-		DataPoint:              dp,
-		AggregatePoint:         ap,
-		RankPoint:              rp,
-		Biometric:              bio,
+		Config:                   configp,
+		Logger:                   loggerp,
+		Middleware:               mid,
+		Gateway:                  gh,
+		User:                     cu,
+		Organization:             org,
+		Tag:                      tag,
+		Exercise:                 exc,
+		Member:                   mem,
+		Attachment:               att,
+		VideoCategory:            vc,
+		VideoCollection:          vcol,
+		VideoContent:             vcon,
+		Server:                   srv,
+		Offer:                    off,
+		Invoice:                  inv,
+		StripePaymentProcessor:   strpp,
+		FitnessPlan:              ff,
+		NutritionPlan:            np,
+		GoogleFitApp:             gfa,
+		GoogleFitDataPointStorer: gfdp,
+		DataPoint:                dp,
+		AggregatePoint:           ap,
+		RankPoint:                rp,
+		Biometric:                bio,
 	}
 
 	// Attach the HTTP server controller to the ServerMux.
@@ -365,6 +369,8 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 	// --- DATA POINT --- //
 	case n == 3 && p[1] == "v1" && p[2] == "data-points" && r.Method == http.MethodGet:
 		port.DataPoint.List(w, r)
+	case n == 3 && p[1] == "v1" && p[2] == "google-fit-data-points" && r.Method == http.MethodGet:
+		port.GoogleFitDataPointStorer.List(w, r)
 
 	// --- AGGREGATE POINT --- //
 	case n == 4 && p[1] == "v1" && p[2] == "aggregate-points" && p[3] == "summary" && r.Method == http.MethodGet:

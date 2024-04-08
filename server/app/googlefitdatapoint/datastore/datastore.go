@@ -72,28 +72,6 @@ type GoogleFitDataPoint struct {
 	OrganizationID primitive.ObjectID `bson:"organization_id" json:"organization_id"`
 }
 
-type GoogleFitDataPointListFilter struct {
-	// Pagination related.
-	Cursor    primitive.ObjectID
-	PageSize  int64
-	SortField string
-	SortOrder int8 // 1=ascending | -1=descending
-
-	// Filter related.
-	OrganizationID  primitive.ObjectID
-	BranchID        primitive.ObjectID
-	ExcludeArchived bool
-	SearchText      string
-	Status          int8
-	DataTypeNames   []string
-}
-
-type GoogleFitDataPointListResult struct {
-	Results     []*GoogleFitDataPoint `json:"results"`
-	NextCursor  primitive.ObjectID    `json:"next_cursor"`
-	HasNextPage bool                  `json:"has_next_page"`
-}
-
 // GoogleFitDataPointStorer Interface for organization.
 type GoogleFitDataPointStorer interface {
 	CheckIfExistsByCompositeKey(ctx context.Context, userID primitive.ObjectID, dataTypeName string, startAt time.Time, endAt time.Time) (bool, error)
@@ -104,11 +82,11 @@ type GoogleFitDataPointStorer interface {
 	// GetByPaymentProcessorGoogleFitDataPointID(ctx context.Context, paymentProcessorGoogleFitDataPointID string) (*GoogleFitDataPoint, error)
 	UpdateByID(ctx context.Context, m *GoogleFitDataPoint) error
 	// UpsertByUserID(ctx context.Context, fba *GoogleFitDataPoint) error
-	// ListByFilter(ctx context.Context, m *GoogleFitDataPointListFilter) (*GoogleFitDataPointListResult, error)
-	// ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointListFilter) ([]*GoogleFitDataPointAsSelectOption, error)
-	ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointListResult, error)
-	ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error)
-	ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error)
+	ListByFilter(ctx context.Context, m *GoogleFitDataPointPaginationListFilter) (*GoogleFitDataPointPaginationListResult, error)
+	// ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointPaginationListFilter) ([]*GoogleFitDataPointAsSelectOption, error)
+	ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointPaginationListResult, error)
+	ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error)
+	ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error)
 	// DeleteByID(ctx context.Context, id primitive.ObjectID) error
 	// CheckIfExistsByNameInOrgBranch(ctx context.Context, name string, orgID primitive.ObjectID, branchID primitive.ObjectID) (bool, error)
 	// // //TODO: Add more...

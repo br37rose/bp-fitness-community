@@ -2,13 +2,11 @@ package datastore
 
 import (
 	"context"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointListResult, error) {
-	f := &GoogleFitDataPointListFilter{
-		Cursor:    primitive.NilObjectID,
+func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointPaginationListResult, error) {
+	f := &GoogleFitDataPointPaginationListFilter{
+		Cursor:    "",
 		PageSize:  1_000_000_000,
 		SortField: "_id",
 		SortOrder: 1,
@@ -17,9 +15,9 @@ func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatus(ctx context.Context)
 	return impl.ListByFilter(ctx, f)
 }
 
-func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error) {
-	f := &GoogleFitDataPointListFilter{
-		Cursor:        primitive.NilObjectID,
+func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error) {
+	f := &GoogleFitDataPointPaginationListFilter{
+		Cursor:        "",
 		PageSize:      1_000_000_000,
 		SortField:     "_id",
 		SortOrder:     1,
@@ -29,9 +27,9 @@ func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatusInDataTypeNames(ctx c
 	return impl.ListByFilter(ctx, f)
 }
 
-func (impl GoogleFitDataPointStorerImpl) ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointListResult, error) {
-	f := &GoogleFitDataPointListFilter{
-		Cursor:        primitive.NilObjectID,
+func (impl GoogleFitDataPointStorerImpl) ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error) {
+	f := &GoogleFitDataPointPaginationListFilter{
+		Cursor:        "",
 		PageSize:      1_000_000_000,
 		SortField:     "_id",
 		SortOrder:     1,

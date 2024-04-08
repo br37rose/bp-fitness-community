@@ -8,19 +8,21 @@ import (
 	"log/slog"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *GoogleFitDataPointListFilter) (*GoogleFitDataPointListResult, error) {
+func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *GoogleFitDataPointPaginationListFilter) (*GoogleFitDataPointPaginationListResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
 	defer cancel()
 
-	// Create the filter based on the cursor
-	filter := bson.M{}
-	if !f.Cursor.IsZero() {
-		filter["_id"] = bson.M{"$gt": f.Cursor} // Add the cursor condition to the filter
+	// Create the paginated filter based on the cursor
+	filter, err := impl.newPaginationFilter(f)
+	if err != nil {
+		return nil, err
 	}
+
+	// DEVELOPERS NOTE: We will restrict this list to whatever metric ID's were selected.
+	filter["metric_id"] = bson.M{"$in": f.MetricIDs}
 
 	// Apply the conditions to the filter
 	if !f.OrganizationID.IsZero() {
@@ -39,13 +41,36 @@ func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *Go
 		filter["data_type_name"] = bson.M{"$in": f.DataTypeNames}
 	}
 
+	// Create a slice to store conditions
+	var conditions []bson.M
+
+	// Add filter conditions to the slice
+	if !f.GTE.IsZero() {
+		conditions = append(conditions, bson.M{"timestamp": bson.M{"$gte": f.GTE}})
+	}
+	if !f.GT.IsZero() {
+		conditions = append(conditions, bson.M{"timestamp": bson.M{"$gt": f.GT}})
+	}
+	if !f.LTE.IsZero() {
+		conditions = append(conditions, bson.M{"timestamp": bson.M{"$lte": f.LTE}})
+	}
+	if !f.LT.IsZero() {
+		conditions = append(conditions, bson.M{"timestamp": bson.M{"$lt": f.LT}})
+	}
+
+	// Combine conditions with $and operator
+	if len(conditions) > 0 {
+		filter["$and"] = conditions
+	}
+
 	impl.Logger.Debug("listing filter:",
 		slog.Any("filter", filter))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
-	options := options.Find().
-		SetSort(bson.M{f.SortField: f.SortOrder}).
-		SetLimit(f.PageSize)
+	options, err := impl.newPaginationOptions(f)
+	if err != nil {
+		return nil, err
+	}
 
 	// Include Full-text search
 	if f.SearchText != "" {
@@ -60,11 +85,6 @@ func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *Go
 		return nil, err
 	}
 	defer cursor.Close(ctx)
-
-	// var results = []*ComicSubmission{}
-	// if err = cursor.All(ctx, &results); err != nil {
-	// 	panic(err)
-	// }
 
 	// Retrieve the documents and check if there is a next page
 	results := []*GoogleFitDataPoint{}
@@ -83,23 +103,22 @@ func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *Go
 	}
 
 	// Get the next cursor and encode it
-	nextCursor := primitive.NilObjectID
-	if int64(len(results)) == f.PageSize {
-		// Remove the extra document from the current page
-		results = results[:len(results)]
-
-		// Get the last document's _id as the next cursor
-		nextCursor = results[len(results)-1].ID
+	var nextCursor string
+	if hasNextPage {
+		nextCursor, err = impl.newPaginatorNextCursor(f, results)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return &GoogleFitDataPointListResult{
+	return &GoogleFitDataPointPaginationListResult{
 		Results:     results,
 		NextCursor:  nextCursor,
 		HasNextPage: hasNextPage,
 	}, nil
 }
 
-func (impl GoogleFitDataPointStorerImpl) ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointListFilter) ([]*GoogleFitDataPointAsSelectOption, error) {
+func (impl GoogleFitDataPointStorerImpl) ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointPaginationListFilter) ([]*GoogleFitDataPointAsSelectOption, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
 	defer cancel()
 

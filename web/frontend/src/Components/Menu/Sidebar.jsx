@@ -258,11 +258,11 @@ export default props => {
                                             <FontAwesomeIcon className="fas" icon={faStar} />&nbsp;My Summary
                                         </a>
                                     </li>
-                                    {/* <li>
+                                    <li>
                                         <a href="/biometrics/history/tableview" class={`has-text-grey-light ${location.pathname.includes("/biometrics/history/") && "is-active"}`}>
                                             <FontAwesomeIcon className="fas" icon={faChartLine} />&nbsp;My History
                                         </a>
-                                    </li> */}
+                                    </li>
                                 </ul>
                             </li>
                             {/*
