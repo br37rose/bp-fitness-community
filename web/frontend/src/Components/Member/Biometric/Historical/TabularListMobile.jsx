@@ -14,6 +14,18 @@ Display for both tablet and mobile.
 */
 function MemberDataPointHistoricalTabularListMobile(props) {
     const { listData, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, currentUser } = props;
+
+    // Defensive Code
+    if (currentUser) {
+        if (currentUser.primaryHealthTrackingDevice === undefined || currentUser.primaryHealthTrackingDevice === null || currentUser.primaryHealthTrackingDevice === "") {
+            console.log("currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId: EMPTY");
+            return null;
+        }
+    }
+
+    console.log("currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId:", currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId);
+    console.log("currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId:", currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId);
+
     return (
         <>
             {listData && listData.results && listData.results.map(function (datum, i) {
@@ -25,10 +37,10 @@ function MemberDataPointHistoricalTabularListMobile(props) {
                     {datum.value}
 
                     {/* Unit of measure */}
-                    {datum.metricId === currentUser.primaryHealthTrackingDeviceHeartRateMetricId &&
+                    {datum.metricId === currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId &&
                         <>&nbsp;bpm</>
                     }
-                    {datum.metricId === currentUser.primaryHealthTrackingDeviceStepsCountMetricId &&
+                    {datum.metricId === currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId &&
                         <>&nbsp;Steps</>
                     }
                     <br />

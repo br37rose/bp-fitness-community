@@ -23,7 +23,7 @@ import {
 import { useRecoilState } from "recoil";
 
 import FormErrorBox from "../../../Reusable/FormErrorBox";
-import { getDataPointListAPI } from "../../../../API/DataPoint";
+import { getGoogleFitDataPointListAPI } from "../../../../API/GoogleFitDataPoint";
 import {
     topAlertMessageState,
     topAlertStatusState,
@@ -148,7 +148,9 @@ function MemberDataPointHistoricalTabularList() {
             }
         }
 
-        getDataPointListAPI(
+        console.log("params:", params);
+
+        getGoogleFitDataPointListAPI(
           params,
           onDataPointistSuccess,
           onDataPointistError,
@@ -219,6 +221,21 @@ function MemberDataPointHistoricalTabularList() {
     ////
     //// Component rendering.
     ////
+
+    if (currentUser) {
+        console.log("currentUser:", currentUser);
+        console.log("currentUser.primaryHealthTrackingDevice:", currentUser.primaryHealthTrackingDevice);
+        console.log("listData:", listData);
+        console.log("listData.results:", listData.results);
+
+        /*
+        {listData &&
+        listData.results &&
+        (listData.results.length > 0 || previousCursors.length > 0) &&
+         currentUser &&
+         currentUser.primaryHealthTrackingDevice ? (
+         */
+    }
 
     return (
     <>
@@ -324,7 +341,9 @@ function MemberDataPointHistoricalTabularList() {
                     <FormErrorBox errors={errors} />
                     {listData &&
                     listData.results &&
-                    (listData.results.length > 0 || previousCursors.length > 0) ? (
+                    (listData.results.length > 0 || previousCursors.length > 0) &&
+                     currentUser &&
+                     currentUser.primaryHealthTrackingDevice ? (
                       <div className="container">
                         <div class="column has-text-right">
                             <button class="button is-small is-info" type="button">

@@ -12,6 +12,18 @@ import DateTimeTextFormatter from "../../../Reusable/DateTimeTextFormatter";
 
 function MemberDataPointHistoricalTabularListDesktop(props) {
   const { listData, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, currentUser } = props;
+
+  // Defensive Code
+  if (currentUser) {
+      if (currentUser.primaryHealthTrackingDevice === undefined || currentUser.primaryHealthTrackingDevice === null || currentUser.primaryHealthTrackingDevice === "") {
+          console.log("currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId: EMPTY");
+          return null;
+      }
+  }
+
+  console.log("currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId:", currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId);
+  console.log("currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId:", currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId);
+
   return (
     <div className="b-table">
       <div className="table-wrapper has-mobile-cards">
@@ -30,10 +42,10 @@ function MemberDataPointHistoricalTabularListDesktop(props) {
                 return (
                   <tr key={`desktop_${datum.id}`}>
                     <td data-label="Metric">
-                        {datum.metricId === currentUser.primaryHealthTrackingDeviceHeartRateMetricId &&
+                        {datum.metricId === currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId &&
                             <>Heart Rate</>
                         }
-                        {datum.metricId === currentUser.primaryHealthTrackingDeviceStepsCountMetricId &&
+                        {datum.metricId === currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId &&
                             <>Steps Counter</>
                         }
                     </td>
@@ -41,10 +53,10 @@ function MemberDataPointHistoricalTabularListDesktop(props) {
                         {datum.value}
 
                         {/* Unit of measure */}
-                        {datum.metricId === currentUser.primaryHealthTrackingDeviceHeartRateMetricId &&
+                        {datum.metricId === currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId  &&
                             <>&nbsp;bpm</>
                         }
-                        {datum.metricId === currentUser.primaryHealthTrackingDeviceStepsCountMetricId &&
+                        {datum.metricId === currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId  &&
                             <>&nbsp;Steps</>
                         }
                     </td>
