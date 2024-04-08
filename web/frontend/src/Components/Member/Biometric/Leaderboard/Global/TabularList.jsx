@@ -341,12 +341,12 @@ function MemberLeaderboardGlobalTabularList() {
 
             {/* Section for selecting `function` */}
             {/* <div class="column has-text-right">
-                  
+
                         DEVELOPERS NOTE:
                         - Some functions are not available for some metric types because it makes sense. Why would you keep a summation of heart rate? This
                         is the reason for code restrictions below.
                         - The only functions you should use are `RANK_POINT_FUNCTION_AVERAGE` and `RANK_POINT_FUNCTION_SUM`.
-                   
+
                   <button class={`button is-small ${calcFunction === RANK_POINT_FUNCTION_AVERAGE && `is-info`}`} type="button" onClick={(e) => { setCalcFunction(RANK_POINT_FUNCTION_AVERAGE) }}>
                     <FontAwesomeIcon className="mdi" icon={faPercent} />&nbsp;Average
                   </button>
@@ -454,10 +454,10 @@ function MemberLeaderboardGlobalTabularList() {
           </div>
           <div class="column is-half has-text-right">
             {/*
-                        <Link to={`/account/wearable-tech`} class="button is-success is-fullwidth-mobile">
-                            <FontAwesomeIcon className="fas" icon={faPlus} />&nbsp;Register Wearable
-                        </Link>
-                        */}
+            <Link to={`/account/wearable-tech`} class="button is-success is-fullwidth-mobile">
+                <FontAwesomeIcon className="fas" icon={faPlus} />&nbsp;Register Wearable
+            </Link>
+            */}
           </div>
         </div>
 

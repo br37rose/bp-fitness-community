@@ -73,16 +73,7 @@ export const RANK_POINT_FUNCTION_COUNT = 3;
 export const RANK_POINT_FUNCTION_MIN = 4;
 export const RANK_POINT_FUNCTION_MAX = 5;
 
-export const RANK_POINT_METRIC_TYPE_HEART_RATE = 1; // MetricTypeHeartRate      = 1
-export const RANK_POINT_METRIC_TYPE_STEP_COUNTER = 2; // MetricTypeActivitySteps  = 2
-// MetricTypeActivityCalaries     = 3
-// MetricTypeActivityDistance     = 4
-// MetricTypeActivityElevation    = 5
-// MetricTypeActivityFloors       = 6
-// MetricTypeBreathingRate        = 7
-// MetricTypeHeartRateVariability = 8
-// MetricTypeOxygenSaturation     = 9
-// MetricTypeSleep                = 10
-// MetricTypeTemperature          = 11
-// MetricTypeCardioFitnessScore   = 12 // (a.k.a. V02 Max)
-// MetricTypeElectrocardiogram    = 13
+// Please see `DataTypeKey` prefixed constants via https://github.com/bci-innovation-labs/bp8fitnesscommunity/blob/main/server/adapter/cloudprovider/google/constants.go
+export const RANK_POINT_METRIC_TYPE_HEART_RATE = 25;
+export const RANK_POINT_METRIC_TYPE_STEP_COUNTER = 10;
+//TODO: Add more health sensors here...

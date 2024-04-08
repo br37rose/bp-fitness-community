@@ -11,16 +11,63 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (impl *googleFitAppCrontaberImpl) ProcessQueuedDataTask() error {
+/*
+################
+DEVELOPERS NOTE:
+################
+THE FOLLOWING CONSTANTS ARE THE HEALTH TRACKER SENSORS OUR CODE SUPPORTS WHICH
+ARE MARKED WITH THE `[DONE]` TEXT.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - -
+DataTypeNameActivitySegment
+DataTypeNameBasalMetabolicRate
+DataTypeNameCaloriesBurned        [DONE]
+DataTypeNameCyclingPedalingCadence
+DataTypeNameCyclingPedalingCumulative
+DataTypeNameHeartPoints
+DataTypeNameMoveMinutes
+DataTypeNamePower
+DataTypeNameStepCountCadence
+DataTypeNameStepCountDelta        [DONE]
+DataTypeNameWorkout
+- - - - - - - - - - - - - - - - - - - - - - - - - - -
+DataTypeNameCyclingWheelRevolutionRPM
+DataTypeNameCyclingWheelRevolutionCumulative
+DataTypeNameDistanceDelta
+DataTypeNameLocationSample
+DataTypeNameSpeed
+- - - - - - - - - - - - - - - - - - - - - - - - - - -
+DataTypeNameHydration
+DataTypeNameNutrition
+- - - - - - - - - - - - - - - - - - - - - - - - - - -
+DataTypeNameBloodGlucose
+DataTypeNameBloodPressure
+DataTypeNameBodyFatPercentage
+DataTypeNameBodyTemperature
+DataTypeNameCervicalMucus
+DataTypeNameCervicalPosition
+DataTypeNameHeartRateBPM     [DONE]
+DataTypeNameHeight
+DataTypeNameMenstruation
+DataTypeNameOvulationTest
+DataTypeNameOxygenSaturation
+DataTypeNameSleep
+DataTypeNameVaginalSpotting
+DataTypeNameWeight
+- - - - - - - - - - - - - - - - - - - - - - - - - - -
+*/
+
+func (impl *googleFitAppCrontaberImpl) ProcessAllQueuedDataTask() error {
 	impl.Logger.Debug("starting task...")
 
 	// DEVELOPERS NOTE:
 	// Load up only the data we want to process in our application. In future
 	// if we want more data processed then add below:
 	dataTypeNames := []string{
-		gcp_a.DataTypeNameStepCountDelta,
 		gcp_a.DataTypeNameCaloriesBurned,
-		// gcp_a.DataTypeNameHeartRateBPM,
+		gcp_a.DataTypeNameStepCountDelta,
+		gcp_a.DataTypeNameHeartRateBPM,
+		//TODO: Add more health sensors here...
 	}
 
 	ctx := context.Background()
@@ -56,6 +103,11 @@ func (impl *googleFitAppCrontaberImpl) processForQueuedData(ctx context.Context,
 		if dp.StepCountDelta != nil {
 			val = float64(dp.StepCountDelta.Steps)
 		}
+	case gcp_a.DataTypeNameHeartRateBPM:
+		if dp.HeartRateBPM != nil {
+			val = float64(dp.HeartRateBPM.BPM)
+		}
+		//TODO: Add more health sensors here...
 	default:
 		err := fmt.Errorf("unsupported data type name: %s", dp.DataTypeName)
 		impl.Logger.Error("",
@@ -99,9 +151,8 @@ func (impl *googleFitAppCrontaberImpl) processForQueuedData(ctx context.Context,
 
 		// STEP 3: For debugging purposes update the console log.
 		impl.Logger.Debug("created datapoint",
-			// slog.String("id", dp.ID.Hex()),
 			slog.String("data_type_name", dp.DataTypeName),
-			// slog.String("metric_id", dp.MetricID.Hex()),
+			slog.String("metric_id", dp.MetricID.Hex()),
 			slog.Time("start_at", dp.StartAt),
 			slog.Time("end_at", dp.EndAt),
 			slog.Int("status", int(dp.Status)),

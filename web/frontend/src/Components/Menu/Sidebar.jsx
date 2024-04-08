@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMessage, faHeartbeat, faRankingStar, faStar, faChartLine, faLeaf, faTrophy, faHandHolding, faVideoCamera, faDumbbell, faUsers, faBuilding, faTachometer, faUserCircle, faSignOut } from '@fortawesome/free-solid-svg-icons'
 import { useRecoilState } from 'recoil';
 
-
 import { onHamburgerClickedState, currentUserState } from "../../AppState";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 
 export default props => {
@@ -45,16 +45,10 @@ export default props => {
         "/register-successful",
         "/index",
         "/login",
-        "/login/2fa",
-        "/login/2fa/step-1",
-        "/login/2fa/step-2",
-        "/login/2fa/step-3",
         "/logout",
         "/verify",
         "/forgot-password",
         "/password-reset",
-        "/terms",
-        "/privacy"
     ];
     const location = useLocation();
     var arrayLength = ignorePathsArr.length;
@@ -76,8 +70,21 @@ export default props => {
 
 
     //-------------//
-    // CASE 2 OF 3 //
+    //   Whatsapp  //
     //-------------//
+    const WhatsAppGroupButton = () => {
+        const whatsappGroupUrl = "https://chat.whatsapp.com/FdVtOFCoUN48PUy5E4AcKe";
+
+        const handleClick = () => {
+            // Open WhatsApp Group link in a new tab
+            window.open(whatsappGroupUrl, '_blank', 'noopener,noreferrer');
+        };
+        return (
+            <Link className="has-text-success is-size-6" onClick={handleClick}>
+                <FontAwesomeIcon icon={faWhatsapp} />&nbsp;BP8 Community
+            </Link>
+        );
+    }
 
     return (
         <>
@@ -185,6 +192,10 @@ export default props => {
                                 </a>
                             </li>
                         </ul>
+                        <p class="menu-label has-text-grey-light">
+                            Connect with us on
+                        </p>
+                        <WhatsAppGroupButton />
                     </aside>
                 </div>
             }
@@ -267,6 +278,10 @@ export default props => {
                                 </a>
                             </li>
                         </ul>
+                        <p class="menu-label has-text-grey-light">
+                            Connect with us on
+                        </p>
+                        <WhatsAppGroupButton />
                     </aside>
                 </div>
             }

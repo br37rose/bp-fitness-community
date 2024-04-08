@@ -239,3 +239,41 @@ var ActivitySegmentMap = map[int64]string{
 const (
 	ActivitySegmentType = "activity_segment"
 )
+
+const (
+	DataTypeKeyActivitySegment           = 1  // https://developers.google.com/fit/datatypes/activity
+	DataTypeKeyBasalMetabolicRate        = 2  // https://developers.google.com/fit/datatypes/activity#basal_metabolic_rate_bmr
+	DataTypeKeyCaloriesBurned            = 3  // https://developers.google.com/fit/datatypes/activity#rest_8
+	DataTypeKeyCyclingPedalingCadence    = 4  // https://developers.google.com/fit/datatypes/activity#cycling_pedaling_cadence
+	DataTypeKeyCyclingPedalingCumulative = 5  // https://developers.google.com/fit/datatypes/activity#cycling_pedaling_cumulative
+	DataTypeKeyHeartPoints               = 6  // https://developers.google.com/fit/datatypes/activity#heart_points
+	DataTypeKeyMoveMinutes               = 7  // https://developers.google.com/fit/datatypes/activity#move_minutes
+	DataTypeKeyPower                     = 8  // https://developers.google.com/fit/datatypes/activity#power
+	DataTypeKeyStepCountCadence          = 9  //https://developers.google.com/fit/datatypes/activity#step_count_cadence
+	DataTypeKeyStepCountDelta            = 10 // https://developers.google.com/fit/datatypes/activity#step_count_delta
+	DataTypeKeyWorkout                   = 11 //https://developers.google.com/fit/datatypes/activity#workout
+
+	DataTypeKeyCyclingWheelRevolutionRPM        = 12 // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_rpm
+	DataTypeKeyCyclingWheelRevolutionCumulative = 13 // https://developers.google.com/fit/datatypes/location#cycling_wheel_revolution_cumulative
+	DataTypeKeyDistanceDelta                    = 14 // https://developers.google.com/fit/datatypes/location#distance_delta
+	DataTypeKeyLocationSample                   = 15 // https://developers.google.com/fit/datatypes/location#location_sample
+	DataTypeKeySpeed                            = 16 // https://developers.google.com/fit/datatypes/location#speed
+
+	DataTypeKeyHydration = 17 // https://developers.google.com/fit/datatypes/nutrition
+	DataTypeKeyNutrition = 18 // https://developers.google.com/fit/datatypes/nutrition
+
+	DataTypeKeyBloodGlucose      = 19 // https://developers.google.com/fit/datatypes/health#blood_glucose
+	DataTypeKeyBloodPressure     = 20 // https://developers.google.com/fit/datatypes/health#blood_pressure
+	DataTypeKeyBodyFatPercentage = 21 // https://developers.google.com/fit/datatypes/health#body_fat_percentage
+	DataTypeKeyBodyTemperature   = 22 // https://developers.google.com/fit/datatypes/health#body_temperature
+	DataTypeKeyCervicalMucus     = 23 // https://developers.google.com/fit/datatypes/health#cervical_mucus
+	DataTypeKeyCervicalPosition  = 24 // https://developers.google.com/fit/datatypes/health#cervical_position
+	DataTypeKeyHeartRateBPM      = 25 // https://developers.google.com/fit/datatypes/health#heart_rate
+	DataTypeKeyHeight            = 26 // https://developers.google.com/fit/datatypes/health#height
+	DataTypeKeyMenstruation      = 27 // https://developers.google.com/fit/datatypes/health#menstruation
+	DataTypeKeyOvulationTest     = 28 // https://developers.google.com/fit/datatypes/health#ovulation_test
+	DataTypeKeyOxygenSaturation  = 29 // https://developers.google.com/fit/datatypes/health#oxygen_saturation
+	DataTypeKeySleep             = 30 // https://developers.google.com/fit/datatypes/health#sleep
+	DataTypeKeyVaginalSpotting   = 31 // https://developers.google.com/fit/datatypes/health#vaginal_spotting
+	DataTypeKeyWeight            = 32 // https://developers.google.com/fit/datatypes/health#weight
+)

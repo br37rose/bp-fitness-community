@@ -288,7 +288,7 @@ function AccountWearableTechLaunchpad() {
                             />{" "}
                           </Link>
                         </b>{" "}
-                        attach a simulator fitbit with fake data.
+                        attach a Google Fit simulator  with fake data.
                       </i>
                     </p>
                   </div>

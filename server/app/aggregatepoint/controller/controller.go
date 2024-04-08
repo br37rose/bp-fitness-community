@@ -10,7 +10,8 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
-	googlefitdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
+	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
+	gfdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	organization_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
@@ -21,16 +22,16 @@ import (
 // AggregatePointController Interface for organization business logic controller.
 type AggregatePointController interface {
 	ListByFilter(ctx context.Context, f *ap_s.AggregatePointPaginationListFilter) (*ap_s.AggregatePointPaginationListResult, error)
-	AggregateThisHourForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastHourForAllActiveFitBitApps(ctx context.Context) error
-	AggregateTodayForAllActiveFitBitApps(ctx context.Context) error
-	AggregateYesterdayForAllActiveFitBitApps(ctx context.Context) error
-	AggregateThisISOWeekForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastISOWeekForAllActiveFitBitApps(ctx context.Context) error
-	AggregateThisMonthForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastMonthForAllActiveFitBitApps(ctx context.Context) error
-	AggregateThisYearForAllActiveFitBitApps(ctx context.Context) error
-	AggregateLastYearForAllActiveFitBitApps(ctx context.Context) error
+	AggregateThisHourForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastHourForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateTodayForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateYesterdayForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateThisISOWeekForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastISOWeekForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateThisMonthForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastMonthForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateThisYearForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateLastYearForAllActiveGoogleFitApps(ctx context.Context) error
 	GetSummary(ctx context.Context, userID primitive.ObjectID) (*AggregatePointSummaryResponse, error)
 }
 
@@ -44,7 +45,8 @@ type AggregatePointControllerImpl struct {
 	Kmutex                   kmutex.Provider
 	OrganizationStorer       organization_s.OrganizationStorer
 	UserStorer               user_s.UserStorer
-	GoogleFitDataPointStorer googlefitdp_s.GoogleFitDataPointStorer
+	GoogleFitAppStorer       gfa_ds.GoogleFitAppStorer
+	GoogleFitDataPointStorer gfdp_s.GoogleFitDataPointStorer
 	DataPointStorer          dp_s.DataPointStorer
 	AggregatePointStorer     ap_s.AggregatePointStorer
 }
@@ -58,7 +60,8 @@ func NewController(
 	kmutexp kmutex.Provider,
 	org_storer organization_s.OrganizationStorer,
 	usr_storer user_s.UserStorer,
-	gfdp_storer googlefitdp_s.GoogleFitDataPointStorer,
+	gfa_storer gfa_ds.GoogleFitAppStorer,
+	gfdp_storer gfdp_s.GoogleFitDataPointStorer,
 	dp_storer dp_s.DataPointStorer,
 	ap_storer ap_s.AggregatePointStorer,
 ) AggregatePointController {
@@ -72,6 +75,7 @@ func NewController(
 		Kmutex:                   kmutexp,
 		OrganizationStorer:       org_storer,
 		UserStorer:               usr_storer,
+		GoogleFitAppStorer:       gfa_storer,
 		GoogleFitDataPointStorer: gfdp_storer,
 		DataPointStorer:          dp_storer,
 		AggregatePointStorer:     ap_storer,
