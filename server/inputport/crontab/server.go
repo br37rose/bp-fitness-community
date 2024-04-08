@@ -128,11 +128,8 @@ func (port *crontabInputPort) Run() {
 	port.Crontab.MustAddJob("* * * * *", port.RankThisISOWeek) // every minute
 	port.Crontab.MustAddJob("* * * * *", port.RankThisMonth)   // every minute
 	port.Crontab.MustAddJob("* * * * *", port.RankThisYear)    // every minute
-	//--------------------------------------------------------------------------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	//update fitness plans
+	// Fitness Plans
 	port.Crontab.MustAddJob("* * * * *", port.updateFitnessPlans) // every minute
 }
 

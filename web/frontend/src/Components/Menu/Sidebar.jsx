@@ -45,10 +45,16 @@ export default props => {
         "/register-successful",
         "/index",
         "/login",
+        "/login/2fa",
+        "/login/2fa/step-1",
+        "/login/2fa/step-2",
+        "/login/2fa/step-3",
         "/logout",
         "/verify",
         "/forgot-password",
         "/password-reset",
+        "/terms",
+        "/privacy"
     ];
     const location = useLocation();
     var arrayLength = ignorePathsArr.length;
