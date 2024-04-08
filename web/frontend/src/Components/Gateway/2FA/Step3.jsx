@@ -15,6 +15,13 @@ import { ROOT_ROLE_ID, ADMIN_ROLE_ID, TRAINER_ROLE_ID, MEMBER_ROLE_ID } from "..
 
 function TwoFactorAuthenticationWizardStep3() {
     ////
+    //// URL Parameters.
+    ////
+
+    const [searchParams] = useSearchParams(); // Special thanks via https://stackoverflow.com/a/65451140
+    const paramToken = searchParams.get("token");
+
+    ////
     //// Global state.
     ////
 
@@ -28,6 +35,7 @@ function TwoFactorAuthenticationWizardStep3() {
     const [errors, setErrors] = useState({});
     const [forceURL, setForceURL] = useState("");
     const [verificationToken, setVerificationToken] = useState("");
+    const [submittedParamToken, setSubmittedParamToken] = useState(false);
 
     ////
     //// API.
@@ -108,11 +116,36 @@ function TwoFactorAuthenticationWizardStep3() {
         let mounted = true;
 
         if (mounted) {
-            window.scrollTo(0, 0);  // Start the page at the top of the page.
+          window.scrollTo(0, 0); // Start the page at the top of the page.
+
+          // DEVELOPERS NOTE:
+          // It appears that `Apple Verification` service submits a `token` url
+          // parameter to the page with the uniquely generated 2FA code; as a result,
+          // the following code will check to see if this `token` url parameter
+          // exists and whether it was submitted or not and if it wasn't submitted
+          // then we submit for OTP verification and proceed.
+          if (
+            submittedParamToken === false &&
+            paramToken !== undefined &&
+            paramToken !== null &&
+            paramToken !== ""
+          ) {
+            const payload = {
+              verification_token: paramToken,
+            };
+            postVertifyOTP(
+              payload,
+              onVerifyOPTSuccess,
+              onVerifyOPTError,
+              onVerifyOPTDone,
+            );
+            setSubmittedParamToken(true);
+            setVerificationToken(paramToken);
+          }
         }
 
         return () => mounted = false;
-    }, []);
+    }, [paramToken, submittedParamToken]);
 
     ////
     //// Component rendering.
@@ -179,7 +212,7 @@ function TwoFactorAuthenticationWizardStep3() {
                                         {/* End box */}
 
                                         <div className="has-text-centered">
-                                            <p>© 2024 Workery</p>
+                                            <p>© 2024 BP8 Fitness Community</p>
                                         </div>
                                         {/* End suppoert text. */}
 

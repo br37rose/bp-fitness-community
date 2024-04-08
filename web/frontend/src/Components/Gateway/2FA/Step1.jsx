@@ -85,6 +85,37 @@ function TwoFactorAuthenticationWizardStep1() {
                                                 <br />
                                                 <p class="has-text-grey">To begin, please download any of the following applications for your mobile device.</p>
                                                 <p>&nbsp;</p>
+
+                                                {/* Apple 2FA Authenticator */}
+                                                <div className="card">
+                                                  <div className="card-content">
+                                                    <div className="media">
+                                                      <div className="media-content">
+                                                        <p className="title is-5">
+                                                          <u>Apple 2FA</u>
+                                                        </p>
+                                                      </div>
+                                                    </div>
+
+                                                    <div className="content">
+                                                      <p>
+                                                        All iOS and Mac devices with a{" "}
+                                                        <b>Safari Web Browser</b> come with build in a
+                                                        2FA verification services. Sign in with your{" "}
+                                                        <i>Apple ID</i> in Safari and you can take
+                                                        advantage of this service.
+                                                      </p>
+                                                    </div>
+                                                  </div>
+                                                  {/*}
+                                                    <footer className="card-footer">
+                                                        <button className="card-footer-item button is-primary is-small">
+                                                            Download&nbsp;<FontAwesomeIcon className="fas" icon={faArrowRight} />
+                                                        </button>
+                                                    </footer>
+                                                    */}
+                                                </div>
+
                                                 {/* Google Authenticator */}
                                                 <div className="card">
                                                     <div className="card-content">
@@ -167,7 +198,7 @@ function TwoFactorAuthenticationWizardStep1() {
                                         {/* End box */}
 
                                         <div className="has-text-centered">
-                                            <p>© 2024 Workery</p>
+                                            <p>© 2024 BP8 Fitness Community</p>
                                         </div>
                                         {/* End suppoert text. */}
 
