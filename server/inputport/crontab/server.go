@@ -5,7 +5,9 @@ import (
 
 	"github.com/mileusna/crontab"
 
+	oai_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	agg_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/controller"
+	fp_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	googlefitapp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	rank_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	user_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/controller"
@@ -25,6 +27,8 @@ type crontabInputPort struct {
 	AggregatePointController agg_c.AggregatePointController
 	RankPointController      rank_c.RankPointController
 	GoogleFitAppCrontab      googlefitapp_cron.GoogleFitAppCrontaber
+	FitnessPlanStorer        fp_d.FitnessPlanStorer
+	OpenAIConnector          oai_c.OpenAIConnector
 }
 
 func NewInputPort(
@@ -34,6 +38,8 @@ func NewInputPort(
 	aggContr agg_c.AggregatePointController,
 	rankContr rank_c.RankPointController,
 	gfaCron googlefitapp_cron.GoogleFitAppCrontaber,
+	fitnessPlanStorer fp_d.FitnessPlanStorer,
+	openAI oai_c.OpenAIConnector,
 ) InputPortServer {
 	// Initialize.
 
@@ -48,6 +54,8 @@ func NewInputPort(
 		AggregatePointController: aggContr,
 		RankPointController:      rankContr,
 		GoogleFitAppCrontab:      gfaCron,
+		FitnessPlanStorer:        fitnessPlanStorer,
+		OpenAIConnector:          openAI,
 	}
 
 	return p
@@ -123,6 +131,9 @@ func (port *crontabInputPort) Run() {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	//update fitness plans
+	port.Crontab.MustAddJob("* * * * *", port.updateFitnessPlans) // every minute
 }
 
 func (port *crontabInputPort) Shutdown() {

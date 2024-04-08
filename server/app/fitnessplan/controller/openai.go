@@ -12,6 +12,7 @@ import (
 	exercise_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	a_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	domain "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
+	"github.com/sashabaranov/go-openai"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -55,14 +56,14 @@ func (c *FitnessPlanControllerImpl) generateFitnessPlanInBackground(ctx context.
 				return nil, err
 			}
 
-			// Set the state.
-			// fp.Status = domain.StatusActive
-			fp.ModifiedAt = time.Now()
-			if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
-				c.Logger.Error("response received",
-					slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-				return nil, err
-			}
+			// Set the state to in progress.
+			// fp.Status = domain.S
+			// fp.ModifiedAt = time.Now()
+			// if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
+			// 	c.Logger.Error("response received",
+			// 		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+			// 	return nil, err
+			// }
 		}
 		c.Logger.Debug("finished getting from openai",
 			slog.Any("modified_by_user_id", fp.ModifiedByUserID))
@@ -75,6 +76,246 @@ func (c *FitnessPlanControllerImpl) generateFitnessPlanInBackground(ctx context.
 		c.Logger.Error("session failed error",
 			slog.Any("error", err))
 	}
+}
+
+func (c *FitnessPlanControllerImpl) generateFitnessPlanInstructions(sessCtx mongo.SessionContext, fp *domain.FitnessPlan) error {
+	c.Logger.Debug("generating instructions prompt...",
+		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+
+	prompt, err := c.generateFitnessPlanInstructionsPrompt(sessCtx, fp)
+	if err != nil {
+		c.Logger.Error("failed generating prompt",
+			slog.Any("error", err),
+			slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+		return err
+	}
+	c.Logger.Debug("prompt ready",
+		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+	fp.PromptTwo = prompt
+
+	c.Logger.Debug("submitting prompt to openai",
+		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+
+	excercises, err := c.listAvailableExcercises(sessCtx, fp)
+	if err != nil {
+		c.Logger.Error("failed to list excecises", slog.Any("error", err))
+		return err
+	}
+
+	res, err := c.OpenAI.CreateFitnessPlan(sessCtx, prompt, excercises)
+	if err != nil {
+		c.Logger.Error("failed to `CreateFitnessPlan` api call to openai",
+			slog.Any("error", err))
+
+		// Save error.
+		fp.Status = domain.StatusError
+		fp.Error = err.Error()
+		fp.ModifiedAt = time.Now()
+		if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
+			c.Logger.Error("datebase update error",
+				slog.Any("error", err),
+				slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+			return err
+		}
+	}
+
+	// res, err := c.OpenAI.CreateChatCompletion(prompt)
+	// if err != nil { // Error case.
+	// 	c.Logger.Error("failed executing `completion` api call to openai",
+	// 		slog.Any("error", err),
+	// 		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+
+	// 	// Save error.
+	// 	fp.Status = domain.StatusError
+	// 	fp.Error = err.Error()
+	// 	fp.ModifiedAt = time.Now()
+	// 	if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
+	// 		c.Logger.Error("datebase update error",
+	// 			slog.Any("error", err),
+	// 			slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+	// 		return err
+	// 	}
+
+	// 	return err
+	// }
+	// c.Logger.Debug("response received",
+	// 	slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+
+	// Empty case from OpenAI
+	if res.ID == "" || res.ThreadID == "" {
+		err := fmt.Errorf("no response from open ai for fp %v", fp.ID.Hex())
+		// Save error.
+		fp.Status = domain.StatusError
+		fp.Error = err.Error()
+		fp.ModifiedAt = time.Now()
+		if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
+			c.Logger.Error("datebase update error",
+				slog.Any("error", err),
+				slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+			return err
+		}
+		return err
+	}
+
+	status := 0
+	switch res.Status {
+	case openai.RunStatusCancelling, openai.RunStatusExpired, openai.RunStatusFailed:
+		status = domain.StatusError
+	default:
+		status = domain.StatusPending
+	}
+
+	fp.Status = int8(status)
+	fp.RunnerID = res.ID
+	fp.ThreadID = res.ThreadID
+	fp.ModifiedAt = time.Now()
+	if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
+		c.Logger.Error("datebase update error",
+			slog.Any("error", err),
+			slog.Any("modified_by_user_id", fp.ModifiedByUserID))
+		return err
+	}
+	return nil
+}
+
+func (c *FitnessPlanControllerImpl) generateFitnessPlanInstructionsPrompt(sessCtx mongo.SessionContext, fp *domain.FitnessPlan) (string, error) {
+	//
+	// The following lines of code will iterate through all the exercise names
+	// in this fitness plan and put it into a string to plug into our prompt.
+	//
+
+	// en := ""
+	// for _, e := range fp.ExerciseNames {
+	// 	en += e + ","
+	// }
+	// if en != "" { // Remove the last comma in the string.
+	// 	en = strings.TrimSuffix(en, ",")
+	// }
+
+	//
+	// Take our fitness plan and stringify it so we can plug into prompt.
+	//
+
+	// Step 1: Convert to a string the `HomeGymEquipment`field.
+	var hge string = ""
+	for _, s := range fp.HomeGymEquipment {
+		hge += domain.HomeGymEquipmentMap[s] + ", "
+	}
+	if hge != "" { // Remove the last comma in the string.
+		hge = strings.TrimSuffix(hge, ",")
+	}
+
+	// Step 2: Return yes or no if has access to`commercial-style gym`
+	hatcg := "Yes"
+	// if fp.HasAccessToCommercialGym {
+	// 	hatcg = "Yes"
+	// }
+
+	// Step 3: Convert to a string the `EquipmentAccess` field.
+	wah := domain.HasWorkoutsAtHomeMap[fp.HasWorkoutsAtHome]
+
+	// Step 4: Convert clients height.
+	height := fmt.Sprintf("%v ft %v in", fp.HeightFeet, fp.HeightInches)
+
+	// Step 5: Date of birth.
+	bd := fmt.Sprintf("%v", fp.Birthday)
+
+	// Step 6: Gender
+	var gender string
+	if fp.Gender == domain.GenderOther {
+		gender = fp.GenderOther
+	} else {
+		if fp.Gender == domain.GenderMale {
+			gender = "Male"
+		}
+		if fp.Gender == domain.GenderFemale {
+			gender = "Female"
+		}
+	}
+
+	// Step 7: IdealWeight
+	iw := fmt.Sprintf("%v lbs", fp.IdealWeight)
+
+	// Step 8: PhysicalActivity
+	pa := domain.PhysicalActivityMap[fp.PhysicalActivity]
+
+	// Step 9: WorkoutIntensity
+	wi := domain.WorkoutIntensityMap[fp.WorkoutIntensity]
+
+	// Step 10: DaysPerWeek
+	dpw := domain.DaysPerWeekMap[fp.DaysPerWeek]
+
+	// Step 11: TimePerDay
+	tpd := domain.TimePerDayMap[fp.TimePerDay]
+
+	// Step 12: MaxWeeks
+	mw := domain.MaxWeekMap[fp.MaxWeeks]
+
+	// Step 13: Goals
+	var g string = ""
+	for _, s := range fp.Goals {
+		g += domain.GoalMap[s] + ", "
+	}
+	if g != "" { // Remove the last comma in the string.
+		g = strings.TrimSuffix(g, ",")
+	}
+
+	// Step 14: WorkoutPreferences
+	wp := ""
+	for _, s := range fp.WorkoutPreferences {
+		wp += domain.WorkoutPreferenceMap[s] + ", "
+	}
+	if wp != "" { // Remove the last comma in the string.
+		wp = strings.TrimSuffix(wp, ",")
+	}
+
+	prompt := fmt.Sprintf(`
+        CLIENT DETAILS:
+     	The equipment that client has access to: %s
+		Does client have access to a commercial-style gym: %s
+		Does client workout at home: %s
+		Client Height: %s
+		Client Date of Birth: %s
+        Client Gender: %s
+		Client ideal weight they wish to achieve (lbs): %s
+		Client current level of daily physical activity: %s
+		Client current level of intensity in exercise routine: %s
+        Client wants wants to train the following number of days per week: %s
+        Client's length of time per day that they can train: %s
+        Client's goal of number of weeks that they would like the training plan to last: %s
+        Client's fitness goals: %s
+        Client's workout preference: %s
+	`, hge, hatcg, wah, height, bd, gender, iw, pa, wi, dpw, tpd, mw, g, wp)
+	return prompt, nil
+}
+
+func (c *FitnessPlanControllerImpl) listAvailableExcercises(ctx context.Context, fp *domain.FitnessPlan) (string, error) {
+
+	exercises, err := c.ExerciseStorer.ListByFilter(ctx, &exercise_s.ExerciseListFilter{
+		Cursor:          primitive.NilObjectID,
+		SortField:       "created_at",
+		SortOrder:       -1,
+		OrganizationID:  fp.OrganizationID,
+		ExcludeArchived: true,
+		PageSize:        500,
+		Gender:          a_d.GenderMap[fp.Gender],
+	})
+	if err != nil {
+		c.Logger.Error("304")
+		return "", err
+	}
+
+	if len(exercises.Results) == 0 {
+		return "", nil
+	}
+
+	exerciseList := make([]string, 0, len(exercises.Results))
+	for _, exercise := range exercises.Results {
+		exerciseList = append(exerciseList, fmt.Sprintf("id=%s, name=%s, description=%s", exercise.ID.Hex(), exercise.Name, exercise.Description))
+	}
+
+	return strings.Join(exerciseList, ","), nil
+
 }
 
 func (c *FitnessPlanControllerImpl) generateFitnessPlanRecommendedExercises(sessCtx mongo.SessionContext, fp *domain.FitnessPlan) error {
@@ -283,187 +524,5 @@ func (c *FitnessPlanControllerImpl) generateFitnessPlanRecommendedExercisesPromp
         Client's workout preference: %s
 	`, en, hge, hatcg, wah,
 		height, bd, gender, iw, pa, wi, dpw, tpd, mw, g, wp)
-	return prompt, nil
-}
-
-func (c *FitnessPlanControllerImpl) generateFitnessPlanInstructions(sessCtx mongo.SessionContext, fp *domain.FitnessPlan) error {
-	c.Logger.Debug("generating instructions prompt...",
-		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-
-	prompt, err := c.generateFitnessPlanInstructionsPrompt(sessCtx, fp)
-	if err != nil {
-		c.Logger.Error("failed generating prompt",
-			slog.Any("error", err),
-			slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-		return err
-	}
-	c.Logger.Debug("prompt ready",
-		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-	fp.PromptTwo = prompt
-
-	c.Logger.Debug("submitting prompt to openai",
-		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-
-	res, err := c.OpenAI.CreateChatCompletion(prompt)
-	if err != nil { // Error case.
-		c.Logger.Error("failed executing `completion` api call to openai",
-			slog.Any("error", err),
-			slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-
-		// Save error.
-		fp.Status = domain.StatusError
-		fp.Error = err.Error()
-		fp.ModifiedAt = time.Now()
-		if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
-			c.Logger.Error("datebase update error",
-				slog.Any("error", err),
-				slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-			return err
-		}
-
-		return err
-	}
-	c.Logger.Debug("response received",
-		slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-
-	// Empty case from OpenAI
-	if res == "" {
-		err := fmt.Errorf("no response from open ai for fp %v", fp.ID.Hex())
-
-		// Save error.
-		fp.Status = domain.StatusError
-		fp.Error = err.Error()
-		fp.ModifiedAt = time.Now()
-		if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
-			c.Logger.Error("datebase update error",
-				slog.Any("error", err),
-				slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-			return err
-		}
-		return err
-	}
-
-	fp.Status = domain.StatusActive
-	fp.Instructions = res
-	fp.ModifiedAt = time.Now()
-	if err := c.FitnessPlanStorer.UpdateByID(sessCtx, fp); err != nil {
-		c.Logger.Error("datebase update error",
-			slog.Any("error", err),
-			slog.Any("modified_by_user_id", fp.ModifiedByUserID))
-		return err
-	}
-	return nil
-}
-
-func (c *FitnessPlanControllerImpl) generateFitnessPlanInstructionsPrompt(sessCtx mongo.SessionContext, fp *domain.FitnessPlan) (string, error) {
-	//
-	// The following lines of code will iterate through all the exercise names
-	// in this fitness plan and put it into a string to plug into our prompt.
-	//
-
-	en := ""
-	for _, e := range fp.ExerciseNames {
-		en += e + ","
-	}
-	if en != "" { // Remove the last comma in the string.
-		en = strings.TrimSuffix(en, ",")
-	}
-
-	//
-	// Take our fitness plan and stringify it so we can plug into prompt.
-	//
-
-	// Step 1: Convert to a string the `HomeGymEquipment`field.
-	var hge string = ""
-	for _, s := range fp.HomeGymEquipment {
-		hge += domain.HomeGymEquipmentMap[s] + ", "
-	}
-	if hge != "" { // Remove the last comma in the string.
-		hge = strings.TrimSuffix(hge, ",")
-	}
-
-	// Step 2: Return yes or no if has access to`commercial-style gym`
-	hatcg := "Yes" //TODO
-
-	// Step 3: Convert to a string the `EquipmentAccess` field.
-	wah := domain.HasWorkoutsAtHomeMap[fp.HasWorkoutsAtHome]
-
-	// Step 4: Convert clients height.
-	height := fmt.Sprintf("%v ft %v in", fp.HeightFeet, fp.HeightInches)
-
-	// Step 5: Date of birth.
-	bd := fmt.Sprintf("%v", fp.Birthday)
-
-	// Step 6: Gender
-	var gender string
-	if fp.Gender == domain.GenderOther {
-		gender = fp.GenderOther
-	} else {
-		if fp.Gender == domain.GenderMale {
-			gender = "Male"
-		}
-		if fp.Gender == domain.GenderFemale {
-			gender = "Female"
-		}
-	}
-
-	// Step 7: IdealWeight
-	iw := fmt.Sprintf("%v lbs", fp.IdealWeight)
-
-	// Step 8: PhysicalActivity
-	pa := domain.PhysicalActivityMap[fp.PhysicalActivity]
-
-	// Step 9: WorkoutIntensity
-	wi := domain.WorkoutIntensityMap[fp.WorkoutIntensity]
-
-	// Step 10: DaysPerWeek
-	dpw := domain.DaysPerWeekMap[fp.DaysPerWeek]
-
-	// Step 11: TimePerDay
-	tpd := domain.TimePerDayMap[fp.TimePerDay]
-
-	// Step 12: MaxWeeks
-	mw := domain.MaxWeekMap[fp.MaxWeeks]
-
-	// Step 13: Goals
-	var g string = ""
-	for _, s := range fp.Goals {
-		g += domain.GoalMap[s] + ", "
-	}
-	if g != "" { // Remove the last comma in the string.
-		g = strings.TrimSuffix(g, ",")
-	}
-
-	// Step 14: WorkoutPreferences
-	wp := ""
-	for _, s := range fp.WorkoutPreferences {
-		wp += domain.WorkoutPreferenceMap[s] + ", "
-	}
-	if wp != "" { // Remove the last comma in the string.
-		wp = strings.TrimSuffix(wp, ",")
-	}
-
-	prompt := fmt.Sprintf(`
-		Act as a personal trainer and create a customized workout plan based on the following EXERCISES and DETAILS. In your response, please consider the client's fitness goals, current fitness level, available equipment, time commitment, and preferences in order to provide a safe, effective, and enjoyable workout plan that is tailored to their specific needs and circumstances. All output must be in English.
-
-		EXERCISES:
-		%s
-
-        CLIENT DETAILS:
-     	The equipment that client has access to: %s
-		Does client have access to a commercial-style gym: %s
-		Does client workout at home: %s
-		Client Height: %s
-		Client Date of Birth: %s
-        Client Gender: %s
-		Client ideal weight they wish to achieve (lbs): %s
-		Client current level of daily physical activity: %s
-		Client current level of intensity in exercise routine: %s
-        Client wants wants to train the following number of days per week: %s
-        Client's length of time per day that they can train: %s
-        Client's goal of number of weeks that they would like the training plan to last: %s
-        Client's fitness goals: %s
-        Client's workout preference: %s
-	`, en, hge, hatcg, wah, height, bd, gender, iw, pa, wi, dpw, tpd, mw, g, wp)
 	return prompt, nil
 }

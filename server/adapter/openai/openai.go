@@ -13,11 +13,15 @@ import (
 type OpenAIConnector interface {
 	Shutdown()
 	CreateChatCompletion(prompt string) (string, error)
+	CreateFitnessPlan(ctx context.Context, prompt, availableExcercises string) (openai.Run, error)
+	GetRunner(ctx context.Context, threadID, runnerID string) (openai.Run, error)
+	SubmitToolOutputs(ctx context.Context, threadID, runnerID string, request openai.SubmitToolOutputsRequest) (response openai.Run, err error)
 }
 
 type openAIConnector struct {
-	Logger *slog.Logger
-	Client *openai.Client
+	Logger             *slog.Logger
+	Client             *openai.Client
+	FitnessAssistantID string
 }
 
 func NewOpenAIConnector(cfg *c.Conf, logger *slog.Logger, dbClient *mongo_client.Client) OpenAIConnector {
@@ -25,8 +29,9 @@ func NewOpenAIConnector(cfg *c.Conf, logger *slog.Logger, dbClient *mongo_client
 	client := openai.NewClient(cfg.AI.APIKey)
 	logger.Debug("openai initialized with mongodb as backend")
 	return &openAIConnector{
-		Logger: logger,
-		Client: client,
+		Logger:             logger,
+		Client:             client,
+		FitnessAssistantID: cfg.AI.FitnessPlanAssistantID,
 	}
 }
 
@@ -57,4 +62,29 @@ func (impl *openAIConnector) CreateChatCompletion(prompt string) (string, error)
 		return "", nil
 	}
 	return resp.Choices[0].Message.Content, nil
+}
+
+func (impl *openAIConnector) CreateFitnessPlan(ctx context.Context, prompt, availableExcercises string) (openai.Run, error) {
+
+	runnerResp, err := impl.Client.CreateThreadAndRun(ctx, openai.CreateThreadAndRunRequest{
+		Thread: openai.ThreadRequest{
+			Messages: []openai.ThreadMessage{
+				{Role: openai.ThreadMessageRoleUser, Content: prompt},
+				{Role: openai.ThreadMessageRoleUser, Content: "Available exercises: " + availableExcercises},
+			},
+		},
+		RunRequest: openai.RunRequest{
+			AssistantID: impl.FitnessAssistantID,
+		},
+	})
+
+	return runnerResp, err
+}
+
+func (impl *openAIConnector) GetRunner(ctx context.Context, threadID, runnerID string) (openai.Run, error) {
+	return impl.Client.RetrieveRun(ctx, threadID, runnerID)
+}
+
+func (impl *openAIConnector) SubmitToolOutputs(ctx context.Context, threadID, runnerID string, request openai.SubmitToolOutputsRequest) (response openai.Run, err error) {
+	return impl.Client.SubmitToolOutputs(ctx, threadID, runnerID, request)
 }

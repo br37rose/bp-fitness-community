@@ -54,12 +54,27 @@ type FitnessPlan struct {
 	UserID             primitive.ObjectID     `bson:"user_id,omitempty" json:"user_id,omitempty"`
 	UserName           string                 `bson:"user_name" json:"user_name"`
 	UserLexicalName    string                 `bson:"user_lexical_name" json:"user_lexical_name"`
+	WeeklyFitnessPlans []*WeeklyFitnessPlan   `bson:"weekly_fitness_plans" json:"weekly_fitness_plans"`
+	ThreadID           string                 `bson:"thread_id"  json:"-"`
+	RunnerID           string                 `bson:"runner_id"  json:"-"`
 }
 
 type FitnessPlanExercise struct {
-	ID   primitive.ObjectID `bson:"_id" json:"id"`
-	Name string             `bson:"name" json:"name"`
+	ID           primitive.ObjectID `bson:"_id" json:"id"`
+	Name         string             `bson:"name" json:"name"`
+	VideoURL     string             `bson:"video_url" json:"video_url"`
+	ThumbnailURL string             `bson:"thumbnail_url" json:"thumbnail_url"`
 	// DEVELOPERS NOTE: Add more of your fields here...
+}
+
+type DailyPlan struct {
+	Title       string `json:"title"`
+	PlanDetails string `json:"plan_details"`
+}
+
+type WeeklyFitnessPlan struct {
+	Title      string      `json:"title"`
+	DailyPlans []DailyPlan `json:"daily_plans"`
 }
 
 type FitnessPlanListFilter struct {
@@ -72,7 +87,7 @@ type FitnessPlanListFilter struct {
 	// Filter related.
 	OrganizationID primitive.ObjectID
 	UserID         primitive.ObjectID
-	Status         int8
+	StatusList     []int8
 	SearchText     string
 	ExerciseNames  []string
 }

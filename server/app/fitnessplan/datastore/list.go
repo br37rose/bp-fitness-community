@@ -31,8 +31,8 @@ func (impl FitnessPlanStorerImpl) ListByFilter(ctx context.Context, f *FitnessPl
 		// Use the $in operator to filter documents where ExerciseNames contains any of the provided names
 		filter["exercise_names"] = bson.M{"$in": f.ExerciseNames}
 	}
-	if f.Status != 0 {
-		filter["status"] = f.Status
+	if len(f.StatusList) > 0 {
+		filter["status"] = bson.M{"$in": f.StatusList}
 	}
 
 	impl.Logger.Debug("fetching video categories list",
@@ -41,7 +41,7 @@ func (impl FitnessPlanStorerImpl) ListByFilter(ctx context.Context, f *FitnessPl
 		slog.String("SortField", f.SortField),
 		slog.Any("SortOrder", f.SortOrder),
 		slog.Any("OrganizationID", f.OrganizationID),
-		slog.Any("Status", f.Status),
+		slog.Any("Status", f.StatusList),
 	)
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.

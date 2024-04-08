@@ -47,3 +47,9 @@ $RECYCLE.BIN/
 .directory
 .idea  # PyCharm
 */.idea/
+
+# vscode
+.vscode
+
+# env
+.env

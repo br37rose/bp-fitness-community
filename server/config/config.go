@@ -78,8 +78,9 @@ type paymentProcessorConfig struct {
 }
 
 type openAIConfig struct {
-	APIKey          string `env:"BP8_BACKEND_OPENAI_API_KEY,required"`
-	OrganizationKey string `env:"BP8_BACKEND_OPENAI_ORGANIZATION_KEY,required"`
+	APIKey                 string `env:"BP8_BACKEND_OPENAI_API_KEY,required"`
+	OrganizationKey        string `env:"BP8_BACKEND_OPENAI_ORGANIZATION_KEY,required"`
+	FitnessPlanAssistantID string `env:"BP8_BACKEND_OPENAI_API_FITNESS_PLAN_ASSISTANT_ID,required"`
 }
 
 type googleCloudPlatformAppConfig struct {

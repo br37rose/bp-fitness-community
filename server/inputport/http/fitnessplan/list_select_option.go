@@ -14,11 +14,11 @@ func (h *Handler) ListAsSelectOptionByFilter(w http.ResponseWriter, r *http.Requ
 	ctx := r.Context()
 
 	f := &sub_s.FitnessPlanListFilter{
-		Cursor:    primitive.NilObjectID,
-		PageSize:  25,
-		SortField: "_id",
-		SortOrder: 1, // 1=ascending | -1=descending
-		Status:    sub_s.StatusActive,
+		Cursor:     primitive.NilObjectID,
+		PageSize:   25,
+		SortField:  "_id",
+		SortOrder:  1, // 1=ascending | -1=descending
+		StatusList: []int8{sub_s.StatusActive},
 	}
 
 	// Here is where you extract url parameters.
@@ -76,7 +76,7 @@ func (h *Handler) ListAsSelectOptionByFilter(w http.ResponseWriter, r *http.Requ
 	if statusStr != "" {
 		status, _ := strconv.ParseInt(statusStr, 10, 64)
 		if status != 0 {
-			f.Status = int8(status)
+			f.StatusList = []int8{int8(status)}
 		}
 	}
 
