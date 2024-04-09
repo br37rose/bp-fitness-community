@@ -77,6 +77,9 @@ import (
 	vcon_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/controller"
 	vcon_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/datastore"
 	vcon_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
+	w_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/controller"
+	w_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
+	w_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
@@ -181,6 +184,9 @@ func InitializeEvent() Application {
 		tp_s.NewDatastore,
 		tp_c.NewController,
 		tp_http.NewHandler,
+		w_s.NewDatastore,
+		w_c.NewController,
+		w_http.NewHandler,
 		NewApplication)
 	return Application{}
 }
