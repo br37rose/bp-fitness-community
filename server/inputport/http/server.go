@@ -23,6 +23,7 @@ import (
 	strpp "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/paymentprocessor/httptransport/stripe"
 	rankpoint_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/httptransport"
 	tag_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
+	tp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/httptransport"
 	user_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/httptransport"
 	videocategory_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocategory/httptransport"
 	videocollection_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocollection/httptransport"
@@ -63,6 +64,7 @@ type httpInputPort struct {
 	AggregatePoint           *aggregatepoint_http.Handler
 	RankPoint                *rankpoint_http.Handler
 	Biometric                *biometric_http.Handler
+	TrainingProgram          *tp_http.Handler
 }
 
 func NewInputPort(
@@ -90,6 +92,7 @@ func NewInputPort(
 	ap *aggregatepoint_http.Handler,
 	rp *rankpoint_http.Handler,
 	bio *biometric_http.Handler,
+	tp *tp_http.Handler,
 ) InputPortServer {
 	// Initialize the ServeMux.
 	mux := http.NewServeMux()
@@ -133,6 +136,7 @@ func NewInputPort(
 		AggregatePoint:           ap,
 		RankPoint:                rp,
 		Biometric:                bio,
+		TrainingProgram:          tp,
 	}
 
 	// Attach the HTTP server controller to the ServerMux.
@@ -387,6 +391,10 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.Biometric.Leaderboard(w, r)
 	case n == 4 && p[1] == "v1" && p[2] == "biometrics" && p[3] == "summary" && r.Method == http.MethodGet:
 		port.Biometric.GetSummary(w, r)
+
+		// --- TRAINING PROGRAM --- //
+	case n == 3 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodPost:
+		port.TrainingProgram.Create(w, r)
 
 	// --- TAG --- //
 	// case n == 3 && p[1] == "v1" && p[2] == "tags" && r.Method == http.MethodGet:
