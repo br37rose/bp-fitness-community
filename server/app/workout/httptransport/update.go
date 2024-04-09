@@ -60,20 +60,20 @@ func ValidateWorkoutUpdateRequest(dirtyData *w_c.WorkoutUpdateRequest) error {
 func (h *Handler) UpdateByID(w http.ResponseWriter, r *http.Request, id string) {
 	ctx := r.Context()
 
-	data, err := UnmarshalCreateRequest(ctx, r)
+	data, err := UnmarshalUpdateRequest(ctx, r)
 	if err != nil {
 		log.Println("Create | member | err:", err)
 		httperror.ResponseError(w, err)
 		return
 	}
 
-	workout, err := h.Controller.Create(ctx, data)
+	workout, err := h.Controller.UpdateByID(ctx, data)
 	if err != nil {
 		httperror.ResponseError(w, err)
 		return
 	}
 
-	MarshalCreateResponse(workout, w)
+	MarshalUpdateResponse(workout, w)
 }
 
 func MarshalUpdateResponse(res *w_d.Workout, w http.ResponseWriter) {

@@ -4,8 +4,10 @@ import (
 	"context"
 	"log/slog"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/datastore"
 	tp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
@@ -13,6 +15,9 @@ import (
 
 type TrainingprogramController interface {
 	Create(ctx context.Context, req *TrainingProgramCreateRequestIDO) (*tp_s.TrainingProgram, error)
+	GetByID(ctx context.Context, id primitive.ObjectID) (*datastore.TrainingProgram, error)
+	DeleteByID(ctx context.Context, id primitive.ObjectID) error
+	ListByFilter(ctx context.Context, f *datastore.TrainingProgramListFilter) (*datastore.TrainingProgramListResult, error)
 }
 
 type TrainingprogramControllerImpl struct {
