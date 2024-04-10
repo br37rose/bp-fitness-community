@@ -100,9 +100,18 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	if periodStr != "" {
 		period, _ := strconv.ParseInt(periodStr, 10, 64)
 		if period == 0 || period > 250 {
-			period = 1
+			period = rp_s.PeriodDay
 		}
 		f.Period = int8(period)
+	}
+
+	funcStr := query.Get("function")
+	if periodStr != "" {
+		funcNumb, _ := strconv.ParseInt(funcStr, 10, 64)
+		if funcNumb == 0 || funcNumb > 250 {
+			funcNumb = rp_s.FunctionAverage
+		}
+		f.Function = int8(funcNumb)
 	}
 
 	isTodayOnly := query.Get("is_today_only")

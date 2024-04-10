@@ -9,44 +9,67 @@ import FormErrorBox from "../../../../Reusable/FormErrorBox";
 import { PAGE_SIZE_OPTIONS, FITNESS_PLAN_STATUS_MAP } from "../../../../../Constants/FieldOptions";
 import { RANK_POINT_METRIC_TYPE_HEART_RATE, RANK_POINT_METRIC_TYPE_STEP_COUNTER } from "../../../../../Constants/App";
 import DateTimeTextFormatter from "../../../../Reusable/DateTimeTextFormatter";
-import LeaderBoardTable from "../../../../Reusable/TableDesigns/Leaderboard/Table";
 
 /*
 Display for both tablet and mobile.
 */
 function MemberLeaderboardGlobalTabularListMobile(props) {
-    const { data, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, currentUser, period, calcFunction } = props;
+    const { listRank, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, currentUser } = props;
+    return (
+        <>
+            {listRank && listRank.results && listRank.results.map(function (datum, i) {
+                return <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                    <strong>Place:</strong>&nbsp;
+                    #{datum.place}
+                    <br />
+                    <br />
+                    <strong>Picture:</strong>&nbsp;
+                    {datum.userAvatarObjectUrl
+                        ?
+                        <figure class="image is-128x128">
+                            <img src={datum.userAvatarObjectUrl} />
+                        </figure>
+                        :
+                        <>None</>
+                    }
+                    <br />
+                    <br />
+                    <strong>First Name:</strong>&nbsp;
+                    {datum.userFirstName}
+                    <br />
+                    <br />
+                    <strong>Value:</strong>&nbsp;
+                    {datum.value}&nbsp;
+                    {datum.metricType === RANK_POINT_METRIC_TYPE_HEART_RATE && <>bpm</>}
+                    {datum.metricType === RANK_POINT_METRIC_TYPE_STEP_COUNTER && <>steps</>}
+                    <br />
+                    <br />
+                </div>;
+            })}
 
-    const SevenDaysAvgHeader = () => (
-        <div className="board_box">
-            <div className="board_item">
-                <div className="board_content">
-                    <h5 className="mt-2 is-size-6 is-size-6-mobile is has-text-centered px-3 py-1 has-background-primary has-text-dark has has-text-weight-semibold mb-0">
-                        7 days Avg
-                    </h5>
+            <div class="columns pt-4 is-mobile">
+                <div class="column is-half">
+                    <span class="select">
+                        <select class={`input has-text-grey-light`}
+                            name="pageSize"
+                            onChange={(e) => setPageSize(parseInt(e.target.value))}>
+                            {PAGE_SIZE_OPTIONS.map(function (option, i) {
+                                return <option selected={pageSize === option.value} value={option.value}>{option.label}</option>;
+                            })}
+                        </select>
+                    </span>
+
+                </div>
+                <div class="column is-half has-text-right">
+                    {previousCursors.length > 0 &&
+                        <button class="button" onClick={onPreviousClicked}>Previous</button>
+                    }
+                    {listRank.hasNextPage && <>
+                        <button class="button" onClick={onNextClicked}>Next</button>
+                    </>}
                 </div>
             </div>
-        </div>
-    );
-
-    const headers = [
-        { title: 'RANK', className: 'is-vcentered' },
-        { title: 'LEADERBOARD', className: 'is-vcentered' },
-        { title: 'Value', className: 'is-vcentered' },
-        {
-            component: <SevenDaysAvgHeader />,
-            className: 'p-0 pb-2'
-        },
-
-    ];
-
-    return (
-        <LeaderBoardTable
-            data={data}
-            headers={headers}
-            calcFunction={calcFunction}
-            period={period}
-        />
+        </>
     );
 }
 
