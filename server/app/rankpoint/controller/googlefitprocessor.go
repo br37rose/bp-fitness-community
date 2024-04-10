@@ -311,7 +311,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 	// }
 
 	// For debugging purposes only.
-	impl.Logger.Debug("ranked all active fitibt apps",
+	impl.Logger.Debug("ranked all active google fit apps",
 		slog.Any("records_count", len(rankPoints)),
 		slog.Any("function", function),
 		slog.Int("period", int(period)),

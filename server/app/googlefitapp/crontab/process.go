@@ -74,12 +74,14 @@ func (impl *googleFitAppCrontaberImpl) ProcessAllQueuedDataTask() error {
 	dpdp, err := impl.GoogleFitDataPointStorer.ListByQueuedStatusInDataTypeNames(ctx, dataTypeNames)
 	if err != nil {
 		impl.Logger.Error("failed listing queued google fit data points",
+			slog.Any("data_type_names", dataTypeNames),
 			slog.Any("error", err))
 		return err
 	}
 	for _, dp := range dpdp.Results {
 		if err := impl.processForQueuedData(ctx, dp); err != nil {
 			impl.Logger.Error("failed transform queued google fit data point",
+				slog.Any("dp", dp),
 				slog.Any("error", err))
 			return err
 		}
