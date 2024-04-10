@@ -175,8 +175,8 @@ function MemberLeaderboardGlobalTabularList() {
       ["sort_order", "ASC"],
       // ... other parameters ...
       ["metric_type", metricType],
-      ["period", 2],
-      ["function", 1],
+      ["period", p],
+      ["function", cf],
     ]);
 
     // Return the API call promise
@@ -225,7 +225,7 @@ function MemberLeaderboardGlobalTabularList() {
     e.preventDefault(); // Do not remove this line!
     setIsStepsCounter(!isStepsCounter);
     setIsHeartRate(!isHeartRate);
-    setCalcFunction(RANK_POINT_FUNCTION_SUM);
+    setCalcFunction(RANK_POINT_FUNCTION_AVERAGE);
   }
 
   ////

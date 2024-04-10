@@ -12,6 +12,7 @@ import (
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
 )
 
 func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx context.Context, gfas []*gfa_ds.GoogleFitApp, metricType int8, function int8, period int8, start time.Time, end time.Time) error {
@@ -28,18 +29,101 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 		// Pick the metric ID based on metric type selected.
 		var metricID primitive.ObjectID
 		switch metricType { //TODO: Add more health sensors here...
+		case gcp_a.DataTypeKeyActivitySegment:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyBasalMetabolicRate:
+			metricID = gfa.BasalMetabolicRateMetricID
 		case gcp_a.DataTypeKeyCaloriesBurned:
 			metricID = gfa.CaloriesBurnedMetricID
+		case gcp_a.DataTypeKeyCyclingPedalingCadence:
+			metricID = gfa.CyclingPedalingCadenceMetricID
+		case gcp_a.DataTypeKeyCyclingPedalingCumulative:
+			metricID = gfa.CyclingPedalingCumulativeMetricID
+		case gcp_a.DataTypeKeyHeartPoints:
+			metricID = gfa.HeartPointsMetricID
+		case gcp_a.DataTypeKeyMoveMinutes:
+			metricID = gfa.MoveMinutesMetricID
+		case gcp_a.DataTypeKeyPower:
+			metricID = gfa.PowerMetricID
 		case gcp_a.DataTypeKeyStepCountDelta:
 			metricID = gfa.StepCountDeltaMetricID
+		case gcp_a.DataTypeKeyStepCountCadence:
+			metricID = gfa.StepCountCadenceMetricID
+		case gcp_a.DataTypeKeyWorkout:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyCyclingWheelRevolutionRPM:
+			metricID = gfa.PowerMetricID
+		case gcp_a.DataTypeKeyCyclingWheelRevolutionCumulative:
+			metricID = gfa.CyclingWheelRevolutionCumulativeMetricID
+		case gcp_a.DataTypeKeyDistanceDelta:
+			metricID = gfa.DistanceDeltaMetricID
+		case gcp_a.DataTypeKeyLocationSample:
+			metricID = gfa.LocationSampleMetricID
+		case gcp_a.DataTypeKeySpeed:
+			metricID = gfa.SpeedMetricID
+		case gcp_a.DataTypeKeyHydration:
+			metricID = gfa.HydrationMetricID
+		case gcp_a.DataTypeKeyBloodGlucose:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyBloodPressure:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyBodyFatPercentage:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyBodyTemperature:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyCervicalMucus:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyCervicalPosition:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
 		case gcp_a.DataTypeKeyHeartRateBPM:
 			metricID = gfa.HeartRateBPMMetricID
+		case gcp_a.DataTypeKeyHeight:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyOvulationTest:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyOxygenSaturation:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeySleep:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyVaginalSpotting:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
+		case gcp_a.DataTypeKeyWeight:
+			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
+			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+			return err
 		default:
 			err := fmt.Errorf("does not exist for metric type: %v", metricType)
 			impl.Logger.Error("",
 				slog.Any("google_fit_app_id", gfa.ID),
 				slog.Any("metric_id", metricID),
 				slog.Int("period", int(period)),
+				slog.Int("metric_type", int(metricType)),
 				slog.Any("error", err))
 			return err
 		}
@@ -50,6 +134,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 				slog.Any("google_fit_app_id", gfa.ID),
 				slog.Any("metric_id", metricID),
 				slog.Int("period", int(period)),
+				slog.Int("metric_type", int(metricType)),
 				slog.Any("error", err))
 			return err
 		}
@@ -61,6 +146,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 					slog.Any("metric_id", metricID),
 					slog.Any("function", function),
 					slog.Int("period", int(period)),
+					slog.Int("metric_type", int(metricType)),
 					slog.Any("error", err))
 				return err
 			}
@@ -74,6 +160,11 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 				u, err := impl.UserStorer.GetByID(ctx, gfa.UserID)
 				if err != nil {
 					impl.Logger.Error("failed getting user",
+						slog.Any("google_fit_app_id", gfa.ID),
+						slog.Any("metric_id", metricID),
+						slog.Any("function", function),
+						slog.Int("period", int(period)),
+						slog.Int("metric_type", int(metricType)),
 						slog.Any("error", err))
 					return err
 				}
@@ -111,6 +202,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 						slog.Any("error", err),
 						slog.Any("function", function),
 						slog.Int("period", int(period)),
+						slog.Int("metric_type", int(metricType)),
 						slog.Any("start", start),
 						slog.Any("end", end))
 					return err
@@ -122,6 +214,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 					slog.Any("rp_id", rp.ID),
 					slog.Any("function", function),
 					slog.Int("period", int(period)),
+					slog.Int("metric_type", int(metricType)),
 					slog.Any("start", start),
 					slog.Any("end", end))
 			} else {
@@ -141,6 +234,11 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 
 				if err := impl.RankPointStorer.UpdateByID(ctx, rp); err != nil {
 					impl.Logger.Error("failed updating rank point",
+						slog.Any("google_fit_app_id", gfa.ID),
+						slog.Any("metric_id", metricID),
+						slog.Any("function", function),
+						slog.Int("period", int(period)),
+						slog.Int("metric_type", int(metricType)),
 						slog.Any("error", err))
 					return err
 				}
@@ -152,6 +250,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 					slog.Any("rp_id", rp.ID),
 					slog.Any("function", function),
 					slog.Int("period", int(period)),
+					slog.Int("metric_type", int(metricType)),
 					slog.Any("start", start),
 					slog.Any("end", end))
 			}
@@ -195,6 +294,9 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 		rp.Place = uint64(i + 1)
 		if err := impl.RankPointStorer.UpdateByID(ctx, rp); err != nil {
 			impl.Logger.Error("failed updating rank point",
+				slog.Any("function", function),
+				slog.Int("period", int(period)),
+				slog.Int("metric_type", int(metricType)),
 				slog.Any("error", err))
 			return err
 		}
