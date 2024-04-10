@@ -240,7 +240,7 @@ function MemberLeaderboardGlobalTabularList() {
             <section className="section">
 
               {/* Desktop Breadcrumbs */}
-              <nav className="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
+              <nav className="breadcrumb has-background-light is-hidden-touch p-4" aria-label="breadcrumbs">
                 <ul>
                   <li className=""><Link to="/dashboard" aria-current="page"><FontAwesomeIcon className="fas" icon={faGauge} />&nbsp;Dashboard</Link></li>
                   <li className=""><Link to="/biometrics"><FontAwesomeIcon className="fas" icon={faHeartbeat} />&nbsp;Biometrics</Link></li>
@@ -249,7 +249,7 @@ function MemberLeaderboardGlobalTabularList() {
               </nav>
 
               {/* Mobile Breadcrumbs */}
-              <nav class="breadcrumb is-hidden-desktop" aria-label="breadcrumbs">
+              <nav class="breadcrumb has-background-light is-hidden-desktop p-4">
                 <ul>
                   <li class="">
                     <Link to="/dashboard" aria-current="page"><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
