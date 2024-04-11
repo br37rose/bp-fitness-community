@@ -33,10 +33,10 @@ import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
 import FormSelectField from "../../Reusable/FormSelectField";
 import { VIDEO_COLLECTION_STATUS_OPTIONS_WITH_EMPTY_OPTION } from "../../../Constants/FieldOptions";
 import { getWorkoutListApi } from "../../../API/workout";
-import AdminVideoCollectionListMobile from "./listMobile";
-import AdminWorkoutListDesktop from "./listDesktop";
+import MemberListMobile from "./listMobile";
+import MemberListDesktop from "./listDesktop";
 
-function AdminWokoutList() {
+function MemberWorkoutList() {
   ////
   //// Global state.
   ////
@@ -113,6 +113,7 @@ function AdminWokoutList() {
 
     let params = new Map();
     params.set("page_size", limit); // Pagination
+    params.set("user_id", currentUser.id);
 
     // DEVELOPERS NOTE: Our `sortByValue` is string with the sort field
     // and sort order combined with a comma seperation. Therefore we
@@ -217,7 +218,7 @@ function AdminWokoutList() {
           <nav className="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
             <ul>
               <li className="">
-                <Link to="/admin/dashboard" aria-current="page">
+                <Link to="/dashboard" aria-current="page">
                   <FontAwesomeIcon className="fas" icon={faGauge} />
                   &nbsp;Dashboard
                 </Link>
@@ -235,7 +236,7 @@ function AdminWokoutList() {
           <nav class="breadcrumb is-hidden-desktop" aria-label="breadcrumbs">
             <ul>
               <li class="">
-                <Link to="/admin/dashboard" aria-current="page">
+                <Link to="/dashboard" aria-current="page">
                   <FontAwesomeIcon className="fas" icon={faArrowLeft} />
                   &nbsp;Back to Dashboard
                 </Link>
@@ -284,7 +285,7 @@ function AdminWokoutList() {
                 </button>
                 &nbsp;
                 <Link
-                  to={`/admin/workouts/add`}
+                  to={`/workouts/add`}
                   className="is-fullwidth-mobile button is-small is-success"
                   type="button"
                 >
@@ -376,7 +377,7 @@ function AdminWokoutList() {
                             ##################################################################
                         */}
                     <div class="is-hidden-touch">
-                      <AdminWorkoutListDesktop
+                      <MemberListDesktop
                         listData={listData}
                         setPageSize={setPageSize}
                         pageSize={pageSize}
@@ -392,7 +393,7 @@ function AdminWokoutList() {
                             ###########################################################################
                         */}
                     <div class="is-fullwidth is-hidden-desktop">
-                      <AdminVideoCollectionListMobile
+                      <MemberListMobile
                         listData={listData}
                         setPageSize={setPageSize}
                         pageSize={pageSize}
@@ -412,7 +413,7 @@ function AdminWokoutList() {
                       <p className="subtitle">
                         No class types.{" "}
                         <b>
-                          <Link to="/admin/workouts/add">
+                          <Link to="/workouts/add">
                             Click here&nbsp;
                             <FontAwesomeIcon
                               className="mdi"
@@ -430,17 +431,14 @@ function AdminWokoutList() {
 
             <div class="columns pt-5">
               <div class="column is-half">
-                <Link
-                  class="button is-fullwidth-mobile"
-                  to={`/admin/dashboard`}
-                >
+                <Link class="button is-fullwidth-mobile" to={`/dashboard`}>
                   <FontAwesomeIcon className="fas" icon={faArrowLeft} />
                   &nbsp;Back to Dashboard
                 </Link>
               </div>
               <div class="column is-half has-text-right">
                 <Link
-                  to={`/admin/workouts/add`}
+                  to={`/workouts/add`}
                   class="button is-success is-fullwidth-mobile"
                 >
                   <FontAwesomeIcon className="fas" icon={faPlus} />
@@ -455,4 +453,4 @@ function AdminWokoutList() {
   );
 }
 
-export default AdminWokoutList;
+export default MemberWorkoutList;

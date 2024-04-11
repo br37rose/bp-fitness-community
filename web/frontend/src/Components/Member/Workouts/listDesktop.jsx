@@ -6,7 +6,7 @@ import {
   WORKOUT_STATUS_MAP,
 } from "../../../Constants/FieldOptions";
 
-function AdminWorkoutListDesktop(props) {
+function MemberListDesktop(props) {
   const {
     listData,
     setPageSize,
@@ -23,8 +23,8 @@ function AdminWorkoutListDesktop(props) {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Visibility</th>
               <th>User</th>
+              <th>Excercise count</th>
               <th>Status</th>
               <th>CreatedAt</th>
               <th></th>
@@ -37,10 +37,10 @@ function AdminWorkoutListDesktop(props) {
                 return (
                   <tr key={`desktop_${datum.id}`}>
                     <td data-label="Name">{datum.name}</td>
-                    <td data-label="Visibiility">
-                      {datum.visibility == 1 ? "Visibile to All" : "Personal"}
-                    </td>
                     <td data-label="User">{datum.userName || " - "}</td>
+                    <td data-label="excercise-count">
+                      {datum.workoutExercises?.length}
+                    </td>
 
                     <td data-label="Status">
                       {WORKOUT_STATUS_MAP[datum.status]}
@@ -50,7 +50,7 @@ function AdminWorkoutListDesktop(props) {
                     <td className="is-actions-cell">
                       <div className="buttons is-right">
                         <Link
-                          to={`/admin/workouts/${datum.id}`}
+                          to={`/workouts/${datum.id}`}
                           className="button is-small is-dark"
                           type="button"
                         >
@@ -106,4 +106,4 @@ function AdminWorkoutListDesktop(props) {
   );
 }
 
-export default AdminWorkoutListDesktop;
+export default MemberListDesktop;

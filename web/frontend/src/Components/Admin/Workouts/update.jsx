@@ -7,7 +7,11 @@ import { useRecoilState } from "recoil";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import FormTextareaField from "../../Reusable/FormTextareaField";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
+import {
+  currentUserState,
+  topAlertMessageState,
+  topAlertStatusState,
+} from "../../../AppState";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DropZone from "../../Reusable/dropzone";
@@ -41,7 +45,8 @@ function AdminWorkoutUpdate() {
       name: name,
       description: description,
       visibility: datum.visibility, //1. visible to all 2. personal
-      user_id: datum.user_id || null,
+      user_id: datum.userId || null,
+      user_name: datum.userName,
     };
     let workoutExcercises = new Array();
     selectedWorkouts.map((w, index) =>

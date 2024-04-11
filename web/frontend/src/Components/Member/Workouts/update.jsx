@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faArrowLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import FormTextareaField from "../../Reusable/FormTextareaField";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
+import {
+  currentUserState,
+  topAlertMessageState,
+  topAlertStatusState,
+} from "../../../AppState";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DropZone from "../../Reusable/dropzone";
 import { getExerciseListAPI } from "../../../API/Exercise";
 import ExerciseDisplay from "../../Reusable/ExerciseDisplay";
-import { postWorkoutCreateAPI } from "../../../API/workout";
+import { getWorkoutDetailAPI, putWorkoutUpdateAPI } from "../../../API/workout";
 import DragSortListForSelectedWorkouts from "../../Reusable/draglistforSelectWorkouts";
 
-function AdminWorkoutAdd() {
+function MemberWorkoutEdit() {
   const [topAlertMessage, setTopAlertMessage] =
     useRecoilState(topAlertMessageState);
   const [topAlertStatus, setTopAlertStatus] =
@@ -30,17 +34,25 @@ function AdminWorkoutAdd() {
   const [listdata, setlistdata] = useState([]);
   const [selectableExcercises, setselectableExcercises] = useState(listdata);
   const [forceURL, setForceURL] = useState("");
+  const [datum, setDatum] = useState({});
+  const [currentUser] = useRecoilState(currentUserState);
+
+  const { id } = useParams();
 
   const onSubmitClick = () => {
     // Logic to submit data
     let payload = {
+      id: datum.id,
       name: name,
       description: description,
-      visibility: 1, //1. visible to all 2. personal
+      visibility: datum.visibility, //1. visible to all 2. personal
+      user_id: datum.user_id || currentUser.id,
+      user_name: datum.userName || currentUser.name,
     };
     let workoutExcercises = new Array();
     selectedWorkouts.map((w, index) =>
       workoutExcercises.push({
+        id: w.selfId ? w.selfId : null,
         exercise_id: w.isRest ? null : w.id,
         exercise_name: w.isRest ? "REST" : w.name,
         is_rest: w.isRest === true,
@@ -50,22 +62,23 @@ function AdminWorkoutAdd() {
         rest_period_in_secs: parseInt(w.restPeriod),
         target_time_in_secs: w.targetTime ? parseInt(w.targetTime) : 0,
         target_text: w?.targetText,
+        created_at: w.selfId ? w.createdAt : null,
       })
     );
     payload.workout_exercises = workoutExcercises;
-    postWorkoutCreateAPI(payload, onAddSuccess, onAddError, onAddDone);
+    putWorkoutUpdateAPI(id, payload, onAddSuccess, onAddError, onAddDone);
   };
 
   function onAddSuccess(response) {
     // Add a temporary banner message in the app and then clear itself after 2 seconds.
-    setTopAlertMessage("Exercise created");
+    setTopAlertMessage("Workout updated");
     setTopAlertStatus("success");
     setTimeout(() => {
       setTopAlertMessage("");
     }, 2000);
 
     // Redirect the organization to the organization attachments page.
-    setForceURL("/admin/workouts/" + response.id + "");
+    setForceURL("/workouts/" + response.id + "");
   }
 
   function onAddError(apiErr) {
@@ -99,13 +112,8 @@ function AdminWorkoutAdd() {
   function onExerciseListSuccess(response) {
     if (response.results !== null) {
       setlistdata(response.results);
-      setselectableExcercises(response.results);
-      if (response.hasNextPage) {
-        // setNextCursor(response.nextCursor);
-      }
     } else {
       setlistdata([]);
-      // setNextCursor("");
     }
   }
 
@@ -119,10 +127,58 @@ function AdminWorkoutAdd() {
     setFetching(false);
   }
 
+  function workoutdetailsuccess(response) {
+    setDatum(response);
+    if (response.workoutExercises) {
+      setSelectedWorkouts(
+        response.workoutExercises.map((w) => ({
+          ...w,
+          selfId: w.id,
+          id: w.exerciseId,
+          name: w.exerciseName,
+          reps: w.sets,
+          restPeriod: w.restPeriodInSecs,
+          targetTime: w.targetTimeInsecs,
+        }))
+      );
+    }
+    setName(response.name);
+    setDescription(response.description);
+  }
+  function workoutdetailerrror(apiErr) {
+    setErrors(apiErr);
+
+    // The following code will cause the screen to scroll to the top of
+    // the page. Please see ``react-scroll`` for more information:
+    // https://github.com/fisshy/react-scroll
+    var scroll = Scroll.animateScroll;
+    scroll.scrollToTop();
+  }
+
+  function workoutdetaildone() {
+    setFetching(false);
+  }
+
   useEffect(() => {
     getAllExcericses();
+    getWorkoutDetailAPI(
+      id,
+      workoutdetailsuccess,
+      workoutdetailerrror,
+      workoutdetaildone
+    );
+
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (listdata.length && selectedWorkouts.length) {
+      const filtered = listdata.filter((l) => {
+        return !selectedWorkouts.some((obj) => obj.id === l.id);
+      });
+      setselectableExcercises(filtered);
+    }
+  }, [listdata, selectedWorkouts]);
 
   if (forceURL !== "") {
     return <Navigate to={forceURL} />;
@@ -181,8 +237,8 @@ function AdminWorkoutAdd() {
         <section className="section">
           <div className="box">
             <p className="title is-4">
-              <FontAwesomeIcon icon={faPlus} />
-              &nbsp;Add Workouts
+              <FontAwesomeIcon icon={faEdit} />
+              &nbsp;Edit Workout
             </p>
             <FormErrorBox errors={errors} />
             <p className="pb-4 mb-5 has-text-grey">
@@ -257,7 +313,6 @@ function AdminWorkoutAdd() {
                           exercises={selectableExcercises}
                           isdraggable
                           onAdd={onDrop}
-                          showindex={false}
                         />
                       </div>
                     </div>
@@ -266,7 +321,7 @@ function AdminWorkoutAdd() {
                     <div className="column is-half">
                       <Link
                         className="button is-fullwidth-mobile"
-                        to={`/admin/workouts`}
+                        to={`/workouts`}
                       >
                         <FontAwesomeIcon icon={faArrowLeft} />
                         &nbsp;Back to workouts
@@ -277,6 +332,9 @@ function AdminWorkoutAdd() {
                         onClick={onSubmitClick}
                         className="button is-success is-fullwidth-mobile"
                         type="button"
+                        disabled={
+                          !(name && description && selectedWorkouts.length)
+                        }
                       >
                         <FontAwesomeIcon icon={faPlus} />
                         &nbsp;Submit
@@ -293,4 +351,4 @@ function AdminWorkoutAdd() {
   );
 }
 
-export default AdminWorkoutAdd;
+export default MemberWorkoutEdit;

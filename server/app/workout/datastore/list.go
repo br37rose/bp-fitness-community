@@ -37,6 +37,9 @@ func (impl WorkouStorerImpl) ListByFilter(ctx context.Context, f *WorkoutListFil
 	if len(f.Types) > 0 {
 		filter["type"] = bson.M{"$in": f.Types}
 	}
+	if !f.UserId.IsZero() {
+		filter["user_id"] = f.UserId
+	}
 
 	impl.Logger.Debug("listing",
 		slog.Any("statusList", f.StatusList),

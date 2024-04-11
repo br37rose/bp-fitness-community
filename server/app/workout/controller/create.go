@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"time"
 
+	u_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	w_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config/constants"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,11 +20,19 @@ type WorkoutCreateRequestIDO struct {
 	WorkoutExercises          []*w_d.WorkoutExercise `json:"workout_exercises,omitempty"`
 	WorkoutExerciseTimeInMins int64                  `json:"workout_exercise_time_in_mins"`
 	Visibility                int8                   `json:"visibility"`
+	UserId                    primitive.ObjectID     `json:"user_id"`
+	UserName                  string                 `json:"user_name"`
 }
 
 func (c *WorkoutControllerImpl) Create(ctx context.Context, req *WorkoutCreateRequestIDO) (*w_d.Workout, error) {
 	userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
 	userName := ctx.Value(constants.SessionUserName).(string)
+	urole, ok := ctx.Value(constants.SessionUserRole).(int8)
+	if ok && urole == u_d.UserRoleMember {
+		req.UserId = userID
+		req.UserName = userName
+		req.Visibility = w_d.WorkoutPersonalVisible
+	}
 
 	session, err := c.DbClient.StartSession()
 	if err != nil {
@@ -60,6 +69,8 @@ func (c *WorkoutControllerImpl) Create(ctx context.Context, req *WorkoutCreateRe
 			ModifiedByUserName:        userName,
 			ModifiedByUserID:          userID,
 			Visibility:                req.Visibility,
+			UserId:                    req.UserId,
+			UserName:                  req.UserName,
 		}
 		if req.Visibility == w_d.WorkoutPersonalVisible {
 			res.UserId = userID

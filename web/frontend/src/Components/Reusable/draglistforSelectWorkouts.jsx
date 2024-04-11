@@ -16,7 +16,6 @@ const DragSortListForSelectedWorkouts = ({
     return () => {};
   }, [selectedWorkouts]);
 
-
   const renderWorkoutContent = (exercise) => {
     return (
       <>
@@ -88,16 +87,21 @@ const DragSortListForSelectedWorkouts = ({
                   </div>
                   {exercise.targetType == 1 && (
                     <div className="column">
-                      <FormInputField
-                        label={"TargetTime"}
-                        maxWidth={"150px"}
-                        type="number"
-                        value={exercise.targetTime}
-                        onChange={(e) =>
-                          handleInputChange(e, exercise.id, "targetTime")
-                        }
-                        placeholder="Time"
-                      />
+                      <div className="is-flex is-align-items-center">
+                        <FormInputField
+                          label={"TargetTime"}
+                          maxWidth={"80px"}
+                          type="number"
+                          value={exercise.targetTime}
+                          onChange={(e) =>
+                            handleInputChange(e, exercise.id, "targetTime")
+                          }
+                          placeholder="Time"
+                        />
+                        <span className="label is-small is-inline has-text-grey ml-1">
+                          Sec
+                        </span>
+                      </div>
                     </div>
                   )}
 
@@ -125,11 +129,6 @@ const DragSortListForSelectedWorkouts = ({
       </>
     );
   };
-
-  const listItems = selectedWorkouts.map((exercise, index) => ({
-    id: exercise.id,
-    content: renderWorkoutContent(exercise),
-  }));
 
   return (
     <div>

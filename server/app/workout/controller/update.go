@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	ud "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	domain "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config/constants"
 	httperror "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
@@ -27,6 +28,10 @@ type WorkoutUpdateRequest struct {
 func (c *WorkoutControllerImpl) UpdateByID(ctx context.Context, req *WorkoutUpdateRequest) (*domain.Workout, error) {
 	userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
 	userName := ctx.Value(constants.SessionUserName).(string)
+	urole, ok := ctx.Value(constants.SessionUserRole).(int8)
+	if ok && urole == ud.UserRoleMember {
+		req.Visibility = domain.WorkoutPersonalVisible
+	}
 
 	session, err := c.DbClient.StartSession()
 	if err != nil {

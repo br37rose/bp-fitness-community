@@ -108,6 +108,16 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		f.SearchText = searchKeyword
 	}
 
+	userId := query.Get("user_id")
+	if userId != "" {
+		userId, err := primitive.ObjectIDFromHex(userId)
+		if err != nil {
+			httperror.ResponseError(w, err)
+			return
+		}
+		f.UserId = userId
+	}
+
 	m, err := h.Controller.ListByFilter(ctx, f)
 	if err != nil {
 		httperror.ResponseError(w, err)

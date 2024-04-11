@@ -108,6 +108,10 @@ import AdminWokoutList from "./Components/Admin/Workouts/list";
 import AdminWorkoutAdd from "./Components/Admin/Workouts/add";
 import AdminWorkoutDetail from "./Components/Admin/Workouts/Detail";
 import AdminWorkoutUpdate from "./Components/Admin/Workouts/update";
+import MemberWorkoutList from "./Components/Member/Workouts/list";
+import MemberWorkoutAdd from "./Components/Member/Workouts/add";
+import MemberWorkoutDetail from "./Components/Member/Workouts/Detail";
+import MemberWorkoutEdit from "./Components/Member/Workouts/update";
 
 function AppRoute() {
   return (
@@ -481,6 +485,26 @@ function AppRoute() {
                     exact
                     path="/dashboard"
                     element={<MemberDashboard />}
+                  />
+                  <Route
+                    exact
+                    path="/workouts"
+                    element={<MemberWorkoutList />}
+                  />
+                  <Route
+                    exact
+                    path="/workouts/add"
+                    element={<MemberWorkoutAdd />}
+                  />
+                  <Route
+                    exact
+                    path="/workouts/:id"
+                    element={<MemberWorkoutDetail />}
+                  />
+                  <Route
+                    exact
+                    path="/workouts/:id/update"
+                    element={<MemberWorkoutEdit />}
                   />
 
                   {/*

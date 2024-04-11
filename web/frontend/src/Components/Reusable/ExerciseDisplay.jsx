@@ -9,12 +9,14 @@ function ExerciseDisplay({
   isdraggable,
   wrapperclass,
   onAdd,
+  showindex = true,
 }) {
   const exerciseItemJSX = (exercise, index) => (
     <div key={index} className="mb-4 exercise-item">
-      <h2 className="mb-3 has-text-weight-medium is-size-6">{`${index + 1}. ${
-        exercise.name
-      }`}</h2>
+      <h2 className="mb-3 has-text-weight-medium is-size-6">
+        {showindex && `${index + 1}. `}
+        {exercise.name}
+      </h2>
       <video className="exercise-video" poster={exercise.thumbnailUrl} controls>
         <source src={exercise.videoUrl} type="video/mp4" />
         Your browser does not support the video tag.

@@ -9,7 +9,7 @@ import {
 /*
 Display for both tablet and mobile.
 */
-function AdminWorkoutListMobile(props) {
+function MemberListMobile(props) {
   const {
     listData,
     setPageSize,
@@ -29,8 +29,12 @@ function AdminWorkoutListMobile(props) {
               <strong>Name:</strong>&nbsp;{datum.name}
               <br />
               <br />
-              <strong>Visibility:</strong>&nbsp;
-              {datum.visibility == 1 ? "Visibile to All" : "Personal"}
+              <strong>User:</strong>&nbsp;
+              {datum.name}
+              <br />
+              <br />
+              <strong>Excercise count:</strong>&nbsp;
+              {datum.workoutExercises?.length}
               <br />
               <br />
               <strong>Status:</strong>&nbsp;
@@ -45,21 +49,13 @@ function AdminWorkoutListMobile(props) {
               <div class="is-hidden-mobile" key={`tablet_${datum.id}`}>
                 <div className="buttons is-right">
                   <Link
-                    to={`/admin/workouts/${datum.id}`}
+                    to={`/workouts/${datum.id}`}
                     class="button is-small is-dark"
                     type="button"
                   >
                     <FontAwesomeIcon className="mdi" icon={faEye} />
                     &nbsp;View
                   </Link>
-                  {/*
-                            <Link to={`/admin/member/${datum.id}/update`} class="button is-small is-warning" type="button">
-                                <FontAwesomeIcon className="mdi" icon={faPencil} />&nbsp;Edit
-                            </Link>
-                            <button onClick={(e, ses) => onSelectMemberForDeletion(e, datum)} class="button is-small is-danger" type="button">
-                                <FontAwesomeIcon className="mdi" icon={faTrashCan} />&nbsp;Delete
-                            </button>
-                            */}
                 </div>
               </div>
               {/* Mobile only */}
@@ -67,7 +63,7 @@ function AdminWorkoutListMobile(props) {
                 <div class="columns is-mobile">
                   <div class="column">
                     <Link
-                      to={`/admin/workouts/${datum.id}`}
+                      to={`/workouts/${datum.id}`}
                       class="button is-small is-dark is-fullwidth"
                       type="button"
                     >
@@ -75,18 +71,6 @@ function AdminWorkoutListMobile(props) {
                       &nbsp;View
                     </Link>
                   </div>
-                  {/*
-                            <div class="column">
-                                <Link to={`/admin/member/${datum.id}/update`} class="button is-small is-warning is-fullwidth" type="button">
-                                    <FontAwesomeIcon className="mdi" icon={faPencil} />&nbsp;Edit
-                                </Link>
-                            </div>
-                            <div class="column">
-                                <button onClick={(e, ses) => onSelectMemberForDeletion(e, datum)} class="button is-small is-danger is-fullwidth" type="button">
-                                    <FontAwesomeIcon className="mdi" icon={faTrashCan} />&nbsp;Delete
-                                </button>
-                            </div>
-                            */}
                 </div>
               </div>
             </div>
@@ -133,4 +117,4 @@ function AdminWorkoutListMobile(props) {
   );
 }
 
-export default AdminWorkoutListMobile;
+export default MemberListMobile;

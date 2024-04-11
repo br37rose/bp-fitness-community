@@ -7,7 +7,11 @@ import { useRecoilState } from "recoil";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import FormTextareaField from "../../Reusable/FormTextareaField";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
+import {
+  currentUserState,
+  topAlertMessageState,
+  topAlertStatusState,
+} from "../../../AppState";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DropZone from "../../Reusable/dropzone";
@@ -16,11 +20,13 @@ import ExerciseDisplay from "../../Reusable/ExerciseDisplay";
 import { postWorkoutCreateAPI } from "../../../API/workout";
 import DragSortListForSelectedWorkouts from "../../Reusable/draglistforSelectWorkouts";
 
-function AdminWorkoutAdd() {
+function MemberWorkoutAdd() {
   const [topAlertMessage, setTopAlertMessage] =
     useRecoilState(topAlertMessageState);
   const [topAlertStatus, setTopAlertStatus] =
     useRecoilState(topAlertStatusState);
+
+  const [currentUser] = useRecoilState(currentUserState);
 
   const [errors, setErrors] = useState({});
   const [isFetching, setFetching] = useState(false);
@@ -36,7 +42,9 @@ function AdminWorkoutAdd() {
     let payload = {
       name: name,
       description: description,
-      visibility: 1, //1. visible to all 2. personal
+      visibility: 2, //1. visible to all 2. personal
+      user_id: currentUser.id,
+      user_name: currentUser.name,
     };
     let workoutExcercises = new Array();
     selectedWorkouts.map((w, index) =>
@@ -65,7 +73,7 @@ function AdminWorkoutAdd() {
     }, 2000);
 
     // Redirect the organization to the organization attachments page.
-    setForceURL("/admin/workouts/" + response.id + "");
+    setForceURL("/workouts/" + response.id + "");
   }
 
   function onAddError(apiErr) {
@@ -88,6 +96,7 @@ function AdminWorkoutAdd() {
     params.set("page_size", 1000000);
     params.set("sort_field", "created");
     params.set("sort_order", "-1");
+
     getExerciseListAPI(
       params,
       onExerciseListSuccess,
@@ -266,7 +275,7 @@ function AdminWorkoutAdd() {
                     <div className="column is-half">
                       <Link
                         className="button is-fullwidth-mobile"
-                        to={`/admin/workouts`}
+                        to={`/workouts`}
                       >
                         <FontAwesomeIcon icon={faArrowLeft} />
                         &nbsp;Back to workouts
@@ -277,6 +286,9 @@ function AdminWorkoutAdd() {
                         onClick={onSubmitClick}
                         className="button is-success is-fullwidth-mobile"
                         type="button"
+                        disabled={
+                          !(name && description && selectedWorkouts.length)
+                        }
                       >
                         <FontAwesomeIcon icon={faPlus} />
                         &nbsp;Submit
@@ -293,4 +305,4 @@ function AdminWorkoutAdd() {
   );
 }
 
-export default AdminWorkoutAdd;
+export default MemberWorkoutAdd;

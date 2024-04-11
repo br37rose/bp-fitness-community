@@ -66,6 +66,7 @@ type WorkoutListFilter struct {
 	Types           []int8
 	ExcludeArchived bool
 	SearchText      string
+	UserId          primitive.ObjectID
 }
 
 type WorkouStorerImpl struct {
