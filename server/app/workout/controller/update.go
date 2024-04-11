@@ -19,7 +19,7 @@ type WorkoutUpdateRequest struct {
 	Description               string                    `json:"description"`
 	Type                      int8                      `json:"type" bson:"type"`
 	Status                    int8                      `json:"status" bson:"status"`
-	Visibility                bool                      `json:"visibility"`
+	Visibility                int8                      `json:"visibility"`
 	WorkoutExercises          []*domain.WorkoutExercise `json:"workout_exercises,omitempty" bson:"workout_exercises,omitempty"`
 	WorkoutExerciseTimeInMins int64                     `json:"workout_exercise_time_in_mins" bson:"workout_exercise_time_in_mins"`
 }
@@ -46,10 +46,21 @@ func (c *WorkoutControllerImpl) UpdateByID(ctx context.Context, req *WorkoutUpda
 			return nil, httperror.NewForBadRequestWithSingleField("message", "workout does not exist")
 		}
 
+		for i, v := range req.WorkoutExercises {
+			if v.ID.IsZero() {
+				v.ID = primitive.NewObjectID()
+			}
+			if v.CreatedAt.IsZero() {
+				v.CreatedAt = time.Now().UTC()
+			}
+			v.ModifiedAt = time.Now().UTC()
+			v.OrderNumber = int64(i + 1)
+		}
+
 		os.Name = req.Name
 		os.Description = req.Description
 		os.Type = req.Type
-		os.Status = req.Status
+		os.Status = domain.WorkoutStatusActive
 		os.Visibility = req.Visibility
 		os.WorkoutExercises = req.WorkoutExercises
 		os.WorkoutExerciseTimeInMins = req.WorkoutExerciseTimeInMins

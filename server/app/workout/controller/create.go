@@ -18,7 +18,7 @@ type WorkoutCreateRequestIDO struct {
 	Status                    int8                   `json:"status"`
 	WorkoutExercises          []*w_d.WorkoutExercise `json:"workout_exercises,omitempty"`
 	WorkoutExerciseTimeInMins int64                  `json:"workout_exercise_time_in_mins"`
-	Visibility                bool                   `json:"visibility"`
+	Visibility                int8                   `json:"visibility"`
 }
 
 func (c *WorkoutControllerImpl) Create(ctx context.Context, req *WorkoutCreateRequestIDO) (*w_d.Workout, error) {
@@ -35,6 +35,14 @@ func (c *WorkoutControllerImpl) Create(ctx context.Context, req *WorkoutCreateRe
 
 	// Define a transaction function with a series of operations
 	transactionFunc := func(sessCtx mongo.SessionContext) (interface{}, error) {
+		for i, v := range req.WorkoutExercises {
+			if v.ID.IsZero() {
+				v.ID = primitive.NewObjectID()
+			}
+			v.CreatedAt = time.Now().UTC()
+			v.ModifiedAt = time.Now().UTC()
+			v.OrderNumber = int64(i + 1)
+		}
 
 		// Create our record in the database.
 		res := &w_d.Workout{
@@ -42,7 +50,7 @@ func (c *WorkoutControllerImpl) Create(ctx context.Context, req *WorkoutCreateRe
 			Name:                      req.Name,
 			Description:               req.Description,
 			Type:                      req.Type,
-			Status:                    req.Status,
+			Status:                    w_d.WorkoutStatusActive,
 			WorkoutExercises:          req.WorkoutExercises,
 			WorkoutExerciseTimeInMins: req.WorkoutExerciseTimeInMins,
 			CreatedAt:                 time.Now(),
@@ -51,7 +59,13 @@ func (c *WorkoutControllerImpl) Create(ctx context.Context, req *WorkoutCreateRe
 			ModifiedAt:                time.Now(),
 			ModifiedByUserName:        userName,
 			ModifiedByUserID:          userID,
+			Visibility:                req.Visibility,
 		}
+		if req.Visibility == w_d.WorkoutPersonalVisible {
+			res.UserId = userID
+			res.UserName = userName
+		}
+
 		err := c.WorkoutStorer.Create(sessCtx, res)
 		if err != nil {
 			c.Logger.Error("fitnessplan create error", slog.Any("error", err))

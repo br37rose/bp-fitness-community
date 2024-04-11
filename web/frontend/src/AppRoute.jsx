@@ -106,6 +106,8 @@ import AdminTrainingProgramList from "./Components/Admin/TrainingProgram/list";
 import AdminTrainingProgramAdd from "./Components/Admin/TrainingProgram/add";
 import AdminWokoutList from "./Components/Admin/Workouts/list";
 import AdminWorkoutAdd from "./Components/Admin/Workouts/add";
+import AdminWorkoutDetail from "./Components/Admin/Workouts/Detail";
+import AdminWorkoutUpdate from "./Components/Admin/Workouts/update";
 
 function AppRoute() {
   return (
@@ -334,6 +336,16 @@ function AppRoute() {
                     exact
                     path="/admin/workouts/add"
                     element={<AdminWorkoutAdd />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/workouts/:id"
+                    element={<AdminWorkoutDetail />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/workouts/:id/update"
+                    element={<AdminWorkoutUpdate />}
                   />
 
                   {/*

@@ -20,7 +20,7 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		SortField:       "_id",
 		SortOrder:       1,
 		ExcludeArchived: true,
-		StatusList:      []int8{1},
+		// StatusList:      []int8{1},
 	}
 
 	// Here is where you extract URL parameters.
@@ -101,6 +101,11 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	if excludeArchivedStr != "" {
 		excludeArchived, _ := strconv.ParseBool(excludeArchivedStr)
 		f.ExcludeArchived = excludeArchived
+	}
+
+	searchKeyword := query.Get("search")
+	if searchKeyword != "" {
+		f.SearchText = searchKeyword
 	}
 
 	m, err := h.Controller.ListByFilter(ctx, f)

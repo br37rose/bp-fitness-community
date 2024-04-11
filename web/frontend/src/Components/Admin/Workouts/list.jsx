@@ -18,10 +18,6 @@ import { useRecoilState } from "recoil";
 
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import {
-  getVideoCollectionListAPI,
-  deleteVideoCollectionAPI,
-} from "../../../API/VideoCollection";
-import {
   topAlertMessageState,
   topAlertStatusState,
   currentUserState,
@@ -35,12 +31,10 @@ import {
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
 import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
 import FormSelectField from "../../Reusable/FormSelectField";
-import {
-  VIDEO_COLLECTION_STATUS_OPTIONS_WITH_EMPTY_OPTION,
-  VIDEO_COLLECTION_TYPE_OPTIONS_WITH_EMPTY_OPTION,
-} from "../../../Constants/FieldOptions";
-import AdminVideoCollectionListDesktop from "../VideoCollection/ListDesktop";
-import AdminVideoCollectionListMobile from "../VideoCollection/ListMobile";
+import { VIDEO_COLLECTION_STATUS_OPTIONS_WITH_EMPTY_OPTION } from "../../../Constants/FieldOptions";
+import { getWorkoutListApi } from "../../../API/workout";
+import AdminVideoCollectionListMobile from "./listMobile";
+import AdminWorkoutListDesktop from "./listDesktop";
 
 function AdminWokoutList() {
   ////
@@ -73,10 +67,6 @@ function AdminWokoutList() {
 
   const [errors, setErrors] = useState({});
   const [listData, setListData] = useState("");
-  const [
-    selectedVideoCollectionForDeletion,
-    setSelectedVideoCollectionForDeletion,
-  ] = useState("");
   const [isFetching, setFetching] = useState(false);
   const [pageSize, setPageSize] = useState(10); // Pagination
   const [previousCursors, setPreviousCursors] = useState([]); // Pagination
@@ -87,8 +77,7 @@ function AdminWokoutList() {
   //// API.
   ////
 
-  function onVideoCollectionListSuccess(response) {
-    console.log("onVideoCollectionListSuccess: Starting...");
+  function onWorkoutListSuccess(response) {
     if (response.results !== null) {
       setListData(response);
       if (response.hasNextPage) {
@@ -100,8 +89,7 @@ function AdminWokoutList() {
     }
   }
 
-  function onVideoCollectionListError(apiErr) {
-    console.log("onVideoCollectionListError: Starting...");
+  function onWorkoutlistError(apiErr) {
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -111,62 +99,7 @@ function AdminWokoutList() {
     scroll.scrollToTop();
   }
 
-  function onVideoCollectionListDone() {
-    console.log("onVideoCollectionListDone: Starting...");
-    setFetching(false);
-  }
-
-  function onVideoCollectionDeleteSuccess(response) {
-    console.log("onVideoCollectionDeleteSuccess: Starting..."); // For debugging purposes only.
-
-    // Update notification.
-    setTopAlertStatus("success");
-    setTopAlertMessage("Video collection deleted");
-    setTimeout(() => {
-      console.log(
-        "onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
-      setTopAlertMessage("");
-    }, 2000);
-
-    // Fetch again an updated list.
-    fetchList(
-      currentCursor,
-      pageSize,
-      actualSearchText,
-      status,
-      videoType,
-      sort
-    );
-  }
-
-  function onVideoCollectionDeleteError(apiErr) {
-    console.log("onVideoCollectionDeleteError: Starting..."); // For debugging purposes only.
-    setErrors(apiErr);
-
-    // Update notification.
-    setTopAlertStatus("danger");
-    setTopAlertMessage("Failed deleting");
-    setTimeout(() => {
-      console.log(
-        "onVideoCollectionDeleteError: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
-      setTopAlertMessage("");
-    }, 2000);
-
-    // The following code will cause the screen to scroll to the top of
-    // the page. Please see ``react-scroll`` for more information:
-    // https://github.com/fisshy/react-scroll
-    var scroll = Scroll.animateScroll;
-    scroll.scrollToTop();
-  }
-
-  function onVideoCollectionDeleteDone() {
-    console.log("onVideoCollectionDeleteDone: Starting...");
+  function onWorkoutListDOne() {
     setFetching(false);
   }
 
@@ -203,22 +136,23 @@ function AdminWokoutList() {
       params.set("search", keywords);
     }
     if (st !== undefined && st !== null && st !== "") {
-      params.set("status", st);
-    }
-    if (vt !== undefined && vt !== null && vt !== "") {
-      params.set("video_type", vt);
+      let stArray = new Array();
+      stArray.push(st);
+      params.set("status_list", stArray);
+      if (st === 2) {
+        params.set("exclude_archived", false);
+      }
     }
 
-    getVideoCollectionListAPI(
+    getWorkoutListApi(
       params,
-      onVideoCollectionListSuccess,
-      onVideoCollectionListError,
-      onVideoCollectionListDone
+      onWorkoutListSuccess,
+      onWorkoutlistError,
+      onWorkoutListDOne
     );
   };
 
   const onNextClicked = (e) => {
-    console.log("onNextClicked");
     let arr = [...previousCursors];
     arr.push(currentCursor);
     setPreviousCursors(arr);
@@ -226,7 +160,6 @@ function AdminWokoutList() {
   };
 
   const onPreviousClicked = (e) => {
-    console.log("onPreviousClicked");
     let arr = [...previousCursors];
     const previousCursor = arr.pop();
     setPreviousCursors(arr);
@@ -235,30 +168,7 @@ function AdminWokoutList() {
 
   const onSearchButtonClick = (e) => {
     // Searching
-    console.log("Search button clicked...");
     setActualSearchText(temporarySearchText);
-  };
-
-  const onSelectVideoCollectionForDeletion = (e, datum) => {
-    console.log("onSelectVideoCollectionForDeletion", datum);
-    setSelectedVideoCollectionForDeletion(datum);
-  };
-
-  const onDeselectVideoCollectionForDeletion = (e) => {
-    console.log("onDeselectVideoCollectionForDeletion");
-    setSelectedVideoCollectionForDeletion("");
-  };
-
-  const onDeleteConfirmButtonClick = (e) => {
-    console.log("onDeleteConfirmButtonClick"); // For debugging purposes only.
-
-    deleteVideoCollectionAPI(
-      selectedVideoCollectionForDeletion.id,
-      onVideoCollectionDeleteSuccess,
-      onVideoCollectionDeleteError,
-      onVideoCollectionDeleteDone
-    );
-    setSelectedVideoCollectionForDeletion("");
   };
 
   // Function resets the filter state to its default state.
@@ -335,45 +245,6 @@ function AdminWokoutList() {
 
           {/* Page */}
           <nav className="box">
-            <div
-              className={`modal ${
-                selectedVideoCollectionForDeletion ? "is-active" : ""
-              }`}
-            >
-              <div className="modal-background"></div>
-              <div className="modal-card">
-                <header className="modal-card-head">
-                  <p className="modal-card-title">Are you sure?</p>
-                  <button
-                    className="delete"
-                    aria-label="close"
-                    onClick={onDeselectVideoCollectionForDeletion}
-                  ></button>
-                </header>
-                <section className="modal-card-body">
-                  You are about to <b>delete</b> this video collection; it will
-                  no longer appear on your dashboard nor will the video
-                  collection be able to log into their account. This action can
-                  be undone but you'll need to contact the system administrator.
-                  Are you sure you would like to continue?
-                </section>
-                <footer className="modal-card-foot">
-                  <button
-                    className="button is-success"
-                    onClick={onDeleteConfirmButtonClick}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    className="button"
-                    onClick={onDeselectVideoCollectionForDeletion}
-                  >
-                    Cancel
-                  </button>
-                </footer>
-              </div>
-            </div>
-
             <div className="columns">
               <div className="column">
                 <h1 className="title is-4">
@@ -486,18 +357,6 @@ function AdminWokoutList() {
                       }
                     />
                   </div>
-                  <div class="column">
-                    <FormSelectField
-                      label="Video Type"
-                      name="videoType"
-                      placeholder="Pick"
-                      selectedValue={videoType}
-                      errorText={errors && errors.videoType}
-                      helpText=""
-                      onChange={(e) => setVideoType(e.target.value)}
-                      options={VIDEO_COLLECTION_TYPE_OPTIONS_WITH_EMPTY_OPTION}
-                    />
-                  </div>
                 </div>
               </div>
             )}
@@ -517,16 +376,13 @@ function AdminWokoutList() {
                             ##################################################################
                         */}
                     <div class="is-hidden-touch">
-                      <AdminVideoCollectionListDesktop
+                      <AdminWorkoutListDesktop
                         listData={listData}
                         setPageSize={setPageSize}
                         pageSize={pageSize}
                         previousCursors={previousCursors}
                         onPreviousClicked={onPreviousClicked}
                         onNextClicked={onNextClicked}
-                        onSelectVideoCollectionForDeletion={
-                          onSelectVideoCollectionForDeletion
-                        }
                       />
                     </div>
 
@@ -543,9 +399,6 @@ function AdminWokoutList() {
                         previousCursors={previousCursors}
                         onPreviousClicked={onPreviousClicked}
                         onNextClicked={onNextClicked}
-                        onSelectVideoCollectionForDeletion={
-                          onSelectVideoCollectionForDeletion
-                        }
                       />
                     </div>
                   </div>

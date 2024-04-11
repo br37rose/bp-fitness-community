@@ -39,18 +39,11 @@ func ValidateWorkoutUpdateRequest(dirtyData *w_c.WorkoutUpdateRequest) error {
 	if dirtyData.ID.IsZero() {
 		e["id"] = "missing value"
 	}
-	if dirtyData.Type <= 0 {
-		e["type"] = "missing value"
-	}
-	if dirtyData.Status <= 0 {
-		e["status"] = "missing value"
-	}
+
 	if dirtyData.WorkoutExercises == nil {
 		e["workout_exercises"] = "missing value"
 	}
-	if dirtyData.WorkoutExerciseTimeInMins <= 0 {
-		e["workout_exercise_time_in_mins"] = "missing value"
-	}
+
 	if len(e) != 0 {
 		return httperror.NewForBadRequest(&e)
 	}

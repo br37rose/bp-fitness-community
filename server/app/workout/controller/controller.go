@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 
+	exc "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	w_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	w_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
@@ -26,6 +27,7 @@ type WorkoutControllerImpl struct {
 	UUID          uuid.Provider
 	DbClient      *mongo.Client
 	WorkoutStorer w_s.WorkoutStorer
+	ExcStoreer    exc.ExerciseStorer
 }
 
 func NewController(
@@ -34,6 +36,8 @@ func NewController(
 	uuidp uuid.Provider,
 	client *mongo.Client,
 	workout_store w_s.WorkoutStorer,
+	excStoreer exc.ExerciseStorer,
+
 ) WorkoutController {
 	impl := &WorkoutControllerImpl{
 		Config:        appCfg,
@@ -41,6 +45,7 @@ func NewController(
 		UUID:          uuidp,
 		DbClient:      client,
 		WorkoutStorer: workout_store,
+		ExcStoreer:    excStoreer,
 	}
 	return impl
 }

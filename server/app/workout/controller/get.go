@@ -15,5 +15,14 @@ func (c *WorkoutControllerImpl) GetByID(ctx context.Context, id primitive.Object
 		c.Logger.Error("database get by id error", slog.Any("error", err))
 		return nil, err
 	}
+	for i, e := range m.WorkoutExercises {
+		if !e.IsRest && !e.ExerciseID.IsZero() {
+			exc, err := c.ExcStoreer.GetByID(ctx, e.ExerciseID)
+			if err != nil {
+				return nil, err
+			}
+			m.WorkoutExercises[i].Excercise = *exc
+		}
+	}
 	return m, err
 }

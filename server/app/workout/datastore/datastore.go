@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,17 +14,21 @@ import (
 )
 
 const (
-	WorkoutStatusActive   = 1
-	WorkoutStatusArchived = 2
+	WorkoutStatusActive    = 1
+	WorkoutStatusArchived  = 2
+	WorkoutVisibileToAll   = 1
+	WorkoutPersonalVisible = 2
 )
 
 type Workout struct {
 	ID                        primitive.ObjectID `json:"id" bson:"_id"`
+	UserId                    primitive.ObjectID `json:"user_id" bson:"user_id"`
+	UserName                  string             `json:"user_name" bson:"user_name"`
 	Name                      string             `json:"name" bson:"name"`
 	Description               string             `json:"description"`
 	Type                      int8               `json:"type" bson:"type"`
 	Status                    int8               `json:"status" bson:"status"`
-	Visibility                bool               `json:"visibility"`
+	Visibility                int8               `json:"visibility"`
 	WorkoutExercises          []*WorkoutExercise `json:"workout_exercises,omitempty" bson:"workout_exercises,omitempty"`
 	WorkoutExerciseTimeInMins int64              `json:"workout_exercise_time_in_mins" bson:"workout_exercise_time_in_mins"`
 	CreatedAt                 time.Time          `bson:"created_at" json:"created_at,omitempty"`
@@ -43,8 +48,10 @@ type WorkoutExercise struct {
 	Type             int8               `bson:"type" json:"type"`
 	TargetTimeInSecs int64              `json:"target_time_in_secs,omitempty" bson:"target_time_in_secs,omitempty"`
 	RestPeriodInSecs int64              `json:"rest_period_in_secs,omitempty" bson:"rest_period_in_secs,omitempty"`
+	TargetText       string             `json:"target_text,omitempty" bson:"target_text,omitempty"`
 	CreatedAt        time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	ModifiedAt       time.Time          `json:"modified_at,omitempty" bson:"modified_at,omitempty"`
+	Excercise        datastore.Exercise `json:"excercise,omitempty" bson:"excercise,omitempty"`
 }
 
 type WorkoutListFilter struct {

@@ -37,18 +37,9 @@ func ValidateCreateRequest(dirtyData *w_c.WorkoutCreateRequestIDO) error {
 	e := make(map[string]string)
 
 	if dirtyData.Name == "" {
-		e["first_name"] = "missing value"
-	}
-	if dirtyData.Type <= 0 {
-		e["type"] = "missing value"
-	}
-	if dirtyData.Status <= 0 {
-		e["status"] = "missing value"
+		e["name"] = "missing value"
 	}
 
-	if dirtyData.WorkoutExerciseTimeInMins <= 0 {
-		e["status"] = "missing value"
-	}
 	if dirtyData.WorkoutExercises == nil {
 		e["workout_exercises"] = "missing value"
 	}
