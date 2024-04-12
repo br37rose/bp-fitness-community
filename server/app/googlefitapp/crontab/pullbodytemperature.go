@@ -63,30 +63,32 @@ func (impl *googleFitAppCrontaberImpl) pullBodyTemperatureDataFromGoogleWithGfaA
 			return err
 		}
 		if !exists {
-			dp := &dp_ds.GoogleFitDataPoint{
-				ID:              primitive.NewObjectID(),
-				DataTypeName:    gcp_a.DataTypeNameBodyTemperature,
-				Status:          dp_ds.StatusQueued,
-				UserID:          gfa.UserID,
-				UserName:        gfa.UserName,
-				UserLexicalName: gfa.UserLexicalName,
-				GoogleFitAppID:  gfa.ID,
-				MetricID:        gfa.BodyTemperatureMetricID,
-				StartAt:         bodyTemperatureDatapoint.StartTime,
-				EndAt:           bodyTemperatureDatapoint.EndTime,
-				BodyTemperature: &bodyTemperatureDatapoint,
-				Error:           "",
-				CreatedAt:       time.Now(),
-				ModifiedAt:      time.Now(),
-				OrganizationID:  gfa.OrganizationID,
+			if bodyTemperatureDatapoint.EndTime.Before(time.Now()) && bodyTemperatureDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+				dp := &dp_ds.GoogleFitDataPoint{
+					ID:              primitive.NewObjectID(),
+					DataTypeName:    gcp_a.DataTypeNameBodyTemperature,
+					Status:          dp_ds.StatusQueued,
+					UserID:          gfa.UserID,
+					UserName:        gfa.UserName,
+					UserLexicalName: gfa.UserLexicalName,
+					GoogleFitAppID:  gfa.ID,
+					MetricID:        gfa.BodyTemperatureMetricID,
+					StartAt:         bodyTemperatureDatapoint.StartTime,
+					EndAt:           bodyTemperatureDatapoint.EndTime,
+					BodyTemperature: &bodyTemperatureDatapoint,
+					Error:           "",
+					CreatedAt:       time.Now(),
+					ModifiedAt:      time.Now(),
+					OrganizationID:  gfa.OrganizationID,
+				}
+				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+					impl.Logger.Error("failed inserting google fit data point for body temperature into database",
+						slog.Any("error", err))
+					return err
+				}
+				impl.Logger.Debug("inserted body temperature data point",
+					slog.Any("dp", dp))
 			}
-			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for body temperature into database",
-					slog.Any("error", err))
-				return err
-			}
-			impl.Logger.Debug("inserted body temperature data point",
-				slog.Any("dp", dp))
 		}
 	}
 

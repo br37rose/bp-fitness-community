@@ -57,30 +57,32 @@ func (impl *googleFitAppCrontaberImpl) pullCaloriesBurnedDataFromGoogleWithGfaAn
 			return err
 		}
 		if !exists {
-			dp := &dp_ds.GoogleFitDataPoint{
-				ID:              primitive.NewObjectID(),
-				DataTypeName:    gcp_a.DataTypeNameCaloriesBurned,
-				Status:          dp_ds.StatusQueued,
-				UserID:          gfa.UserID,
-				UserName:        gfa.UserName,
-				UserLexicalName: gfa.UserLexicalName,
-				GoogleFitAppID:  gfa.ID,
-				MetricID:        gfa.CaloriesBurnedMetricID,
-				StartAt:         caloriesBurnedDatapoint.StartTime,
-				EndAt:           caloriesBurnedDatapoint.EndTime,
-				CaloriesBurned:  &caloriesBurnedDatapoint,
-				Error:           "",
-				CreatedAt:       time.Now(),
-				ModifiedAt:      time.Now(),
-				OrganizationID:  gfa.OrganizationID,
+			if caloriesBurnedDatapoint.EndTime.Before(time.Now()) && caloriesBurnedDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+				dp := &dp_ds.GoogleFitDataPoint{
+					ID:              primitive.NewObjectID(),
+					DataTypeName:    gcp_a.DataTypeNameCaloriesBurned,
+					Status:          dp_ds.StatusQueued,
+					UserID:          gfa.UserID,
+					UserName:        gfa.UserName,
+					UserLexicalName: gfa.UserLexicalName,
+					GoogleFitAppID:  gfa.ID,
+					MetricID:        gfa.CaloriesBurnedMetricID,
+					StartAt:         caloriesBurnedDatapoint.StartTime,
+					EndAt:           caloriesBurnedDatapoint.EndTime,
+					CaloriesBurned:  &caloriesBurnedDatapoint,
+					Error:           "",
+					CreatedAt:       time.Now(),
+					ModifiedAt:      time.Now(),
+					OrganizationID:  gfa.OrganizationID,
+				}
+				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+					impl.Logger.Error("failed inserting google fit data point for calories burned into database",
+						slog.Any("error", err))
+					return err
+				}
+				impl.Logger.Debug("inserted calories burned data point",
+					slog.Any("dp", dp))
 			}
-			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for calories burned into database",
-					slog.Any("error", err))
-				return err
-			}
-			impl.Logger.Debug("inserted calories burned data point",
-				slog.Any("dp", dp))
 		}
 	}
 

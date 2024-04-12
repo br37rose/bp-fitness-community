@@ -57,30 +57,32 @@ func (impl *googleFitAppCrontaberImpl) pullDistanceDeltaDataFromGoogleWithGfaAnd
 			return err
 		}
 		if !exists {
-			dp := &dp_ds.GoogleFitDataPoint{
-				ID:              primitive.NewObjectID(),
-				DataTypeName:    gcp_a.DataTypeNameDistanceDelta,
-				Status:          dp_ds.StatusQueued,
-				UserID:          gfa.UserID,
-				UserName:        gfa.UserName,
-				UserLexicalName: gfa.UserLexicalName,
-				GoogleFitAppID:  gfa.ID,
-				MetricID:        gfa.DistanceDeltaMetricID,
-				StartAt:         distanceDeltaDatapoint.StartTime,
-				EndAt:           distanceDeltaDatapoint.EndTime,
-				DistanceDelta:   &distanceDeltaDatapoint,
-				Error:           "",
-				CreatedAt:       time.Now(),
-				ModifiedAt:      time.Now(),
-				OrganizationID:  gfa.OrganizationID,
+			if distanceDeltaDatapoint.EndTime.Before(time.Now()) && distanceDeltaDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+				dp := &dp_ds.GoogleFitDataPoint{
+					ID:              primitive.NewObjectID(),
+					DataTypeName:    gcp_a.DataTypeNameDistanceDelta,
+					Status:          dp_ds.StatusQueued,
+					UserID:          gfa.UserID,
+					UserName:        gfa.UserName,
+					UserLexicalName: gfa.UserLexicalName,
+					GoogleFitAppID:  gfa.ID,
+					MetricID:        gfa.DistanceDeltaMetricID,
+					StartAt:         distanceDeltaDatapoint.StartTime,
+					EndAt:           distanceDeltaDatapoint.EndTime,
+					DistanceDelta:   &distanceDeltaDatapoint,
+					Error:           "",
+					CreatedAt:       time.Now(),
+					ModifiedAt:      time.Now(),
+					OrganizationID:  gfa.OrganizationID,
+				}
+				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+					impl.Logger.Error("failed inserting google fit data point for distance delta into database",
+						slog.Any("error", err))
+					return err
+				}
+				impl.Logger.Debug("inserted distance delta data point",
+					slog.Any("dp", dp))
 			}
-			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for distance delta into database",
-					slog.Any("error", err))
-				return err
-			}
-			impl.Logger.Debug("inserted distance delta data point",
-				slog.Any("dp", dp))
 		}
 	}
 

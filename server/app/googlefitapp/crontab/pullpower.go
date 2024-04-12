@@ -63,30 +63,32 @@ func (impl *googleFitAppCrontaberImpl) pullPowerDataFromGoogleWithGfaAndFitnessS
 			return err
 		}
 		if !exists {
-			dp := &dp_ds.GoogleFitDataPoint{
-				ID:              primitive.NewObjectID(),
-				DataTypeName:    gcp_a.DataTypeNamePower,
-				Status:          dp_ds.StatusQueued,
-				UserID:          gfa.UserID,
-				UserName:        gfa.UserName,
-				UserLexicalName: gfa.UserLexicalName,
-				GoogleFitAppID:  gfa.ID,
-				MetricID:        gfa.PowerMetricID,
-				StartAt:         powerDatapoint.StartTime,
-				EndAt:           powerDatapoint.EndTime,
-				Power:           &powerDatapoint,
-				Error:           "",
-				CreatedAt:       time.Now(),
-				ModifiedAt:      time.Now(),
-				OrganizationID:  gfa.OrganizationID,
+			if powerDatapoint.EndTime.Before(time.Now()) && powerDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+				dp := &dp_ds.GoogleFitDataPoint{
+					ID:              primitive.NewObjectID(),
+					DataTypeName:    gcp_a.DataTypeNamePower,
+					Status:          dp_ds.StatusQueued,
+					UserID:          gfa.UserID,
+					UserName:        gfa.UserName,
+					UserLexicalName: gfa.UserLexicalName,
+					GoogleFitAppID:  gfa.ID,
+					MetricID:        gfa.PowerMetricID,
+					StartAt:         powerDatapoint.StartTime,
+					EndAt:           powerDatapoint.EndTime,
+					Power:           &powerDatapoint,
+					Error:           "",
+					CreatedAt:       time.Now(),
+					ModifiedAt:      time.Now(),
+					OrganizationID:  gfa.OrganizationID,
+				}
+				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+					impl.Logger.Error("failed inserting google fit data point for power into database",
+						slog.Any("error", err))
+					return err
+				}
+				impl.Logger.Debug("inserted power data point",
+					slog.Any("dp", dp))
 			}
-			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for power into database",
-					slog.Any("error", err))
-				return err
-			}
-			impl.Logger.Debug("inserted power data point",
-				slog.Any("dp", dp))
 		}
 	}
 
