@@ -120,7 +120,7 @@ func NewDatastore(appCfg *c.Conf, loggerp *slog.Logger, client *mongo.Client) Go
 	_, err := uc.Indexes().CreateMany(context.TODO(), []mongo.IndexModel{
 		{Keys: bson.D{{Key: "user_id", Value: 1}}},
 		{Keys: bson.D{{Key: "googlefit_app_id", Value: 1}}},
-		{Keys: bson.D{{Key: "start_at", Value: 1}}},
+		{Keys: bson.D{{Key: "start_at", Value: -1}}},
 		{Keys: bson.D{{Key: "status", Value: 1}}},
 		{Keys: bson.D{{Key: "type", Value: 1}}},
 		{Keys: bson.D{

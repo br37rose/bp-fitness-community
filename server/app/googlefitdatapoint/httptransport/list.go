@@ -19,7 +19,7 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	f := &dp_s.GoogleFitDataPointPaginationListFilter{
 		Cursor:    "",
 		PageSize:  250,
-		SortField: "timestamp",
+		SortField: "start_at",
 		SortOrder: dp_s.OrderDescending,
 	}
 

@@ -60,6 +60,7 @@ function MemberLeaderboardGlobalTabularListDesktop(props) {
             {listRank &&
               listRank.results &&
               listRank.results.map(function (datum, i) {
+                  //TODO: IMPLEMENT MORE...
                 switch (datum.dataTypeName) {
                   case "com.google.heart_rate.bpm":
                     return (
@@ -87,7 +88,7 @@ function MemberLeaderboardGlobalTabularListDesktop(props) {
                     return (
                       <tr key={`desktop_${datum.id}`}>
                       <td data-label="Type">{datum.dataTypeName}</td>
-                        <td data-label="Value">Unsupported</td>
+                        <td data-label="Value">Not Implemented</td>
                         <td data-label="Start At">{datum.startAt}</td>
                         <td data-label="End At">{datum.endAt}</td>
                       </tr>

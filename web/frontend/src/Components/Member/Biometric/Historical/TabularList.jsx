@@ -126,9 +126,12 @@ function MemberHistoricalDataTabularList() {
         setErrors({});
 
         let params = new Map();
+        if (cur !== "") {
+            params.set("cursor", cur); // Pagination
+        }
         params.set("page_size", limit);
-        params.set("sort_field", "created_at");
-        params.set("sort_order","ASC");
+        params.set("sort_field", "start_at");
+        params.set("sort_order","DESC");
         params.set("period", p);
         params.set("user_id", user.id);
         var values = selectedDataTypes.map(item => item).join(',');
@@ -391,7 +394,7 @@ function MemberHistoricalDataTabularList() {
                             */}
                     </div>{/* Section for selecting `function` */}
 
-                    
+
 
                     {listRank &&
                     listRank.results &&
