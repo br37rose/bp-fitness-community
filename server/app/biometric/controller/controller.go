@@ -23,6 +23,7 @@ import (
 type BiometricController interface {
 	Leaderboard(ctx context.Context, req *LeaderboardRequest) (*rp_s.RankPointPaginationListResult, error)
 	GetSummary(ctx context.Context, userID primitive.ObjectID) (*AggregatePointSummaryResponse, error)
+	HistoricData(ctx context.Context, req *HistoricDataRequest) (*rp_s.RankPointPaginationListResult, error)
 }
 
 type BiometricControllerImpl struct {

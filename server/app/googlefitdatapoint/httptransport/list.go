@@ -2,8 +2,10 @@ package httptransport
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/bartmika/timekit"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
@@ -58,25 +60,22 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		}
 		f.GTE = gte
 	}
-	metricIDs := make([]primitive.ObjectID, 0)
-	heartRateID := query.Get("heart_rate_id")
-	if heartRateID != "" {
-		heartRateID, err := primitive.ObjectIDFromHex(heartRateID)
-		if err != nil {
-			httperror.ResponseError(w, err)
-			return
-		}
-		metricIDs = append(metricIDs, heartRateID)
-	}
 
-	stepsCounterID := query.Get("steps_counter_id")
-	if stepsCounterID != "" {
-		stepsCounterID, err := primitive.ObjectIDFromHex(stepsCounterID)
-		if err != nil {
-			httperror.ResponseError(w, err)
-			return
+	metricIDs := make([]primitive.ObjectID, 0)
+	metricIDsStr := query.Get("metric_ids")
+	metricIDsStrArr := strings.Split(metricIDsStr, ",")
+	for _, mIDStr := range metricIDsStrArr {
+		if mIDStr != "" {
+			id, err := primitive.ObjectIDFromHex(mIDStr)
+			if err != nil {
+				h.Logger.Error("failed converting",
+					slog.Any("err", err),
+					slog.Any("metric_ids", metricIDs))
+				httperror.ResponseError(w, err)
+				return
+			}
+			metricIDs = append(metricIDs, id)
 		}
-		metricIDs = append(metricIDs, stepsCounterID)
 	}
 	f.MetricIDs = metricIDs
 

@@ -54,6 +54,7 @@ export const BP8_FITNESS_TAGS_API_ENDPOINT = HTTP_API_SERVER + '/api/v1/tags';
 export const BP8_FITNESS_TAG_API_ENDPOINT = HTTP_API_SERVER + '/api/v1/tag/{id}';
 export const BP8_FITNESS_TAG_SELECT_OPTIONS_API_ENDPOINT = HTTP_API_SERVER + "/api/v1/tags/select-options";
 export const BP8_FITNESS_BIOMETRICS_MY_SUMMARY_API_ENDPOINT = HTTP_API_SERVER + "/api/v1/biometrics/summary";
+export const BP8_FITNESS_BIOMETRICS_HISTORIC_DATA_API_ENDPOINT = HTTP_API_SERVER + "/api/v1/biometrics/historic-data";
 export const BP8_FITNESS_PUBLIC_WORKOUT_SESSIONS_API_ENDPOINT = HTTP_API_SERVER + "/api/v1/public/workout-sessions";
 export const BP8_FITNESS_COMPLETE_STRIPE_CHECKOUT_SESSION_API_ENDPOINT = HTTP_API_SERVER + "/api/v1/stripe/complete-checkout-session?session_id={sessionID}";
 export const BP8_FITNESS_CREATE_STRIPE_CHECKOUT_SESSION_API_ENDPOINT = HTTP_API_SERVER + "/api/v1/stripe/create-checkout-session";
