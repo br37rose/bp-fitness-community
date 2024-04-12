@@ -35,6 +35,8 @@ export function getGoogleFitDataPointListAPI(filtersMap = new Map(), onSuccessCa
             data.results.forEach(
                 (item, index) => {
                     item.createdAt = DateTime.fromISO(item.createdAt).toLocaleString(DateTime.DATETIME_MED);
+                    item.startAt = DateTime.fromISO(item.startAt).toLocaleString(DateTime.DATETIME_MED);
+                    item.endAt = DateTime.fromISO(item.endAt).toLocaleString(DateTime.DATETIME_MED);
                     // console.log(item, index);
                 }
             )

@@ -18,33 +18,52 @@ function MemberLeaderboardGlobalTabularListMobile(props) {
     return (
         <>
             {listRank && listRank.results && listRank.results.map(function (datum, i) {
-                return <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
-                    <strong>Place:</strong>&nbsp;
-                    #{datum.place}
-                    <br />
-                    <br />
-                    <strong>Picture:</strong>&nbsp;
-                    {datum.userAvatarObjectUrl
-                        ?
-                        <figure class="image is-128x128">
-                            <img src={datum.userAvatarObjectUrl} />
-                        </figure>
-                        :
-                        <>None</>
-                    }
-                    <br />
-                    <br />
-                    <strong>First Name:</strong>&nbsp;
-                    {datum.userFirstName}
-                    <br />
-                    <br />
-                    <strong>Value:</strong>&nbsp;
-                    {datum.value}&nbsp;
-                    {datum.metricType === RANK_POINT_METRIC_TYPE_HEART_RATE && <>bpm</>}
-                    {datum.metricType === RANK_POINT_METRIC_TYPE_STEP_COUNTER && <>steps</>}
-                    <br />
-                    <br />
-                </div>;
+                switch (datum.dataTypeName) {
+                  case "com.google.heart_rate.bpm":
+                    return (
+                      <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                      <strong>Type:</strong>&nbsp;{datum.dataTypeName}
+                      <br />
+                      <strong>Value:</strong>&nbsp;{datum.hearteRateBpm.bpm} BPM
+                      <br />
+                      <strong>Start At:</strong>&nbsp;{datum.startAt}
+                      <br />
+                      <strong>End At:</strong>&nbsp;{datum.endAt}
+                      <br />
+                      <br />
+                      </div>
+                    );
+                  case "com.google.step_count.delta":
+                    return (
+                      <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                        <strong>Type:</strong>&nbsp;{datum.dataTypeName}
+                        <br />
+                        <strong>Value:</strong>&nbsp;{datum.stepCountDelta.steps} Steps
+                        <br />
+                        <strong>Start At:</strong>&nbsp;{datum.startAt}
+                        <br />
+                        <strong>End At:</strong>&nbsp;{datum.endAt}
+                        <br />
+                        <br />
+                      </div>
+                    );
+                  default:
+                    return (
+                     <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                      <strong>Type:</strong>&nbsp;{datum.dataTypeName}
+                      <br />
+                      <strong>Value:</strong>&nbsp;Unsupported
+                      <br />
+                      <strong>Start At:</strong>&nbsp;{datum.startAt}
+                      <br />
+                      <strong>End At:</strong>&nbsp;{datum.endAt}
+                      <br />
+                      <br />
+                      </div>
+                    );
+                }
+              })}
+
             })}
 
             <div class="columns pt-4 is-mobile">

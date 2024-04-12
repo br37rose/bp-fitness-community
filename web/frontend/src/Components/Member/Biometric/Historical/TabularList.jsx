@@ -41,6 +41,7 @@ import {
     dataPointFilterIsHeartRateState,
     dataPointFilterIsStepsCounterState
 } from "../../../../AppState";
+import FormMultiSelectField from "../../../Reusable/FormMultiSelectField";
 import FormCheckboxField from "../../../Reusable/FormCheckboxField";
 import PageLoadingContent from "../../../Reusable/PageLoadingContent";
 import FormInputFieldWithButton from "../../../Reusable/FormInputFieldWithButton";
@@ -68,9 +69,6 @@ function MemberHistoricalDataTabularList() {
     const [temporarySearchText, setTemporarySearchText] = useRecoilState(dataPointFilterTemporarySearchTextState); // Searching - The search field value as your writes their query.
     const [actualSearchText, setActualSearchText] = useRecoilState(dataPointFilterActualSearchTextState); // Searching - The actual search query value to submit to the API.
     const [status, setStatus] = useRecoilState(dataPointFilterStatusState);
-    // const [isHeartRate, setIsHeartRate] = useRecoilState(dataPointFilterIsHeartRateState);
-    // const [isStepsCounter, setIsStepsCounter] = useRecoilState(dataPointFilterIsStepsCounterState);
-
     ////
     //// Component states.
     ////
@@ -83,9 +81,8 @@ function MemberHistoricalDataTabularList() {
     const [previousCursors, setPreviousCursors] = useState([]); // Pagination
     const [nextCursor, setNextCursor] = useState(""); // Pagination
     const [currentCursor, setCurrentCursor] = useState(""); // Pagination
-    const [isHeartRate, setIsHeartRate] = useState(true);
-    const [isStepsCounter, setIsStepsCounter] = useState(false);
     const [period, setPeriod] = useState(RANK_POINT_PERIOD_DAY);
+    const [selectedDataTypes, setSelectedDataTypes] = useState([]);
 
     ////
     //// API.
@@ -124,36 +121,18 @@ function MemberHistoricalDataTabularList() {
     //// Event handling.
     ////
 
-    const onHeartRateButtonClick = (e) => {
-      e.preventDefault(); // Do not remove this line!
-      setIsStepsCounter(!isStepsCounter);
-      setIsHeartRate(!isHeartRate)
-    }
-
-      const onStepCounterButtonClick = (e) => {
-        e.preventDefault(); // Do not remove this line!
-        setIsStepsCounter(!isStepsCounter);
-        setIsHeartRate(!isHeartRate);
-      }
-
-    const fetchList = (user, cur, limit, keywords, stat, sbv, isHeartRate, isStepsCounter, p) => {
+    const fetchList = (user, cur, limit, keywords, stat, sbv, selectedDataTypes=[], p) => {
         setFetching(true);
         setErrors({});
-
-        let metricType;
-        if (isHeartRate) {
-          metricType = RANK_POINT_METRIC_TYPE_HEART_RATE;
-        } else if (isStepsCounter) {
-          metricType = RANK_POINT_METRIC_TYPE_STEP_COUNTER;
-        }
 
         let params = new Map();
         params.set("page_size", limit);
         params.set("sort_field", "created_at");
         params.set("sort_order","ASC");
-        params.set("metric_types",parseInt(metricType));
         params.set("period", p);
         params.set("user_id", user.id);
+        var values = selectedDataTypes.map(item => item).join(',');
+        params.set("metric_ids",values);
 
         console.log("params:", params);
 
@@ -205,8 +184,6 @@ function MemberHistoricalDataTabularList() {
         setTemporarySearchText("");
         setSort("created_at,DESC");
         setStatus(0);
-        setIsHeartRate(true);
-        setIsStepsCounter(true);
     }
 
     ////
@@ -218,17 +195,115 @@ function MemberHistoricalDataTabularList() {
 
         if (mounted) {
           window.scrollTo(0, 0); // Start the page at the top of the page.
-          fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, isHeartRate, isStepsCounter, period);
+          fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, selectedDataTypes, period);
         }
 
         return () => {
           mounted = false;
         };
-    }, [currentUser, currentCursor, pageSize, actualSearchText, status, sort, isHeartRate, isStepsCounter, period]);
+    }, [currentUser, currentCursor, pageSize, actualSearchText, status, sort, selectedDataTypes, period]);
 
     ////
     //// Component rendering.
     ////
+
+    // The following block of code will generate the dataTypes we can filter by.
+    let dataTypes = [];
+    if (currentUser) {
+        dataTypes.push({
+            label: "Heart Rate (BPM)",
+            value: currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId
+        });
+        dataTypes.push({
+            label: "Steps Delta",
+            value: currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId
+        });
+
+        /*
+        activitySegmentMetricId
+        basalMetabolicRateMetricId
+        bloodGlucoseMetricId
+        bloodPressureMetricId
+        bodyFatPercentageMetricId
+
+        TODO:
+
+        // "6616da845db3afcd697caf1a"
+        //
+        // :
+        // "6616da845db3afcd697caf1b"
+        // bodyTemperaturePercentageMetricId
+        // :
+        // "6616da845db3afcd697caf1c"
+        // caloriesBurnedMetricId
+        // :
+        // "6616da845db3afcd697caf09"
+        // cyclingPedalingCadenceMetricId
+        // :
+        // "6616da845db3afcd697caf0a"
+        // cyclingPedalingCumulativeMetricId
+        // :
+        // "6616da845db3afcd697caf0b"
+        // cyclingWheelRevolutionCumulativeMetricId
+        // :
+        // "6616da845db3afcd697caf13"
+        // cyclingWheelRevolutionRpmMetricId
+        // :
+        // "6616da845db3afcd697caf12"
+        // distanceDeltaMetricId
+        // :
+        // "6616da845db3afcd697caf14"
+        // heartPointsId
+        // :
+        // "6616da845db3afcd697caf0c"
+        // heartRateBpmMetricId
+        // :
+        // "6616da845db3afcd697caf1d"
+        // heightMetricId
+        // :
+        // "6616da845db3afcd697caf1e"
+        // hydrationMetricId
+        // :
+        // "6616da845db3afcd697caf17"
+        // locationSampleMetricId
+        // :
+        // "6616da845db3afcd697caf15"
+        // moveMinutesMetricId
+        // :
+        // "6616da845db3afcd697caf0d"
+        // nutritionMetricId
+        // :
+        // "6616da845db3afcd697caf18"
+        // oxygenSaturationMetricId
+        // :
+        // "6616da845db3afcd697caf1f"
+        // powerMetricId
+        // :
+        // "6616da845db3afcd697caf0e"
+        // sleepMetricId
+        // :
+        // "6616da845db3afcd697caf20"
+        // speedMetricId
+        // :
+        // "6616da845db3afcd697caf16"
+        // stepCountCadenceMetricId
+        // :
+        // "6616da845db3afcd697caf10"
+        // stepCountDeltaMetricId
+        // :
+        // "6616da845db3afcd697caf0f"
+        // weightMetricId
+        // :
+        // "6616da845db3afcd697caf21"
+        // workoutMetricId
+        // :
+        // "6616da845db3afcd697caf11"
+
+        */
+
+
+    }
+    console.log("dataTypes:", dataTypes);
 
     return (
     <>
@@ -264,7 +339,7 @@ function MemberHistoricalDataTabularList() {
                   </div>
                   <div className="column has-text-right">
                       <button onClick={
-                          ()=>fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, isHeartRate, isStepsCounter, period)
+                          ()=>fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, selectedDataTypes, period)
                       } class="is-fullwidth-mobile button is-link is-small" type="button">
                           <FontAwesomeIcon className="mdi" icon={faRefresh} />&nbsp;<span class="is-hidden-desktop is-hidden-tablet">Refresh</span>
                       </button>
@@ -289,42 +364,34 @@ function MemberHistoricalDataTabularList() {
                     <FormErrorBox errors={errors} />
 
                     {/* Section for selecting `metric type` */}
-                    <div class="column has-text-right">
-                      <button class={`button is-small ${isHeartRate && `is-info`}`} type="button" onClick={(e) => { onHeartRateButtonClick(e) }}>
-                        <FontAwesomeIcon className="mdi" icon={faHeart} />&nbsp;Heart Rate
-                      </button>
-                      <Link class={`button is-small ${isStepsCounter && `is-info`}`} type="button" onClick={(e) => { onStepCounterButtonClick(e) }}>
-                        <FontAwesomeIcon className="mdi" icon={faPersonWalking} />&nbsp;Steps Count
-                      </Link>&nbsp;
-                      {/*
+                    <div class="column ">
+
+                        <FormMultiSelectField
+                          label="Data Types"
+                          name="selectedDataTypes"
+                          placeholder="Text input"
+                          options={dataTypes}
+                          selectedValues={selectedDataTypes}
+                          onChange={(e) => {
+                            let values = [];
+                            for (let option of e) {
+                              values.push(option.value);
+                            }
+                            setSelectedDataTypes(values);
+                          }}
+                          errorText={errors && errors.paymentMethods}
+                          helpText=""
+                          isRequired={true}
+                          maxWidth="320px"
+                        />
+
+                    {/*
                                 DEVELOPERS NOTE:
                                 - As we add more sensors, add your new sensors here...
                             */}
                     </div>{/* Section for selecting `function` */}
 
-
-                    {/* Section for selecting `period` */}
-                    <div class="column has-text-right">
-                      {/*
-                        DEVELOPERS NOTE:
-                        - Period refers to the period of time the ranking is between. For example `day` would mean ranking for today.
-                        - Week is ISO week, meaning it the week starts on Sunday and ends on Saturday.
-                        - Month or year ranking are only ment for THIS month or year.
-                    */}
-                      <button class={`button is-small ${period === RANK_POINT_PERIOD_DAY && `is-info`}`} type="button" onClick={(e) => { e.preventDefault(); setPeriod(RANK_POINT_PERIOD_DAY); }}>
-                        Today
-                      </button>
-                      <Link class={`button is-small ${period === RANK_POINT_PERIOD_WEEK && `is-info`}`} type="button" onClick={(e) => { e.preventDefault(); setPeriod(RANK_POINT_PERIOD_WEEK); }}>
-                        Week
-                      </Link>
-                      <Link class={`button is-small ${period === RANK_POINT_PERIOD_MONTH && `is-info`}`} type="button" onClick={(e) => { e.preventDefault(); setPeriod(RANK_POINT_PERIOD_MONTH); }}>
-                        Month
-                      </Link>
-                      <Link class={`button is-small ${period === RANK_POINT_PERIOD_YEAR && `is-info`}`} type="button" onClick={(e) => { e.preventDefault(); setPeriod(RANK_POINT_PERIOD_YEAR); }}>
-                        Year
-                      </Link>
-                      &nbsp;
-                    </div>
+                    
 
                     {listRank &&
                     listRank.results &&
