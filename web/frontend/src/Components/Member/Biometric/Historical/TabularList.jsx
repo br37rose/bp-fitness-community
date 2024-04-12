@@ -214,97 +214,113 @@ function MemberHistoricalDataTabularList() {
     let dataTypes = [];
     if (currentUser) {
         dataTypes.push({
-            label: "Heart Rate (BPM)",
-            value: currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId
+            label: "Activity",
+            value: currentUser.primaryHealthTrackingDevice.activitySegmentMetricId
+        });
+        dataTypes.push({
+            label: "Basal Metabolic Rate",
+            value: currentUser.primaryHealthTrackingDevice.basalMetabolicRateMetricId
+        });
+        dataTypes.push({
+            label: "Blood Glucose",
+            value: currentUser.primaryHealthTrackingDevice.bloodGlucoseMetricId
+        });
+        dataTypes.push({
+            label: "Blood Pressure",
+            value: currentUser.primaryHealthTrackingDevice.bloodPressureMetricId
         });
         dataTypes.push({
             label: "Steps Delta",
             value: currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId
         });
-
-        /*
-        activitySegmentMetricId
-        basalMetabolicRateMetricId
-        bloodGlucoseMetricId
-        bloodPressureMetricId
-        bodyFatPercentageMetricId
-
-        TODO:
-
-        // "6616da845db3afcd697caf1a"
-        //
-        // :
-        // "6616da845db3afcd697caf1b"
-        // bodyTemperaturePercentageMetricId
-        // :
-        // "6616da845db3afcd697caf1c"
-        // caloriesBurnedMetricId
-        // :
-        // "6616da845db3afcd697caf09"
-        // cyclingPedalingCadenceMetricId
-        // :
-        // "6616da845db3afcd697caf0a"
-        // cyclingPedalingCumulativeMetricId
-        // :
-        // "6616da845db3afcd697caf0b"
-        // cyclingWheelRevolutionCumulativeMetricId
-        // :
-        // "6616da845db3afcd697caf13"
-        // cyclingWheelRevolutionRpmMetricId
-        // :
-        // "6616da845db3afcd697caf12"
-        // distanceDeltaMetricId
-        // :
-        // "6616da845db3afcd697caf14"
-        // heartPointsId
-        // :
-        // "6616da845db3afcd697caf0c"
-        // heartRateBpmMetricId
-        // :
-        // "6616da845db3afcd697caf1d"
-        // heightMetricId
-        // :
-        // "6616da845db3afcd697caf1e"
-        // hydrationMetricId
-        // :
-        // "6616da845db3afcd697caf17"
-        // locationSampleMetricId
-        // :
-        // "6616da845db3afcd697caf15"
-        // moveMinutesMetricId
-        // :
-        // "6616da845db3afcd697caf0d"
-        // nutritionMetricId
-        // :
-        // "6616da845db3afcd697caf18"
-        // oxygenSaturationMetricId
-        // :
-        // "6616da845db3afcd697caf1f"
-        // powerMetricId
-        // :
-        // "6616da845db3afcd697caf0e"
-        // sleepMetricId
-        // :
-        // "6616da845db3afcd697caf20"
-        // speedMetricId
-        // :
-        // "6616da845db3afcd697caf16"
-        // stepCountCadenceMetricId
-        // :
-        // "6616da845db3afcd697caf10"
-        // stepCountDeltaMetricId
-        // :
-        // "6616da845db3afcd697caf0f"
-        // weightMetricId
-        // :
-        // "6616da845db3afcd697caf21"
-        // workoutMetricId
-        // :
-        // "6616da845db3afcd697caf11"
-
-        */
-
-
+        dataTypes.push({
+            label: "Body Temperature",
+            value: currentUser.primaryHealthTrackingDevice.bodyTemperaturePercentageMetricId
+        });
+        dataTypes.push({
+            label: "Calories Burned",
+            value: currentUser.primaryHealthTrackingDevice.caloriesBurnedMetricId
+        });
+        dataTypes.push({
+            label: "Cycling Pedaling Cadence",
+            value: currentUser.primaryHealthTrackingDevice.cyclingPedalingCadenceMetricId
+        });
+        dataTypes.push({
+            label: "Cycling Pedaling Cumulative",
+            value: currentUser.primaryHealthTrackingDevice.cyclingPedalingCumulativeMetricId
+        });
+        dataTypes.push({
+            label: "cycling Wheel Revolution Cumulative",
+            value: currentUser.primaryHealthTrackingDevice.cyclingWheelRevolutionCumulativeMetricId
+        });
+        dataTypes.push({
+            label: "Cycling Wheel Revolution RPM",
+            value: currentUser.primaryHealthTrackingDevice.cyclingWheelRevolutionRpmMetricId
+        });
+        dataTypes.push({
+            label: "Distance Delta",
+            value: currentUser.primaryHealthTrackingDevice.distanceDeltaMetricId
+        });
+        dataTypes.push({
+            label: "Heart Points",
+            value: currentUser.primaryHealthTrackingDevice.heartPointsId
+        });
+        dataTypes.push({
+            label: "Heart Rate (BPM)",
+            value: currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId
+        });
+        dataTypes.push({
+            label: "Height",
+            value: currentUser.primaryHealthTrackingDevice.heightMetricId
+        });
+        dataTypes.push({
+            label: "Hydration",
+            value: currentUser.primaryHealthTrackingDevice.hydrationMetricId
+        });
+        dataTypes.push({
+            label: "Location Sample",
+            value: currentUser.primaryHealthTrackingDevice.locationSampleMetricId
+        });
+        dataTypes.push({
+            label: "Move Minutes",
+            value: currentUser.primaryHealthTrackingDevice.moveMinutesMetricId
+        });
+        dataTypes.push({
+            label: "Nutrition",
+            value: currentUser.primaryHealthTrackingDevice.nutritionMetricId
+        });
+        dataTypes.push({
+            label: "Oxygen Saturation",
+            value: currentUser.primaryHealthTrackingDevice.oxygenSaturationMetricId
+        });
+        dataTypes.push({
+            label: "Power",
+            value: currentUser.primaryHealthTrackingDevice.powerMetricId
+        });
+        dataTypes.push({
+            label: "Sleep",
+            value: currentUser.primaryHealthTrackingDevice.sleepMetricId
+        });
+        dataTypes.push({
+            label: "Speed",
+            value: currentUser.primaryHealthTrackingDevice.speedMetricId
+        });
+        dataTypes.push({
+            label: "Steps Counter (Cadence)",
+            value: currentUser.primaryHealthTrackingDevice.stepCountCadenceMetricId
+        });
+        dataTypes.push({
+            label: "Steps Counter (Delta)",
+            value: currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId
+        });
+        dataTypes.push({
+            label: "Weight",
+            value: currentUser.primaryHealthTrackingDevice.weightMetricId
+        });
+        dataTypes.push({
+            label: "Workout",
+            value: currentUser.primaryHealthTrackingDevice.workoutMetricId
+        });
     }
     console.log("dataTypes:", dataTypes);
 

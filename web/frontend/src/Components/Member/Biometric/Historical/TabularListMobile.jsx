@@ -62,8 +62,6 @@ function MemberLeaderboardGlobalTabularListMobile(props) {
                       </div>
                     );
                 }
-              })}
-
             })}
 
             <div class="columns pt-4 is-mobile">
