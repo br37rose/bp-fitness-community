@@ -401,6 +401,8 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.TrainingProgram.Create(w, r)
 	case n == 4 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodGet:
 		port.TrainingProgram.GetByID(w, r, p[3])
+	case n == 5 && p[1] == "v1" && p[2] == "training-program" && p[4] == "phases" && r.Method == http.MethodPatch:
+		port.TrainingProgram.UpdateTrainingPhase(w, r, p[3])
 	case n == 4 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodDelete:
 		port.TrainingProgram.DeleteByID(w, r, p[3])
 	case n == 3 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodGet:

@@ -120,3 +120,9 @@ export const BP8_FITNESS_PAYMENT_PROCESSOR_STRIPE_INVOICES_API_ENDPOINT =
   "/api/v1/stripe/invoices?user_id={userID}&cursor={cursor}&page_size={pageSize}";
 export const BP8_FITNESS_WORKOUTS_API_ENDPOINT =
   HTTP_API_SERVER + "/api/v1/workouts";
+export const BP8_FITNESS_T_PROGRAM_API_ENDPOINT =
+  HTTP_API_SERVER + "/api/v1/training-program";
+export const BP8_FITNESS_MEMBER_SELECT_OPTION_ENDPOINT =
+  HTTP_API_SERVER + "/api/v1/select-options/{bid}/members";
+export const BP8_FITNESS_T_PROGRAM_PHASE_PATCH_API_ENDPOINT =
+  HTTP_API_SERVER + "/api/v1/training-program/{pid}/phases";

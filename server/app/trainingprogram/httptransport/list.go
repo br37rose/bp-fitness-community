@@ -133,6 +133,11 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		f.StatusList = statusList
 	}
 
+	searchKeyword := query.Get("search")
+	if searchKeyword != "" {
+		f.SearchText = searchKeyword
+	}
+
 	m, err := h.Controller.ListByFilter(ctx, f)
 	if err != nil {
 		httperror.ResponseError(w, err)

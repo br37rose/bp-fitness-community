@@ -117,6 +117,12 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		}
 		f.UserId = userId
 	}
+	getExc := query.Get("get_exercise")
+	if getExc != "" {
+		if val, err := strconv.ParseBool(getExc); err != nil && val {
+			f.GetExcercise = val
+		}
+	}
 
 	m, err := h.Controller.ListByFilter(ctx, f)
 	if err != nil {

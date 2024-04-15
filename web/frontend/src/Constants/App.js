@@ -78,8 +78,5 @@ export const RANK_POINT_METRIC_TYPE_HEART_RATE = 25;
 export const RANK_POINT_METRIC_TYPE_STEP_COUNTER = 10;
 //TODO: Add more health sensors here...
 
-export const TRAINING_PROGRAM_TYPE_PHASED = 1;
-export const TRAINING_PROGRAM_TYPE_WORKOUTS = 2;
-
 export const WORKOUT_ALL_VISIBLE = 1;
 export const WORKOUT_PERSONAL_VISIBLE = 2;

@@ -51,6 +51,12 @@ func (impl TrainingProgramStorerImpl) ListByFilter(ctx context.Context, f *Train
 		SetSort(bson.M{f.SortField: f.SortOrder}).
 		SetLimit(f.PageSize)
 
+	if f.SearchText != "" {
+		filter["$text"] = bson.M{"$search": f.SearchText}
+		options.SetProjection(bson.M{"score": bson.M{"$meta": "textScore"}})
+		options.SetSort(bson.D{{Key: "score", Value: bson.M{"$meta": "textScore"}}})
+	}
+
 	cursor, err := impl.Collection.Find(ctx, filter, options)
 	if err != nil {
 		return nil, err

@@ -15,8 +15,8 @@ import (
 type TrainingProgramCreateRequestIDO struct {
 	Name           string             `json:"name,omitempty"`
 	Description    string             `json:"description,omitempty"`
-	Phases         int64              `json:"phases,omitempty,string"`
-	Weeks          int64              `json:"weeks,omitempty,string"`
+	Phases         int64              `json:"phases,omitempty"`
+	Weeks          int64              `json:"weeks,omitempty"`
 	OrganizationID primitive.ObjectID `json:"organization_id"`
 	UserId         primitive.ObjectID `json:"user_id"`
 }
@@ -42,10 +42,18 @@ func (impl *TrainingprogramControllerImpl) TrainingProgramFromrequest(ctx contex
 	} else if requestData.UserId.IsZero() {
 		return nil, httperror.NewForBadRequestWithSingleField("userid", "not provided")
 	}
+	user, err := impl.UserStorer.GetByID(ctx, requestData.UserId)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, httperror.NewForBadRequestWithSingleField("userid", "invalid userid provided")
+	}
 
 	tp := tp_s.TrainingProgram{
 		ID:                 primitive.NewObjectID(),
 		UserID:             requestData.UserId,
+		UserName:           user.Name,
 		Name:               requestData.Name,
 		Description:        requestData.Description,
 		Phases:             requestData.Phases,

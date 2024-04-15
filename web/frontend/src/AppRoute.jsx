@@ -112,6 +112,7 @@ import MemberWorkoutList from "./Components/Member/Workouts/list";
 import MemberWorkoutAdd from "./Components/Member/Workouts/add";
 import MemberWorkoutDetail from "./Components/Member/Workouts/Detail";
 import MemberWorkoutEdit from "./Components/Member/Workouts/update";
+import AdminTPDetail from "./Components/Admin/TrainingProgram/Detail";
 
 function AppRoute() {
   return (
@@ -330,6 +331,11 @@ function AppRoute() {
                     exact
                     path="/admin/training-program/add"
                     element={<AdminTrainingProgramAdd />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/training-program/:id"
+                    element={<AdminTPDetail />}
                   />
                   <Route
                     exact

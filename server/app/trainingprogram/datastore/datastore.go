@@ -21,6 +21,7 @@ const (
 type TrainingProgram struct {
 	ID                 primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	UserID             primitive.ObjectID `json:"user_id,omitempty" bson:"user_id,omitempty"`
+	UserName           string             `json:"user_name,omitempty" bson:"user_name,omitempty"`
 	OrganizationID     primitive.ObjectID `bson:"organization_id" json:"organization_id,omitempty"`
 	Name               string             `json:"name,omitempty" bson:"name,omitempty"`
 	Description        string             `json:"description,omitempty" bson:"description,omitempty"`
@@ -90,8 +91,8 @@ type TrainingRoutine struct {
 // }
 
 type TrainingDay struct {
-	Week uint64     `json:"week,omitempty" bson:"week,omitempty"`
-	Day  uint64     `json:"day,omitempty" bson:"day,omitempty"`
+	Week int64      `json:"week,omitempty" bson:"week,omitempty"`
+	Day  int64      `json:"day,omitempty" bson:"day,omitempty"`
 	Time *time.Time `json:"time,omitempty" bson:"time,omitempty"`
 	Type int8       `json:"type,omitempty" bson:"type,omitempty"`
 }
@@ -116,6 +117,7 @@ type TrainingProgramListFilter struct {
 	StartTime       time.Time
 	EndTime         time.Time
 	StatusList      []int8
+	SearchText      string
 }
 
 type TrainingProgramListResult struct {
@@ -128,6 +130,7 @@ type TrainingProgramStorer interface {
 	Create(ctx context.Context, tp *TrainingProgram) error
 	GetByID(ctx context.Context, id primitive.ObjectID) (*TrainingProgram, error)
 	UpdateByID(ctx context.Context, tp *TrainingProgram) error
+	UpdatePhase(ctx context.Context, tpId primitive.ObjectID, phase []*TrainingPhase) error
 	Delete(ctx context.Context, id primitive.ObjectID) error
 	ListByFilter(ctx context.Context, f *TrainingProgramListFilter) (*TrainingProgramListResult, error)
 }

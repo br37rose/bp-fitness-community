@@ -19,10 +19,11 @@ func (c *WorkoutControllerImpl) ListByFilter(ctx context.Context, f *datastore.W
 		}
 	}
 
-	workpouts, err := c.WorkoutStorer.ListByFilter(ctx, f)
+	workouts, err := c.WorkoutStorer.ListByFilter(ctx, f)
 	if err != nil {
 		c.Logger.Error("database list by filter error", slog.Any("error", err))
 		return nil, err
 	}
-	return workpouts, err
+
+	return workouts, err
 }

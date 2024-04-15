@@ -3,34 +3,26 @@ import { Link, Navigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faImage,
   faPlus,
   faArrowLeft,
   faGauge,
-  faVideoCamera,
   faEye,
   faDumbbell,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
-import { postVideoCollectionCreateAPI } from "../../../API/VideoCollection";
 import FormErrorBox from "../../Reusable/FormErrorBox";
-import FormAttachmentField from "../../Reusable/FormAttachmentField";
 import FormInputField from "../../Reusable/FormInputField";
 import FormTextareaField from "../../Reusable/FormTextareaField";
-import FormRadioField from "../../Reusable/FormRadioField";
-import FormSelectField from "../../Reusable/FormSelectField";
-import FormSelectFieldForVideoCategory from "../../Reusable/FormSelectFieldForVideoCategory";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
-import { VIDEO_COLLECTION_TYPE_OPTIONS_WITH_EMPTY_OPTION } from "../../../Constants/FieldOptions";
 import {
-  EXERCISE_THUMBNAIL_TYPE_SIMPLE_STORAGE_SERVER,
-  EXERCISE_THUMBNAIL_TYPE_EXTERNAL_URL,
-  VIDEO_COLLECTION_TYPE_MANY_VIDEOS,
-  TRAINING_PROGRAM_TYPE_PHASED,
-  TRAINING_PROGRAM_TYPE_WORKOUTS,
-} from "../../../Constants/App";
+  currentUserState,
+  topAlertMessageState,
+  topAlertStatusState,
+} from "../../../AppState";
+import { postTrainingProgCreateAPI } from "../../../API/trainingProgram";
+import { getMemberListOptionsAPI } from "../../../API/member";
+import FormSelectField from "../../Reusable/FormSelectField";
 
 function AdminTrainingProgramAdd() {
   ////
@@ -41,6 +33,7 @@ function AdminTrainingProgramAdd() {
     useRecoilState(topAlertMessageState);
   const [topAlertStatus, setTopAlertStatus] =
     useRecoilState(topAlertStatusState);
+  const [currentuser] = useRecoilState(currentUserState);
 
   ////
   //// Component states.
@@ -49,47 +42,36 @@ function AdminTrainingProgramAdd() {
   const [errors, setErrors] = useState({});
   const [isFetching, setFetching] = useState(false);
   const [forceURL, setForceURL] = useState("");
-  const [thumbnailType, setThumbnailType] = useState(0);
   const [thumbnailURL, setThumbnailURL] = useState("");
   const [thumbnailAttachmentID, setThumbnailAttachmentID] = useState("");
-  const [thumbnailAttachmentName, setThumbnailAttachmentName] = useState("");
-  const [alternateName, setAlternateName] = useState("");
+  const [memoptions, setmemoptions] = useState([]);
+
   const [name, setName] = useState("");
   const [phases, setphases] = useState(4);
   const [weeks, setweeks] = useState(4);
-  const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState(VIDEO_COLLECTION_TYPE_MANY_VIDEOS);
-  const [videoCategoryID, setVideoCategoryID] = useState("");
-  const [isVideoCategoryOther, setIsVideoCategoryOther] = useState("");
-  const [programType, setprogramType] = useState(TRAINING_PROGRAM_TYPE_PHASED);
+  const [user, setuser] = useState("");
 
   ////
   //// Event handling.
   ////
 
   const onSubmitClick = (e) => {
-    console.log("onSubmitClick: Starting...");
     setFetching(true);
     setErrors({});
-    postVideoCollectionCreateAPI(
+    postTrainingProgCreateAPI(
       {
-        type: type,
-        thumbnail_type: thumbnailType,
-        thumbnail_upload: thumbnailAttachmentID,
-        thumbnail_url: thumbnailURL,
         name: name,
-        summary: summary,
         description: description,
-        video_category_id: videoCategoryID,
-        is_video_category_other: isVideoCategoryOther,
-        category_id: videoCategoryID,
+        phases: parseInt(phases),
+        weeks: parseInt(weeks),
+        organization_id: currentuser.organizationId,
+        user_id: user,
       },
       onAddSuccess,
       onAddError,
       onAddDone
     );
-    console.log("onSubmitClick: Finished.");
   };
 
   ////
@@ -99,41 +81,24 @@ function AdminTrainingProgramAdd() {
   // --- VideoCollection Create --- //
 
   function onAddSuccess(response) {
-    // For debugging purposes only.
-    console.log("onAddSuccess: Starting...");
-    console.log(response);
-
     // Add a temporary banner message in the app and then clear itself after 2 seconds.
-    setTopAlertMessage("Video collection created");
+    setTopAlertMessage("program  created");
     setTopAlertStatus("success");
     setTimeout(() => {
-      console.log("onAddSuccess: Delayed for 2 seconds.");
-      console.log(
-        "onAddSuccess: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
     // Redirect the organization to the organization attachments page.
-    setForceURL("/admin/video-collection/" + response.id + "");
+    setForceURL("/admin/training-program/" + response.id + "");
   }
 
   function onAddError(apiErr) {
-    console.log("onAddError: Starting...");
     setErrors(apiErr);
 
     // Add a temporary banner message in the app and then clear itself after 2 seconds.
     setTopAlertMessage("Failed submitting");
     setTopAlertStatus("danger");
     setTimeout(() => {
-      console.log("onAddError: Delayed for 2 seconds.");
-      console.log(
-        "onAddError: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -145,7 +110,6 @@ function AdminTrainingProgramAdd() {
   }
 
   function onAddDone() {
-    console.log("onAddDone: Starting...");
     setFetching(false);
   }
 
@@ -160,10 +124,37 @@ function AdminTrainingProgramAdd() {
       window.scrollTo(0, 0); // Start the page at the top of the page.
     }
 
+    getMemberListOptionsAPI(
+      currentuser.organizationId,
+      onListOK,
+      onListNotOK,
+      onDone
+    );
+
     return () => {
       mounted = false;
     };
   }, []);
+
+  function onListOK(resp) {
+    setFetching(false);
+    if (resp?.length) {
+      setmemoptions([{ value: "", label: "please select user" }, ...resp]);
+    }
+  }
+
+  function onListNotOK(resp) {
+    setErrors(resp);
+    // Add a temporary banner message in the app and then clear itself after 2 seconds.
+    setTopAlertMessage("Failed gettiing list");
+    setTopAlertStatus("danger");
+    setTimeout(() => {
+      setTopAlertMessage("");
+    }, 2000);
+  }
+  function onDone() {
+    setFetching(false);
+  }
 
   ////
   //// Component rendering.
@@ -242,64 +233,61 @@ function AdminTrainingProgramAdd() {
             ) : (
               <>
                 <div class="container">
-                  <FormRadioField
-                    label="Program Type"
-                    name="programtype"
-                    value={programType}
-                    opt1Value={TRAINING_PROGRAM_TYPE_PHASED}
-                    opt1Label="Phased"
-                    opt2Value={TRAINING_PROGRAM_TYPE_WORKOUTS}
-                    opt2Label="Workouts"
-                    errorText={errors && errors.programType}
-                    onChange={(e) => setprogramType(parseInt(e.target.value))}
-                    maxWidth="180px"
-                    disabled={false}
-                  />
-
-                  {programType == TRAINING_PROGRAM_TYPE_PHASED && (
-                    <>
-                      <p class="subtitle is-6 mt-5">
-                        <FontAwesomeIcon className="fas" icon={faEye} />
-                        &nbsp;Information
-                      </p>
-                      <hr />
-                      <div className="columns">
-                        <div className="column is-justify-content-center">
-                          <FormInputField
-                            label="Phases"
-                            name="phases"
-                            placeholder="phases"
-                            value={phases}
-                            errorText={errors && errors.phases}
-                            onChange={(e) => setphases(e.target.value)}
-                            isRequired={true}
-                            maxWidth="80px"
-                          />
-                        </div>
-                        <div className="column">
-                          <FormInputField
-                            label="Weeks"
-                            name="weeks"
-                            placeholder="weeks"
-                            value={weeks}
-                            errorText={errors && errors.weeks}
-                            onChange={(e) => setweeks(e.target.value)}
-                            isRequired={true}
-                            maxWidth="80px"
-                          />
-                        </div>
-                        <div className="column">
-                          <FormInputField
-                            label="Duration"
-                            name="duration"
-                            value={phases * weeks + " weeks"}
-                            disabled
-                            maxWidth="180px"
-                          />
-                        </div>
+                  <>
+                    <p class="subtitle is-6 mt-5">
+                      <FontAwesomeIcon className="fas" icon={faEye} />
+                      &nbsp;Information
+                    </p>
+                    <hr />
+                    <div className="columns">
+                      <div className="column">
+                        <FormSelectField
+                          label={"Pick User"}
+                          onChange={(e) => setuser(e.target.value)}
+                          options={memoptions}
+                          selectedValue={user}
+                        />
                       </div>
-                    </>
-                  )}
+                    </div>
+                    <div className="columns">
+                      <div className="column is-justify-content-center">
+                        <FormInputField
+                          type="number"
+                          label="Phases"
+                          name="phases"
+                          placeholder="phases"
+                          value={phases}
+                          errorText={errors && errors.phases}
+                          onChange={(e) => setphases(e.target.value)}
+                          isRequired={true}
+                          maxWidth="80px"
+                        />
+                      </div>
+                      <div className="column">
+                        <FormInputField
+                          type="number"
+                          label="Weeks"
+                          name="weeks"
+                          placeholder="weeks"
+                          value={weeks}
+                          errorText={errors && errors.weeks}
+                          onChange={(e) => setweeks(e.target.value)}
+                          isRequired={true}
+                          maxWidth="80px"
+                        />
+                      </div>
+                      <div className="column">
+                        <FormInputField
+                          label="Duration"
+                          name="duration"
+                          value={phases * weeks + " weeks"}
+                          disabled
+                          maxWidth="180px"
+                        />
+                      </div>
+                    </div>
+                  </>
+
                   <FormTextareaField
                     label="Name"
                     name="Name"
@@ -326,10 +314,10 @@ function AdminTrainingProgramAdd() {
                     <div class="column is-half">
                       <Link
                         class="button is-fullwidth-mobile"
-                        to={`/admin/video-collections`}
+                        to={`/admin/training-program`}
                       >
                         <FontAwesomeIcon className="fas" icon={faArrowLeft} />
-                        &nbsp;Back to Video Collections
+                        &nbsp;Back to training programs
                       </Link>
                     </div>
                     <div class="column is-half has-text-right">
@@ -337,6 +325,9 @@ function AdminTrainingProgramAdd() {
                         onClick={onSubmitClick}
                         class="button is-success is-fullwidth-mobile"
                         type="button"
+                        disabled={
+                          !(name && description && phases && weeks && user)
+                        }
                       >
                         <FontAwesomeIcon className="fas" icon={faPlus} />
                         &nbsp;Submit

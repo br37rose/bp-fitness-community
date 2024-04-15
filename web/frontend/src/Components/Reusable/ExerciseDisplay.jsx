@@ -1,5 +1,3 @@
-import { faP } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
 import DraggableItem from "./dragable";
 
 function ExerciseDisplay({

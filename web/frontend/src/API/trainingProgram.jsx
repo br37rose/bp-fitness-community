@@ -1,9 +1,12 @@
 import { camelizeKeys, decamelize } from "humps";
-import { BP8_FITNESS_WORKOUTS_API_ENDPOINT } from "../Constants/API";
+import {
+  BP8_FITNESS_T_PROGRAM_API_ENDPOINT,
+  BP8_FITNESS_T_PROGRAM_PHASE_PATCH_API_ENDPOINT,
+} from "../Constants/API";
 import getCustomAxios from "../Helpers/customAxios";
 import { DateTime } from "luxon";
 
-export function postWorkoutCreateAPI(
+export function postTrainingProgCreateAPI(
   decamelizedData,
   onSuccessCallback,
   onErrorCallback,
@@ -12,7 +15,7 @@ export function postWorkoutCreateAPI(
   const axios = getCustomAxios();
 
   axios
-    .post(BP8_FITNESS_WORKOUTS_API_ENDPOINT, decamelizedData)
+    .post(BP8_FITNESS_T_PROGRAM_API_ENDPOINT, decamelizedData)
     .then((successResponse) => {
       const responseData = successResponse.data;
 
@@ -29,7 +32,7 @@ export function postWorkoutCreateAPI(
     .then(onDoneCallback);
 }
 
-export function getWorkoutListApi(
+export function getTrainingProgListApi(
   filtersMap = new Map(),
   onSuccessCallback,
   onErrorCallback,
@@ -38,7 +41,15 @@ export function getWorkoutListApi(
   const axios = getCustomAxios();
 
   // The following code will generate the query parameters for the url based on the map.
-  let aURL = BP8_FITNESS_WORKOUTS_API_ENDPOINT;
+  let aURL = BP8_FITNESS_T_PROGRAM_API_ENDPOINT;
+  filtersMap.forEach((value, key) => {
+    let decamelizedkey = decamelize(key);
+    if (aURL.indexOf("?") > -1) {
+      aURL += "&" + decamelizedkey + "=" + value;
+    } else {
+      aURL += "?" + decamelizedkey + "=" + value;
+    }
+  });
 
   axios
     .get(aURL)
@@ -70,15 +81,15 @@ export function getWorkoutListApi(
     .then(onDoneCallback);
 }
 
-export function getWorkoutDetailAPI(
-  workoutId,
+export function getTrainingProgDetailAPI(
+  TrainingProgId,
   onSuccessCallback,
   onErrorCallback,
   onDoneCallback
 ) {
   const axios = getCustomAxios();
   axios
-    .get(BP8_FITNESS_WORKOUTS_API_ENDPOINT + "/" + workoutId)
+    .get(BP8_FITNESS_T_PROGRAM_API_ENDPOINT + "/" + TrainingProgId)
     .then((successResponse) => {
       const responseData = successResponse.data;
 
@@ -96,8 +107,8 @@ export function getWorkoutDetailAPI(
     })
     .then(onDoneCallback);
 }
-export function putWorkoutUpdateAPI(
-  workoutId,
+export function putTrainingProgUpdateAPI(
+  TrainingProgId,
   decamelizedData,
   onSuccessCallback,
   onErrorCallback,
@@ -106,7 +117,10 @@ export function putWorkoutUpdateAPI(
   const axios = getCustomAxios();
 
   axios
-    .put(BP8_FITNESS_WORKOUTS_API_ENDPOINT + "/" + workoutId, decamelizedData)
+    .put(
+      BP8_FITNESS_T_PROGRAM_API_ENDPOINT + "/" + TrainingProgId,
+      decamelizedData
+    )
     .then((successResponse) => {
       const responseData = successResponse.data;
 
@@ -123,15 +137,45 @@ export function putWorkoutUpdateAPI(
     .then(onDoneCallback);
 }
 
-export function deleteWorkoutAPI(
-  workoutId,
+export function deleteTrainingProgAPI(
+  TrainingProgId,
   onSuccessCallback,
   onErrorCallback,
   onDoneCallback
 ) {
   const axios = getCustomAxios();
   axios
-    .delete(BP8_FITNESS_WORKOUTS_API_ENDPOINT + "/" + workoutId)
+    .delete(BP8_FITNESS_T_PROGRAM_API_ENDPOINT + "/" + TrainingProgId)
+    .then((successResponse) => {
+      const responseData = successResponse.data;
+
+      // Snake-case from API to camel-case for React.
+      const data = camelizeKeys(responseData);
+
+      // Return the callback data.
+      onSuccessCallback(data);
+    })
+    .catch((exception) => {
+      let errors = camelizeKeys(exception);
+      onErrorCallback(errors);
+    })
+    .then(onDoneCallback);
+}
+
+export function patchTrainingProgAPI(
+  prgmid,
+  decamelizedData,
+  onSuccessCallback,
+  onErrorCallback,
+  onDoneCallback
+) {
+  const axios = getCustomAxios();
+  let url = BP8_FITNESS_T_PROGRAM_PHASE_PATCH_API_ENDPOINT.replace(
+    "{pid}",
+    prgmid
+  );
+  axios
+    .patch(url, decamelizedData)
     .then((successResponse) => {
       const responseData = successResponse.data;
 

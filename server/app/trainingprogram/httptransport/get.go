@@ -1,10 +1,8 @@
 package httptransport
 
 import (
-	"encoding/json"
 	"net/http"
 
-	tp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -25,11 +23,4 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request, id string) {
 	}
 
 	MarshalDetailResponse(m, w)
-}
-
-func MarshalDetailResponse(res *tp_s.TrainingProgram, w http.ResponseWriter) {
-	if err := json.NewEncoder(w).Encode(&res); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }

@@ -17,10 +17,7 @@ import {
 import { useRecoilState } from "recoil";
 
 import FormErrorBox from "../../Reusable/FormErrorBox";
-import {
-  getVideoCollectionListAPI,
-  deleteVideoCollectionAPI,
-} from "../../../API/VideoCollection";
+import { deleteVideoCollectionAPI } from "../../../API/VideoCollection";
 import {
   topAlertMessageState,
   topAlertStatusState,
@@ -35,12 +32,10 @@ import {
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
 import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
 import FormSelectField from "../../Reusable/FormSelectField";
-import {
-  VIDEO_COLLECTION_STATUS_OPTIONS_WITH_EMPTY_OPTION,
-  VIDEO_COLLECTION_TYPE_OPTIONS_WITH_EMPTY_OPTION,
-} from "../../../Constants/FieldOptions";
-import AdminVideoCollectionListDesktop from "../VideoCollection/ListDesktop";
-import AdminVideoCollectionListMobile from "../VideoCollection/ListMobile";
+import { VIDEO_COLLECTION_STATUS_OPTIONS_WITH_EMPTY_OPTION } from "../../../Constants/FieldOptions";
+import { getTrainingProgListApi } from "../../../API/trainingProgram";
+import AdminTPListDesktop from "./listDesktop";
+import AdminTPListMobile from "./listMobile";
 
 function AdminTrainingProgramList() {
   ////
@@ -88,7 +83,6 @@ function AdminTrainingProgramList() {
   ////
 
   function onVideoCollectionListSuccess(response) {
-    console.log("onVideoCollectionListSuccess: Starting...");
     if (response.results !== null) {
       setListData(response);
       if (response.hasNextPage) {
@@ -101,7 +95,6 @@ function AdminTrainingProgramList() {
   }
 
   function onVideoCollectionListError(apiErr) {
-    console.log("onVideoCollectionListError: Starting...");
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -112,22 +105,14 @@ function AdminTrainingProgramList() {
   }
 
   function onVideoCollectionListDone() {
-    console.log("onVideoCollectionListDone: Starting...");
     setFetching(false);
   }
 
   function onVideoCollectionDeleteSuccess(response) {
-    console.log("onVideoCollectionDeleteSuccess: Starting..."); // For debugging purposes only.
-
     // Update notification.
     setTopAlertStatus("success");
     setTopAlertMessage("Video collection deleted");
     setTimeout(() => {
-      console.log(
-        "onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -143,18 +128,12 @@ function AdminTrainingProgramList() {
   }
 
   function onVideoCollectionDeleteError(apiErr) {
-    console.log("onVideoCollectionDeleteError: Starting..."); // For debugging purposes only.
     setErrors(apiErr);
 
     // Update notification.
     setTopAlertStatus("danger");
     setTopAlertMessage("Failed deleting");
     setTimeout(() => {
-      console.log(
-        "onVideoCollectionDeleteError: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -166,7 +145,6 @@ function AdminTrainingProgramList() {
   }
 
   function onVideoCollectionDeleteDone() {
-    console.log("onVideoCollectionDeleteDone: Starting...");
     setFetching(false);
   }
 
@@ -186,8 +164,8 @@ function AdminTrainingProgramList() {
     // need to split as follows.
     if (sbv !== undefined && sbv !== null && sbv !== "") {
       const sortArray = sbv.split(",");
-      params.set("sort_field", sortArray[0]); // Sort (1 of 2)
-      params.set("sort_order", sortArray[1]); // Sort (2 of 2)
+      params.set("sort_field", "_id"); // Sort (1 of 2)
+      params.set("sort_order", -1); // Sort (2 of 2)
     }
 
     if (cur !== "") {
@@ -203,13 +181,13 @@ function AdminTrainingProgramList() {
       params.set("search", keywords);
     }
     if (st !== undefined && st !== null && st !== "") {
-      params.set("status", st);
+      params.set("status_list", st === 0 ? 1 : st);
     }
     if (vt !== undefined && vt !== null && vt !== "") {
       params.set("video_type", vt);
     }
 
-    getVideoCollectionListAPI(
+    getTrainingProgListApi(
       params,
       onVideoCollectionListSuccess,
       onVideoCollectionListError,
@@ -218,7 +196,6 @@ function AdminTrainingProgramList() {
   };
 
   const onNextClicked = (e) => {
-    console.log("onNextClicked");
     let arr = [...previousCursors];
     arr.push(currentCursor);
     setPreviousCursors(arr);
@@ -226,7 +203,6 @@ function AdminTrainingProgramList() {
   };
 
   const onPreviousClicked = (e) => {
-    console.log("onPreviousClicked");
     let arr = [...previousCursors];
     const previousCursor = arr.pop();
     setPreviousCursors(arr);
@@ -235,23 +211,18 @@ function AdminTrainingProgramList() {
 
   const onSearchButtonClick = (e) => {
     // Searching
-    console.log("Search button clicked...");
     setActualSearchText(temporarySearchText);
   };
 
   const onSelectVideoCollectionForDeletion = (e, datum) => {
-    console.log("onSelectVideoCollectionForDeletion", datum);
     setSelectedVideoCollectionForDeletion(datum);
   };
 
   const onDeselectVideoCollectionForDeletion = (e) => {
-    console.log("onDeselectVideoCollectionForDeletion");
     setSelectedVideoCollectionForDeletion("");
   };
 
   const onDeleteConfirmButtonClick = (e) => {
-    console.log("onDeleteConfirmButtonClick"); // For debugging purposes only.
-
     deleteVideoCollectionAPI(
       selectedVideoCollectionForDeletion.id,
       onVideoCollectionDeleteSuccess,
@@ -486,18 +457,6 @@ function AdminTrainingProgramList() {
                       }
                     />
                   </div>
-                  <div class="column">
-                    <FormSelectField
-                      label="Video Type"
-                      name="videoType"
-                      placeholder="Pick"
-                      selectedValue={videoType}
-                      errorText={errors && errors.videoType}
-                      helpText=""
-                      onChange={(e) => setVideoType(e.target.value)}
-                      options={VIDEO_COLLECTION_TYPE_OPTIONS_WITH_EMPTY_OPTION}
-                    />
-                  </div>
                 </div>
               </div>
             )}
@@ -517,7 +476,7 @@ function AdminTrainingProgramList() {
                             ##################################################################
                         */}
                     <div class="is-hidden-touch">
-                      <AdminVideoCollectionListDesktop
+                      <AdminTPListDesktop
                         listData={listData}
                         setPageSize={setPageSize}
                         pageSize={pageSize}
@@ -536,7 +495,7 @@ function AdminTrainingProgramList() {
                             ###########################################################################
                         */}
                     <div class="is-fullwidth is-hidden-desktop">
-                      <AdminVideoCollectionListMobile
+                      <AdminTPListMobile
                         listData={listData}
                         setPageSize={setPageSize}
                         pageSize={pageSize}
