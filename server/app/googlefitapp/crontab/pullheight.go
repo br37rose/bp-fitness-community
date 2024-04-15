@@ -57,30 +57,32 @@ func (impl *googleFitAppCrontaberImpl) pullHeightDataFromGoogleWithGfaAndFitness
 			return err
 		}
 		if !exists {
-			dp := &dp_ds.GoogleFitDataPoint{
-				ID:              primitive.NewObjectID(),
-				DataTypeName:    gcp_a.DataTypeNameHeight, // This is a `Google Fit` specific identifier.
-				Status:          dp_ds.StatusQueued,
-				UserID:          gfa.UserID,
-				UserName:        gfa.UserName,
-				UserLexicalName: gfa.UserLexicalName,
-				GoogleFitAppID:  gfa.ID,
-				MetricID:        gfa.HydrationMetricID,
-				StartAt:         heightDatapoint.StartTime,
-				EndAt:           heightDatapoint.EndTime,
-				Height:          &heightDatapoint,
-				Error:           "",
-				CreatedAt:       time.Now(),
-				ModifiedAt:      time.Now(),
-				OrganizationID:  gfa.OrganizationID,
+			if heightDatapoint.EndTime.Before(time.Now()) && heightDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+				dp := &dp_ds.GoogleFitDataPoint{
+					ID:              primitive.NewObjectID(),
+					DataTypeName:    gcp_a.DataTypeNameHeight, // This is a `Google Fit` specific identifier.
+					Status:          dp_ds.StatusQueued,
+					UserID:          gfa.UserID,
+					UserName:        gfa.UserName,
+					UserLexicalName: gfa.UserLexicalName,
+					GoogleFitAppID:  gfa.ID,
+					MetricID:        gfa.HydrationMetricID,
+					StartAt:         heightDatapoint.StartTime,
+					EndAt:           heightDatapoint.EndTime,
+					Height:          &heightDatapoint,
+					Error:           "",
+					CreatedAt:       time.Now(),
+					ModifiedAt:      time.Now(),
+					OrganizationID:  gfa.OrganizationID,
+				}
+				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+					impl.Logger.Error("failed inserting google fit data point for height into database",
+						slog.Any("error", err))
+					return err
+				}
+				impl.Logger.Debug("inserted height data point",
+					slog.Any("dp", dp))
 			}
-			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for height into database",
-					slog.Any("error", err))
-				return err
-			}
-			impl.Logger.Debug("inserted height data point",
-				slog.Any("dp", dp))
 		}
 	}
 

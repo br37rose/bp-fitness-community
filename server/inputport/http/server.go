@@ -395,6 +395,8 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.Biometric.Leaderboard(w, r)
 	case n == 4 && p[1] == "v1" && p[2] == "biometrics" && p[3] == "summary" && r.Method == http.MethodGet:
 		port.Biometric.GetSummary(w, r)
+	case n == 4 && p[1] == "v1" && p[2] == "biometrics" && p[3] == "historic-data" && r.Method == http.MethodGet:
+		port.Biometric.HistoricData(w, r)
 
 		// --- TRAINING PROGRAM --- //
 	case n == 3 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodPost:

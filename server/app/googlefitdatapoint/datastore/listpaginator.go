@@ -61,11 +61,11 @@ func (impl GoogleFitDataPointStorerImpl) newPaginationFilter(f *GoogleFitDataPoi
 		case "data_type_name":
 			// STEP 3: Build for `lexical_name` field.
 			return impl.newPaginationFilterBasedOnString(f, string(decodedCursor))
-		case "created_at":
+		case "created_at", "start_at":
 			// STEP 3: Build for `join_date` field.
 			return impl.newPaginationFilterBasedOnTimestamp(f, string(decodedCursor))
 		default:
-			return nil, fmt.Errorf("unsupported sort field for `%v`, only supported fields are `data_type_name` and `created_at`", f.SortField)
+			return nil, fmt.Errorf("unsupported sort field for `%v`, only supported fields are `data_type_name`, `start_at` and `created_at`", f.SortField)
 		}
 	}
 	return bson.M{}, nil
@@ -187,8 +187,12 @@ func (impl GoogleFitDataPointStorerImpl) newPaginatorNextCursor(f *GoogleFitData
 		timestamp := lastDatum.CreatedAt.UnixMilli()
 		nextCursor = fmt.Sprintf("%v|%v", timestamp, lastDatum.ID.Hex())
 		break
+	case "start_at":
+		timestamp := lastDatum.StartAt.UnixMilli()
+		nextCursor = fmt.Sprintf("%v|%v", timestamp, lastDatum.ID.Hex())
+		break
 	default:
-		return "", fmt.Errorf("unsupported sort field in options for `%v`, only supported fields are `data_type_name` and `created_at`", f.SortField)
+		return "", fmt.Errorf("unsupported sort field in options for `%v`, only supported fields are `data_type_name`, `start_at` and `created_at`", f.SortField)
 	}
 
 	// Encode to base64 without the `=` symbol that would corrupt when we

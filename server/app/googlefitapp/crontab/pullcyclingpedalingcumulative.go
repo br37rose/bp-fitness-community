@@ -63,30 +63,32 @@ func (impl *googleFitAppCrontaberImpl) pullCyclingPedalingCumulativeDataFromGoog
 			return err
 		}
 		if !exists {
-			dp := &dp_ds.GoogleFitDataPoint{
-				ID:                        primitive.NewObjectID(),
-				DataTypeName:              gcp_a.DataTypeNameCyclingPedalingCumulative,
-				Status:                    dp_ds.StatusQueued,
-				UserID:                    gfa.UserID,
-				UserName:                  gfa.UserName,
-				UserLexicalName:           gfa.UserLexicalName,
-				GoogleFitAppID:            gfa.ID,
-				MetricID:                  gfa.CyclingPedalingCumulativeMetricID,
-				StartAt:                   datapoint.StartTime,
-				EndAt:                     datapoint.EndTime,
-				CyclingPedalingCumulative: &datapoint,
-				Error:                     "",
-				CreatedAt:                 time.Now(),
-				ModifiedAt:                time.Now(),
-				OrganizationID:            gfa.OrganizationID,
+			if datapoint.EndTime.Before(time.Now()) && datapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+				dp := &dp_ds.GoogleFitDataPoint{
+					ID:                        primitive.NewObjectID(),
+					DataTypeName:              gcp_a.DataTypeNameCyclingPedalingCumulative,
+					Status:                    dp_ds.StatusQueued,
+					UserID:                    gfa.UserID,
+					UserName:                  gfa.UserName,
+					UserLexicalName:           gfa.UserLexicalName,
+					GoogleFitAppID:            gfa.ID,
+					MetricID:                  gfa.CyclingPedalingCumulativeMetricID,
+					StartAt:                   datapoint.StartTime,
+					EndAt:                     datapoint.EndTime,
+					CyclingPedalingCumulative: &datapoint,
+					Error:                     "",
+					CreatedAt:                 time.Now(),
+					ModifiedAt:                time.Now(),
+					OrganizationID:            gfa.OrganizationID,
+				}
+				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+					impl.Logger.Error("failed inserting google fit data point for cycling pedaling cumulative into database",
+						slog.Any("error", err))
+					return err
+				}
+				impl.Logger.Debug("inserted cycling pedaling cumulative data point",
+					slog.Any("dp", dp))
 			}
-			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for cycling pedaling cumulative into database",
-					slog.Any("error", err))
-				return err
-			}
-			impl.Logger.Debug("inserted cycling pedaling cumulative data point",
-				slog.Any("dp", dp))
 		}
 	}
 

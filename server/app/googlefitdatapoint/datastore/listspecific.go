@@ -8,7 +8,7 @@ func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatus(ctx context.Context)
 	f := &GoogleFitDataPointPaginationListFilter{
 		Cursor:    "",
 		PageSize:  1_000_000_000,
-		SortField: "_id",
+		SortField: "created_at",
 		SortOrder: 1,
 		Status:    StatusQueued,
 	}
@@ -19,7 +19,7 @@ func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatusInDataTypeNames(ctx c
 	f := &GoogleFitDataPointPaginationListFilter{
 		Cursor:        "",
 		PageSize:      1_000_000_000,
-		SortField:     "_id",
+		SortField:     "created_at",
 		SortOrder:     1,
 		Status:        StatusQueued,
 		DataTypeNames: dataTypeNames,
@@ -31,7 +31,7 @@ func (impl GoogleFitDataPointStorerImpl) ListByActiveStatusInDataTypeNames(ctx c
 	f := &GoogleFitDataPointPaginationListFilter{
 		Cursor:        "",
 		PageSize:      1_000_000_000,
-		SortField:     "_id",
+		SortField:     "created_at",
 		SortOrder:     1,
 		Status:        StatusActive,
 		DataTypeNames: dataTypeNames,

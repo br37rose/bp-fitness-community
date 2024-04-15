@@ -51,7 +51,14 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 		// For debugging purposes only.
 		impl.Logger.Debug("created aggregate point",
 			slog.String("metric_id", metricID.Hex()),
-			slog.Int("period", int(period)))
+			slog.Int("period", int(period)),
+			slog.Time("start", startAt),
+			slog.Time("end", endAt),
+			slog.Any("count", response.Count),
+			slog.Any("avg", response.Average),
+			slog.Any("min", response.Min),
+			slog.Any("max", response.Max),
+			slog.Any("sum", response.Sum))
 	} else {
 		// CASE 2 OF 2: Update
 		ap.MetricID = metricID
@@ -71,7 +78,14 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 		// For debugging purposes only.
 		impl.Logger.Debug("updated aggregate point",
 			slog.String("metric_id", metricID.Hex()),
-			slog.Int("period", int(period)))
+			slog.Int("period", int(period)),
+			slog.Time("start", startAt),
+			slog.Time("end", endAt),
+			slog.Any("count", response.Count),
+			slog.Any("avg", response.Average),
+			slog.Any("min", response.Min),
+			slog.Any("max", response.Max),
+			slog.Any("sum", response.Sum))
 	}
 	return nil
 }

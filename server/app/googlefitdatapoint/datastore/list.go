@@ -21,10 +21,10 @@ func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *Go
 		return nil, err
 	}
 
-	// DEVELOPERS NOTE: We will restrict this list to whatever metric ID's were selected.
-	filter["metric_id"] = bson.M{"$in": f.MetricIDs}
-
 	// Apply the conditions to the filter
+	if len(f.MetricIDs) > 0 {
+		filter["metric_id"] = bson.M{"$in": f.MetricIDs}
+	}
 	if !f.OrganizationID.IsZero() {
 		filter["organization_id"] = f.OrganizationID
 	}

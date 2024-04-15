@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+    faHeart,
+    faPersonWalking,
+    faRankingStar,
     faChartLine,
     faHeartbeat,
     faFilterCircleXmark,
@@ -19,6 +22,8 @@ import {
     faRefresh,
     faFilter,
     faSearch,
+    faPercent,
+    faAdd,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -36,15 +41,22 @@ import {
     dataPointFilterIsHeartRateState,
     dataPointFilterIsStepsCounterState
 } from "../../../../AppState";
+import FormMultiSelectField from "../../../Reusable/FormMultiSelectField";
 import FormCheckboxField from "../../../Reusable/FormCheckboxField";
 import PageLoadingContent from "../../../Reusable/PageLoadingContent";
 import FormInputFieldWithButton from "../../../Reusable/FormInputFieldWithButton";
 import { PAGE_SIZE_OPTIONS } from "../../../../Constants/FieldOptions";
-import MemberDataPointHistoricalTabularListDesktop from "./TabularListDesktop";
-import MemberDataPointHistoricalTabularListMobile from "./TabularListMobile";
+import { RANK_POINT_PERIOD_DAY, RANK_POINT_PERIOD_WEEK, RANK_POINT_PERIOD_MONTH, RANK_POINT_PERIOD_YEAR, RANK_POINT_FUNCTION_AVERAGE,
+RANK_POINT_FUNCTION_SUM } from "../../../../Constants/App";
+import MemberHistoricalDataTabularListDesktop from "./TabularListDesktop";
+import MemberHistoricalDataTabularListMobile from "./TabularListMobile";
+import {
+  RANK_POINT_METRIC_TYPE_HEART_RATE,
+  RANK_POINT_METRIC_TYPE_STEP_COUNTER,
+} from "../../../../Constants/App";
 
 
-function MemberDataPointHistoricalTabularList() {
+function MemberHistoricalDataTabularList() {
     ////
     //// Global state.
     ////
@@ -57,21 +69,20 @@ function MemberDataPointHistoricalTabularList() {
     const [temporarySearchText, setTemporarySearchText] = useRecoilState(dataPointFilterTemporarySearchTextState); // Searching - The search field value as your writes their query.
     const [actualSearchText, setActualSearchText] = useRecoilState(dataPointFilterActualSearchTextState); // Searching - The actual search query value to submit to the API.
     const [status, setStatus] = useRecoilState(dataPointFilterStatusState);
-    const [isHeartRate, setIsHeartRate] = useRecoilState(dataPointFilterIsHeartRateState);
-    const [isStepsCounter, setIsStepsCounter] = useRecoilState(dataPointFilterIsStepsCounterState);
-
     ////
     //// Component states.
     ////
 
     const [errors, setErrors] = useState({});
-    const [listData, setListData] = useState("");
+    const [listRank, setListRank] = useState("");
     const [selectedFitnessPlanForDeletion, setSelectedFitnessPlanForDeletion] = useState("");
     const [isFetching, setFetching] = useState(false);
     const [pageSize, setPageSize] = useState(100); // Pagination
     const [previousCursors, setPreviousCursors] = useState([]); // Pagination
     const [nextCursor, setNextCursor] = useState(""); // Pagination
     const [currentCursor, setCurrentCursor] = useState(""); // Pagination
+    const [period, setPeriod] = useState(RANK_POINT_PERIOD_DAY);
+    const [selectedDataTypes, setSelectedDataTypes] = useState([]);
 
     ////
     //// API.
@@ -80,12 +91,12 @@ function MemberDataPointHistoricalTabularList() {
     function onDataPointistSuccess(response) {
         console.log("onDataPointistSuccess: Starting...");
         if (response.results !== null) {
-          setListData(response);
+          setListRank(response);
           if (response.hasNextPage) {
             setNextCursor(response.nextCursor); // For pagination purposes.
           }
         } else {
-          setListData([]);
+          setListRank([]);
           setNextCursor("");
       }
     }
@@ -110,46 +121,25 @@ function MemberDataPointHistoricalTabularList() {
     //// Event handling.
     ////
 
-    const fetchList = (user, cur, limit, keywords, stat, sbv, isHeartRate, isStepsCounter) => {
+    const fetchList = (user, cur, limit, keywords, stat, sbv, selectedDataTypes=[], p) => {
         setFetching(true);
         setErrors({});
 
         let params = new Map();
-        params.set("page_size", limit); // Pagination
-
-        // DEVELOPERS NOTE: Our `sortByValue` is string with the sort field
-        // and sort order combined with a comma seperation. Therefore we
-        // need to split as follows.
-        if (sbv !== undefined && sbv !== null && sbv !== "") {
-            const sortArray = sbv.split(",");
-            params.set("sort_field", sortArray[0]); // Sort (1 of 2)
-            params.set("sort_order", sortArray[1]); // Sort (2 of 2)
-        }
-
         if (cur !== "") {
-          // Pagination
-          params.set("cursor", cur);
+            params.set("cursor", cur); // Pagination
         }
-
-        // Filtering
-        if (keywords !== undefined && keywords !== null && keywords !== "") {
-          // Searhcing
-          params.set("search", keywords);
-        }
-
-        params.set("status", stat);
-
-        if (user !== undefined && user !== null && user !== "") {
-            if (isHeartRate === true) {
-                params.set("heart_rate_id", user.primaryHealthTrackingDeviceHeartRateMetricId);
-            }
-            if (isStepsCounter === true) {
-                params.set("steps_counter_id", user.primaryHealthTrackingDeviceStepsCountMetricId);
-            }
-        }
+        params.set("page_size", limit);
+        params.set("sort_field", "start_at");
+        params.set("sort_order","DESC");
+        params.set("period", p);
+        params.set("user_id", user.id);
+        var values = selectedDataTypes.map(item => item).join(',');
+        params.set("metric_ids",values);
 
         console.log("params:", params);
 
+        // Make the submission to the API backend.
         getGoogleFitDataPointListAPI(
           params,
           onDataPointistSuccess,
@@ -195,10 +185,8 @@ function MemberDataPointHistoricalTabularList() {
         setShowFilter(false);
         setActualSearchText("");
         setTemporarySearchText("");
-        setSort("timestamp,DESC");
+        setSort("created_at,DESC");
         setStatus(0);
-        setIsHeartRate(true);
-        setIsStepsCounter(true);
     }
 
     ////
@@ -210,32 +198,131 @@ function MemberDataPointHistoricalTabularList() {
 
         if (mounted) {
           window.scrollTo(0, 0); // Start the page at the top of the page.
-          fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, isHeartRate, isStepsCounter);
+          fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, selectedDataTypes, period);
         }
 
         return () => {
           mounted = false;
         };
-    }, [currentUser, currentCursor, pageSize, actualSearchText, status, sort, isHeartRate, isStepsCounter]);
+    }, [currentUser, currentCursor, pageSize, actualSearchText, status, sort, selectedDataTypes, period]);
 
     ////
     //// Component rendering.
     ////
 
+    // The following block of code will generate the dataTypes we can filter by.
+    let dataTypes = [];
     if (currentUser) {
-        console.log("currentUser:", currentUser);
-        console.log("currentUser.primaryHealthTrackingDevice:", currentUser.primaryHealthTrackingDevice);
-        console.log("listData:", listData);
-        console.log("listData.results:", listData.results);
-
-        /*
-        {listData &&
-        listData.results &&
-        (listData.results.length > 0 || previousCursors.length > 0) &&
-         currentUser &&
-         currentUser.primaryHealthTrackingDevice ? (
-         */
+        dataTypes.push({
+            label: "Activity",
+            value: currentUser.primaryHealthTrackingDevice.activitySegmentMetricId
+        });
+        dataTypes.push({
+            label: "Basal Metabolic Rate",
+            value: currentUser.primaryHealthTrackingDevice.basalMetabolicRateMetricId
+        });
+        dataTypes.push({
+            label: "Blood Glucose",
+            value: currentUser.primaryHealthTrackingDevice.bloodGlucoseMetricId
+        });
+        dataTypes.push({
+            label: "Blood Pressure",
+            value: currentUser.primaryHealthTrackingDevice.bloodPressureMetricId
+        });
+        dataTypes.push({
+            label: "Steps Delta",
+            value: currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId
+        });
+        dataTypes.push({
+            label: "Body Temperature",
+            value: currentUser.primaryHealthTrackingDevice.bodyTemperaturePercentageMetricId
+        });
+        dataTypes.push({
+            label: "Calories Burned",
+            value: currentUser.primaryHealthTrackingDevice.caloriesBurnedMetricId
+        });
+        dataTypes.push({
+            label: "Cycling Pedaling Cadence",
+            value: currentUser.primaryHealthTrackingDevice.cyclingPedalingCadenceMetricId
+        });
+        dataTypes.push({
+            label: "Cycling Pedaling Cumulative",
+            value: currentUser.primaryHealthTrackingDevice.cyclingPedalingCumulativeMetricId
+        });
+        dataTypes.push({
+            label: "cycling Wheel Revolution Cumulative",
+            value: currentUser.primaryHealthTrackingDevice.cyclingWheelRevolutionCumulativeMetricId
+        });
+        dataTypes.push({
+            label: "Cycling Wheel Revolution RPM",
+            value: currentUser.primaryHealthTrackingDevice.cyclingWheelRevolutionRpmMetricId
+        });
+        dataTypes.push({
+            label: "Distance Delta",
+            value: currentUser.primaryHealthTrackingDevice.distanceDeltaMetricId
+        });
+        dataTypes.push({
+            label: "Heart Points",
+            value: currentUser.primaryHealthTrackingDevice.heartPointsId
+        });
+        dataTypes.push({
+            label: "Heart Rate (BPM)",
+            value: currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId
+        });
+        dataTypes.push({
+            label: "Height",
+            value: currentUser.primaryHealthTrackingDevice.heightMetricId
+        });
+        dataTypes.push({
+            label: "Hydration",
+            value: currentUser.primaryHealthTrackingDevice.hydrationMetricId
+        });
+        dataTypes.push({
+            label: "Location Sample",
+            value: currentUser.primaryHealthTrackingDevice.locationSampleMetricId
+        });
+        dataTypes.push({
+            label: "Move Minutes",
+            value: currentUser.primaryHealthTrackingDevice.moveMinutesMetricId
+        });
+        dataTypes.push({
+            label: "Nutrition",
+            value: currentUser.primaryHealthTrackingDevice.nutritionMetricId
+        });
+        dataTypes.push({
+            label: "Oxygen Saturation",
+            value: currentUser.primaryHealthTrackingDevice.oxygenSaturationMetricId
+        });
+        dataTypes.push({
+            label: "Power",
+            value: currentUser.primaryHealthTrackingDevice.powerMetricId
+        });
+        dataTypes.push({
+            label: "Sleep",
+            value: currentUser.primaryHealthTrackingDevice.sleepMetricId
+        });
+        dataTypes.push({
+            label: "Speed",
+            value: currentUser.primaryHealthTrackingDevice.speedMetricId
+        });
+        dataTypes.push({
+            label: "Steps Counter (Cadence)",
+            value: currentUser.primaryHealthTrackingDevice.stepCountCadenceMetricId
+        });
+        dataTypes.push({
+            label: "Steps Counter (Delta)",
+            value: currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId
+        });
+        dataTypes.push({
+            label: "Weight",
+            value: currentUser.primaryHealthTrackingDevice.weightMetricId
+        });
+        dataTypes.push({
+            label: "Workout",
+            value: currentUser.primaryHealthTrackingDevice.workoutMetricId
+        });
     }
+    console.log("dataTypes:", dataTypes);
 
     return (
     <>
@@ -243,20 +330,19 @@ function MemberDataPointHistoricalTabularList() {
             <section className="section">
 
               {/* Desktop Breadcrumbs */}
-              <nav className="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
+              <nav className="breadcrumb has-background-light is-hidden-touch p-4" aria-label="breadcrumbs">
                 <ul>
                   <li className=""><Link to="/dashboard" aria-current="page"><FontAwesomeIcon className="fas" icon={faGauge} />&nbsp;Dashboard</Link></li>
                   <li className=""><Link to="/biometrics"><FontAwesomeIcon className="fas" icon={faHeartbeat} />&nbsp;Biometrics</Link></li>
-                  <li className="is-active"><Link aria-current="page"><FontAwesomeIcon className="fas" icon={faChartLine} />&nbsp;My History</Link></li>
+                  <li className="is-active"><Link aria-current="page"><FontAwesomeIcon className="fas" icon={faRankingStar} />&nbsp;Leadboard</Link></li>
                 </ul>
               </nav>
 
               {/* Mobile Breadcrumbs */}
-              <nav class="breadcrumb is-hidden-desktop" aria-label="breadcrumbs">
+              <nav class="breadcrumb has-background-light is-hidden-desktop p-4">
                 <ul>
                   <li class="">
-                    <Link to="/dashboard" aria-current="page"><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard
-                    </Link>
+                    <Link to="/dashboard" aria-current="page"><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
                   </li>
                 </ul>
               </nav>
@@ -266,94 +352,71 @@ function MemberDataPointHistoricalTabularList() {
                 <div className="columns">
                   <div className="column">
                     <h1 className="title is-4">
-                      <FontAwesomeIcon className="fas" icon={faChartLine} />
+                      <FontAwesomeIcon className="fas" icon={faRankingStar} />
                       &nbsp;My History
                     </h1>
                   </div>
                   <div className="column has-text-right">
-                      <button onClick={()=>fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, isHeartRate, isStepsCounter)} class="is-fullwidth-mobile button is-link is-small" type="button">
+                      <button onClick={
+                          ()=>fetchList(currentUser, currentCursor, pageSize, actualSearchText, status, sort, selectedDataTypes, period)
+                      } class="is-fullwidth-mobile button is-link is-small" type="button">
                           <FontAwesomeIcon className="mdi" icon={faRefresh} />&nbsp;<span class="is-hidden-desktop is-hidden-tablet">Refresh</span>
                       </button>
                       &nbsp;
+                       {/*
                       <button onClick={(e)=>setShowFilter(!showFilter)} class="is-fullwidth-mobile button is-small is-primary" type="button">
                           <FontAwesomeIcon className="mdi" icon={faFilter} />&nbsp;Filter
                       </button>
-                      {/*
-                          DEVELOPERS NOTE:
-                          - If the logged in user doesn't have a device registered then
-                            show the following button to encourage them to register.
+
+                      &nbsp;
+                      <Link to={`/account/wearable-tech`} className="is-fullwidth-mobile button is-small is-success" type="button">
+                          <FontAwesomeIcon className="mdi" icon={faPlus} />&nbsp;Register Wearable
+                      </Link>
                       */}
-                      {currentUser !== undefined && currentUser !== null && currentUser !== "" && <>
-                          {currentUser.primaryHealthTrackingDeviceType === 0 && <>
-                            &nbsp;
-                            <Link to={`/account/wearable-tech`} className="is-fullwidth-mobile button is-small is-success" type="button">
-                                <FontAwesomeIcon className="mdi" icon={faPlus} />&nbsp;Register Wearable
-                            </Link>
-                          </>}
-                      </>}
                   </div>
                 </div>
-
-                {/* FILTER */}
-                {showFilter && (
-                    <div class="has-background-white-bis" style={{borderRadius:"15px", padding:"20px"}}>
-
-                        {/* Filter Title + Clear Button */}
-                        <div class="columns is-mobile">
-                            <div class="column is-half">
-                                <strong><u><FontAwesomeIcon className="mdi" icon={faFilter} />&nbsp;Filter</u></strong>
-                            </div>
-                            <div class="column is-half has-text-right">
-                                <Link onClick={onClearFilterClick}><FontAwesomeIcon className="mdi" icon={faFilterCircleXmark} />&nbsp;Clear Filter</Link>
-                            </div>
-                        </div>
-
-                        {/* Filter Options */}
-                        <div class="columns">
-                            <div class="column">
-                                <FormCheckboxField
-                                    label="Heart Rate"
-                                    name="isHeartRate"
-                                    checked={isHeartRate}
-                                    errorText={errors && errors.isHeartRate}
-                                    onChange={(e)=>{setIsHeartRate(!isHeartRate)}}
-                                    maxWidth="180px"
-                                />
-                            </div>
-                            <div class="column">
-                                <FormCheckboxField
-                                    label="Steps Counter"
-                                    name="isStepsCounter"
-                                    checked={isStepsCounter}
-                                    errorText={errors && errors.isStepsCounter}
-                                    onChange={(e)=>{setIsStepsCounter(!isStepsCounter)}}
-                                    maxWidth="180px"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
 
                 {isFetching ? (
                   <PageLoadingContent displayMessage={"Please wait..."} />
                 ) : (
                   <>
                     <FormErrorBox errors={errors} />
-                    {listData &&
-                    listData.results &&
-                    (listData.results.length > 0 || previousCursors.length > 0) &&
-                     currentUser &&
-                     currentUser.primaryHealthTrackingDevice ? (
+
+                    {/* Section for selecting `metric type` */}
+                    <div class="column ">
+
+                        <FormMultiSelectField
+                          label="Data Types"
+                          name="selectedDataTypes"
+                          placeholder="Text input"
+                          options={dataTypes}
+                          selectedValues={selectedDataTypes}
+                          onChange={(e) => {
+                            let values = [];
+                            for (let option of e) {
+                              values.push(option.value);
+                            }
+                            setSelectedDataTypes(values);
+                          }}
+                          errorText={errors && errors.paymentMethods}
+                          helpText=""
+                          isRequired={true}
+                          maxWidth="320px"
+                        />
+
+                    {/*
+                                DEVELOPERS NOTE:
+                                - As we add more sensors, add your new sensors here...
+                            */}
+                    </div>{/* Section for selecting `function` */}
+
+
+
+                    {listRank &&
+                    listRank.results &&
+                    (listRank.results.length > 0 || previousCursors.length > 0) ? (
                       <div className="container">
-                        <div class="column has-text-right">
-                            <button class="button is-small is-info" type="button">
-                                <FontAwesomeIcon className="mdi" icon={faTable} />
-                            </button>
-                            <Link class="button is-small" type="button" to="/biometrics/history/graphview">
-                                <FontAwesomeIcon className="mdi" icon={faChartLine} />
-                            </Link>
-                            &nbsp;
-                        </div>
+
 
                         {/*
                             ##################################################################
@@ -361,8 +424,8 @@ function MemberDataPointHistoricalTabularList() {
                             ##################################################################
                         */}
                         <div class="is-hidden-touch" >
-                            <MemberDataPointHistoricalTabularListDesktop
-                                listData={listData}
+                            <MemberHistoricalDataTabularListDesktop
+                                listRank={listRank}
                                 setPageSize={setPageSize}
                                 pageSize={pageSize}
                                 previousCursors={previousCursors}
@@ -378,8 +441,8 @@ function MemberDataPointHistoricalTabularList() {
                             ###########################################################################
                         */}
                         <div class="is-fullwidth is-hidden-desktop">
-                            <MemberDataPointHistoricalTabularListMobile
-                                listData={listData}
+                            <MemberHistoricalDataTabularListMobile
+                                listRank={listRank}
                                 setPageSize={setPageSize}
                                 pageSize={pageSize}
                                 previousCursors={previousCursors}
@@ -436,4 +499,4 @@ function MemberDataPointHistoricalTabularList() {
     );
 }
 
-export default MemberDataPointHistoricalTabularList;
+export default MemberHistoricalDataTabularList;

@@ -7,50 +7,61 @@ import { useRecoilState } from 'recoil';
 
 import FormErrorBox from "../../../Reusable/FormErrorBox";
 import { PAGE_SIZE_OPTIONS, FITNESS_PLAN_STATUS_MAP } from "../../../../Constants/FieldOptions";
+import { RANK_POINT_METRIC_TYPE_HEART_RATE, RANK_POINT_METRIC_TYPE_STEP_COUNTER } from "../../../../Constants/App";
 import DateTimeTextFormatter from "../../../Reusable/DateTimeTextFormatter";
 
 /*
 Display for both tablet and mobile.
 */
-function MemberDataPointHistoricalTabularListMobile(props) {
-    const { listData, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, currentUser } = props;
-
-    // Defensive Code
-    if (currentUser) {
-        if (currentUser.primaryHealthTrackingDevice === undefined || currentUser.primaryHealthTrackingDevice === null || currentUser.primaryHealthTrackingDevice === "") {
-            console.log("currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId: EMPTY");
-            return null;
-        }
-    }
-
-    console.log("currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId:", currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId);
-    console.log("currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId:", currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId);
-
+function MemberLeaderboardGlobalTabularListMobile(props) {
+    const { listRank, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, currentUser } = props;
     return (
         <>
-            {listData && listData.results && listData.results.map(function (datum, i) {
-                return <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
-                    <strong>Metric:</strong>&nbsp;{datum.name}
-                    <br />
-                    <br />
-                    <strong>Value:</strong>&nbsp;
-                    {datum.value}
-
-                    {/* Unit of measure */}
-                    {datum.metricId === currentUser.primaryHealthTrackingDevice.heartRateBpmMetricId &&
-                        <>&nbsp;bpm</>
-                    }
-                    {datum.metricId === currentUser.primaryHealthTrackingDevice.stepCountDeltaMetricId &&
-                        <>&nbsp;Steps</>
-                    }
-                    <br />
-                    <br />
-                    <strong>Timestamp:</strong>&nbsp;
-                    <DateTimeTextFormatter value={datum.timestamp} />
-                    <br />
-                    <br />
-
-                </div>;
+            {listRank && listRank.results && listRank.results.map(function (datum, i) {
+                switch (datum.dataTypeName) {
+                  case "com.google.heart_rate.bpm":
+                    return (
+                      <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                      <strong>Type:</strong>&nbsp;{datum.dataTypeName}
+                      <br />
+                      <strong>Value:</strong>&nbsp;{datum.hearteRateBpm.bpm} BPM
+                      <br />
+                      <strong>Start At:</strong>&nbsp;{datum.startAt}
+                      <br />
+                      <strong>End At:</strong>&nbsp;{datum.endAt}
+                      <br />
+                      <br />
+                      </div>
+                    );
+                  case "com.google.step_count.delta":
+                    return (
+                      <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                        <strong>Type:</strong>&nbsp;{datum.dataTypeName}
+                        <br />
+                        <strong>Value:</strong>&nbsp;{datum.stepCountDelta.steps} Steps
+                        <br />
+                        <strong>Start At:</strong>&nbsp;{datum.startAt}
+                        <br />
+                        <strong>End At:</strong>&nbsp;{datum.endAt}
+                        <br />
+                        <br />
+                      </div>
+                    );
+                  default:
+                    return (
+                     <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                      <strong>Type:</strong>&nbsp;{datum.dataTypeName}
+                      <br />
+                      <strong>Value:</strong>&nbsp;Unsupported
+                      <br />
+                      <strong>Start At:</strong>&nbsp;{datum.startAt}
+                      <br />
+                      <strong>End At:</strong>&nbsp;{datum.endAt}
+                      <br />
+                      <br />
+                      </div>
+                    );
+                }
             })}
 
             <div class="columns pt-4 is-mobile">
@@ -70,7 +81,7 @@ function MemberDataPointHistoricalTabularListMobile(props) {
                     {previousCursors.length > 0 &&
                         <button class="button" onClick={onPreviousClicked}>Previous</button>
                     }
-                    {listData.hasNextPage && <>
+                    {listRank.hasNextPage && <>
                         <button class="button" onClick={onNextClicked}>Next</button>
                     </>}
                 </div>
@@ -79,4 +90,4 @@ function MemberDataPointHistoricalTabularListMobile(props) {
     );
 }
 
-export default MemberDataPointHistoricalTabularListMobile;
+export default MemberLeaderboardGlobalTabularListMobile;

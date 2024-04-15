@@ -57,30 +57,32 @@ func (impl *googleFitAppCrontaberImpl) pullStepCountCadenceDataFromGoogleWithGfa
 			return err
 		}
 		if !exists {
-			dp := &dp_ds.GoogleFitDataPoint{
-				ID:               primitive.NewObjectID(),
-				DataTypeName:     gcp_a.DataTypeNameStepCountCadence,
-				Status:           dp_ds.StatusQueued,
-				UserID:           gfa.UserID,
-				UserName:         gfa.UserName,
-				UserLexicalName:  gfa.UserLexicalName,
-				GoogleFitAppID:   gfa.ID,
-				MetricID:         gfa.StepCountCadenceMetricID,
-				StartAt:          stepCountCadenceDatapoint.StartTime,
-				EndAt:            stepCountCadenceDatapoint.EndTime,
-				StepCountCadence: &stepCountCadenceDatapoint,
-				Error:            "",
-				CreatedAt:        time.Now(),
-				ModifiedAt:       time.Now(),
-				OrganizationID:   gfa.OrganizationID,
+			if stepCountCadenceDatapoint.EndTime.Before(time.Now()) && stepCountCadenceDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+				dp := &dp_ds.GoogleFitDataPoint{
+					ID:               primitive.NewObjectID(),
+					DataTypeName:     gcp_a.DataTypeNameStepCountCadence,
+					Status:           dp_ds.StatusQueued,
+					UserID:           gfa.UserID,
+					UserName:         gfa.UserName,
+					UserLexicalName:  gfa.UserLexicalName,
+					GoogleFitAppID:   gfa.ID,
+					MetricID:         gfa.StepCountCadenceMetricID,
+					StartAt:          stepCountCadenceDatapoint.StartTime,
+					EndAt:            stepCountCadenceDatapoint.EndTime,
+					StepCountCadence: &stepCountCadenceDatapoint,
+					Error:            "",
+					CreatedAt:        time.Now(),
+					ModifiedAt:       time.Now(),
+					OrganizationID:   gfa.OrganizationID,
+				}
+				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
+					impl.Logger.Error("failed inserting google fit data point for step count delta into database",
+						slog.Any("error", err))
+					return err
+				}
+				impl.Logger.Debug("inserted step count delta data point",
+					slog.Any("dp", dp))
 			}
-			if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-				impl.Logger.Error("failed inserting google fit data point for step count delta into database",
-					slog.Any("error", err))
-				return err
-			}
-			impl.Logger.Debug("inserted step count delta data point",
-				slog.Any("dp", dp))
 		}
 	}
 

@@ -74,15 +74,26 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForTodayUsingActiveGoo
 		gcp_a.DataTypeKeyHeartRateBPM,
 		//TODO: Add more health sensors here...
 	}
+	funcTypes := []int8{
+		rp_s.FunctionAverage,
+		rp_s.FunctionSum,
+		rp_s.FunctionCount,
+		rp_s.FunctionMin,
+		rp_s.FunctionMax,
+	}
 	for _, metricType := range metricTypes {
-		go func(list []*gfa_ds.GoogleFitApp, mt int8, startDT time.Time, endDT time.Time) {
-			if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, rp_s.FunctionAverage, rp_s.PeriodDay, startDT, endDT); err != nil {
-				impl.Logger.Error("failed generating global rate ranking",
-					slog.Any("date_range", "today"),
-					slog.Any("error", err))
-				return
-			}
-		}(gfas.Results, metricType, start, end)
+		for _, funcType := range funcTypes {
+			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
+				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodDay, startDT, endDT); err != nil {
+					impl.Logger.Error("failed generating global rate ranking for day",
+						slog.Any("date_range", "today"),
+						slog.Any("mt", mt),
+						slog.Any("ft", ft),
+						slog.Any("error", err))
+					return
+				}
+			}(gfas.Results, metricType, funcType, start, end)
+		}
 	}
 	return nil
 }
@@ -111,15 +122,26 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisISOWeekUsingAct
 		gcp_a.DataTypeKeyHeartRateBPM,
 		//TODO: Add more health sensors here...
 	}
+	funcTypes := []int8{
+		rp_s.FunctionAverage,
+		rp_s.FunctionSum,
+		rp_s.FunctionCount,
+		rp_s.FunctionMin,
+		rp_s.FunctionMax,
+	}
 	for _, metricType := range metricTypes {
-		go func(list []*gfa_ds.GoogleFitApp, mt int8, startDT time.Time, endDT time.Time) {
-			if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, rp_s.FunctionAverage, rp_s.PeriodWeek, startDT, endDT); err != nil {
-				impl.Logger.Error("failed generating global rate ranking",
-					slog.Any("date_range", "today"),
-					slog.Any("error", err))
-				return
-			}
-		}(gfas.Results, metricType, start, end)
+		for _, funcType := range funcTypes {
+			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
+				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodWeek, startDT, endDT); err != nil {
+					impl.Logger.Error("failed generating global rate ranking for this iso week",
+						slog.Any("date_range", "iso week"),
+						slog.Any("mt", mt),
+						slog.Any("ft", ft),
+						slog.Any("error", err))
+					return
+				}
+			}(gfas.Results, metricType, funcType, start, end)
+		}
 	}
 
 	return nil
@@ -149,15 +171,26 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisMonthUsingActiv
 		gcp_a.DataTypeKeyHeartRateBPM,
 		//TODO: Add more health sensors here...
 	}
+	funcTypes := []int8{
+		rp_s.FunctionAverage,
+		rp_s.FunctionSum,
+		rp_s.FunctionCount,
+		rp_s.FunctionMin,
+		rp_s.FunctionMax,
+	}
 	for _, metricType := range metricTypes {
-		go func(list []*gfa_ds.GoogleFitApp, mt int8, startDT time.Time, endDT time.Time) {
-			if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, rp_s.FunctionAverage, rp_s.PeriodMonth, startDT, endDT); err != nil {
-				impl.Logger.Error("failed generating global rate ranking",
-					slog.Any("date_range", "today"),
-					slog.Any("error", err))
-				return
-			}
-		}(gfas.Results, metricType, start, end)
+		for _, funcType := range funcTypes {
+			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
+				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodMonth, startDT, endDT); err != nil {
+					impl.Logger.Error("failed generating global rate ranking for this month",
+						slog.Any("date_range", "month"),
+						slog.Any("mt", mt),
+						slog.Any("ft", ft),
+						slog.Any("error", err))
+					return
+				}
+			}(gfas.Results, metricType, funcType, start, end)
+		}
 	}
 
 	return nil
@@ -187,15 +220,26 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisYearUsingActive
 		gcp_a.DataTypeKeyHeartRateBPM,
 		//TODO: Add more health sensors here...
 	}
+	funcTypes := []int8{
+		rp_s.FunctionAverage,
+		rp_s.FunctionSum,
+		rp_s.FunctionCount,
+		rp_s.FunctionMin,
+		rp_s.FunctionMax,
+	}
 	for _, metricType := range metricTypes {
-		go func(list []*gfa_ds.GoogleFitApp, mt int8, startDT time.Time, endDT time.Time) {
-			if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, rp_s.FunctionAverage, rp_s.PeriodYear, startDT, endDT); err != nil {
-				impl.Logger.Error("failed generating global rate ranking",
-					slog.Any("date_range", "today"),
-					slog.Any("error", err))
-				return
-			}
-		}(gfas.Results, metricType, start, end)
+		for _, funcType := range funcTypes {
+			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
+				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodYear, startDT, endDT); err != nil {
+					impl.Logger.Error("failed generating global rate ranking for this year",
+						slog.Any("date_range", "year"),
+						slog.Any("mt", mt),
+						slog.Any("ft", ft),
+						slog.Any("error", err))
+					return
+				}
+			}(gfas.Results, metricType, funcType, start, end)
+		}
 	}
 
 	return nil
