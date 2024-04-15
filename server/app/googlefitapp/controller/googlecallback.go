@@ -250,6 +250,7 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 	}
 
 	// Update our user with our new Google Fit registration / login.
+	u.GoogleFitAppID = gfa.ID
 	u.PrimaryHealthTrackingDeviceType = u_s.UserPrimaryHealthTrackingDeviceTypeGoogleFit
 	u.PrimaryHealthTrackingDeviceRequiresLoginAgain = false
 	u.ModifiedAt = time.Now()
