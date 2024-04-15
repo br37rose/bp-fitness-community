@@ -62,6 +62,9 @@ import (
 	tag_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/controller"
 	tag_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/datastore"
 	tag_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
+	tp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/controller"
+	tp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/datastore"
+	tp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/httptransport"
 	user_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/controller"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	user_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/httptransport"
@@ -74,6 +77,10 @@ import (
 	vcon_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/controller"
 	vcon_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/datastore"
 	vcon_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
+	w_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/controller"
+	w_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
+	w_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
+
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
@@ -174,6 +181,12 @@ func InitializeEvent() Application {
 		middleware.NewMiddleware,
 		crontab.NewInputPort,
 		http.NewInputPort,
+		tp_s.NewDatastore,
+		tp_c.NewController,
+		tp_http.NewHandler,
+		w_s.NewDatastore,
+		w_c.NewController,
+		w_http.NewHandler,
 		NewApplication)
 	return Application{}
 }

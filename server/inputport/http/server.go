@@ -23,10 +23,12 @@ import (
 	strpp "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/paymentprocessor/httptransport/stripe"
 	rankpoint_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/httptransport"
 	tag_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
+	tp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/httptransport"
 	user_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/httptransport"
 	videocategory_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocategory/httptransport"
 	videocollection_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocollection/httptransport"
 	videocontent_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
+	w_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -63,6 +65,8 @@ type httpInputPort struct {
 	AggregatePoint           *aggregatepoint_http.Handler
 	RankPoint                *rankpoint_http.Handler
 	Biometric                *biometric_http.Handler
+	TrainingProgram          *tp_http.Handler
+	Workout                  *w_http.Handler
 }
 
 func NewInputPort(
@@ -90,6 +94,8 @@ func NewInputPort(
 	ap *aggregatepoint_http.Handler,
 	rp *rankpoint_http.Handler,
 	bio *biometric_http.Handler,
+	tp *tp_http.Handler,
+	w *w_http.Handler,
 ) InputPortServer {
 	// Initialize the ServeMux.
 	mux := http.NewServeMux()
@@ -133,6 +139,8 @@ func NewInputPort(
 		AggregatePoint:           ap,
 		RankPoint:                rp,
 		Biometric:                bio,
+		TrainingProgram:          tp,
+		Workout:                  w,
 	}
 
 	// Attach the HTTP server controller to the ServerMux.
@@ -390,6 +398,18 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 	case n == 4 && p[1] == "v1" && p[2] == "biometrics" && p[3] == "historic-data" && r.Method == http.MethodGet:
 		port.Biometric.HistoricData(w, r)
 
+		// --- TRAINING PROGRAM --- //
+	case n == 3 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodPost:
+		port.TrainingProgram.Create(w, r)
+	case n == 4 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodGet:
+		port.TrainingProgram.GetByID(w, r, p[3])
+	case n == 5 && p[1] == "v1" && p[2] == "training-program" && p[4] == "phases" && r.Method == http.MethodPatch:
+		port.TrainingProgram.UpdateTrainingPhase(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodDelete:
+		port.TrainingProgram.DeleteByID(w, r, p[3])
+	case n == 3 && p[1] == "v1" && p[2] == "training-program" && r.Method == http.MethodGet:
+		port.TrainingProgram.List(w, r)
+
 	// --- TAG --- //
 	// case n == 3 && p[1] == "v1" && p[2] == "tags" && r.Method == http.MethodGet:
 	// 	port.Tag.List(w, r)
@@ -403,6 +423,18 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 	// 	port.Tag.DeleteByID(w, r, p[3])
 	case n == 4 && p[1] == "v1" && p[2] == "tags" && p[3] == "select-options" && r.Method == http.MethodGet:
 		port.Tag.ListAsSelectOptionByFilter(w, r)
+
+	// --- Workout --- //
+	case n == 3 && p[1] == "v1" && p[2] == "workouts" && r.Method == http.MethodGet:
+		port.Workout.List(w, r)
+	case n == 3 && p[1] == "v1" && p[2] == "workouts" && r.Method == http.MethodPost:
+		port.Workout.Create(w, r)
+	case n == 4 && p[1] == "v1" && p[2] == "workouts" && r.Method == http.MethodGet:
+		port.Workout.GetByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "workouts" && r.Method == http.MethodPut:
+		port.Workout.UpdateByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "workouts" && r.Method == http.MethodDelete:
+		port.Workout.DeleteByID(w, r, p[3])
 
 	// --- CATCH ALL: D.N.E. ---
 	default:

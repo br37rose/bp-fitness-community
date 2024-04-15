@@ -403,6 +403,10 @@ export const VIDEO_COLLECTION_STATUS_MAP = {
   1: "Active",
   2: "Archived",
 };
+export const WORKOUT_STATUS_MAP = {
+  1: "Active",
+  2: "Archived",
+};
 
 export const VIDEO_COLLECTION_STATUS_OPTIONS = [
   { value: 1, label: "Active" },
@@ -825,4 +829,17 @@ export const NUTRITIONAL_GOAL_OPTIONS = [
 export const NUTRITIONAL_GOAL_WITH_EMPTY_OPTIONS = [
   { value: 0, label: "Please select" }, // EMPTY OPTION
   ...NUTRITIONAL_GOAL_OPTIONS,
+];
+
+export const RESTPERIOD_OPTIONS = [
+  { value: 10, label: "10 sec" },
+  { value: 15, label: "15 sec" },
+  { value: 20, label: "20 sec" },
+  { value: 25, label: "25 sec" },
+  { value: 30, label: "35 sec" },
+  { value: 35, label: "40 sec" },
+  { value: 40, label: "45 sec" },
+  { value: 45, label: "50 sec" },
+  { value: 50, label: "55 sec" },
+  { value: 60, label: "60 sec" },
 ];
