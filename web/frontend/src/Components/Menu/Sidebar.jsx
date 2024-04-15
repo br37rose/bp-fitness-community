@@ -394,6 +394,18 @@ export default (props) => {
               </li>
               <li>
                 <a
+                  href="/training-program"
+                  class={`has-text-grey-light ${
+                    location.pathname.includes("training-program") &&
+                    "is-active"
+                  }`}
+                >
+                  <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
+                  &nbsp;Training Program
+                </a>
+              </li>
+              <li>
+                <a
                   href="/biometrics"
                   class={`has-text-grey-light ${
                     location.pathname.includes("/biometrics") &&

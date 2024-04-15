@@ -71,9 +71,9 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	visibilityStr := query.Get("visibility")
-	if visibilityStr != "" {
-		visibility, _ := strconv.ParseBool(visibilityStr)
-		f.Visibility = visibility
+	if visibilityStr != "" { //0- all ,2 - personal + visibile to all, forerposnal we can pass userid
+		visibility, _ := strconv.ParseInt(visibilityStr, 10, 8)
+		f.Visibility = int8(visibility)
 	}
 
 	createdByUserID := query.Get("created_by_user_id")

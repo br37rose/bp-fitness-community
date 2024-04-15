@@ -37,11 +37,19 @@ export function getWorkoutListApi(
 ) {
   const axios = getCustomAxios();
 
-  // The following code will generate the query parameters for the url based on the map.
-  let aURL = BP8_FITNESS_WORKOUTS_API_ENDPOINT;
+  // Append the query parameters to the API endpoint
+  let apiUrl = BP8_FITNESS_WORKOUTS_API_ENDPOINT;
+  filtersMap.forEach((value, key) => {
+    let decamelizedkey = decamelize(key);
+    if (apiUrl.indexOf("?") > -1) {
+      apiUrl += "&" + decamelizedkey + "=" + value;
+    } else {
+      apiUrl += "?" + decamelizedkey + "=" + value;
+    }
+  });
 
   axios
-    .get(aURL)
+    .get(apiUrl)
     .then((successResponse) => {
       const responseData = successResponse.data;
 

@@ -34,10 +34,10 @@ import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
 import FormSelectField from "../../Reusable/FormSelectField";
 import { VIDEO_COLLECTION_STATUS_OPTIONS_WITH_EMPTY_OPTION } from "../../../Constants/FieldOptions";
 import { getTrainingProgListApi } from "../../../API/trainingProgram";
-import AdminTPListDesktop from "./listDesktop";
-import AdminTPListMobile from "./listMobile";
+import MemberTPListMobile from "./listMobile";
+import MemberTPListDesktop from "./listDesktop";
 
-function AdminTrainingProgramList() {
+function MemberTrainingProgramList() {
   ////
   //// Global state.
   ////
@@ -158,14 +158,12 @@ function AdminTrainingProgramList() {
 
     let params = new Map();
     params.set("page_size", limit); // Pagination
+    params.set("user_id", currentUser.id);
 
-    // DEVELOPERS NOTE: Our `sortByValue` is string with the sort field
-    // and sort order combined with a comma seperation. Therefore we
-    // need to split as follows.
     if (sbv !== undefined && sbv !== null && sbv !== "") {
       const sortArray = sbv.split(",");
-      params.set("sort_field", "_id"); // Sort (1 of 2)
-      params.set("sort_order", -1); // Sort (2 of 2)
+      params.set("sort_field", "_id");
+      params.set("sort_order", -1);
     }
 
     if (cur !== "") {
@@ -278,7 +276,7 @@ function AdminTrainingProgramList() {
           <nav className="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
             <ul>
               <li className="">
-                <Link to="/admin/dashboard" aria-current="page">
+                <Link to="/dashboard" aria-current="page">
                   <FontAwesomeIcon className="fas" icon={faGauge} />
                   &nbsp;Dashboard
                 </Link>
@@ -296,7 +294,7 @@ function AdminTrainingProgramList() {
           <nav class="breadcrumb is-hidden-desktop" aria-label="breadcrumbs">
             <ul>
               <li class="">
-                <Link to="/admin/dashboard" aria-current="page">
+                <Link to="/dashboard" aria-current="page">
                   <FontAwesomeIcon className="fas" icon={faArrowLeft} />
                   &nbsp;Back to Dashboard
                 </Link>
@@ -306,6 +304,45 @@ function AdminTrainingProgramList() {
 
           {/* Page */}
           <nav className="box">
+            <div
+              className={`modal ${
+                selectedVideoCollectionForDeletion ? "is-active" : ""
+              }`}
+            >
+              <div className="modal-background"></div>
+              <div className="modal-card">
+                <header className="modal-card-head">
+                  <p className="modal-card-title">Are you sure?</p>
+                  <button
+                    className="delete"
+                    aria-label="close"
+                    onClick={onDeselectVideoCollectionForDeletion}
+                  ></button>
+                </header>
+                <section className="modal-card-body">
+                  You are about to <b>delete</b> this video collection; it will
+                  no longer appear on your dashboard nor will the video
+                  collection be able to log into their account. This action can
+                  be undone but you'll need to contact the system administrator.
+                  Are you sure you would like to continue?
+                </section>
+                <footer className="modal-card-foot">
+                  <button
+                    className="button is-success"
+                    onClick={onDeleteConfirmButtonClick}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    className="button"
+                    onClick={onDeselectVideoCollectionForDeletion}
+                  >
+                    Cancel
+                  </button>
+                </footer>
+              </div>
+            </div>
+
             <div className="columns">
               <div className="column">
                 <h1 className="title is-4">
@@ -345,7 +382,7 @@ function AdminTrainingProgramList() {
                 </button>
                 &nbsp;
                 <Link
-                  to={`/admin/training-program/add`}
+                  to={`/training-program/add`}
                   className="is-fullwidth-mobile button is-small is-success"
                   type="button"
                 >
@@ -437,7 +474,7 @@ function AdminTrainingProgramList() {
                             ##################################################################
                         */}
                     <div class="is-hidden-touch">
-                      <AdminTPListDesktop
+                      <MemberTPListDesktop
                         listData={listData}
                         setPageSize={setPageSize}
                         pageSize={pageSize}
@@ -456,7 +493,7 @@ function AdminTrainingProgramList() {
                             ###########################################################################
                         */}
                     <div class="is-fullwidth is-hidden-desktop">
-                      <AdminTPListMobile
+                      <MemberTPListMobile
                         listData={listData}
                         setPageSize={setPageSize}
                         pageSize={pageSize}
@@ -479,7 +516,7 @@ function AdminTrainingProgramList() {
                       <p className="subtitle">
                         No class types.{" "}
                         <b>
-                          <Link to="/admin/training-program/add">
+                          <Link to="/training-program/add">
                             Click here&nbsp;
                             <FontAwesomeIcon
                               className="mdi"
@@ -487,7 +524,7 @@ function AdminTrainingProgramList() {
                             />
                           </Link>
                         </b>{" "}
-                        to get started creating your first Training program.
+                        to get started creating your first Training program
                       </p>
                     </div>
                   </section>
@@ -497,17 +534,14 @@ function AdminTrainingProgramList() {
 
             <div class="columns pt-5">
               <div class="column is-half">
-                <Link
-                  class="button is-fullwidth-mobile"
-                  to={`/admin/dashboard`}
-                >
+                <Link class="button is-fullwidth-mobile" to={`/dashboard`}>
                   <FontAwesomeIcon className="fas" icon={faArrowLeft} />
                   &nbsp;Back to Dashboard
                 </Link>
               </div>
               <div class="column is-half has-text-right">
                 <Link
-                  to={`/admin/training-program/add`}
+                  to={`/training-program/add`}
                   class="button is-success is-fullwidth-mobile"
                 >
                   <FontAwesomeIcon className="fas" icon={faPlus} />
@@ -522,4 +556,4 @@ function AdminTrainingProgramList() {
   );
 }
 
-export default AdminTrainingProgramList;
+export default MemberTrainingProgramList;

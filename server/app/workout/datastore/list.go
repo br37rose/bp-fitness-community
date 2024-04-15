@@ -26,8 +26,13 @@ func (impl WorkouStorerImpl) ListByFilter(ctx context.Context, f *WorkoutListFil
 	if f.ExcludeArchived {
 		filter["status"] = bson.M{"$ne": WorkoutStatusArchived} // Do not list archived items! This code
 	}
-	if f.Visibility {
-		filter["visibility"] = true
+	if f.Visibility != 0 {
+		if f.Visibility == 2 && !f.UserId.IsZero() {
+			filter["$or"] = []bson.M{
+				{"user_id": f.UserId},
+				{"visibility": bson.M{"$eq": WorkoutVisibileToAll}},
+			}
+		}
 	}
 
 	if !f.CreatedByUserID.IsZero() {
@@ -37,8 +42,8 @@ func (impl WorkouStorerImpl) ListByFilter(ctx context.Context, f *WorkoutListFil
 	if len(f.Types) > 0 {
 		filter["type"] = bson.M{"$in": f.Types}
 	}
-	if !f.UserId.IsZero() {
-		filter["user_id"] = f.UserId
+	if !f.UserId.IsZero() && f.Visibility != 2 {
+		filter["user_id"] = bson.M{"$eq": f.UserId}
 	}
 
 	impl.Logger.Debug("listing",

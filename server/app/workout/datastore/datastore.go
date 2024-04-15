@@ -61,7 +61,7 @@ type WorkoutListFilter struct {
 	SortOrder int8 // 1=ascending | -1=descending
 
 	StatusList      []int8
-	Visibility      bool
+	Visibility      int8
 	CreatedByUserID primitive.ObjectID
 	Types           []int8
 	ExcludeArchived bool

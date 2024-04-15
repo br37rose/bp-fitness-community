@@ -33,7 +33,7 @@ import Modal from "../../Reusable/modal";
 import FormInputField from "../../Reusable/FormInputField";
 import Accordion from "../../Reusable/accordion";
 
-function AdminTPDetail() {
+function MemberTPDetail() {
   // URL Parameters
   const { id } = useParams();
 
@@ -173,7 +173,7 @@ function AdminTPDetail() {
     setTimeout(() => {
       setTopAlertMessage("");
     }, 2000);
-    setForceURL("/admin/training-program");
+    setForceURL("/training-program");
   }
 
   function ondeleteError(apiErr) {
@@ -242,7 +242,7 @@ function AdminTPDetail() {
     setTimeout(() => {
       setTopAlertMessage("");
     }, 2000);
-    setForceURL("/admin/training-program");
+    setForceURL("/training-program");
   }
 
   function onPatchError(apiErr) {
@@ -291,13 +291,13 @@ function AdminTPDetail() {
         <nav className="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
           <ul>
             <li className="">
-              <Link to="/admin/dashboard" aria-current="page">
+              <Link to="/dashboard" aria-current="page">
                 <FontAwesomeIcon className="fas" icon={faGauge} />
                 &nbsp;Dashboard
               </Link>
             </li>
             <li className="">
-              <Link to="/admin/training-program" aria-current="page">
+              <Link to="/training-program" aria-current="page">
                 <FontAwesomeIcon className="fas" icon={faDumbbell} />
                 &nbsp;Training Program
               </Link>
@@ -314,7 +314,7 @@ function AdminTPDetail() {
         <nav className="breadcrumb is-hidden-desktop" aria-label="breadcrumbs">
           <ul>
             <li className="">
-              <Link to="/admin/training-program" aria-current="page">
+              <Link to="/training-program" aria-current="page">
                 <FontAwesomeIcon className="fas" icon={faArrowLeft} />
                 &nbsp;Back to Training program
               </Link>
@@ -450,7 +450,7 @@ function AdminTPDetail() {
                                     {routine.name}
                                     <Link
                                       className="ml-1"
-                                      to={"/admin/workouts/" + routine.id}
+                                      to={"/workouts/" + routine.id}
                                       target="_blank"
                                     >
                                       <FontAwesomeIcon
@@ -591,4 +591,4 @@ function AdminTPDetail() {
   );
 }
 
-export default AdminTPDetail;
+export default MemberTPDetail;
