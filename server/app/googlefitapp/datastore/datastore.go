@@ -139,7 +139,7 @@ type GoogleFitAppStorerImpl struct {
 
 func NewDatastore(appCfg *c.Conf, loggerp *slog.Logger, client *mongo.Client) GoogleFitAppStorer {
 	// ctx := context.Background()
-	uc := client.Database(appCfg.DB.Name).Collection("googlefit_apps")
+	uc := client.Database(appCfg.DB.Name).Collection("google_fit_apps")
 
 	// // For debugging purposes only.
 	// if _, err := uc.Indexes().DropAll(context.TODO()); err != nil {

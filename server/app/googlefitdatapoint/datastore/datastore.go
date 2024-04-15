@@ -106,7 +106,7 @@ type GoogleFitDataPointStorerImpl struct {
 
 func NewDatastore(appCfg *c.Conf, loggerp *slog.Logger, client *mongo.Client) GoogleFitDataPointStorer {
 	// ctx := context.Background()
-	uc := client.Database(appCfg.DB.Name).Collection("googlefit_data_points")
+	uc := client.Database(appCfg.DB.Name).Collection("google_fit_data_points")
 
 	// // For debugging purposes only.
 	// if _, err := uc.Indexes().DropAll(context.TODO()); err != nil {
