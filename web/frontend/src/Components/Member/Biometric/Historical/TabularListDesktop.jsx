@@ -63,7 +63,6 @@ function MemberLeaderboardGlobalTabularListDesktop(props) {
             {listRank &&
               listRank.results &&
               listRank.results.map(function (datum, i) {
-                  //TODO: IMPLEMENT MORE...
                   return (
                     <tr key={`desktop_${datum.id}`}>
                     <td data-label="Type"><GoogleFitDataPointTypeToString datapoint={datum} /></td>
@@ -72,40 +71,6 @@ function MemberLeaderboardGlobalTabularListDesktop(props) {
                       <td data-label="End At">{datum.endAt}</td>
                     </tr>
                   );
-
-                // switch (datum.dataTypeName) {
-                //   case "com.google.heart_rate.bpm":
-                //     return (
-                //       <tr key={`desktop_${datum.id}`}>
-                //       <td data-label="Type">Heart Rate</td>
-                //         <td data-label="Value">
-                //           {datum.hearteRateBpm.bpm} BPM
-                //         </td>
-                //         <td data-label="Start At">{datum.startAt}</td>
-                //         <td data-label="End At">{datum.endAt}</td>
-                //       </tr>
-                //     );
-                //   case "com.google.step_count.delta":
-                //     return (
-                //       <tr key={`desktop_${datum.id}`}>
-                //       <td data-label="Type">Steps</td>
-                //         <td data-label="Value">
-                //           {datum.stepCountDelta.steps} Steps
-                //         </td>
-                //         <td data-label="Start At">{datum.startAt}</td>
-                //         <td data-label="End At">{datum.endAt}</td>
-                //       </tr>
-                //     );
-                //   default:
-                //     return (
-                //       <tr key={`desktop_${datum.id}`}>
-                //       <td data-label="Type">{datum.dataTypeName}</td>
-                //         <td data-label="Value">Not Implemented</td>
-                //         <td data-label="Start At">{datum.startAt}</td>
-                //         <td data-label="End At">{datum.endAt}</td>
-                //       </tr>
-                //     );
-                // }
               })}
           </tbody>
         </table>
