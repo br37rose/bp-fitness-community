@@ -59,7 +59,7 @@ type PrimaryHealthTrackingDevice struct {
 	// GoogleFitAppID is the unique identifier of the Google fit authorized device in
 	// our system. The authorized device information is found in the the
 	// `FitBitApp` domain.
-	GoogleFitAppID primitive.ObjectID `bson:"googlefit_app_id" json:"-"`
+	GoogleFitAppID primitive.ObjectID `bson:"google_fit_app_id" json:"-"`
 
 	ActivitySegmentMetricID                  primitive.ObjectID `bson:"activity_segment_metric_id" json:"activity_segment_metric_id,omitempty"`
 	BasalMetabolicRateMetricID               primitive.ObjectID `bson:"basal_metabolic_rate_metric_id" json:"basal_metabolic_rate_metric_id,omitempty"`
@@ -244,7 +244,7 @@ type User struct {
 	// GoogleFitAppID is the unique identifier of the Google fit authorized device in
 	// our system. The authorized device information is found in the the
 	// `FitBitApp` domain.
-	GoogleFitAppID primitive.ObjectID `bson:"googlefit_app_id" json:"-"`
+	GoogleFitAppID primitive.ObjectID `bson:"google_fit_app_id" json:"-"`
 
 	// PrimaryHealthTrackingDeviceType indicates what primary health tracking device the
 	// user is using with our system.

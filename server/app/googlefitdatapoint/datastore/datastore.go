@@ -23,7 +23,7 @@ type GoogleFitDataPoint struct {
 	UserLexicalName string             `bson:"user_lexical_name" json:"user_lexical_name"`
 
 	// GoogleFitAppID is the reference ID to the `Google Fit App` we have registered with our system.
-	GoogleFitAppID primitive.ObjectID `bson:"googlefit_app_id" json:"googlefit_app_id"`
+	GoogleFitAppID primitive.ObjectID `bson:"google_fit_app_id" json:"google_fit_app_id"`
 
 	// MetricID is the ID of the metric we assigned for this record.
 	MetricID primitive.ObjectID `bson:"metric_id" json:"metric_id"`
@@ -120,7 +120,7 @@ func NewDatastore(appCfg *c.Conf, loggerp *slog.Logger, client *mongo.Client) Go
 
 	_, err := uc.Indexes().CreateMany(context.TODO(), []mongo.IndexModel{
 		{Keys: bson.D{{Key: "user_id", Value: 1}}},
-		{Keys: bson.D{{Key: "googlefit_app_id", Value: 1}}},
+		{Keys: bson.D{{Key: "google_fit_app_id", Value: 1}}},
 		{Keys: bson.D{{Key: "start_at", Value: -1}}},
 		{Keys: bson.D{{Key: "status", Value: 1}}},
 		{Keys: bson.D{{Key: "type", Value: 1}}},
