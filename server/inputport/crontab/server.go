@@ -9,6 +9,7 @@ import (
 	agg_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/controller"
 	fp_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	googlefitapp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
+	googlefitdp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/crontab"
 	rank_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	user_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
@@ -20,15 +21,16 @@ type InputPortServer interface {
 }
 
 type crontabInputPort struct {
-	Config                   *config.Conf
-	Logger                   *slog.Logger
-	Crontab                  *crontab.Crontab
-	UserController           user_c.UserController
-	AggregatePointController agg_c.AggregatePointController
-	RankPointController      rank_c.RankPointController
-	GoogleFitAppCrontab      googlefitapp_cron.GoogleFitAppCrontaber
-	FitnessPlanStorer        fp_d.FitnessPlanStorer
-	OpenAIConnector          oai_c.OpenAIConnector
+	Config                    *config.Conf
+	Logger                    *slog.Logger
+	Crontab                   *crontab.Crontab
+	UserController            user_c.UserController
+	AggregatePointController  agg_c.AggregatePointController
+	RankPointController       rank_c.RankPointController
+	GoogleFitDataPointCrontab googlefitdp_cron.GoogleFitDataPointCrontaber
+	GoogleFitAppCrontab       googlefitapp_cron.GoogleFitAppCrontaber
+	FitnessPlanStorer         fp_d.FitnessPlanStorer
+	OpenAIConnector           oai_c.OpenAIConnector
 }
 
 func NewInputPort(
@@ -37,6 +39,7 @@ func NewInputPort(
 	usrContr user_c.UserController,
 	aggContr agg_c.AggregatePointController,
 	rankContr rank_c.RankPointController,
+	gfdb googlefitdp_cron.GoogleFitDataPointCrontaber,
 	gfaCron googlefitapp_cron.GoogleFitAppCrontaber,
 	fitnessPlanStorer fp_d.FitnessPlanStorer,
 	openAI oai_c.OpenAIConnector,
@@ -47,15 +50,16 @@ func NewInputPort(
 
 	// Create our HTTP server controller.
 	p := &crontabInputPort{
-		Config:                   configp,
-		Logger:                   loggerp,
-		Crontab:                  ctab,
-		UserController:           usrContr,
-		AggregatePointController: aggContr,
-		RankPointController:      rankContr,
-		GoogleFitAppCrontab:      gfaCron,
-		FitnessPlanStorer:        fitnessPlanStorer,
-		OpenAIConnector:          openAI,
+		Config:                    configp,
+		Logger:                    loggerp,
+		Crontab:                   ctab,
+		UserController:            usrContr,
+		AggregatePointController:  aggContr,
+		RankPointController:       rankContr,
+		GoogleFitDataPointCrontab: gfdb,
+		GoogleFitAppCrontab:       gfaCron,
+		FitnessPlanStorer:         fitnessPlanStorer,
+		OpenAIConnector:           openAI,
 	}
 
 	return p
@@ -67,6 +71,7 @@ func (port *crontabInputPort) Run() {
 	// port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob()
 	// port.GoogleFitAppCrontab.PullDataFromGoogleJob()
 	// port.GoogleFitAppCrontab.ProcessAllQueuedDataTask()
+	// port.GoogleFitDataPointCrontab.DeleteAllAnomalousData()
 	// port.processAllActiveSimulators() //TODO: IMPLEMENT.
 
 	// (For debugging purposes only)
@@ -97,9 +102,10 @@ func (port *crontabInputPort) Run() {
 	// Google Fit data.
 	// The following section will include Google Fit web-services interaction
 	// related background tasks that are important for fetching or simulating
-	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob) // every minute TOOD: ADD BACK WHEN READY
-	port.Crontab.MustAddJob("*/5 * * * *", port.GoogleFitAppCrontab.PullDataFromGoogleJob)    // every 5 minutes TOOD: ADD BACK WHEN READY
-	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.ProcessAllQueuedDataTask)   // every minute
+	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob)   // every minute TOOD: ADD BACK WHEN READY
+	port.Crontab.MustAddJob("*/5 * * * *", port.GoogleFitAppCrontab.PullDataFromGoogleJob)      // every 5 minutes TOOD: ADD BACK WHEN READY
+	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.ProcessAllQueuedDataTask)     // every minute
+	port.Crontab.MustAddJob("* * * * *", port.GoogleFitDataPointCrontab.DeleteAllAnomalousData) // every minute
 	// port.Crontab.MustAddJob("* * * * *", port.processAllActiveSimulators) // every minute //TODO: IMPLEMENT
 
 	// Aggregation.

@@ -51,14 +51,14 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	if sortOrder == "DESC" {
 		f.SortOrder = dp_s.OrderDescending
 	}
-	gteStr := query.Get("created_at_gte")
+	gteStr := query.Get("start_at_gte")
 	if gteStr != "" {
 		gte, err := timekit.ParseJavaScriptTimeString(gteStr)
 		if err != nil {
 			httperror.ResponseError(w, err)
 			return
 		}
-		f.GTE = gte
+		f.StartAtGTE = gte
 	}
 
 	metricIDs := make([]primitive.ObjectID, 0)

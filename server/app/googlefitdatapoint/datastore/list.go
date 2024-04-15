@@ -45,17 +45,17 @@ func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *Go
 	var conditions []bson.M
 
 	// Add filter conditions to the slice
-	if !f.GTE.IsZero() {
-		conditions = append(conditions, bson.M{"timestamp": bson.M{"$gte": f.GTE}})
+	if !f.StartAtGTE.IsZero() {
+		conditions = append(conditions, bson.M{"start_at": bson.M{"$gte": f.StartAtGTE}})
 	}
-	if !f.GT.IsZero() {
-		conditions = append(conditions, bson.M{"timestamp": bson.M{"$gt": f.GT}})
+	if !f.StartAtGT.IsZero() {
+		conditions = append(conditions, bson.M{"start_at": bson.M{"$gt": f.StartAtGT}})
 	}
-	if !f.LTE.IsZero() {
-		conditions = append(conditions, bson.M{"timestamp": bson.M{"$lte": f.LTE}})
+	if !f.StartAtLTE.IsZero() {
+		conditions = append(conditions, bson.M{"start_at": bson.M{"$lte": f.StartAtLTE}})
 	}
-	if !f.LT.IsZero() {
-		conditions = append(conditions, bson.M{"timestamp": bson.M{"$lt": f.LT}})
+	if !f.StartAtLT.IsZero() {
+		conditions = append(conditions, bson.M{"start_at": bson.M{"$lt": f.StartAtLT}})
 	}
 
 	// Combine conditions with $and operator

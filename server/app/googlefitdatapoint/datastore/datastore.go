@@ -87,7 +87,8 @@ type GoogleFitDataPointStorer interface {
 	ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointPaginationListResult, error)
 	ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error)
 	ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error)
-	// DeleteByID(ctx context.Context, id primitive.ObjectID) error
+	ListByAnomalousDetection(ctx context.Context) (*GoogleFitDataPointPaginationListResult, error)
+	DeleteByID(ctx context.Context, id primitive.ObjectID) error
 	// CheckIfExistsByNameInOrgBranch(ctx context.Context, name string, orgID primitive.ObjectID, branchID primitive.ObjectID) (bool, error)
 	// // //TODO: Add more...
 }

@@ -35,10 +35,11 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	controller16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
+	crontab2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	datastore17 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	httptransport15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	controller15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/controller"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/crontab"
 	datastore16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	httptransport14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/httptransport"
 	controller12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
@@ -82,7 +83,7 @@ import (
 	datastore21 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	httptransport21 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
-	crontab2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
+	crontab3 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -187,8 +188,9 @@ func InitializeEvent() Application {
 	workoutController := controller22.NewController(conf, slogLogger, provider, client, workoutStorer, exerciseStorer)
 	handler20 := httptransport21.NewHandler(slogLogger, workoutController)
 	inputPortServer := http.NewInputPort(conf, slogLogger, middlewareMiddleware, handler, httptransportHandler, handler2, handler3, handler4, handler5, handler6, handler7, handler8, handler9, handler10, handler11, stripeHandler, fitnessplanHandler, handler12, handler13, handler14, handler15, handler16, handler17, handler18, handler19, handler20)
-	googleFitAppCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
-	crontabInputPortServer := crontab2.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
+	googleFitDataPointCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitDataPointController, userStorer)
+	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
+	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
 	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer)
 	return application
 }

@@ -32,10 +32,10 @@ type GoogleFitDataPointPaginationListFilter struct {
 	Status          int8
 	DataTypeNames   []string
 	MetricIDs       []primitive.ObjectID
-	GT              time.Time
-	GTE             time.Time
-	LT              time.Time
-	LTE             time.Time
+	StartAtGT       time.Time
+	StartAtGTE      time.Time
+	StartAtLT       time.Time
+	StartAtLTE      time.Time
 }
 
 // GoogleFitDataPointPaginationListResult represents the paginated list results for

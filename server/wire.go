@@ -38,6 +38,7 @@ import (
 	googlefitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	googlefitdp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/controller"
+	googlefitdp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/crontab"
 	googlefitdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	googlefitdp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/httptransport"
 	inv_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
@@ -144,6 +145,7 @@ func InitializeEvent() Application {
 		nutritionplan_c.NewController,
 		googlefitdp_s.NewDatastore,
 		googlefitdp_c.NewController,
+		googlefitdp_cron.NewCrontab,
 		googlefitdp_http.NewHandler,
 		googlefitapp_s.NewDatastore,
 		googlefitapp_c.NewController,

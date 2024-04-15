@@ -15,10 +15,10 @@ func (c *GoogleFitDataPointControllerImpl) ListByFilter(ctx context.Context, f *
 		slog.String("SortField", f.SortField),
 		slog.Int("SortOrder", int(f.SortOrder)),
 		slog.Any("MetricIDs", f.MetricIDs),
-		slog.Time("GTE", f.GTE),
-		slog.Time("GT", f.GT),
-		slog.Time("LTE", f.LTE),
-		slog.Time("LT", f.LT))
+		slog.Time("StartAtGTE", f.StartAtGTE),
+		slog.Time("StartAtGT", f.StartAtGT),
+		slog.Time("StartAtLTE", f.StartAtLTE),
+		slog.Time("StartAtLT", f.StartAtLT))
 
 	m, err := c.GoogleFitDataPointStorer.ListByFilter(ctx, f)
 	if err != nil {
