@@ -7,7 +7,7 @@ import {
   faArrowLeft,
   faGauge,
   faEye,
-  faDumbbell,
+  faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -182,7 +182,7 @@ function AdminTrainingProgramAdd() {
               </li>
               <li class="">
                 <Link to="/admin/training-program" aria-current="page">
-                  <FontAwesomeIcon className="fas" icon={faDumbbell} />
+                  <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
                   &nbsp;Training Program
                 </Link>
               </li>

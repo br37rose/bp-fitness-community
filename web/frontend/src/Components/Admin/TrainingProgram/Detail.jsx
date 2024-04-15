@@ -6,14 +6,13 @@ import {
   faTrash,
   faArrowLeft,
   faGauge,
-  faVideo,
   faEye,
-  faDumbbell,
   faTable,
   faSave,
   faCancel,
   faArrowUpRightFromSquare,
   faEdit,
+  faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
@@ -21,7 +20,7 @@ import { useParams } from "react-router-dom";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
 import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
-import { deleteWorkoutAPI, getWorkoutListApi } from "../../../API/workout";
+import { getWorkoutListApi } from "../../../API/workout";
 import {
   deleteTrainingProgAPI,
   getTrainingProgDetailAPI,
@@ -298,7 +297,7 @@ function AdminTPDetail() {
             </li>
             <li className="">
               <Link to="/admin/training-program" aria-current="page">
-                <FontAwesomeIcon className="fas" icon={faDumbbell} />
+                <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
                 &nbsp;Training Program
               </Link>
             </li>
@@ -365,7 +364,7 @@ function AdminTPDetail() {
             <div className="columns">
               <div className="column">
                 <p className="title is-4">
-                  <FontAwesomeIcon className="fas" icon={faVideo} />
+                  <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
                   &nbsp;Training-program
                 </p>
               </div>

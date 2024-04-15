@@ -7,7 +7,7 @@ import {
   faArrowLeft,
   faGauge,
   faEye,
-  faDumbbell,
+  faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -21,8 +21,6 @@ import {
   topAlertStatusState,
 } from "../../../AppState";
 import { postTrainingProgCreateAPI } from "../../../API/trainingProgram";
-import { getMemberListOptionsAPI } from "../../../API/member";
-import FormSelectField from "../../Reusable/FormSelectField";
 import DataDisplayRowText from "../../Reusable/DataDisplayRowText";
 
 function MemberTrainingProgramAdd() {
@@ -155,7 +153,7 @@ function MemberTrainingProgramAdd() {
               </li>
               <li class="">
                 <Link to="/training-program" aria-current="page">
-                  <FontAwesomeIcon className="fas" icon={faDumbbell} />
+                  <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
                   &nbsp;Training Program
                 </Link>
               </li>

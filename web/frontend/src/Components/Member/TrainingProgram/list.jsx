@@ -12,7 +12,7 @@ import {
   faFilter,
   faSearch,
   faFilterCircleXmark,
-  faDumbbell,
+  faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -283,7 +283,7 @@ function MemberTrainingProgramList() {
               </li>
               <li className="is-active">
                 <Link aria-current="page">
-                  <FontAwesomeIcon className="fas" icon={faDumbbell} />
+                  <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
                   &nbsp;Training program
                 </Link>
               </li>
@@ -346,7 +346,7 @@ function MemberTrainingProgramList() {
             <div className="columns">
               <div className="column">
                 <h1 className="title is-4">
-                  <FontAwesomeIcon className="fas" icon={faDumbbell} />
+                  <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
                   &nbsp;Training Program
                 </h1>
               </div>
