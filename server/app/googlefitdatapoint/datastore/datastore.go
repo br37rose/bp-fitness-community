@@ -53,7 +53,7 @@ type GoogleFitDataPoint struct {
 	BloodPressure                    *gcp_a.BloodPressureStruct                    `bson:"blood_pressure,omitempty" json:"blood_pressure,omitempty"`
 	BodyFatPercentage                *gcp_a.BodyFatPercentageStruct                `bson:"body_fat_percentage,omitempty" json:"body_fat_percentage,omitempty"`
 	BodyTemperature                  *gcp_a.BodyTemperatureStruct                  `bson:"body_temperature,omitempty" json:"body_temperature,omitempty"`
-	HeartRateBPM                     *gcp_a.HeartRateBPMStruct                     `bson:"hearte_rate_bpm,omitempty" json:"hearte_rate_bpm,omitempty"`
+	HeartRateBPM                     *gcp_a.HeartRateBPMStruct                     `bson:"heart_rate_bpm,omitempty" json:"heart_rate_bpm,omitempty"`
 	Height                           *gcp_a.HeightStruct                           `bson:"height,omitempty" json:"height,omitempty"`
 	Sleep                            *gcp_a.SleepStruct                            `bson:"sleep,omitempty" json:"sleep,omitempty"`
 	OxygenSaturation                 *gcp_a.OxygenSaturationStruct                 `bson:"oxygen_saturation,omitempty" json:"oxygen_saturation,omitempty"`

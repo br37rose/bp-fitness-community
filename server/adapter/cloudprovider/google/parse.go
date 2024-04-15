@@ -969,6 +969,7 @@ func ParseBloodGlucose(datasets []*fitness.Dataset) []BloodGlucoseStruct {
 					StartTime:               startTime,
 					EndTime:                 endTime,
 					BloodGlucoseLevel:       bloodGlucoseLevel.FpVal,
+					TemporalRelationToMeal:  0, //TODO - See https://developers.google.com/fit/datatypes/health#blood_glucose
 					MealType:                mealType.IntVal,
 					TemporalRelationToSleep: temporalRelationToSleep.IntVal,
 					SpecimenSource:          specimenSource.IntVal,

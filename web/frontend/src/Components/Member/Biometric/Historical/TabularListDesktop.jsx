@@ -33,6 +33,9 @@ import {
   RANK_POINT_METRIC_TYPE_STEP_COUNTER,
 } from "../../../../Constants/App";
 import DateTimeTextFormatter from "../../../Reusable/DateTimeTextFormatter";
+import GoogleFitDataPointValueToString from "../../../Reusable/SpecificPage/Biometrics/GoogleFitDataPointValueToString";
+import GoogleFitDataPointTypeToString from "../../../Reusable/SpecificPage/Biometrics/GoogleFitDataPointTypeToString";
+
 
 function MemberLeaderboardGlobalTabularListDesktop(props) {
   const {
@@ -61,39 +64,48 @@ function MemberLeaderboardGlobalTabularListDesktop(props) {
               listRank.results &&
               listRank.results.map(function (datum, i) {
                   //TODO: IMPLEMENT MORE...
-                switch (datum.dataTypeName) {
-                  case "com.google.heart_rate.bpm":
-                    return (
-                      <tr key={`desktop_${datum.id}`}>
-                      <td data-label="Type">Heart Rate</td>
-                        <td data-label="Value">
-                          {datum.hearteRateBpm.bpm} BPM
-                        </td>
-                        <td data-label="Start At">{datum.startAt}</td>
-                        <td data-label="End At">{datum.endAt}</td>
-                      </tr>
-                    );
-                  case "com.google.step_count.delta":
-                    return (
-                      <tr key={`desktop_${datum.id}`}>
-                      <td data-label="Type">Steps</td>
-                        <td data-label="Value">
-                          {datum.stepCountDelta.steps} Steps
-                        </td>
-                        <td data-label="Start At">{datum.startAt}</td>
-                        <td data-label="End At">{datum.endAt}</td>
-                      </tr>
-                    );
-                  default:
-                    return (
-                      <tr key={`desktop_${datum.id}`}>
-                      <td data-label="Type">{datum.dataTypeName}</td>
-                        <td data-label="Value">Not Implemented</td>
-                        <td data-label="Start At">{datum.startAt}</td>
-                        <td data-label="End At">{datum.endAt}</td>
-                      </tr>
-                    );
-                }
+                  return (
+                    <tr key={`desktop_${datum.id}`}>
+                    <td data-label="Type"><GoogleFitDataPointTypeToString datapoint={datum} /></td>
+                      <td data-label="Value"><GoogleFitDataPointValueToString datapoint={datum} /></td>
+                      <td data-label="Start At">{datum.startAt}</td>
+                      <td data-label="End At">{datum.endAt}</td>
+                    </tr>
+                  );
+
+                // switch (datum.dataTypeName) {
+                //   case "com.google.heart_rate.bpm":
+                //     return (
+                //       <tr key={`desktop_${datum.id}`}>
+                //       <td data-label="Type">Heart Rate</td>
+                //         <td data-label="Value">
+                //           {datum.hearteRateBpm.bpm} BPM
+                //         </td>
+                //         <td data-label="Start At">{datum.startAt}</td>
+                //         <td data-label="End At">{datum.endAt}</td>
+                //       </tr>
+                //     );
+                //   case "com.google.step_count.delta":
+                //     return (
+                //       <tr key={`desktop_${datum.id}`}>
+                //       <td data-label="Type">Steps</td>
+                //         <td data-label="Value">
+                //           {datum.stepCountDelta.steps} Steps
+                //         </td>
+                //         <td data-label="Start At">{datum.startAt}</td>
+                //         <td data-label="End At">{datum.endAt}</td>
+                //       </tr>
+                //     );
+                //   default:
+                //     return (
+                //       <tr key={`desktop_${datum.id}`}>
+                //       <td data-label="Type">{datum.dataTypeName}</td>
+                //         <td data-label="Value">Not Implemented</td>
+                //         <td data-label="Start At">{datum.startAt}</td>
+                //         <td data-label="End At">{datum.endAt}</td>
+                //       </tr>
+                //     );
+                // }
               })}
           </tbody>
         </table>

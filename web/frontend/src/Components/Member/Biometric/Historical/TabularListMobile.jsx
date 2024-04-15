@@ -9,6 +9,8 @@ import FormErrorBox from "../../../Reusable/FormErrorBox";
 import { PAGE_SIZE_OPTIONS, FITNESS_PLAN_STATUS_MAP } from "../../../../Constants/FieldOptions";
 import { RANK_POINT_METRIC_TYPE_HEART_RATE, RANK_POINT_METRIC_TYPE_STEP_COUNTER } from "../../../../Constants/App";
 import DateTimeTextFormatter from "../../../Reusable/DateTimeTextFormatter";
+import GoogleFitDataPointValueToString from "../../../Reusable/SpecificPage/Biometrics/GoogleFitDataPointValueToString";
+import GoogleFitDataPointTypeToString from "../../../Reusable/SpecificPage/Biometrics/GoogleFitDataPointTypeToString";
 
 /*
 Display for both tablet and mobile.
@@ -18,50 +20,19 @@ function MemberLeaderboardGlobalTabularListMobile(props) {
     return (
         <>
             {listRank && listRank.results && listRank.results.map(function (datum, i) {
-                switch (datum.dataTypeName) {
-                  case "com.google.heart_rate.bpm":
-                    return (
-                      <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
-                      <strong>Type:</strong>&nbsp;{datum.dataTypeName}
-                      <br />
-                      <strong>Value:</strong>&nbsp;{datum.hearteRateBpm.bpm} BPM
-                      <br />
-                      <strong>Start At:</strong>&nbsp;{datum.startAt}
-                      <br />
-                      <strong>End At:</strong>&nbsp;{datum.endAt}
-                      <br />
-                      <br />
-                      </div>
-                    );
-                  case "com.google.step_count.delta":
-                    return (
-                      <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
-                        <strong>Type:</strong>&nbsp;{datum.dataTypeName}
-                        <br />
-                        <strong>Value:</strong>&nbsp;{datum.stepCountDelta.steps} Steps
-                        <br />
-                        <strong>Start At:</strong>&nbsp;{datum.startAt}
-                        <br />
-                        <strong>End At:</strong>&nbsp;{datum.endAt}
-                        <br />
-                        <br />
-                      </div>
-                    );
-                  default:
-                    return (
-                     <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
-                      <strong>Type:</strong>&nbsp;{datum.dataTypeName}
-                      <br />
-                      <strong>Value:</strong>&nbsp;Unsupported
-                      <br />
-                      <strong>Start At:</strong>&nbsp;{datum.startAt}
-                      <br />
-                      <strong>End At:</strong>&nbsp;{datum.endAt}
-                      <br />
-                      <br />
-                      </div>
-                    );
-                }
+                return (
+                  <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
+                  <strong>Type:</strong>&nbsp;<GoogleFitDataPointTypeToString datapoint={datum} />
+                  <br />
+                  <strong>Value:</strong>&nbsp;<GoogleFitDataPointValueToString datapoint={datum} />
+                  <br />
+                  <strong>Start At:</strong>&nbsp;{datum.startAt}
+                  <br />
+                  <strong>End At:</strong>&nbsp;{datum.endAt}
+                  <br />
+                  <br />
+                  </div>
+                );
             })}
 
             <div class="columns pt-4 is-mobile">
