@@ -1,4 +1,5 @@
 import DraggableItem from "./dragable";
+import { useState } from "react";
 
 function ExerciseDisplay({
   exercises,
@@ -8,13 +9,43 @@ function ExerciseDisplay({
   wrapperclass,
   onAdd,
   showindex = true,
+  showDescription = true,
 }) {
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleDescription = () => {
+    setShowMore(!showMore);
+  };
+  const trimDescription = (description) => {
+    const maxLength = 100;
+    return description.length > maxLength
+      ? description.slice(0, maxLength) + "..."
+      : description;
+  };
+
   const exerciseItemJSX = (exercise, index) => (
-    <div key={index} className="mb-4 exercise-item">
+    <div key={index} className="mb-3 exercise-item">
       <h2 className="mb-3 has-text-weight-medium is-size-6">
         {showindex && `${index + 1}. `}
         {exercise.name}
       </h2>
+      {showDescription && (
+        <div>
+          <p className="mb-3 exercise-description">
+            {showMore
+              ? exercise.description
+              : trimDescription(exercise.description)}
+            {exercise.description.length > 100 && (
+              <button
+                className="is-small transparent-button is-family-sans-serif has-text-weight-bold"
+                onClick={toggleDescription}
+              >
+                {showMore ? "Show Less" : "More"}
+              </button>
+            )}
+          </p>
+        </div>
+      )}
       <video className="exercise-video" poster={exercise.thumbnailUrl} controls>
         <source src={exercise.videoUrl} type="video/mp4" />
         Your browser does not support the video tag.

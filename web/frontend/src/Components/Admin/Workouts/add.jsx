@@ -258,6 +258,7 @@ function AdminWorkoutAdd() {
                           isdraggable
                           onAdd={onDrop}
                           showindex={false}
+                          showDescription={false}
                         />
                       </div>
                     </div>

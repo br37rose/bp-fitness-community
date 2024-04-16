@@ -18,8 +18,6 @@ func (c *FitnessPlanControllerImpl) GetByID(ctx context.Context, id primitive.Ob
 
 	//This is to fix the issue with the expiration of url stored in the fitness Plan
 	for index, excercise := range m.Exercises {
-		id := excercise.ID.Hex()
-		_ = id
 		e, err := c.ExcerciseContr.GetByID(ctx, excercise.ID)
 		if err != nil {
 			c.Logger.Error("excercise does not exist", slog.Any("error", err))
@@ -27,6 +25,7 @@ func (c *FitnessPlanControllerImpl) GetByID(ctx context.Context, id primitive.Ob
 		}
 		m.Exercises[index].VideoURL = e.VideoObjectURL
 		m.Exercises[index].ThumbnailURL = e.ThumbnailObjectURL
+		m.Exercises[index].Description = e.Description
 	}
 
 	return m, err

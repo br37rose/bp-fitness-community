@@ -11585,6 +11585,11 @@ a.has-text-danger-dark:focus {
   height: auto;
 }
 
+.exercise-description {
+  font-size: 14px;
+  color: #666;
+}
+
 @media (max-width: 768px) {
   .exercise-container {
     display: block;
@@ -11753,4 +11758,11 @@ a.has-text-danger-dark:focus {
 
 .workout-box.selected {
   border: 2px solid #3cb371; /* Green border for selected workout box */
+}
+
+.transparent-button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
 }
