@@ -45,6 +45,7 @@ type MemberUpdateRequestIDO struct {
 	ShippingAddressLine2      string             `bson:"shipping_address_line2" json:"shipping_address_line2,omitempty"`
 	Tags                      []*user_s.UserTag  `bson:"tags" json:"tags"`
 	OnboardingAnswers         []*user_s.Answer   `bson:"onboarding_answers" json:"onboarding_answers,omitempty"`
+	OnboardingCompleted       bool               `bson:"onboarding_completed" json:"onboarding_completed"`
 }
 
 func (impl *MemberControllerImpl) userFromUpdateRequest(requestData *MemberUpdateRequestIDO) (*user_s.User, error) {
@@ -87,6 +88,7 @@ func (impl *MemberControllerImpl) userFromUpdateRequest(requestData *MemberUpdat
 		ShippingAddressLine2:      requestData.ShippingAddressLine2,
 		Tags:                      requestData.Tags,
 		OnboardingAnswers:         requestData.OnboardingAnswers,
+		OnboardingCompleted:       requestData.OnboardingCompleted,
 	}
 
 	// Set new password if user added new password.
@@ -199,6 +201,7 @@ func (impl *MemberControllerImpl) UpdateByID(ctx context.Context, requestData *M
 		ou.ShippingAddressLine1 = nu.ShippingAddressLine1
 		ou.ShippingAddressLine2 = nu.ShippingAddressLine2
 		ou.OnboardingAnswers = nu.OnboardingAnswers
+		ou.OnboardingCompleted = nu.OnboardingCompleted
 
 		// Process user tags.
 		var modifiedTags []*user_s.UserTag

@@ -281,7 +281,8 @@ type User struct {
 	OTPAuthURL string `bson:"otp_auth_url" json:"-"`
 
 	// OnboardingAnswers stores the user's answers to the onboarding questions.
-	OnboardingAnswers []*Answer `bson:"onboarding_answers" json:"onboarding_answers,omitempty"`
+	OnboardingAnswers   []*Answer `bson:"onboarding_answers" json:"onboarding_answers,omitempty"`
+	OnboardingCompleted bool      `bson:"onboarding_completed" json:"onboarding_completed"`
 }
 
 type Answer struct {
