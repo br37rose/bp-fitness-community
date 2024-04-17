@@ -38,13 +38,13 @@ type AggregatePointSummaryResponse struct {
 	HeartRateThisYearData    []*ap_s.AggregatePoint `bson:"heart_rate_this_year_data" json:"heart_rate_this_year_data"`
 	HeartRateLastYearData    []*ap_s.AggregatePoint `bson:"heart_rate_last_year_data" json:"heart_rate_last_year_data"`
 
-	HeartRateThisDayRanking []*rp_s.RankPoint `bson:"heart_rate_this_day_ranking" json:"heart_rate_this_day_ranking"`
-	// HeartRateLastDayRanking     []*rp_s.RankPoint `bson:"heart_rate_last_day_ranking" json:"heart_rate_last_day_ranking"`
+	HeartRateThisDayRanking     []*rp_s.RankPoint `bson:"heart_rate_this_day_ranking" json:"heart_rate_this_day_ranking"`
 	HeartRateThisISOWeekRanking []*rp_s.RankPoint `bson:"heart_rate_this_iso_week_ranking" json:"heart_rate_this_iso_week_ranking"`
+	HeartRateThisMonthRanking   []*rp_s.RankPoint `bson:"heart_rate_this_month_ranking" json:"heart_rate_this_month_ranking"`
+	HeartRateThisYearRanking    []*rp_s.RankPoint `bson:"heart_rate_this_year_ranking" json:"heart_rate_this_year_ranking"`
+	// HeartRateLastDayRanking     []*rp_s.RankPoint `bson:"heart_rate_last_day_ranking" json:"heart_rate_last_day_ranking"`
 	// HeartRateLastISOWeekRanking []*rp_s.RankPoint `bson:"heart_rate_last_iso_week_ranking" json:"heart_rate_last_iso_week_ranking"`
-	HeartRateThisMonthRanking []*rp_s.RankPoint `bson:"heart_rate_this_month_ranking" json:"heart_rate_this_month_ranking"`
 	// HeartRateLastMonthRanking   []*rp_s.RankPoint `bson:"heart_rate_last_month_ranking" json:"heart_rate_last_month_ranking"`
-	HeartRateThisYearRanking []*rp_s.RankPoint `bson:"heart_rate_this_year_ranking" json:"heart_rate_this_year_ranking"`
 	// HeartRateLastYearRanking    []*rp_s.RankPoint `bson:"heart_rate_last_year_ranking" json:"heart_rate_last_year_ranking"`
 
 	StepsCounterThisDaySummary     *ap_s.AggregatePoint `bson:"steps_counter_this_day_summary" json:"steps_counter_this_day_summary"`
@@ -65,13 +65,13 @@ type AggregatePointSummaryResponse struct {
 	StepsCounterThisYearData    []*ap_s.AggregatePoint `bson:"steps_counter_this_year_data" json:"steps_counter_this_year_data"`
 	StepsCounterLastYearData    []*ap_s.AggregatePoint `bson:"steps_counter_last_year_data" json:"steps_counter_last_year_data"`
 
-	StepsCounterThisDayRanking []*rp_s.RankPoint `bson:"steps_counter_this_day_ranking" json:"steps_counter_this_day_ranking"`
-	// StepsCounterLastDayRanking     []*rp_s.RankPoint `bson:"steps_counter_last_day_ranking" json:"steps_counter_last_day_ranking"`
+	StepsCounterThisDayRanking     []*rp_s.RankPoint `bson:"steps_counter_this_day_ranking" json:"steps_counter_this_day_ranking"`
 	StepsCounterThisISOWeekRanking []*rp_s.RankPoint `bson:"steps_counter_this_iso_week_ranking" json:"steps_counter_this_iso_week_ranking"`
+	StepsCounterThisMonthRanking   []*rp_s.RankPoint `bson:"steps_counter_this_month_ranking" json:"steps_counter_this_month_ranking"`
+	StepsCounterThisYearRanking    []*rp_s.RankPoint `bson:"steps_counter_this_year_ranking" json:"steps_counter_this_year_ranking"`
+	// StepsCounterLastDayRanking     []*rp_s.RankPoint `bson:"steps_counter_last_day_ranking" json:"steps_counter_last_day_ranking"`
 	// StepsCounterLastISOWeekRanking []*rp_s.RankPoint `bson:"steps_counter_last_iso_week_ranking" json:"steps_counter_last_iso_week_ranking"`
-	StepsCounterThisMonthRanking []*rp_s.RankPoint `bson:"steps_counter_this_month_ranking" json:"steps_counter_this_month_ranking"`
 	// StepsCounterLastMonthRanking   []*rp_s.RankPoint `bson:"steps_counter_last_month_ranking" json:"steps_counter_last_month_ranking"`
-	StepsCounterThisYearRanking []*rp_s.RankPoint `bson:"steps_counter_this_year_ranking" json:"steps_counter_this_year_ranking"`
 	// StepsCounterLastYearRanking    []*rp_s.RankPoint `bson:"steps_counter_last_year_ranking" json:"steps_counter_last_year_ranking"`
 }
 
