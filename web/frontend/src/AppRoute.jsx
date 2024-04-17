@@ -41,7 +41,7 @@ import AdminMemberList from "./Components/Admin/Member/List";
 import AdminMemberAdd from "./Components/Admin/Member/Add";
 import AdminDashboard from "./Components/Admin/Dashboard";
 import MemberLeaderboardGlobalTabularList from "./Components/Member/Biometric/Leaderboard/Global/TabularList";
-import MemberSummary from "./Components/Member/Biometric/Summary/Summary";
+import MemberSummary from "./Components/Member/Biometric/Summary/View";
 import MemberDataPointHistoricalGraphicalList from "./Components/Member/Biometric/Historical/GraphicalList";
 import MemberDataPointHistoricalTabularList from "./Components/Member/Biometric/Historical/TabularList";
 import MemberBiometricLaunchpad from "./Components/Member/Biometric/Launchpad";
