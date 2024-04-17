@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"sync"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
@@ -92,93 +94,120 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 		}
 	}
 
-	if userID.IsZero() {
-		impl.Logger.Error("user_id missing value")
-		return nil, httperror.NewForBadRequestWithSingleField("user_id", "missing value")
-	}
+	////
+	//// Start the transaction.
+	////
 
-	u, err := impl.UserStorer.GetByID(ctx, uid)
+	session, err := impl.DbClient.StartSession()
 	if err != nil {
-		impl.Logger.Error("failed getting user",
-			slog.String("user_id", uid.Hex()),
+		impl.Logger.Error("start session error",
 			slog.Any("error", err))
 		return nil, err
 	}
-	if u == nil {
-		impl.Logger.Error("user does not exist", slog.String("user_id", uid.Hex()))
-		return nil, httperror.NewForBadRequestWithSingleField("user_id", fmt.Sprintf("user does not exist for ID: %v", uid.Hex()))
+	defer session.EndSession(ctx)
+
+	// Define a transaction function with a series of operations
+	transactionFunc := func(sessCtx mongo.SessionContext) (interface{}, error) {
+
+		if userID.IsZero() {
+			impl.Logger.Error("user_id missing value")
+			return nil, httperror.NewForBadRequestWithSingleField("user_id", "missing value")
+		}
+
+		u, err := impl.UserStorer.GetByID(sessCtx, uid)
+		if err != nil {
+			impl.Logger.Error("failed getting user",
+				slog.String("user_id", uid.Hex()),
+				slog.Any("error", err))
+			return nil, err
+		}
+		if u == nil {
+			impl.Logger.Error("user does not exist", slog.String("user_id", uid.Hex()))
+			return nil, httperror.NewForBadRequestWithSingleField("user_id", fmt.Sprintf("user does not exist for ID: %v", uid.Hex()))
+		}
+		switch u.PrimaryHealthTrackingDeviceType {
+		case u_d.UserPrimaryHealthTrackingDeviceTypeNone:
+			err := errors.New("no health tracker attached")
+			impl.Logger.Error("no health tracker attached",
+				slog.String("user_id", uid.Hex()),
+				slog.Any("error", err))
+			return nil, err
+		case u_d.UserPrimaryHealthTrackingDeviceTypeGoogleFit:
+			// Do nothing except continue execution of this function...
+		default:
+			impl.Logger.Error("user has unsupported health tracker", slog.String("user_id", uid.Hex()))
+			return nil, httperror.NewForBadRequestWithSingleField("user_id", fmt.Sprintf("user has unsupported health tracker for type: %v", u.PrimaryHealthTrackingDeviceType))
+		}
+
+		// Variable stores the number of goroutines we expect to wait for. We
+		// set value of `1` because we have the following sensors we want to
+		// process in the background as goroutines:
+		// - heart rate (summary)
+		// - heart rate (data)
+		// - heart rate (ranking)
+		// - step counter delta (summary)
+		// - step counter delta (data)
+		// - step counter delta (summary)
+		numWorkers := 3
+
+		// Create a channel to collect errors from goroutines.
+		errCh := make(chan error, numWorkers)
+
+		// Variable used to synchronize all the go routines running in
+		// background outside of this function.
+		var wg sync.WaitGroup
+
+		// Variable used to lock / unlock access when the goroutines want to
+		// perform writes to our output response.
+		var mu sync.Mutex
+
+		// Load up the number of workers our waitgroup will need to handle.
+		wg.Add(numWorkers)
+
+		// Variable used to return a summary for all our data.
+		res := &AggregatePointSummaryResponse{}
+
+		// Execute the following functions:
+		// ---> Heart Rate:
+		go func() {
+			if err := impl.generateSummarySummaryForHR(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		go func() {
+			if err := impl.generateSummaryDataForHR(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		go func() {
+			if err := impl.generateSummaryRankingsForHR(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+
+		// Create a goroutine to close the error channel when all workers are done
+		go func() {
+			wg.Wait()
+			close(errCh)
+		}()
+
+		// Iterate over the error channel to collect any errors from workers
+		for err := range errCh {
+			impl.Logger.Error("failed executing in goroutine",
+				slog.Any("error", err))
+			return nil, err
+		}
+
+		return res, nil
 	}
-	switch u.PrimaryHealthTrackingDeviceType {
-	case u_d.UserPrimaryHealthTrackingDeviceTypeNone:
-		err := errors.New("no health tracker attached")
-		impl.Logger.Error("no health tracker attached",
-			slog.String("user_id", uid.Hex()),
+
+	// Start a transaction
+	res, err := session.WithTransaction(ctx, transactionFunc)
+	if err != nil {
+		impl.Logger.Error("session failed error",
 			slog.Any("error", err))
 		return nil, err
-	case u_d.UserPrimaryHealthTrackingDeviceTypeGoogleFit:
-		// Do nothing except continue execution of this function...
-	default:
-		impl.Logger.Error("user has unsupported health tracker", slog.String("user_id", uid.Hex()))
-		return nil, httperror.NewForBadRequestWithSingleField("user_id", fmt.Sprintf("user has unsupported health tracker for type: %v", u.PrimaryHealthTrackingDeviceType))
 	}
 
-	// TODO:
-	// DEVELOPERS NOTE:
-	// In the future use golang goroutines to improve performance. This is the
-	// techdebt we will incur for now.
-
-	// Variable used to return a summary for all our data.
-	res := &AggregatePointSummaryResponse{}
-
-	////
-	//// Heart Rate
-	////
-
-	// if !u.PrimaryHealthTrackingDeviceHeartRateMetricID.IsZero() {
-	// 	if err := impl.generateSummaryForHR(ctx, u, res); err != nil {
-	// 		impl.Logger.Error("failed generating my summary data for heart rate",
-	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-	// 			slog.Any("error", err))
-	// 		return nil, err
-	// 	}
-	// 	if err := impl.generateSummaryDataForHR(ctx, u, res); err != nil {
-	// 		impl.Logger.Error("failed generating my summary data for heart rate",
-	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-	// 			slog.Any("error", err))
-	// 		return nil, err
-	// 	}
-	// 	if err := impl.generateSummaryRankingsForHR(ctx, u, res); err != nil {
-	// 		impl.Logger.Error("failed generating my summary rankings for heart rate",
-	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-	// 			slog.Any("error", err))
-	// 		return nil, err
-	// 	}
-	// }
-	//
-	// ////
-	// //// Step Count
-	// ////
-	//
-	// if !u.PrimaryHealthTrackingDeviceStepsCountMetricID.IsZero() {
-	// 	if err := impl.generateSummaryForStepCounter(ctx, u, res); err != nil {
-	// 		impl.Logger.Error("failed generating my summary rankings for steps counter",
-	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
-	// 			slog.Any("error", err))
-	// 		return nil, err
-	// 	}
-	// 	if err := impl.generateSummaryDataForStepsCounter(ctx, u, res); err != nil {
-	// 		impl.Logger.Error("failed generating my summary rankings for steps counter",
-	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
-	// 			slog.Any("error", err))
-	// 		return nil, err
-	// 	}
-	// 	if err := impl.generateSummaryRankingsForStepsCounter(ctx, u, res); err != nil {
-	// 		impl.Logger.Error("failed generating my summary rankings for steps counter",
-	// 			slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCountMetricID.Hex()),
-	// 			slog.Any("error", err))
-	// 		return nil, err
-	// 	}
-	// }
-
-	return res, nil
+	return res.(*AggregatePointSummaryResponse), nil
 }
