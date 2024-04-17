@@ -47,6 +47,8 @@ type AggregatePointSummaryResponse struct {
 	// HeartRateLastMonthRanking   []*rp_s.RankPoint `bson:"heart_rate_last_month_ranking" json:"heart_rate_last_month_ranking"`
 	// HeartRateLastYearRanking    []*rp_s.RankPoint `bson:"heart_rate_last_year_ranking" json:"heart_rate_last_year_ranking"`
 
+	StepsCounterThisHourSummary    *ap_s.AggregatePoint `bson:"steps_counter_this_hour_summary" json:"steps_counter_this_hour_summary"`
+	StepsCounterLastHourSummary    *ap_s.AggregatePoint `bson:"steps_counter_last_hour_summary" json:"steps_counter_last_hour_summary"`
 	StepsCounterThisDaySummary     *ap_s.AggregatePoint `bson:"steps_counter_this_day_summary" json:"steps_counter_this_day_summary"`
 	StepsCounterLastDaySummary     *ap_s.AggregatePoint `bson:"steps_counter_last_day_summary" json:"steps_counter_last_day_summary"`
 	StepsCounterThisISOWeekSummary *ap_s.AggregatePoint `bson:"steps_counter_this_iso_week_summary" json:"steps_counter_this_iso_week_summary"`
@@ -148,7 +150,7 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 		// - step counter delta (summary)
 		// - step counter delta (data)
 		// - step counter delta (summary)
-		numWorkers := 3
+		numWorkers := 5
 
 		// Create a channel to collect errors from goroutines.
 		errCh := make(chan error, numWorkers)
@@ -181,6 +183,17 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 		}()
 		go func() {
 			if err := impl.generateSummaryRankingsForHR(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		// ---> Step Counter:
+		go func() {
+			if err := impl.generateSummarySummaryForStepsCounter(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		go func() {
+			if err := impl.generateSummaryDataForStepsDelta(sessCtx, u, res, &mu, &wg); err != nil {
 				errCh <- err
 			}
 		}()
