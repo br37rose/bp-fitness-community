@@ -436,7 +436,7 @@ function MemberDashboard() {
   return (
     <Layout breadcrumbItems={breadcrumbItems}>
       {/* Wizard Component */}
-      <OnBoardingQuestionWizard questions={questionsData} />
+      {/* <OnBoardingQuestionWizard questions={questionsData} /> */}
 
       <div className="box">
         <div className="columns">

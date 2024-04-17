@@ -279,6 +279,14 @@ type User struct {
 
 	// OTPAuthURL is the URL used to share.
 	OTPAuthURL string `bson:"otp_auth_url" json:"-"`
+
+	// OnboardingAnswers stores the user's answers to the onboarding questions.
+	OnboardingAnswers []*Answer `bson:"onboarding_answers" json:"onboarding_answers,omitempty"`
+}
+
+type Answer struct {
+	QuestionID primitive.ObjectID `bson:"question_id" json:"question_id"`
+	Answers    []string           `bson:"answers" json:"answers"`
 }
 
 // Address describes common properties for an Address hash.

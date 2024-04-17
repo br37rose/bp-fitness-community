@@ -40,6 +40,18 @@ func ValidateCreateRequest(dirtyData *q_c.QuestionRequest) error {
 		e["content"] = "missing value"
 	}
 
+	if len(dirtyData.Content) > 0 {
+		for _, opt := range dirtyData.Content {
+			if opt.Title == "" {
+				e["title"] = "missing value"
+			}
+			if len(opt.Options) == 0 {
+				e["options"] = "missing value"
+
+			}
+		}
+	}
+
 	if len(e) != 0 {
 		return httperror.NewForBadRequest(&e)
 	}

@@ -39,7 +39,6 @@ type QuestionContent struct {
 }
 
 type QuestionListFilter struct {
-
 	// Pagination related.
 	Cursor    primitive.ObjectID
 	PageSize  int64
