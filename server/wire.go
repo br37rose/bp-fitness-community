@@ -57,6 +57,9 @@ import (
 	organization_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/httptransport"
 	strpayproc_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/paymentprocessor/controller/stripe"
 	strpayproc_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/paymentprocessor/httptransport/stripe"
+	q_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/question/controller"
+	q_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/question/datastore"
+	q_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/question/httptransport"
 	rp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 	rp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/httptransport"
@@ -189,6 +192,9 @@ func InitializeEvent() Application {
 		w_s.NewDatastore,
 		w_c.NewController,
 		w_http.NewHandler,
+		q_s.NewDatastore,
+		q_c.NewController,
+		q_http.NewHandler,
 		NewApplication)
 	return Application{}
 }

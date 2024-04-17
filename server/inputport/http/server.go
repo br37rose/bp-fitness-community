@@ -21,6 +21,7 @@ import (
 	offer_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/offer/httptransport"
 	organization_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/httptransport"
 	strpp "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/paymentprocessor/httptransport/stripe"
+	q_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/question/httptransport"
 	rankpoint_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/httptransport"
 	tag_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
 	tp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/httptransport"
@@ -29,6 +30,7 @@ import (
 	videocollection_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocollection/httptransport"
 	videocontent_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
 	w_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
+
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
@@ -67,6 +69,7 @@ type httpInputPort struct {
 	Biometric                *biometric_http.Handler
 	TrainingProgram          *tp_http.Handler
 	Workout                  *w_http.Handler
+	Question                 *q_http.Handler
 }
 
 func NewInputPort(
@@ -96,6 +99,7 @@ func NewInputPort(
 	bio *biometric_http.Handler,
 	tp *tp_http.Handler,
 	w *w_http.Handler,
+	q *q_http.Handler,
 ) InputPortServer {
 	// Initialize the ServeMux.
 	mux := http.NewServeMux()
@@ -141,6 +145,7 @@ func NewInputPort(
 		Biometric:                bio,
 		TrainingProgram:          tp,
 		Workout:                  w,
+		Question:                 q,
 	}
 
 	// Attach the HTTP server controller to the ServerMux.
@@ -435,6 +440,18 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.Workout.UpdateByID(w, r, p[3])
 	case n == 4 && p[1] == "v1" && p[2] == "workouts" && r.Method == http.MethodDelete:
 		port.Workout.DeleteByID(w, r, p[3])
+
+	// --- Questions --- //
+	case n == 3 && p[1] == "v1" && p[2] == "questions" && r.Method == http.MethodGet:
+		port.Question.List(w, r)
+	case n == 3 && p[1] == "v1" && p[2] == "questions" && r.Method == http.MethodPost:
+		port.Question.Create(w, r)
+	case n == 4 && p[1] == "v1" && p[2] == "question" && r.Method == http.MethodGet:
+		port.Question.GetByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "question" && r.Method == http.MethodPut:
+		port.Question.UpdateByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "question" && r.Method == http.MethodDelete:
+		port.Question.DeleteByID(w, r, p[3])
 
 	// --- CATCH ALL: D.N.E. ---
 	default:

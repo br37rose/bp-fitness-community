@@ -55,7 +55,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	data, err := UnmarshalCreateRequest(ctx, r)
 	if err != nil {
-		log.Println("Create | member | err:", err)
+		log.Println("Create | workout | err:", err)
 		httperror.ResponseError(w, err)
 		return
 	}

@@ -64,6 +64,7 @@ type FitnessPlanExercise struct {
 	Name         string             `bson:"name" json:"name"`
 	VideoURL     string             `bson:"video_url" json:"video_url"`
 	ThumbnailURL string             `bson:"thumbnail_url" json:"thumbnail_url"`
+	Description  string             `bson:"description" json:"description"`
 	// DEVELOPERS NOTE: Add more of your fields here...
 }
 
