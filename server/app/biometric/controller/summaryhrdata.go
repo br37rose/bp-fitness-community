@@ -18,7 +18,76 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
 
+	// Developers note:
+	// Since we'll add more goroutines in this function, let's increase our
+	// `WaitGroup` now.
+	// - Today
+	// - Yesterday
+	// - This ISO Week
+	// - Last ISO Week
+	// - This Month
+	// - Last Month
+	// - This Year
+	// - Last Year
+	wg.Add(8)
+
 	// --- Today --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRToday(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+	// --- Yesterday --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRYesterday(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+	// --- This ISO Week --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRThisISOWeek(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+	// --- Last ISO Week --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRLastISOWeek(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+	// --- This Month --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRThisMonth(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+	// --- Last Month --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRLastMonth(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+	// --- This Year --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRThisYear(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+	// --- Last Year --- //
+	go func() {
+		if err := impl.generateSummaryDataForHRLastYear(sessCtx, u, res, mu, wg); err != nil {
+			//TODO
+		}
+	}()
+
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRToday(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
+
 	// Fetch all aggregate data points for the today based on the `per hour`
 	// period. This is due to the fact that the frontend graph requires posting
 	// latest values per hour for the day; as a result, this code will work
@@ -48,7 +117,29 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 		return err
 	}
 
-	// --- Yesterday --- //
+	// Lock the mutex before accessing res
+	mu.Lock()
+	defer mu.Unlock()
+
+	if thisDayList != nil {
+		// impl.Logger.Debug("debugging purposes only",
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+		// 	slog.Any("period", ap_s.PeriodHour),
+		// 	slog.Any("sort_field", thisDayFilter.SortField),
+		// 	slog.Any("sort_order", thisDayFilter.SortOrder),
+		// 	slog.Time("start", thisDayStart),
+		// 	slog.Time("end", thisDayEnd))
+		res.HeartRateThisDayData = thisDayList.Results
+	}
+
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRYesterday(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
+
 	lastDayStart := timekit.MidnightYesterday(time.Now)
 	lastDayEnd := timekit.Midnight(time.Now)
 	lastDayFilter := &ap_s.AggregatePointPaginationListFilter{
@@ -65,14 +156,36 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 	if err != nil {
 		impl.Logger.Error("failed listing aggregate points",
 			slog.String("metric_id", u.PrimaryHealthTrackingDevice.HeartRateBPMMetricID.Hex()),
-			slog.Any("period", thisDayFilter.Period),
-			slog.Any("sort_field", thisDayFilter.SortField),
-			slog.Any("sort_order", thisDayFilter.SortOrder),
+			slog.Any("period", lastDayFilter.Period),
+			slog.Any("sort_field", lastDayFilter.SortField),
+			slog.Any("sort_order", lastDayFilter.SortOrder),
 			slog.Time("start", lastDayStart),
 			slog.Time("end", lastDayEnd),
 			slog.Any("error", err))
 		return err
 	}
+
+	// Lock the mutex before accessing res
+	mu.Lock()
+	defer mu.Unlock()
+
+	if lastDayList != nil {
+		// impl.Logger.Debug("debugging purposes only",
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+		// 	slog.Any("period", ap_s.PeriodHour),
+		// 	slog.Any("sort_field", lastDayList.SortField),
+		// 	slog.Any("sort_order", lastDayList.SortOrder),
+		// 	slog.Time("start", lastDayStart),
+		// 	slog.Time("end", lastDayEnd))
+		res.HeartRateLastDayData = lastDayList.Results
+	}
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRThisISOWeek(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
 
 	// --- This ISO Week --- //
 	// For returning week aggregate points, we want to return the data for
@@ -105,7 +218,29 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 		return err
 	}
 
-	// --- Last ISO Week --- //
+	// Lock the mutex before accessing res
+	mu.Lock()
+	defer mu.Unlock()
+
+	if thisISOWeekList != nil {
+		// impl.Logger.Debug("debugging purposes only",
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+		// 	slog.Any("period", ap_s.PeriodHour),
+		// 	slog.Any("sort_field", thisISOWeekFilter.SortField),
+		// 	slog.Any("sort_order", thisISOWeekFilter.SortOrder),
+		// 	slog.Time("start", thisISOWeekStart),
+		// 	slog.Time("end", thisISOWeekEnd))
+		res.HeartRateThisISOWeekData = thisISOWeekList.Results
+	}
+
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRLastISOWeek(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
+
 	lastISOWeekWeekStart := timekit.FirstDayOfLastISOWeek(time.Now)
 	lastISOWeekWeekEnd := timekit.FirstDayOfThisISOWeek(time.Now)
 	lastISOWeekWeekFilter := &ap_s.AggregatePointPaginationListFilter{
@@ -130,6 +265,30 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 			slog.Any("error", err))
 		return err
 	}
+
+	// Lock the mutex before accessing res
+	mu.Lock()
+	defer mu.Unlock()
+
+	if lastISOWeekWeekList != nil {
+		// impl.Logger.Debug("debugging purposes only",
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+		// 	slog.Any("period", ap_s.PeriodHour),
+		// 	slog.Any("sort_field", lastISOWeekWeekFilter.SortField),
+		// 	slog.Any("sort_order", lastISOWeekWeekFilter.SortOrder),
+		// 	slog.Time("start", lastISOWeekWeekStart),
+		// 	slog.Time("end", lastISOWeekWeekEnd))
+		res.HeartRateLastISOWeekData = lastISOWeekWeekList.Results
+	}
+
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRThisMonth(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
+
 	// --- This Month --- //
 	thisMonthStart := timekit.FirstDayOfThisMonth(time.Now)
 	thisMonthEnd := timekit.FirstDayOfNextMonth(time.Now)
@@ -155,6 +314,30 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 			slog.Any("error", err))
 		return err
 	}
+
+	// Lock the mutex before accessing res
+	mu.Lock()
+	defer mu.Unlock()
+
+	if thisMonthList != nil {
+		// impl.Logger.Debug("debugging purposes only",
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+		// 	slog.Any("period", thisMonthFilter.Period),
+		// 	slog.Any("sort_field", thisMonthFilter.SortField),
+		// 	slog.Any("sort_order", thisMonthFilter.SortOrder),
+		// 	slog.Time("start", thisMonthStart),
+		// 	slog.Time("end", thisMonthEnd))
+		res.HeartRateThisMonthData = thisMonthList.Results
+	}
+
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRLastMonth(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
+
 	// --- Last Month --- //
 	lastMonthStart := timekit.FirstDayOfLastMonth(time.Now)
 	lastMonthEnd := timekit.FirstDayOfThisMonth(time.Now)
@@ -180,6 +363,30 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 			slog.Any("error", err))
 		return err
 	}
+
+	// Lock the mutex before accessing res
+	mu.Lock()
+	defer mu.Unlock()
+
+	if lastMonthList != nil {
+		// impl.Logger.Debug("debugging purposes only",
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+		// 	slog.Any("period", ap_s.PeriodHour),
+		// 	slog.Any("sort_field", lastMonthFilter.SortField),
+		// 	slog.Any("sort_order", lastMonthFilter.SortOrder),
+		// 	slog.Time("start", lastMonthStart),
+		// 	slog.Time("end", lastMonthEnd))
+		res.HeartRateLastMonthData = lastMonthList.Results
+	}
+
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRThisYear(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
+
 	// --- This Year --- //
 	// When the user sees the year, we want to provide summary data on an only
 	// `per month` basis.
@@ -207,6 +414,29 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 			slog.Any("error", err))
 		return err
 	}
+
+	// Lock the mutex before accessing res
+	mu.Lock()
+	defer mu.Unlock()
+
+	if thisYearList != nil {
+		// impl.Logger.Debug("debugging purposes only",
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
+		// 	slog.Any("period", ap_s.PeriodHour),
+		// 	slog.Any("sort_field", thisYearFilter.SortField),
+		// 	slog.Any("sort_order", thisYearFilter.SortOrder),
+		// 	slog.Time("start", thisYearStart),
+		// 	slog.Time("end", thisYearEnd))
+		res.HeartRateThisYearData = thisYearList.Results
+	}
+
+	return nil
+}
+
+func (impl *BiometricControllerImpl) generateSummaryDataForHRLastYear(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
 
 	// --- Last Year --- //
 	lastYearStart := timekit.FirstDayOfThisYear(time.Now)
@@ -238,76 +468,6 @@ func (impl *BiometricControllerImpl) generateSummaryDataForHR(sessCtx mongo.Sess
 	mu.Lock()
 	defer mu.Unlock()
 
-	if thisDayList != nil {
-		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-		// 	slog.Any("period", ap_s.PeriodHour),
-		// 	slog.Any("sort_field", thisDayFilter.SortField),
-		// 	slog.Any("sort_order", thisDayFilter.SortOrder),
-		// 	slog.Time("start", thisDayStart),
-		// 	slog.Time("end", thisDayEnd))
-		res.HeartRateThisDayData = thisDayList.Results
-	}
-	if thisDayList != nil {
-		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-		// 	slog.Any("period", ap_s.PeriodHour),
-		// 	slog.Any("sort_field", lastDayList.SortField),
-		// 	slog.Any("sort_order", lastDayList.SortOrder),
-		// 	slog.Time("start", lastDayStart),
-		// 	slog.Time("end", lastDayEnd))
-		res.HeartRateLastDayData = lastDayList.Results
-	}
-	if thisISOWeekList != nil {
-		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-		// 	slog.Any("period", ap_s.PeriodHour),
-		// 	slog.Any("sort_field", thisISOWeekFilter.SortField),
-		// 	slog.Any("sort_order", thisISOWeekFilter.SortOrder),
-		// 	slog.Time("start", thisISOWeekStart),
-		// 	slog.Time("end", thisISOWeekEnd))
-		res.HeartRateThisISOWeekData = thisISOWeekList.Results
-	}
-	if lastISOWeekWeekList != nil {
-		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-		// 	slog.Any("period", ap_s.PeriodHour),
-		// 	slog.Any("sort_field", lastISOWeekWeekFilter.SortField),
-		// 	slog.Any("sort_order", lastISOWeekWeekFilter.SortOrder),
-		// 	slog.Time("start", lastISOWeekWeekStart),
-		// 	slog.Time("end", lastISOWeekWeekEnd))
-		res.HeartRateLastISOWeekData = lastISOWeekWeekList.Results
-	}
-	if thisMonthList != nil {
-		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-		// 	slog.Any("period", thisMonthFilter.Period),
-		// 	slog.Any("sort_field", thisMonthFilter.SortField),
-		// 	slog.Any("sort_order", thisMonthFilter.SortOrder),
-		// 	slog.Time("start", thisMonthStart),
-		// 	slog.Time("end", thisMonthEnd))
-		res.HeartRateThisMonthData = thisMonthList.Results
-	}
-	if lastMonthList != nil {
-		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-		// 	slog.Any("period", ap_s.PeriodHour),
-		// 	slog.Any("sort_field", lastMonthFilter.SortField),
-		// 	slog.Any("sort_order", lastMonthFilter.SortOrder),
-		// 	slog.Time("start", lastMonthStart),
-		// 	slog.Time("end", lastMonthEnd))
-		res.HeartRateLastMonthData = lastMonthList.Results
-	}
-	if thisYearList != nil {
-		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
-		// 	slog.Any("period", ap_s.PeriodHour),
-		// 	slog.Any("sort_field", thisYearFilter.SortField),
-		// 	slog.Any("sort_order", thisYearFilter.SortOrder),
-		// 	slog.Time("start", thisYearStart),
-		// 	slog.Time("end", thisYearEnd))
-		res.HeartRateThisYearData = thisYearList.Results
-	}
 	if lastYearList != nil {
 		// impl.Logger.Debug("debugging purposes only",
 		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceHeartRateMetricID.Hex()),
