@@ -15,22 +15,50 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForHR(sessCtx mongo.
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
 
-	if err := impl.generateSummaryRankingsForHRToday(sessCtx, u, mu, res); err != nil {
-		return err
-	}
-	if err := impl.generateSummaryRankingsForHRISOWeek(sessCtx, u, mu, res); err != nil {
-		return err
-	}
-	if err := impl.generateSummaryRankingsForHRMonth(sessCtx, u, mu, res); err != nil {
-		return err
-	}
-	if err := impl.generateSummaryRankingsForHRYear(sessCtx, u, mu, res); err != nil {
-		return err
-	}
+	// Developers note:
+	// Since we'll add more goroutines in this function, let's increase our
+	// `WaitGroup` now.
+	// - Today
+	// - Yesterday
+	// - This ISO Week
+	// - Last ISO Week
+	// - This Month
+	// - Last Month
+	// - This Year
+	// - Last Year
+	wg.Add(4)
+
+	// --- Today --- //
+	go func() {
+		if err := impl.generateSummaryRankingsForHRToday(sessCtx, u, res, mu, wg); err != nil {
+			// return err
+		}
+	}()
+
+	go func() {
+		if err := impl.generateSummaryRankingsForHRISOWeek(sessCtx, u, res, mu, wg); err != nil {
+			//return err
+		}
+	}()
+
+	go func() {
+		if err := impl.generateSummaryRankingsForHRMonth(sessCtx, u, res, mu, wg); err != nil {
+			// return err
+		}
+	}()
+
+	go func() {
+		if err := impl.generateSummaryRankingsForHRYear(sessCtx, u, res, mu, wg); err != nil {
+			// return err
+		}
+	}()
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForHRToday(sessCtx mongo.SessionContext, u *u_d.User, mu *sync.Mutex, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForHRToday(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
 
 	////
 	//// Generate the rankings for TODAY.
@@ -85,7 +113,10 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForHRToday(sessCtx m
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForHRISOWeek(sessCtx mongo.SessionContext, u *u_d.User, mu *sync.Mutex, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForHRISOWeek(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
 
 	////
 	//// Generate the rankings for ISO WEEK.
@@ -144,7 +175,10 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForHRISOWeek(sessCtx
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForHRMonth(sessCtx mongo.SessionContext, u *u_d.User, mu *sync.Mutex, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForHRMonth(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
 
 	////
 	//// Generate the rankings for ISO WEEK.
@@ -203,7 +237,11 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForHRMonth(sessCtx m
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForHRYear(sessCtx mongo.SessionContext, u *u_d.User, mu *sync.Mutex, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForHRYear(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+	// Once this function has been completed (whether successfully or not) then
+	// update the `WaitGroup` that this goroutine is finished.
+	defer wg.Done()
+
 	rp, err := impl.RankPointStorer.GetByCompositeKeyForThisYear(sessCtx, u.PrimaryHealthTrackingDevice.HeartRateBPMMetricID, rp_d.FunctionAverage)
 	if err != nil {
 		impl.Logger.Error("failed getting by composite key for year",
