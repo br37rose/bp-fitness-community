@@ -116,6 +116,10 @@ import AdminTPDetail from "./Components/Admin/TrainingProgram/Detail";
 import MemberTrainingProgramList from "./Components/Member/TrainingProgram/list";
 import MemberTrainingProgramAdd from "./Components/Member/TrainingProgram/add";
 import MemberTPDetail from "./Components/Member/TrainingProgram/Detail";
+import AdminQuestionnaireList from "./Components/Admin/questionnaire/List";
+import AdminQuestionnaireAdd from "./Components/Admin/questionnaire/Add";
+import AdminQuestionnaireDetail from "./Components/Admin/questionnaire/Detail";
+import AdminQuestionnaireUpdate from "./Components/Admin/questionnaire/Update";
 
 function AppRoute() {
   return (
@@ -359,6 +363,32 @@ function AppRoute() {
                     exact
                     path="/admin/workouts/:id/update"
                     element={<AdminWorkoutUpdate />}
+                  />
+
+                  {/* {Questions} */}
+
+                  <Route
+                    exact
+                    path="/admin/questions"
+                    element={<AdminQuestionnaireList />}
+                  />
+
+                  <Route
+                    exact
+                    path="/admin/questions/add"
+                    element={<AdminQuestionnaireAdd />}
+                  />
+
+                  <Route
+                    exact
+                    path="/admin/questions/:id"
+                    element={<AdminQuestionnaireDetail />}
+                  />
+
+                  <Route
+                    exact
+                    path="/admin/questions/:id/update"
+                    element={<AdminQuestionnaireUpdate />}
                   />
 
                   {/*

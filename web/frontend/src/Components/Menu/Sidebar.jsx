@@ -18,6 +18,7 @@ import {
   faUserCircle,
   faSignOut,
   faCalendarPlus,
+  faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -274,6 +275,20 @@ export default (props) => {
                     >
                       <FontAwesomeIcon className="fas" icon={faHandHolding} />
                       &nbsp;Offers
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href={`/admin/questions`}
+                      class={`has-text-grey-light ${
+                        location.pathname.includes("questions") && "is-active"
+                      }`}
+                    >
+                      <FontAwesomeIcon
+                        className="fas"
+                        icon={faQuestionCircle}
+                      />
+                      &nbsp;User Signup Questions
                     </a>
                   </li>
                 </ul>

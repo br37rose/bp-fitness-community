@@ -37,9 +37,10 @@ func (c *QuestionControllerImpl) Create(ctx context.Context, req *QuestionReques
 		// Create our record in the database.
 		res := &q_s.Question{
 			ID:                 primitive.NewObjectID(),
-			Question:           req.Question,
+			Title:              req.Title,
+			Subtitle:           req.Subtitle,
 			IsMultiSelect:      req.IsMultiSelect,
-			Content:            req.Content,
+			Options:            req.Options,
 			CreatedAt:          time.Now(),
 			CreatedByUserID:    userID,
 			CreatedByUserName:  userName,

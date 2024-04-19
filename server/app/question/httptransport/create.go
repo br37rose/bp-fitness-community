@@ -32,22 +32,18 @@ func UnmarshalCreateRequest(ctx context.Context, r *http.Request) (*q_c.Question
 func ValidateCreateRequest(dirtyData *q_c.QuestionRequest) error {
 	e := make(map[string]string)
 
-	if dirtyData.Question == "" {
-		e["question"] = "missing value"
+	if dirtyData.Title == "" {
+		e["title"] = "missing value"
 
 	}
-	if len(dirtyData.Content) == 0 {
-		e["content"] = "missing value"
+	if len(dirtyData.Options) == 0 {
+		e["options"] = "missing value"
 	}
 
-	if len(dirtyData.Content) > 0 {
-		for _, opt := range dirtyData.Content {
-			if opt.Title == "" {
-				e["title"] = "missing value"
-			}
-			if len(opt.Options) == 0 {
+	if len(dirtyData.Options) > 0 {
+		for _, opt := range dirtyData.Options {
+			if opt == "" {
 				e["options"] = "missing value"
-
 			}
 		}
 	}

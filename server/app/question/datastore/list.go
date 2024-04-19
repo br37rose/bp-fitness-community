@@ -24,8 +24,10 @@ func (impl *QuestionStorerImpl) ListByFilter(ctx context.Context, f *QuestionLis
 		filter["is_multi_select"] = f.IsMultiSelect
 	}
 
-	if len(f.Status) > 0 {
-		filter["status"] = bson.M{"$in": f.Status}
+	if f.Status {
+		filter["status"] = f.Status
+	} else {
+		filter["status"] = false
 	}
 
 	impl.Logger.Debug("listing filter:", slog.Any("filter", filter))
