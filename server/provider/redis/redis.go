@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"log"
 	"log/slog"
 
 	"github.com/redis/go-redis/v9"
@@ -39,12 +40,15 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 		// Create our redis client.
 		client := redis.NewClusterClient(clusterOptions)
 
-		logger.Debug("redis cluster checking connection...")
+		logger.Debug("redis cluster checking connection...",
+			slog.Any("addrs", clusterOptions.Addrs),
+			slog.String("username", clusterOptions.Username),
+		)
 
 		// Ping Redis to check if the connection is working
 		_, err := client.Ping(context.Background()).Result()
 		if err != nil {
-			panic(err)
+			log.Fatalf("failed connecting to redis with error: %v", err)
 		}
 
 		logger.Debug("redis cluster initialized successfully")
@@ -68,12 +72,15 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 
 	client := redis.NewClient(opts)
 
-	logger.Debug("redis checking connection...")
+	logger.Debug("redis checking connection...",
+		slog.String("addr", opts.Addr),
+		slog.String("username", opts.Username),
+	)
 
 	// Ping Redis to check if the connection is working
 	_, err := client.Ping(context.Background()).Result()
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed connecting to redis with error: %v", err)
 	}
 
 	logger.Debug("redis initialized successfully")
