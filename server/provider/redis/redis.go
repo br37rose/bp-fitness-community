@@ -49,23 +49,33 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 
 		logger.Debug("redis cluster initialized successfully")
 		return client
-	} else {
-		logger.Debug("redis initializing...")
-		client := redis.NewClient(&redis.Options{
-			Addr:     appCfg.Redis.Addresses[0],
-			Username: username,
-			Password: password,
-		})
-
-		logger.Debug("redis checking connection...")
-
-		// Ping Redis to check if the connection is working
-		_, err := client.Ping(context.Background()).Result()
-		if err != nil {
-			panic(err)
-		}
-
-		logger.Debug("redis initialized successfully")
-		return client
 	}
+
+	logger.Debug("redis initializing...")
+
+	// Configure the manditory options:
+	opts := &redis.Options{
+		Addr: appCfg.Redis.Addresses[0],
+	}
+
+	// Configure the optional options:
+	if username != "" {
+		opts.Username = username
+	}
+	if password != "" {
+		opts.Password = password
+	}
+
+	client := redis.NewClient(opts)
+
+	logger.Debug("redis checking connection...")
+
+	// Ping Redis to check if the connection is working
+	_, err := client.Ping(context.Background()).Result()
+	if err != nil {
+		panic(err)
+	}
+
+	logger.Debug("redis initialized successfully")
+	return client
 }
