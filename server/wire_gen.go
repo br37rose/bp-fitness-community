@@ -95,6 +95,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/mongodb"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/password"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/redis"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/time"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
 )
@@ -109,6 +110,7 @@ import (
 func InitializeEvent() Application {
 	slogLogger := logger.NewProvider()
 	conf := config.New()
+	universalClient := redis.NewProvider(conf, slogLogger)
 	provider := uuid.NewProvider()
 	timeProvider := time.NewProvider()
 	jwtProvider := jwt.NewProvider(conf)
@@ -197,6 +199,6 @@ func InitializeEvent() Application {
 	googleFitDataPointCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitDataPointController, userStorer)
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
-	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer)
+	application := NewApplication(slogLogger, universalClient, inputPortServer, crontabInputPortServer)
 	return application
 }
