@@ -18,7 +18,7 @@ require (
 	github.com/mailgun/mailgun-go/v4 v4.11.1
 	github.com/mileusna/crontab v1.2.0
 	github.com/nirasan/go-oauth-pkce-code-verifier v0.0.0-20220510032225-4f9f17eaec4c
-	github.com/redis/go-redis/v9 v9.3.0
+	github.com/redis/go-redis/v9 v9.5.1
 	github.com/rs/cors v1.10.1
 	github.com/sashabaranov/go-openai v1.17.11
 	github.com/segmentio/ksuid v1.0.4

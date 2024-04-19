@@ -1,13 +1,13 @@
 package main
 
 import (
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"log/slog"
-
-	_ "github.com/google/wire"   // Add dependency on this package from our app.
+	_ "github.com/google/wire" // Add dependency on this package from our app.
+	redis "github.com/redis/go-redis/v9"
 	_ "go.uber.org/automaxprocs" // Automatically set GOMAXPROCS to match Linux container CPU quota.
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
@@ -23,6 +23,7 @@ type Application struct {
 // NewApplication is application construction function which is automatically called by `Google Wire` dependency injection library.
 func NewApplication(
 	loggerp *slog.Logger,
+	r redis.UniversalClient,
 	httpServer http.InputPortServer,
 	crontabServer crontab.InputPortServer,
 ) Application {
