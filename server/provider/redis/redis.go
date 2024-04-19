@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"crypto/tls"
 	"log"
 	"log/slog"
 
@@ -60,6 +61,9 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 	// Configure the manditory options:
 	opts := &redis.Options{
 		Addr: appCfg.Redis.Addresses[0],
+		TLSConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
 	}
 
 	// Configure the optional options:
