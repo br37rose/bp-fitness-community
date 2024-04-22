@@ -9,6 +9,7 @@ package main
 import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
@@ -42,6 +43,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/crontab"
 	datastore16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	httptransport14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/httptransport"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/scheduler"
 	controller12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
 	datastore12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
 	httptransport12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
@@ -90,6 +92,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
+	scheduler2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -111,6 +114,7 @@ func InitializeEvent() Application {
 	slogLogger := logger.NewProvider()
 	conf := config.New()
 	universalClient := redis.NewProvider(conf, slogLogger)
+	distributedSchedulerAdapter := distributedscheduler.NewAdapter(slogLogger, universalClient)
 	provider := uuid.NewProvider()
 	timeProvider := time.NewProvider()
 	jwtProvider := jwt.NewProvider(conf)
@@ -199,6 +203,8 @@ func InitializeEvent() Application {
 	googleFitDataPointCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitDataPointController, userStorer)
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
-	application := NewApplication(slogLogger, universalClient, inputPortServer, crontabInputPortServer)
+	googleFitDataPointScheduler := scheduler.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, dataPointStorer, googleFitDataPointStorer, userStorer)
+	schedulerInputPortServer := scheduler2.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler)
+	application := NewApplication(slogLogger, distributedSchedulerAdapter, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
 	return application
 }

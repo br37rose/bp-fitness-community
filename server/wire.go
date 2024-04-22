@@ -8,6 +8,7 @@ import (
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
@@ -90,6 +91,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	fitnessplan_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -98,6 +100,8 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/redis"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/time"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
+
+	googlefitdp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/scheduler"
 )
 
 func InitializeEvent() Application {
@@ -117,6 +121,7 @@ func InitializeEvent() Application {
 		mongodb_p.NewProvider,
 		mongodbcache.NewCache,
 		redis.NewProvider,
+		distributedscheduler.NewAdapter,
 		gcp_a.NewAdapter,
 		openai.NewOpenAIConnector,
 		s3_storage.NewStorage,
@@ -188,6 +193,8 @@ func InitializeEvent() Application {
 		middleware.NewMiddleware,
 		crontab.NewInputPort,
 		http.NewInputPort,
+		googlefitdp_task.NewScheduler,
+		scheduler.NewInputPort,
 		tp_s.NewDatastore,
 		tp_c.NewController,
 		tp_http.NewHandler,

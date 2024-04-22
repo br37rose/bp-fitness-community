@@ -20,6 +20,7 @@ services:
       - 'REDIS_PASSWORD=bitnami'
       - 'REDIS_PORT_NUMBER=6370'
       - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+    attach: false # Disable console logs here.
 
   redis2:
     container_name: bp8fitnesscommunity_redis2
@@ -33,6 +34,7 @@ services:
       - 'REDIS_PASSWORD=bitnami'
       - 'REDIS_PORT_NUMBER=6371'
       - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+    attach: false # Disable console logs here.
 
   redis3:
     container_name: bp8fitnesscommunity_redis3
@@ -46,6 +48,7 @@ services:
       - 'REDIS_PASSWORD=bitnami'
       - 'REDIS_PORT_NUMBER=6372'
       - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+    attach: false # Disable console logs here.
 
   redis4:
     container_name: bp8fitnesscommunity_redis4
@@ -59,6 +62,7 @@ services:
       - 'REDIS_PASSWORD=bitnami'
       - 'REDIS_PORT_NUMBER=6373'
       - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+    attach: false # Disable console logs here.
 
   redis5:
     container_name: bp8fitnesscommunity_redis5
@@ -72,6 +76,7 @@ services:
       - 'REDIS_PASSWORD=bitnami'
       - 'REDIS_PORT_NUMBER=6374'
       - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+    attach: false # Disable console logs here.
 
   redis6:
     container_name: bp8fitnesscommunity_redis6
@@ -94,6 +99,8 @@ services:
       - 'REDIS_CLUSTER_REPLICAS=1'
       - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
       - 'REDIS_CLUSTER_CREATOR=yes'
+    attach: false # Disable console logs here.
+
   db1:
     container_name: bp8fitnesscommunity_db1
     image: mongo:7.0
