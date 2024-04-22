@@ -12,7 +12,7 @@ services:
     container_name: bp8fitnesscommunity_redis1
     image: docker.io/bitnami/redis-cluster:7.2
     volumes:
-      - redis2_data:/bitnami/redis/data
+      - redis1_data:/bitnami/redis/data
     ports:
       - 6370:6370
       - 16370:16370
@@ -26,7 +26,7 @@ services:
     container_name: bp8fitnesscommunity_redis2
     image: docker.io/bitnami/redis-cluster:7.2
     volumes:
-      - redis3_data:/bitnami/redis/data
+      - redis2_data:/bitnami/redis/data
     ports:
       - 6371:6371
       - 16371:16371
@@ -40,7 +40,7 @@ services:
     container_name: bp8fitnesscommunity_redis3
     image: docker.io/bitnami/redis-cluster:7.2
     volumes:
-      - redis4_data:/bitnami/redis/data
+      - redis3_data:/bitnami/redis/data
     ports:
       - 6372:6372
       - 16372:16372
@@ -54,7 +54,7 @@ services:
     container_name: bp8fitnesscommunity_redis4
     image: docker.io/bitnami/redis-cluster:7.2
     volumes:
-      - redis5_data:/bitnami/redis/data
+      - redis4_data:/bitnami/redis/data
     ports:
       - 6373:6373
       - 16373:16373
@@ -68,7 +68,7 @@ services:
     container_name: bp8fitnesscommunity_redis5
     image: docker.io/bitnami/redis-cluster:7.2
     volumes:
-      - redis6_data:/bitnami/redis/data
+      - redis5_data:/bitnami/redis/data
     ports:
       - 6374:6374
       - 16374:16374
