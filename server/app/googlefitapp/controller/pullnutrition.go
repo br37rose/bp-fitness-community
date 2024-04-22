@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullActivitySegmentDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling activity segment dataset",
+func (impl *GoogleFitAppControllerImpl) pullNutritionDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling nutrition dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,64 +23,64 @@ func (impl *googleFitAppCrontaberImpl) pullActivitySegmentDataFromGoogleWithGfaA
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameActivitySegment)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameNutrition)
 	if err != nil {
-		impl.Logger.Error("failed listing activity segment dataset",
+		impl.Logger.Error("failed listing nutrition dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty activity segment dataset",
+		impl.Logger.Warn("pulled empty nutrition dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled activity segment dataset",
+	impl.Logger.Debug("pulled nutrition dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	activityDataset := gcp_a.ParseActivitySegment(dataset)
+	nutritionDataset := gcp_a.ParseNutrition(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, activitySegmentDatapoint := range activityDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameActivitySegment, activitySegmentDatapoint.StartTime, activitySegmentDatapoint.EndTime)
+	for _, nutritionDatapoint := range nutritionDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameNutrition, nutritionDatapoint.StartTime, nutritionDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if activitySegmentDatapoint.EndTime.Before(time.Now()) && activitySegmentDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if nutritionDatapoint.EndTime.Before(time.Now()) && nutritionDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameActivitySegment,
+					DataTypeName:    gcp_a.DataTypeNameNutrition,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.ActivitySegmentMetricID,
-					StartAt:         activitySegmentDatapoint.StartTime,
-					EndAt:           activitySegmentDatapoint.EndTime,
-					ActivitySegment: &activitySegmentDatapoint,
+					MetricID:        gfa.NutritionMetricID,
+					StartAt:         nutritionDatapoint.StartTime,
+					EndAt:           nutritionDatapoint.EndTime,
+					Nutrition:       &nutritionDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for activity into database",
+					impl.Logger.Error("failed inserting google fit data point for nutrition into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted activity segment data point",
+				impl.Logger.Debug("inserted nutrition data point",
 					slog.Any("dp", dp))
 			}
 		}

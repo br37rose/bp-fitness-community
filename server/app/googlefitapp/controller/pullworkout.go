@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,9 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling hydration dataset",
+// pullWorkoutDataFromGoogleWithGfaAndFitnessStore is deprecated. Note: https://9to5google.com/2020/11/30/google-fit-latest-update-removes-advanced-weight-training-features-on-wear-os/.
+func (impl *GoogleFitAppControllerImpl) pullWorkoutDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling workout dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,64 +24,64 @@ func (impl *googleFitAppCrontaberImpl) pullHydrationDataFromGoogleWithGfaAndFitn
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameHydration)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameWorkout)
 	if err != nil {
-		impl.Logger.Error("failed listing hydration dataset",
+		impl.Logger.Error("failed listing workout dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty hydration dataset",
+		impl.Logger.Warn("pulled empty workout dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled hydration dataset",
+	impl.Logger.Debug("pulled workout dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	hydrationDataset := gcp_a.ParseHydration(dataset)
+	ds := gcp_a.ParseWorkout(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, hydrationDatapoint := range hydrationDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameHydration, hydrationDatapoint.StartTime, hydrationDatapoint.EndTime)
+	for _, dp := range ds {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameWorkout, dp.StartTime, dp.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if hydrationDatapoint.EndTime.Before(time.Now()) && hydrationDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if dp.EndTime.Before(time.Now()) && dp.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameHydration,
+					DataTypeName:    gcp_a.DataTypeNameWorkout,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.HydrationMetricID,
-					StartAt:         hydrationDatapoint.StartTime,
-					EndAt:           hydrationDatapoint.EndTime,
-					Hydration:       &hydrationDatapoint,
+					MetricID:        gfa.WorkoutMetricID,
+					StartAt:         dp.StartTime,
+					EndAt:           dp.EndTime,
+					Workout:         &dp,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for hydration into database",
+					impl.Logger.Error("failed inserting google fit data point for workout into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted hydration data point",
+				impl.Logger.Debug("inserted workout data point",
 					slog.Any("dp", dp))
 			}
 		}

@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullStepCountCadenceDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+func (impl *GoogleFitAppControllerImpl) pullStepCountCadenceDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
 	impl.Logger.Debug("pulling step count delta dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 

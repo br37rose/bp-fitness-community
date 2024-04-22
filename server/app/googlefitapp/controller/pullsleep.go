@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling speed dataset",
+func (impl *GoogleFitAppControllerImpl) pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling sleep dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,64 +23,70 @@ func (impl *googleFitAppCrontaberImpl) pullSpeedDataFromGoogleWithGfaAndFitnessS
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameSpeed)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameSleep)
 	if err != nil {
-		impl.Logger.Error("failed listing speed dataset",
+		impl.Logger.Error("failed listing sleep dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty speed dataset",
+		impl.Logger.Warn("pulled empty sleep dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled speed dataset",
+	impl.Logger.Debug("pulled sleep dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	speedDataset := gcp_a.ParseSpeed(dataset)
+	sleepDataset := gcp_a.ParseSleep(dataset)
+
+	impl.Logger.Debug("",
+		slog.String("gfa_id", gfa.ID.Hex()),
+		slog.Any("dataset", dataset),
+		slog.Any("sleepDataset", sleepDataset),
+	)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, speedDatapoint := range speedDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameSpeed, speedDatapoint.StartTime, speedDatapoint.EndTime)
+	for _, sleepDatapoint := range sleepDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameSleep, sleepDatapoint.StartTime, sleepDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if speedDatapoint.EndTime.Before(time.Now()) && speedDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if sleepDatapoint.EndTime.Before(time.Now()) && sleepDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameSpeed, // This is a `Google Fit` specific identifier.
+					DataTypeName:    gcp_a.DataTypeNameSleep,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.SpeedMetricID,
-					StartAt:         speedDatapoint.StartTime,
-					EndAt:           speedDatapoint.EndTime,
-					Speed:           &speedDatapoint,
+					MetricID:        gfa.SleepMetricID,
+					StartAt:         sleepDatapoint.StartTime,
+					EndAt:           sleepDatapoint.EndTime,
+					Sleep:           &sleepDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for speed into database",
+					impl.Logger.Error("failed inserting google fit data point for sleep into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted speed data point",
+				impl.Logger.Debug("inserted sleep data point",
 					slog.Any("dp", dp))
 			}
 		}

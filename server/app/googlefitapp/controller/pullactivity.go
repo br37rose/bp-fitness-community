@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullHeightDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling height dataset",
+func (impl *GoogleFitAppControllerImpl) pullActivitySegmentDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling activity segment dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,64 +23,64 @@ func (impl *googleFitAppCrontaberImpl) pullHeightDataFromGoogleWithGfaAndFitness
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameHeight)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameActivitySegment)
 	if err != nil {
-		impl.Logger.Error("failed listing height dataset",
+		impl.Logger.Error("failed listing activity segment dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty height dataset",
+		impl.Logger.Warn("pulled empty activity segment dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled height dataset",
+	impl.Logger.Debug("pulled activity segment dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	heightDataset := gcp_a.ParseHeight(dataset)
+	activityDataset := gcp_a.ParseActivitySegment(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, heightDatapoint := range heightDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameHeight, heightDatapoint.StartTime, heightDatapoint.EndTime)
+	for _, activitySegmentDatapoint := range activityDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameActivitySegment, activitySegmentDatapoint.StartTime, activitySegmentDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if heightDatapoint.EndTime.Before(time.Now()) && heightDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if activitySegmentDatapoint.EndTime.Before(time.Now()) && activitySegmentDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameHeight, // This is a `Google Fit` specific identifier.
+					DataTypeName:    gcp_a.DataTypeNameActivitySegment,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.HydrationMetricID,
-					StartAt:         heightDatapoint.StartTime,
-					EndAt:           heightDatapoint.EndTime,
-					Height:          &heightDatapoint,
+					MetricID:        gfa.ActivitySegmentMetricID,
+					StartAt:         activitySegmentDatapoint.StartTime,
+					EndAt:           activitySegmentDatapoint.EndTime,
+					ActivitySegment: &activitySegmentDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for height into database",
+					impl.Logger.Error("failed inserting google fit data point for activity into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted height data point",
+				impl.Logger.Debug("inserted activity segment data point",
 					slog.Any("dp", dp))
 			}
 		}

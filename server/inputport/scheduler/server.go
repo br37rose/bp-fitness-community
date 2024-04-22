@@ -56,7 +56,7 @@ func NewInputPort(
 }
 
 func (port *schedulerInputPort) Run() {
-	port.Logger.Info("Scheduler server starting...")
+	port.Logger.Info("scheduler server starting...")
 	port.DistributedScheduler.Start()
 	port.ping()
 
@@ -70,11 +70,14 @@ func (port *schedulerInputPort) Run() {
 	if err := port.GoogleFitAppScheduler.RunEveryProcessAllQueuedData(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
+	if err := port.GoogleFitAppScheduler.RunEveryFifteenMinutesPullDataFromGoogle(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
 
 }
 
 func (port *schedulerInputPort) Shutdown() {
-	port.Logger.Info("Scheduler server shutdown")
+	port.Logger.Info("scheduler server shutdown")
 	port.DistributedScheduler.Shutdown()
 }
 
@@ -82,7 +85,7 @@ func (port *schedulerInputPort) Shutdown() {
 // successfullly connected.
 func (port *schedulerInputPort) ping() {
 	err := port.DistributedScheduler.ScheduleOneTimeFunc(func() {
-		port.Logger.Info("Scheduler pinged")
+		port.Logger.Info("scheduler pinged")
 	})
 	if err != nil {
 		port.Logger.Error("error with pinging scheduler", slog.Any("err", err))

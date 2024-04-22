@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,9 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-// pullWorkoutDataFromGoogleWithGfaAndFitnessStore is deprecated. Note: https://9to5google.com/2020/11/30/google-fit-latest-update-removes-advanced-weight-training-features-on-wear-os/.
-func (impl *googleFitAppCrontaberImpl) pullWorkoutDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling workout dataset",
+func (impl *GoogleFitAppControllerImpl) pullCaloriesBurnedDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling calories burned dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -24,64 +23,64 @@ func (impl *googleFitAppCrontaberImpl) pullWorkoutDataFromGoogleWithGfaAndFitnes
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameWorkout)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameCaloriesBurned)
 	if err != nil {
-		impl.Logger.Error("failed listing workout dataset",
+		impl.Logger.Error("failed listing calories burned dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty workout dataset",
+		impl.Logger.Warn("pulled empty calories burned dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled workout dataset",
+	impl.Logger.Debug("pulled calories burned dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	ds := gcp_a.ParseWorkout(dataset)
+	caloriesBurnedDataset := gcp_a.ParseCaloriesBurned(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, dp := range ds {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameWorkout, dp.StartTime, dp.EndTime)
+	for _, caloriesBurnedDatapoint := range caloriesBurnedDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameCaloriesBurned, caloriesBurnedDatapoint.StartTime, caloriesBurnedDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if dp.EndTime.Before(time.Now()) && dp.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if caloriesBurnedDatapoint.EndTime.Before(time.Now()) && caloriesBurnedDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameWorkout,
+					DataTypeName:    gcp_a.DataTypeNameCaloriesBurned,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.WorkoutMetricID,
-					StartAt:         dp.StartTime,
-					EndAt:           dp.EndTime,
-					Workout:         &dp,
+					MetricID:        gfa.CaloriesBurnedMetricID,
+					StartAt:         caloriesBurnedDatapoint.StartTime,
+					EndAt:           caloriesBurnedDatapoint.EndTime,
+					CaloriesBurned:  &caloriesBurnedDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for workout into database",
+					impl.Logger.Error("failed inserting google fit data point for calories burned into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted workout data point",
+				impl.Logger.Debug("inserted calories burned data point",
 					slog.Any("dp", dp))
 			}
 		}

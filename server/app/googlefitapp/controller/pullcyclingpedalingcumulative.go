@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullCyclingWheelRevolutionRPMDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling cycling wheel revolution rpm dataset",
+func (impl *GoogleFitAppControllerImpl) pullCyclingPedalingCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling cycling pedaling cumulative dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,27 +23,27 @@ func (impl *googleFitAppCrontaberImpl) pullCyclingWheelRevolutionRPMDataFromGoog
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameCyclingWheelRevolutionRPM)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameCyclingPedalingCumulative)
 	if err != nil {
-		impl.Logger.Error("failed listing cycling wheel revolution rpm dataset",
+		impl.Logger.Error("failed listing cycling pedaling cumulative dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty cycling wheel revolution rpm dataset",
+		impl.Logger.Warn("pulled empty cycling pedaling cumulative dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled cycling wheel revolution rpm dataset",
+	impl.Logger.Debug("pulled cycling pedaling cumulative dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	ds := gcp_a.ParseCyclingWheelRevolutionRPM(dataset)
+	ds := gcp_a.ParseCyclingPedalingCumulative(dataset)
 
 	// impl.Logger.Debug("",
 	// 	slog.String("gfa_id", gfa.ID.Hex()),
@@ -56,7 +56,7 @@ func (impl *googleFitAppCrontaberImpl) pullCyclingWheelRevolutionRPMDataFromGoog
 	////
 
 	for _, datapoint := range ds {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameCyclingWheelRevolutionRPM, datapoint.StartTime, datapoint.EndTime)
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameCyclingPedalingCumulative, datapoint.StartTime, datapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
@@ -66,27 +66,27 @@ func (impl *googleFitAppCrontaberImpl) pullCyclingWheelRevolutionRPMDataFromGoog
 			if datapoint.EndTime.Before(time.Now()) && datapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:                        primitive.NewObjectID(),
-					DataTypeName:              gcp_a.DataTypeNameCyclingWheelRevolutionRPM,
+					DataTypeName:              gcp_a.DataTypeNameCyclingPedalingCumulative,
 					Status:                    dp_ds.StatusQueued,
 					UserID:                    gfa.UserID,
 					UserName:                  gfa.UserName,
 					UserLexicalName:           gfa.UserLexicalName,
 					GoogleFitAppID:            gfa.ID,
-					MetricID:                  gfa.CyclingWheelRevolutionRPMMetricID,
+					MetricID:                  gfa.CyclingPedalingCumulativeMetricID,
 					StartAt:                   datapoint.StartTime,
 					EndAt:                     datapoint.EndTime,
-					CyclingWheelRevolutionRPM: &datapoint,
+					CyclingPedalingCumulative: &datapoint,
 					Error:                     "",
 					CreatedAt:                 time.Now(),
 					ModifiedAt:                time.Now(),
 					OrganizationID:            gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for ycling wheel revolution rpm into database",
+					impl.Logger.Error("failed inserting google fit data point for cycling pedaling cumulative into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted cycling wheel revolution rpm data point",
+				impl.Logger.Debug("inserted cycling pedaling cumulative data point",
 					slog.Any("dp", dp))
 			}
 		}

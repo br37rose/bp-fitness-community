@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullBloodGlucoseDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling blood glucose dataset",
+func (impl *GoogleFitAppControllerImpl) pullPowerDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling power dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,64 +23,70 @@ func (impl *googleFitAppCrontaberImpl) pullBloodGlucoseDataFromGoogleWithGfaAndF
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameBloodGlucose)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNamePower)
 	if err != nil {
-		impl.Logger.Error("failed listing blood glucose dataset",
+		impl.Logger.Error("failed listing power dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty blood glucose dataset",
+		impl.Logger.Warn("pulled empty power dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled blood glucose dataset",
+	impl.Logger.Debug("pulled power dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	bloodGlucoseDataset := gcp_a.ParseBloodGlucose(dataset)
+	powerDataset := gcp_a.ParsePower(dataset)
+	//
+	// impl.Logger.Debug("",
+	// 	slog.String("gfa_id", gfa.ID.Hex()),
+	// 	slog.Any("dataset", dataset),
+	// 	slog.Any("powerDataset", powerDataset),
+	// )
 
 	////
 	//// Save into our database.
 	////
 
-	for _, bloodGlucoseDatapoint := range bloodGlucoseDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameBloodGlucose, bloodGlucoseDatapoint.StartTime, bloodGlucoseDatapoint.EndTime)
+	for _, powerDatapoint := range powerDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNamePower, powerDatapoint.StartTime, powerDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if bloodGlucoseDatapoint.EndTime.Before(time.Now()) && bloodGlucoseDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if powerDatapoint.EndTime.Before(time.Now()) && powerDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameBloodGlucose,
+					DataTypeName:    gcp_a.DataTypeNamePower,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.BloodGlucoseMetricID,
-					StartAt:         bloodGlucoseDatapoint.StartTime,
-					EndAt:           bloodGlucoseDatapoint.EndTime,
-					BloodGlucose:    &bloodGlucoseDatapoint,
+					MetricID:        gfa.PowerMetricID,
+					StartAt:         powerDatapoint.StartTime,
+					EndAt:           powerDatapoint.EndTime,
+					Power:           &powerDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for blood glucose into database",
+					impl.Logger.Error("failed inserting google fit data point for power into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted blood glucose data point",
+				impl.Logger.Debug("inserted power data point",
 					slog.Any("dp", dp))
 			}
 		}

@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullHeartPointsDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling heart point dataset",
+func (impl *GoogleFitAppControllerImpl) pullBodyTemperatureDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling body temperature dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,70 +23,70 @@ func (impl *googleFitAppCrontaberImpl) pullHeartPointsDataFromGoogleWithGfaAndFi
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameHeartPoints)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameBodyTemperature)
 	if err != nil {
-		impl.Logger.Error("failed listing heart point dataset",
+		impl.Logger.Error("failed listing body temperature dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty heart point dataset",
+		impl.Logger.Warn("pulled empty body temperature dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled power dataset",
+	impl.Logger.Debug("pulled body temperature dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	heartPointDataset := gcp_a.ParseHeartPoints(dataset)
+	bodyTemperatureDataset := gcp_a.ParseBodyTemperature(dataset)
 	//
 	// impl.Logger.Debug("",
 	// 	slog.String("gfa_id", gfa.ID.Hex()),
 	// 	slog.Any("dataset", dataset),
-	// 	slog.Any("heartPointDataset", heartPointDataset),
+	// 	slog.Any("bodyTemperatureDataset", bodyTemperatureDataset),
 	// )
 
 	////
 	//// Save into our database.
 	////
 
-	for _, heartPointDatapoint := range heartPointDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameHeartPoints, heartPointDatapoint.StartTime, heartPointDatapoint.EndTime)
+	for _, bodyTemperatureDatapoint := range bodyTemperatureDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameBodyTemperature, bodyTemperatureDatapoint.StartTime, bodyTemperatureDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if heartPointDatapoint.EndTime.Before(time.Now()) && heartPointDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if bodyTemperatureDatapoint.EndTime.Before(time.Now()) && bodyTemperatureDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameHeartPoints,
+					DataTypeName:    gcp_a.DataTypeNameBodyTemperature,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.HeartPointsMetricID,
-					StartAt:         heartPointDatapoint.StartTime,
-					EndAt:           heartPointDatapoint.EndTime,
-					HeartPoints:     &heartPointDatapoint,
+					MetricID:        gfa.BodyTemperatureMetricID,
+					StartAt:         bodyTemperatureDatapoint.StartTime,
+					EndAt:           bodyTemperatureDatapoint.EndTime,
+					BodyTemperature: &bodyTemperatureDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for heart point into database",
+					impl.Logger.Error("failed inserting google fit data point for body temperature into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted heart point data point",
+				impl.Logger.Debug("inserted body temperature data point",
 					slog.Any("dp", dp))
 			}
 		}

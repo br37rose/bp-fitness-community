@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) PullDataFromGoogleJob() error {
+func (impl *GoogleFitAppControllerImpl) PullDataFromGoogle() error {
 	ctx := context.Background()
 	gfaIDs, err := impl.GoogleFitAppStorer.ListPhysicalIDsByStatus(ctx, gfa_ds.StatusActive)
 	if err != nil {
@@ -31,7 +31,7 @@ func (impl *googleFitAppCrontaberImpl) PullDataFromGoogleJob() error {
 	return nil
 }
 
-func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaID(ctx context.Context, gfaID primitive.ObjectID) error {
+func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaID(ctx context.Context, gfaID primitive.ObjectID) error {
 	// Lock this google fit app
 	impl.Kmutex.Lockf("googlefitapp_%v", gfaID.Hex())
 	defer impl.Kmutex.Unlockf("googlefitapp_%v", gfaID.Hex())
@@ -113,7 +113,7 @@ func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaID(ctx context.C
 	return impl.pullDataFromGoogleWithGfaAndClient(ctx, gfa, client)
 }
 
-func (impl *googleFitAppCrontaberImpl) pullDataFromGoogleWithGfaAndClient(ctx context.Context, gfa *gfa_ds.GoogleFitApp, client *http.Client) error {
+func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaAndClient(ctx context.Context, gfa *gfa_ds.GoogleFitApp, client *http.Client) error {
 	////
 	//// Load up the Google Fitness Store.
 	////

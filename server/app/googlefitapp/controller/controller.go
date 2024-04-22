@@ -26,6 +26,7 @@ type GoogleFitAppController interface {
 	GoogleCallback(ctx context.Context, state, code string) (*GoogleCallbackResponse, error)
 	RefreshTokensFromGoogle() error
 	ProcessAllQueuedData() error
+	PullDataFromGoogle() error
 }
 
 type GoogleFitAppControllerImpl struct {

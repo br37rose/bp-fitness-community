@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling sleep dataset",
+func (impl *GoogleFitAppControllerImpl) pullLocationSampleDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling location sample dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,70 +23,64 @@ func (impl *googleFitAppCrontaberImpl) pullSleepDataFromGoogleWithGfaAndFitnessS
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameSleep)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameLocationSample)
 	if err != nil {
-		impl.Logger.Error("failed listing sleep dataset",
+		impl.Logger.Error("failed listing location sample dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty sleep dataset",
+		impl.Logger.Warn("pulled empty location sample dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled sleep dataset",
+	impl.Logger.Debug("pulled location sample dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	sleepDataset := gcp_a.ParseSleep(dataset)
-
-	impl.Logger.Debug("",
-		slog.String("gfa_id", gfa.ID.Hex()),
-		slog.Any("dataset", dataset),
-		slog.Any("sleepDataset", sleepDataset),
-	)
+	locationSampleDataset := gcp_a.ParseLocationSample(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, sleepDatapoint := range sleepDataset {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameSleep, sleepDatapoint.StartTime, sleepDatapoint.EndTime)
+	for _, locationSampleSegmentDatapoint := range locationSampleDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameLocationSample, locationSampleSegmentDatapoint.StartTime, locationSampleSegmentDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if sleepDatapoint.EndTime.Before(time.Now()) && sleepDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if locationSampleSegmentDatapoint.EndTime.Before(time.Now()) && locationSampleSegmentDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameSleep,
+					DataTypeName:    gcp_a.DataTypeNameLocationSample,
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.SleepMetricID,
-					StartAt:         sleepDatapoint.StartTime,
-					EndAt:           sleepDatapoint.EndTime,
-					Sleep:           &sleepDatapoint,
+					MetricID:        gfa.LocationSampleMetricID,
+					StartAt:         locationSampleSegmentDatapoint.StartTime,
+					EndAt:           locationSampleSegmentDatapoint.EndTime,
+					LocationSample:  &locationSampleSegmentDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for sleep into database",
+					impl.Logger.Error("failed inserting google fit data point for locationSample into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted sleep data point",
+				impl.Logger.Debug("inserted location sample data point",
 					slog.Any("dp", dp))
 			}
 		}

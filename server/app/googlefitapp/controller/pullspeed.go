@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -13,8 +13,8 @@ import (
 	dp_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) pullMoveMinutesDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling move minutes dataset",
+func (impl *GoogleFitAppControllerImpl) pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
+	impl.Logger.Debug("pulling speed dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
@@ -23,70 +23,64 @@ func (impl *googleFitAppCrontaberImpl) pullMoveMinutesDataFromGoogleWithGfaAndFi
 
 	maxTime := time.Now()
 	minTime := gfa.LastFetchedAt
-	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameMoveMinutes)
+	dataset, err := impl.GCP.NotAggregatedDatasets(svc, minTime, maxTime, gcp_a.DataTypeShortNameSpeed)
 	if err != nil {
-		impl.Logger.Error("failed listing move minutes dataset",
+		impl.Logger.Error("failed listing speed dataset",
 			slog.Any("error", err))
 		return err
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty move minutes dataset",
+		impl.Logger.Warn("pulled empty speed dataset",
 			slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled move minutes dataset",
+	impl.Logger.Debug("pulled speed dataset",
 		slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
 	////
 
-	ds := gcp_a.ParseMoveMinutes(dataset)
-	//
-	// impl.Logger.Debug("",
-	// 	slog.String("gfa_id", gfa.ID.Hex()),
-	// 	slog.Any("dataset", dataset),
-	// 	slog.Any("ds", ds),
-	// )
+	speedDataset := gcp_a.ParseSpeed(dataset)
 
 	////
 	//// Save into our database.
 	////
 
-	for _, datapoint := range ds {
-		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameMoveMinutes, datapoint.StartTime, datapoint.EndTime)
+	for _, speedDatapoint := range speedDataset {
+		exists, err := impl.GoogleFitDataPointStorer.CheckIfExistsByCompositeKey(ctx, gfa.UserID, gcp_a.DataTypeNameSpeed, speedDatapoint.StartTime, speedDatapoint.EndTime)
 		if err != nil {
 			impl.Logger.Error("failed checking google fit datapoint by composite key",
 				slog.Any("error", err))
 			return err
 		}
 		if !exists {
-			if datapoint.EndTime.Before(time.Now()) && datapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
+			if speedDatapoint.EndTime.Before(time.Now()) && speedDatapoint.StartTime.After(time.Date(2000, 1, 1, 1, 0, 0, 0, time.UTC)) {
 				dp := &dp_ds.GoogleFitDataPoint{
 					ID:              primitive.NewObjectID(),
-					DataTypeName:    gcp_a.DataTypeNameMoveMinutes,
+					DataTypeName:    gcp_a.DataTypeNameSpeed, // This is a `Google Fit` specific identifier.
 					Status:          dp_ds.StatusQueued,
 					UserID:          gfa.UserID,
 					UserName:        gfa.UserName,
 					UserLexicalName: gfa.UserLexicalName,
 					GoogleFitAppID:  gfa.ID,
-					MetricID:        gfa.MoveMinutesMetricID,
-					StartAt:         datapoint.StartTime,
-					EndAt:           datapoint.EndTime,
-					MoveMinutes:     &datapoint,
+					MetricID:        gfa.SpeedMetricID,
+					StartAt:         speedDatapoint.StartTime,
+					EndAt:           speedDatapoint.EndTime,
+					Speed:           &speedDatapoint,
 					Error:           "",
 					CreatedAt:       time.Now(),
 					ModifiedAt:      time.Now(),
 					OrganizationID:  gfa.OrganizationID,
 				}
 				if err := impl.GoogleFitDataPointStorer.Create(ctx, dp); err != nil {
-					impl.Logger.Error("failed inserting google fit data point for move minutes into database",
+					impl.Logger.Error("failed inserting google fit data point for speed into database",
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted move minutes data point",
+				impl.Logger.Debug("inserted speed data point",
 					slog.Any("dp", dp))
 			}
 		}
