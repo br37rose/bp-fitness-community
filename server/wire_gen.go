@@ -110,6 +110,7 @@ import (
 import (
 	_ "github.com/google/wire"
 	_ "go.uber.org/automaxprocs"
+	_ "time/tzdata"
 )
 
 // Injectors from wire.go:
@@ -208,7 +209,7 @@ func InitializeEvent() Application {
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
 	googleFitDataPointScheduler := scheduler.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, googleFitDataPointController)
-	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, userStorer)
+	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, googleFitAppController)
 	aggregatePointScheduler := scheduler3.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, aggregatePointController)
 	rankPointScheduler := scheduler4.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, rankPointController)
 	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, fitnessPlanController)

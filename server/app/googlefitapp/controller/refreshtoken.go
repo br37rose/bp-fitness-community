@@ -1,10 +1,10 @@
-package crontab
+package controller
 
 import (
 	"context"
-	"time"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/oauth2"
@@ -12,7 +12,7 @@ import (
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 )
 
-func (impl *googleFitAppCrontaberImpl) RefreshTokensFromGoogleJob() error {
+func (impl *GoogleFitAppControllerImpl) RefreshTokensFromGoogle() error {
 	ctx := context.Background()
 	gfaIDs, err := impl.GoogleFitAppStorer.ListPhysicalIDsByStatus(ctx, gfa_ds.StatusActive)
 	if err != nil {
@@ -30,13 +30,13 @@ func (impl *googleFitAppCrontaberImpl) RefreshTokensFromGoogleJob() error {
 	return nil
 }
 
-func (impl *googleFitAppCrontaberImpl) refreshTokenFromGoogle(ctx context.Context, gfaID primitive.ObjectID) error {
+func (impl *GoogleFitAppControllerImpl) refreshTokenFromGoogle(ctx context.Context, gfaID primitive.ObjectID) error {
 	// Lock this google fit app
 	impl.Kmutex.Lockf("googlefitapp_%v", gfaID.Hex())
 	defer impl.Kmutex.Unlockf("googlefitapp_%v", gfaID.Hex())
 
 	impl.Logger.Debug("checking gfa",
-		slog.String("gfa_id", gfaID.Hex()),)
+		slog.String("gfa_id", gfaID.Hex()))
 
 	// Get our database record.
 	gfa, err := impl.GoogleFitAppStorer.GetByID(ctx, gfaID)
@@ -108,7 +108,7 @@ func (impl *googleFitAppCrontaberImpl) refreshTokenFromGoogle(ctx context.Contex
 	}
 
 	expiryDur := time.Since(gfa.Token.Expiry)
-	expiryDurInMins := expiryDur.Hours()*60*(-1)
+	expiryDurInMins := expiryDur.Hours() * 60 * (-1)
 
 	// Check to see if the token is approaching expiration date and if so then fetch a new one.
 	// Note: This is a manual attempt by us and should be taken care of automatically by `oauth2` library.
@@ -133,7 +133,7 @@ func (impl *googleFitAppCrontaberImpl) refreshTokenFromGoogle(ctx context.Contex
 		}
 
 		expiryDur = time.Since(newTok.Expiry)
-		expiryDurInMins = expiryDur.Hours()*60*(-1)
+		expiryDurInMins = expiryDur.Hours() * 60 * (-1)
 	}
 
 	impl.Logger.Debug("checked gfa is ok",

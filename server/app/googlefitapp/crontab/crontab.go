@@ -13,7 +13,7 @@ import (
 )
 
 type GoogleFitAppCrontaber interface {
-	RefreshTokensFromGoogleJob() error
+	// RefreshTokensFromGoogleJob() error
 	PullDataFromGoogleJob() error
 	ProcessAllQueuedDataTask() error
 }

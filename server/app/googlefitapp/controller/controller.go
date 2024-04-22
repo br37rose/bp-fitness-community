@@ -23,6 +23,7 @@ import (
 type GoogleFitAppController interface {
 	GetGoogleLoginURL(ctx context.Context) (*GoogleLoginURLResponse, error)
 	GoogleCallback(ctx context.Context, state, code string) (*GoogleCallbackResponse, error)
+	RefreshTokensFromGoogle() error
 }
 
 type GoogleFitAppControllerImpl struct {
