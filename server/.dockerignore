@@ -6,13 +6,37 @@ Dockerfile
 .dockerignore
 .gitignore
 README.md
-private.md
-private.txt
 docker-compose.yml
 
 # Project artificats we don't want include.
-private.md
 private.txt
+private.md
+private-prod.md
+private-redis.md
+todo.txt
+private_stripe.md
 .DS_Store
 docs
 data
+
+#—————————————————————————————
+# Application Specific Ignores
+#—————————————————————————————
+
+# Do not share production data used to populate the project's database.
+data
+badgerdb_data
+
+# Do not share developer's private notebook
+private.txt
+private.md
+private-prod.md
+private-redis.md
+todo.txt
+private_stripe.md
+
+# Executable
+bin/
+pt-backend
+bp8fitnesscommunity-backend
+credentials.json

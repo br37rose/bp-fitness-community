@@ -95,6 +95,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
 	mongodb_p "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/mongodb"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/password"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/redis"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/time"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
 )
@@ -115,6 +116,7 @@ func InitializeEvent() Application {
 		password.NewProvider,
 		mongodb_p.NewProvider,
 		mongodbcache.NewCache,
+		redis.NewProvider,
 		gcp_a.NewAdapter,
 		openai.NewOpenAIConnector,
 		s3_storage.NewStorage,
