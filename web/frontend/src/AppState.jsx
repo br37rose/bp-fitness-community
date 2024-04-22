@@ -32,7 +32,7 @@ export const topAlertStatusState = atom({
 
 export const quizAnswersState = atom({
   key: "quizAnswersState", // unique ID (with respect to other atoms/selectors)
-  default: {}, // default value (aka initial value)
+  default: [], // default value (aka initial value)
 });
 
 ////

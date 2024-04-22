@@ -1,25 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faStar,
-  faChartLine,
-  faHeartbeat,
-  faFilterCircleXmark,
-  faArrowLeft,
-  faUsers,
-  faEye,
-  faPencil,
-  faTrashCan,
   faPlus,
   faGauge,
   faArrowRight,
   faTable,
-  faArrowUpRightFromSquare,
   faRefresh,
-  faFilter,
-  faSearch,
   faArrowUp,
   faChild,
   faRunning,
@@ -49,7 +37,13 @@ import PageLoadingContent from "../Reusable/PageLoadingContent";
 import { formatDateStringWithTimezone } from "../../Helpers/timeUtility";
 import AverageAndTimeComparison from "../Reusable/AverageDateAndTimeComparison";
 import Layout from "../Menu/Layout";
-import OnBoardingQuestionWizard from "../Reusable/Wizard/Wizard";
+// import OnBoardingQuestionWizard, {
+//   onboarding,
+// } from "../Reusable/Wizard/Wizard";
+
+import Onboarding, {
+  OnBoardingQuestionWizard,
+} from "../Reusable/Wizard/Wizard";
 import { Title, SelectableOption, Card } from "../Reusable/Wizard/Questions";
 
 function MemberDashboard() {
@@ -75,7 +69,6 @@ function MemberDashboard() {
   const [answers, setAnswers] = useState({});
 
   useEffect(() => {
-    console.log(answers);
     // Perform any action here when selectedCards changes
     // For example, calling an API based on the new selection
   }, [answers]);
@@ -385,13 +378,10 @@ function MemberDashboard() {
   // --- SUMMARY --- //
 
   function onSummarySuccess(response) {
-    console.log("onSummarySuccess: Starting...");
-    console.log("onSummarySuccess: response:", response);
     setDatum(response);
   }
 
   function onSummaryError(apiErr) {
-    console.log("onSummaryError: Starting...");
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -402,7 +392,6 @@ function MemberDashboard() {
   }
 
   function onSummaryDone() {
-    console.log("onSummaryDone: Starting...");
     setFetching(false);
   }
 
@@ -432,6 +421,10 @@ function MemberDashboard() {
   ////
   //// Component rendering.
   ////
+
+  if (!currentUser.onboardingCompleted && currentUser.role !== 2) {
+    return <Onboarding />;
+  }
 
   return (
     <Layout breadcrumbItems={breadcrumbItems}>

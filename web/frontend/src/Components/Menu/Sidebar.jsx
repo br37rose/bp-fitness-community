@@ -288,7 +288,7 @@ export default (props) => {
                         className="fas"
                         icon={faQuestionCircle}
                       />
-                      &nbsp;User Signup Questions
+                      &nbsp;Onboarding Questions
                     </a>
                   </li>
                 </ul>

@@ -116,8 +116,6 @@ function MemberFitnessPlanDetail() {
   ////
 
   const onDeleteConfirmButtonClick = () => {
-    console.log("onDeleteConfirmButtonClick"); // For debugging purposes only.
-
     deleteFitnessPlanAPI(
       selectedFitnessPlanForDeletion.id,
       onFitnessPlanDeleteSuccess,
@@ -138,7 +136,6 @@ function MemberFitnessPlanDetail() {
   }
 
   function onFitnessPlanDetailError(apiErr) {
-    console.log("onFitnessPlanDetailError: Starting...");
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -149,24 +146,16 @@ function MemberFitnessPlanDetail() {
   }
 
   function onFitnessPlanDetailDone() {
-    console.log("onFitnessPlanDetailDone: Starting...");
     setFetching(false);
   }
 
   // --- Delete --- //
 
   function onFitnessPlanDeleteSuccess(response) {
-    console.log("onFitnessPlanDeleteSuccess: Starting..."); // For debugging purposes only.
-
     // Update notification.
     setTopAlertStatus("success");
     setTopAlertMessage("Fitness plan deleted");
     setTimeout(() => {
-      console.log(
-        "onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -175,18 +164,12 @@ function MemberFitnessPlanDetail() {
   }
 
   function onFitnessPlanDeleteError(apiErr) {
-    console.log("onFitnessPlanDeleteError: Starting..."); // For debugging purposes only.
     setErrors(apiErr);
 
     // Update notification.
     setTopAlertStatus("danger");
     setTopAlertMessage("Failed deleting");
     setTimeout(() => {
-      console.log(
-        "onFitnessPlanDeleteError: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -198,7 +181,6 @@ function MemberFitnessPlanDetail() {
   }
 
   function onFitnessPlanDeleteDone() {
-    console.log("onFitnessPlanDeleteDone: Starting...");
     setFetching(false);
   }
 
@@ -404,12 +386,6 @@ function MemberFitnessPlanDetail() {
                       &nbsp;DETAIL
                     </p>
                     <hr />
-                    {/* 
-                    <DataDisplayRowText
-                      label="Exercise Names"
-                      value={datum.exerciseNames}
-                      type="textlist"
-                    /> */}
 
                     <DataDisplayRowText
                       label="Instructions"
@@ -427,7 +403,7 @@ function MemberFitnessPlanDetail() {
                     {datum.exercises !== null && datum.exercises.length > 0 && (
                       <ExerciseDisplay
                         exercises={datum.exercises}
-                        label="Recommended Exercises"
+                        label="Main Exercises"
                       />
                     )}
                   </>

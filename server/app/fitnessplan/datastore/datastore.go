@@ -69,13 +69,14 @@ type FitnessPlanExercise struct {
 }
 
 type DailyPlan struct {
-	Title       string `json:"title"`
-	PlanDetails string `json:"plan_details"`
+	Title        string                `bson:"title" json:"title"`
+	Instructions string                `bson:"instructions" json:"instructions"`
+	PlanDetails  []FitnessPlanExercise `bson:"plan_details" json:"plan_details"`
 }
 
 type WeeklyFitnessPlan struct {
-	Title      string      `json:"title"`
-	DailyPlans []DailyPlan `json:"daily_plans"`
+	Title      string      `bson:"title" json:"title"`
+	DailyPlans []DailyPlan `bson:"daily_plans" json:"daily_plans"`
 }
 
 type FitnessPlanListFilter struct {
@@ -129,7 +130,7 @@ func NewDatastore(appCfg *c.Conf, loggerp *slog.Logger, client *mongo.Client) Fi
 	// colleciton.
 	indexModel := mongo.IndexModel{
 		Keys: bson.D{
-			{"name", "text"},
+			{Key: "name", Value: "text"},
 		},
 	}
 	_, err := uc.Indexes().CreateOne(context.TODO(), indexModel)
