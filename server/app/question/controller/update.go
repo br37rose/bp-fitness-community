@@ -51,9 +51,10 @@ func (c *QuestionControllerImpl) UpdateByID(ctx context.Context, req *QuestionUp
 		// Create our record in the database.
 		res := &q_s.Question{
 			ID:                 req.ID,
-			Question:           req.Question,
+			Title:              req.Title,
 			IsMultiSelect:      req.IsMultiSelect,
-			Content:            req.Content,
+			Subtitle:           req.Subtitle,
+			Options:            req.Options,
 			CreatedAt:          time.Now(),
 			CreatedByUserID:    userID,
 			CreatedByUserName:  userName,

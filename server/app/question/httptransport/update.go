@@ -37,12 +37,20 @@ func ValidateQuestionUpdateRequest(dirtyData *q_c.QuestionUpdateRequest) error {
 		e["id"] = "missing value"
 	}
 
-	if dirtyData.Question == "" {
-		e["question"] = "missing value"
+	if dirtyData.Title == "" {
+		e["title"] = "missing value"
 
 	}
-	if len(dirtyData.Content) == 0 {
-		e["content"] = "missing value"
+	if len(dirtyData.Options) == 0 {
+		e["options"] = "missing value"
+	}
+
+	if len(dirtyData.Options) > 0 {
+		for _, opt := range dirtyData.Options {
+			if opt == "" {
+				e["options"] = "missing value"
+			}
+		}
 	}
 
 	if len(e) != 0 {
@@ -56,7 +64,7 @@ func (h *Handler) UpdateByID(w http.ResponseWriter, r *http.Request, id string) 
 
 	data, err := UnmarshalUpdateRequest(ctx, r)
 	if err != nil {
-		log.Println("Create | member | err:", err)
+		log.Println("Update | question | err:", err)
 		httperror.ResponseError(w, err)
 		return
 	}

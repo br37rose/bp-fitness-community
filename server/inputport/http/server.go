@@ -446,11 +446,11 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.Question.List(w, r)
 	case n == 3 && p[1] == "v1" && p[2] == "questions" && r.Method == http.MethodPost:
 		port.Question.Create(w, r)
-	case n == 4 && p[1] == "v1" && p[2] == "question" && r.Method == http.MethodGet:
+	case n == 4 && p[1] == "v1" && p[2] == "questions" && r.Method == http.MethodGet:
 		port.Question.GetByID(w, r, p[3])
-	case n == 4 && p[1] == "v1" && p[2] == "question" && r.Method == http.MethodPut:
+	case n == 4 && p[1] == "v1" && p[2] == "questions" && r.Method == http.MethodPut:
 		port.Question.UpdateByID(w, r, p[3])
-	case n == 4 && p[1] == "v1" && p[2] == "question" && r.Method == http.MethodDelete:
+	case n == 4 && p[1] == "v1" && p[2] == "questions" && r.Method == http.MethodDelete:
 		port.Question.DeleteByID(w, r, p[3])
 
 	// --- CATCH ALL: D.N.E. ---

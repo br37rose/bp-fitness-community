@@ -128,3 +128,5 @@ export const BP8_FITNESS_MEMBER_SELECT_OPTION_ENDPOINT =
   HTTP_API_SERVER + "/api/v1/select-options/{bid}/members";
 export const BP8_FITNESS_T_PROGRAM_PHASE_PATCH_API_ENDPOINT =
   HTTP_API_SERVER + "/api/v1/training-program/{pid}/phases";
+export const BP8_FITNESS_QUESTIONNAIRE_API_ENDPOINT =
+  HTTP_API_SERVER + "/api/v1/questions";

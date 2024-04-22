@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
 
 	q_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/question/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
@@ -19,7 +18,7 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		PageSize:  250,
 		SortField: "_id",
 		SortOrder: 1,
-		Status:    []int8{1},
+		Status:    true,
 	}
 
 	// Here is where you extract URL parameters.
@@ -57,15 +56,10 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		f.SortOrder = int8(sortOrder)
 	}
 
-	statusListStr := query.Get("status_list")
+	statusListStr := query.Get("status")
 	if statusListStr != "" {
-		statusList := []int8{}
-		statusListStrings := strings.Split(statusListStr, ",")
-		for _, statusStr := range statusListStrings {
-			status, _ := strconv.ParseInt(statusStr, 10, 64)
-			statusList = append(statusList, int8(status))
-		}
-		f.Status = statusList
+		status, _ := strconv.ParseBool(statusListStr)
+		f.Status = status
 	}
 
 	m, err := h.Controller.ListByFilter(ctx, f)
