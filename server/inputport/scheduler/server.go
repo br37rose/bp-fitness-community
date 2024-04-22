@@ -103,6 +103,18 @@ func (port *schedulerInputPort) Run() {
 	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateLastYear(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
+	if err := port.RankPointScheduler.RunEveryMinuteRankToday(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.RankPointScheduler.RunEveryMinuteRankThisISOWeek(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.RankPointScheduler.RunEveryMinuteRankThisMonth(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.RankPointScheduler.RunEveryMinuteRankThisYear(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
 }
 
 func (port *schedulerInputPort) Shutdown() {
