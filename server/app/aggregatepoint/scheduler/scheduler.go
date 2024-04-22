@@ -14,6 +14,12 @@ type AggregatePointScheduler interface {
 	RunEveryMinuteAggregateLastHour() error
 	RunEveryMinuteAggregateToday() error
 	RunEveryMinuteAggregateYesterday() error
+	RunEveryMinuteAggregateThisISOWeek() error
+	RunEveryMinuteAggregateLastISOWeek() error
+	RunEveryMinuteAggregateThisMonth() error
+	RunEveryMinuteAggregateLastMonth() error
+	RunEveryMinuteAggregateThisYear() error
+	RunEveryMinuteAggregateLastYear() error
 }
 
 // Handler Creates http request handler
@@ -99,6 +105,111 @@ func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateYesterday() erro
 	return nil
 }
 
+func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateThisISOWeek() error {
+	impl.Logger.Debug("scheduled: aggregate this iso week", slog.String("interval", "every minute"))
+	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+		if err := impl.Controller.AggregateThisISOWeekForAllActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed aggregating this iso week ",
+				slog.Any("error", err))
+		}
+	})
+	if err != nil {
+		impl.Logger.Error("aggregate this iso week error with scheduler", slog.Any("err", err))
+		return err
+	}
+	return nil
+}
+
+func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateLastISOWeek() error {
+	impl.Logger.Debug("scheduled: aggregate last iso week", slog.String("interval", "every minute"))
+	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+		if err := impl.Controller.AggregateLastISOWeekForAllActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed aggregating last iso week",
+				slog.Any("error", err))
+		}
+	})
+	if err != nil {
+		impl.Logger.Error("aggregate last iso week error with scheduler", slog.Any("err", err))
+		return err
+	}
+	return nil
+}
+
+func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateThisMonth() error {
+	impl.Logger.Debug("scheduled: aggregate this month", slog.String("interval", "every minute"))
+	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+		if err := impl.Controller.AggregateThisMonthForAllActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed aggregating this month",
+				slog.Any("error", err))
+		}
+	})
+	if err != nil {
+		impl.Logger.Error("aggregate this month error with scheduler", slog.Any("err", err))
+		return err
+	}
+	return nil
+}
+
+func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateLastMonth() error {
+	impl.Logger.Debug("scheduled: aggregate last month", slog.String("interval", "every minute"))
+	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+		if err := impl.Controller.AggregateLastMonthForAllActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed aggregating last month",
+				slog.Any("error", err))
+		}
+	})
+	if err != nil {
+		impl.Logger.Error("aggregate last month error with scheduler", slog.Any("err", err))
+		return err
+	}
+	return nil
+}
+
+func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateThisYear() error {
+	impl.Logger.Debug("scheduled: aggregate this year", slog.String("interval", "every minute"))
+	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+		if err := impl.Controller.AggregateThisYearForAllActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed aggregating this year",
+				slog.Any("error", err))
+		}
+	})
+	if err != nil {
+		impl.Logger.Error("aggregate this year error with scheduler", slog.Any("err", err))
+		return err
+	}
+	return nil
+}
+
+func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateLastYear() error {
+	impl.Logger.Debug("scheduled: aggregate last year", slog.String("interval", "every minute"))
+	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+		if err := impl.Controller.AggregateLastYearForAllActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed aggregating last year",
+				slog.Any("error", err))
+		}
+	})
+	if err != nil {
+		impl.Logger.Error("aggregate last year error with scheduler", slog.Any("err", err))
+		return err
+	}
+	return nil
+}
+
+// func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateToday() error {
+// 	impl.Logger.Debug("scheduled: aggregate today", slog.String("interval", "every minute"))
+// 	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+// 		if err := impl.Controller.AggregateTodayForAllActiveGoogleFitApps(context.Background()); err != nil {
+// 			impl.Logger.Error("failed aggregating today",
+// 				slog.Any("error", err))
+// 		}
+// 	})
+// 	if err != nil {
+// 		impl.Logger.Error("aggregate today error with scheduler", slog.Any("err", err))
+// 		return err
+// 	}
+// 	return nil
+// }
+//
 // func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateToday() error {
 // 	impl.Logger.Debug("scheduled: aggregate today", slog.String("interval", "every minute"))
 // 	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {

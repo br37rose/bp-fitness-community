@@ -85,6 +85,24 @@ func (port *schedulerInputPort) Run() {
 	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateYesterday(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateThisISOWeek(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateLastISOWeek(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateThisMonth(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateLastMonth(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateThisYear(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateLastYear(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
 }
 
 func (port *schedulerInputPort) Shutdown() {
