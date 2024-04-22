@@ -13,7 +13,7 @@ import (
 
 // DistributedSchedulerAdapter interface provides the functions necessary for
 // your application to submit tasks to be executed in the background assuming
-// your application has multiple instances running concurrently.
+// your application has multiple instances running concurrently in the cloud.
 type DistributedSchedulerAdapter interface {
 	Start() error
 	Shutdown() error
