@@ -68,75 +68,75 @@ func NewInputPort(
 }
 
 func (port *crontabInputPort) Run() {
-	// // (For debugging purposes only)
-	// // Run the following code on startup of the application.
-	// // port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob()
-	// // port.GoogleFitAppCrontab.PullDataFromGoogleJob()
-	// // port.GoogleFitAppCrontab.ProcessAllQueuedDataTask()
-	// // port.GoogleFitDataPointCrontab.DeleteAllAnomalousData()
-	// // port.processAllActiveSimulators() //TODO: IMPLEMENT.
-	//
-	// // (For debugging purposes only)
-	// // Run the following code on startup of the application.
-	// // port.AggregateThisHour()
-	// // port.AggregateLastHour()
-	// // port.AggregateToday()
-	// // port.AggregateYesterday()
-	// // port.AggregateThisISOWeek()
-	// // port.AggregateLastISOWeek()
-	// // port.AggregateThisMonth()
-	// // port.AggregateLastMonth()
-	// // port.AggregateThisYear()
-	// // port.AggregateLastYear()
-	// // port.RankToday()
-	// // port.RankThisISOWeek()
-	// // port.RankThisMonth()
-	// // port.RankThisYear()
-	//
-	// port.Logger.Info("Crontab server running")
-	//
-	// // MustAddJob is like AddJob but panics on wrong syntax or problems with func/args
-	// // This aproach is similar to regexp.Compile and regexp.MustCompile from go's standard library,  used for easier initialization on startup
-	//
-	// // For debugging purposes
-	// // port.Crontab.MustAddJob("* * * * *", port.ping)                 // every minute
-	//
-	// // Google Fit data.
-	// // The following section will include Google Fit web-services interaction
-	// // related background tasks that are important for fetching or simulating
-	// port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob)   // every minute TOOD: ADD BACK WHEN READY
-	// port.Crontab.MustAddJob("*/5 * * * *", port.GoogleFitAppCrontab.PullDataFromGoogleJob)      // every 5 minutes TOOD: ADD BACK WHEN READY
-	// port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.ProcessAllQueuedDataTask)     // every minute
+	// (For debugging purposes only)
+	// Run the following code on startup of the application.
+	// port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob()
+	// port.GoogleFitAppCrontab.PullDataFromGoogleJob()
+	// port.GoogleFitAppCrontab.ProcessAllQueuedDataTask()
+	// port.GoogleFitDataPointCrontab.DeleteAllAnomalousData()
+	// port.processAllActiveSimulators() //TODO: IMPLEMENT.
+
+	// (For debugging purposes only)
+	// Run the following code on startup of the application.
+	// port.AggregateThisHour()
+	// port.AggregateLastHour()
+	// port.AggregateToday()
+	// port.AggregateYesterday()
+	// port.AggregateThisISOWeek()
+	// port.AggregateLastISOWeek()
+	// port.AggregateThisMonth()
+	// port.AggregateLastMonth()
+	// port.AggregateThisYear()
+	// port.AggregateLastYear()
+	// port.RankToday()
+	// port.RankThisISOWeek()
+	// port.RankThisMonth()
+	// port.RankThisYear()
+
+	port.Logger.Info("Crontab server running")
+
+	// MustAddJob is like AddJob but panics on wrong syntax or problems with func/args
+	// This aproach is similar to regexp.Compile and regexp.MustCompile from go's standard library,  used for easier initialization on startup
+
+	// For debugging purposes
+	// port.Crontab.MustAddJob("* * * * *", port.ping)                 // every minute
+
+	// Google Fit data.
+	// The following section will include Google Fit web-services interaction
+	// related background tasks that are important for fetching or simulating
+	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.RefreshTokensFromGoogleJob) // every minute TOOD: ADD BACK WHEN READY
+	port.Crontab.MustAddJob("*/5 * * * *", port.GoogleFitAppCrontab.PullDataFromGoogleJob)    // every 5 minutes TOOD: ADD BACK WHEN READY
+	port.Crontab.MustAddJob("* * * * *", port.GoogleFitAppCrontab.ProcessAllQueuedDataTask)   // every minute
 	// port.Crontab.MustAddJob("* * * * *", port.GoogleFitDataPointCrontab.DeleteAllAnomalousData) // every minute
-	// // port.Crontab.MustAddJob("* * * * *", port.processAllActiveSimulators) // every minute //TODO: IMPLEMENT
-	//
-	// // Aggregation.
-	// // The following section will include code that takes the raw data points
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateThisHour)    // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateLastHour)    // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateToday)       // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateYesterday)   // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateThisISOWeek) // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateLastISOWeek) // every minute
-	//
-	// // // TODO: Comment the following when going live.
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateThisMonth) // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateLastMonth) // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateThisYear)  // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.AggregateLastYear)  // every minute
-	// // // TODO: Uncomment the following when going live.
-	// // // port.Crontab.MustAddJob("0 * * * *", port.AggregateThisMonth)   // every hour
-	// // // port.Crontab.MustAddJob("0 * * * *", port.AggregateLastMonth)   // every hour
-	// // // port.Crontab.MustAddJob("0 0 * * 0", port.AggregateThisYear)    // every sunday (Code via https://www.linuxshelltips.com/cron-run-every-sunday-at-midnight/)
-	// // // port.Crontab.MustAddJob("0 0 * * 0", port.AggregateLastYear)    // every sunday (Code via https://www.linuxshelltips.com/cron-run-every-sunday-at-midnight/)
-	//
-	// // Leaderboard Ranking
-	// // // The following section will enable the ranking system for the different periods of the year.
-	// port.Crontab.MustAddJob("* * * * *", port.RankToday)       // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.RankThisISOWeek) // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.RankThisMonth)   // every minute
-	// port.Crontab.MustAddJob("* * * * *", port.RankThisYear)    // every minute
-	//
+	// port.Crontab.MustAddJob("* * * * *", port.processAllActiveSimulators) // every minute //TODO: IMPLEMENT
+
+	// Aggregation.
+	// The following section will include code that takes the raw data points
+	port.Crontab.MustAddJob("* * * * *", port.AggregateThisHour)    // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateLastHour)    // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateToday)       // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateYesterday)   // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateThisISOWeek) // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateLastISOWeek) // every minute
+
+	// // TODO: Comment the following when going live.
+	port.Crontab.MustAddJob("* * * * *", port.AggregateThisMonth) // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateLastMonth) // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateThisYear)  // every minute
+	port.Crontab.MustAddJob("* * * * *", port.AggregateLastYear)  // every minute
+	// // TODO: Uncomment the following when going live.
+	// // port.Crontab.MustAddJob("0 * * * *", port.AggregateThisMonth)   // every hour
+	// // port.Crontab.MustAddJob("0 * * * *", port.AggregateLastMonth)   // every hour
+	// // port.Crontab.MustAddJob("0 0 * * 0", port.AggregateThisYear)    // every sunday (Code via https://www.linuxshelltips.com/cron-run-every-sunday-at-midnight/)
+	// // port.Crontab.MustAddJob("0 0 * * 0", port.AggregateLastYear)    // every sunday (Code via https://www.linuxshelltips.com/cron-run-every-sunday-at-midnight/)
+
+	// Leaderboard Ranking
+	// // The following section will enable the ranking system for the different periods of the year.
+	port.Crontab.MustAddJob("* * * * *", port.RankToday)       // every minute
+	port.Crontab.MustAddJob("* * * * *", port.RankThisISOWeek) // every minute
+	port.Crontab.MustAddJob("* * * * *", port.RankThisMonth)   // every minute
+	port.Crontab.MustAddJob("* * * * *", port.RankThisYear)    // every minute
+
 	// Fitness Plans
 	port.Crontab.MustAddJob("* * * * *", port.updateFitnessPlans) // every minute (TODO: PLEASE MOVE CODE TO `SCHEDULER`)
 }

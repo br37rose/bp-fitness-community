@@ -29,10 +29,36 @@ type distributedSchedulerAdapter struct {
 }
 
 func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) DistributedSchedulerAdapter {
-	locker, err := redislock.NewRedisLocker(redisClient, redislock.WithTries(1)) //tODO: FIGURE THIS OUT
-	if err != nil {
-		log.Fatalf("failed staring redis locker with error: %v", err)
+	loggerp.Debug("initializing scheduler...")
+	if redisClient != nil {
+		loggerp.Debug("redis connected to scheduler")
+		locker, err := redislock.NewRedisLocker(redisClient, redislock.WithTries(1)) //tODO: FIGURE THIS OUT
+		if err != nil {
+			log.Fatalf("failed staring redis locker with error: %v", err)
+		}
+		location, _ := time.LoadLocation("America/Toronto")
+
+		s, err := gocron.NewScheduler(
+			gocron.WithLocation(location),
+			gocron.WithLogger(
+				loggerp,
+			),
+			gocron.WithDistributedLocker(locker), //tODO: FIGURE THIS OUT
+		)
+		if err != nil {
+			log.Fatalf("failed staring new scheduler with error: %v", err)
+		}
+
+		loggerp.Debug("initialized scheduler")
+		return &distributedSchedulerAdapter{
+			Logger:    loggerp,
+			Redis:     redisClient,
+			Locker:    locker,
+			Scheduler: s,
+		}
 	}
+	loggerp.Warn("redis not connected to scheduler")
+
 	location, _ := time.LoadLocation("America/Toronto")
 
 	s, err := gocron.NewScheduler(
@@ -40,15 +66,14 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) Distrib
 		gocron.WithLogger(
 			loggerp,
 		),
-		gocron.WithDistributedLocker(locker), //tODO: FIGURE THIS OUT
 	)
 	if err != nil {
 		log.Fatalf("failed staring new scheduler with error: %v", err)
 	}
+
+	loggerp.Debug("initialized scheduler")
 	return &distributedSchedulerAdapter{
 		Logger:    loggerp,
-		Redis:     redisClient,
-		Locker:    locker,
 		Scheduler: s,
 	}
 }

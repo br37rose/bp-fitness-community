@@ -3,7 +3,6 @@ package redis
 import (
 	"context"
 	"crypto/tls"
-	"log"
 	"log/slog"
 
 	"github.com/redis/go-redis/v9"
@@ -28,6 +27,9 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 		// Configure the manditory options:
 		clusterOptions := &redis.ClusterOptions{
 			Addrs: appCfg.Redis.Addresses,
+			TLSConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
 		}
 
 		// Configure the optional options:
@@ -42,14 +44,17 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 		client := redis.NewClusterClient(clusterOptions)
 
 		logger.Debug("redis cluster checking connection...",
+			slog.Bool("is_cluster", appCfg.Redis.IsClusterConfiguration),
 			slog.Any("addrs", clusterOptions.Addrs),
 			slog.String("username", clusterOptions.Username),
+			slog.String("password", clusterOptions.Password),
 		)
 
 		// Ping Redis to check if the connection is working
 		_, err := client.Ping(context.Background()).Result()
 		if err != nil {
-			log.Fatalf("failed connecting to redis with error: %v", err)
+			logger.Error("failed connecting to redis cluster with error: %v", err)
+			return nil
 		}
 
 		logger.Debug("redis cluster initialized successfully")
@@ -58,9 +63,11 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 
 	logger.Debug("redis initializing...")
 
+	addr := appCfg.Redis.Addresses[0]
+
 	// Configure the manditory options:
 	opts := &redis.Options{
-		Addr: appCfg.Redis.Addresses[0],
+		Addr: addr,
 		TLSConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
@@ -77,14 +84,17 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 	client := redis.NewClient(opts)
 
 	logger.Debug("redis checking connection...",
-		slog.String("addr", opts.Addr),
+		slog.Bool("is_cluster", appCfg.Redis.IsClusterConfiguration),
+		slog.String("addr", addr),
 		slog.String("username", opts.Username),
+		slog.String("password", opts.Password),
 	)
 
 	// Ping Redis to check if the connection is working
 	_, err := client.Ping(context.Background()).Result()
 	if err != nil {
-		log.Fatalf("failed connecting to redis with error: %v", err)
+		logger.Error("failed connecting to redis with error: %v", err)
+		return nil
 	}
 
 	logger.Debug("redis initialized successfully")

@@ -100,7 +100,19 @@ services:
       - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
       - 'REDIS_CLUSTER_CREATOR=yes'
     attach: false # Disable console logs here.
-
+  # redis:
+  #     container_name: bp8fitnesscommunity_redis
+  #     image: docker.io/bitnami/redis:latest
+  #     restart: always
+  #     volumes:
+  #       - redis_data:/bitnami/redis/data
+  #     ports:
+  #       - 6379:6379
+  #     environment:
+  #       # ALLOW_EMPTY_PASSWORD is recommended only for development.
+  #       - ALLOW_EMPTY_PASSWORD=yes
+  #       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+  #     # attach: false # Disable console logs here.
   db1:
     container_name: bp8fitnesscommunity_db1
     image: mongo:7.0
@@ -175,7 +187,7 @@ services:
     volumes:
       - "db3_data:/data/db"
       - "db3_config:/data/configdb"
-    attach: false # Disable console logs here.
+    # attach: false # Disable console logs here.
 
   mongo-express:
     container_name: bp8fitnesscommunity_db_admin
@@ -268,6 +280,7 @@ services:
       - db1
       - db2
       - db3
+      # - redis
       - redis1
       - redis2
       - redis3
@@ -278,6 +291,7 @@ services:
       - db1
       - db2
       - db3
+      # - redis
       - redis1
       - redis2
       - redis3
@@ -318,3 +332,5 @@ volumes:
   redis4_data:
   redis5_data:
   redis6_data:
+  # redis_data:
+  # redis_conf:
