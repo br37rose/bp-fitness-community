@@ -73,7 +73,18 @@ func (port *schedulerInputPort) Run() {
 	if err := port.GoogleFitAppScheduler.RunEveryFifteenMinutesPullDataFromGoogle(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
-
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateThisHour(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateLastHour(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateToday(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
+	if err := port.AggregatePointScheduler.RunEveryMinuteAggregateYesterday(); err != nil {
+		port.Logger.Error("scheduler has error", slog.Any("err", err))
+	}
 }
 
 func (port *schedulerInputPort) Shutdown() {
