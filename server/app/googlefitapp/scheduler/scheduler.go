@@ -10,6 +10,7 @@ import (
 
 type GoogleFitAppScheduler interface {
 	RunEveryMinuteRefreshTokensFromGoogle() error
+	RunEveryProcessAllQueuedData() error
 }
 
 // Handler Creates http request handler
@@ -43,6 +44,21 @@ func (impl *googleFitAppSchedulerImpl) RunEveryMinuteRefreshTokensFromGoogle() e
 			impl.Logger.Error("refresh token error with scheduler", slog.Any("err", err))
 		}
 		impl.Logger.Debug("finished refresh token")
+	})
+	if err != nil {
+		impl.Logger.Error("error with scheduler", slog.Any("err", err))
+	}
+	return nil
+}
+
+func (impl *googleFitAppSchedulerImpl) RunEveryProcessAllQueuedData() error {
+	impl.Logger.Debug("scheduled: process queued data", slog.String("interval", "every minute"))
+	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+		impl.Logger.Debug("running process queued data...")
+		if err := impl.Controller.ProcessAllQueuedData; err != nil {
+			impl.Logger.Error("process queued data error with scheduler", slog.Any("err", err))
+		}
+		impl.Logger.Debug("finished process queued data")
 	})
 	if err != nil {
 		impl.Logger.Error("error with scheduler", slog.Any("err", err))

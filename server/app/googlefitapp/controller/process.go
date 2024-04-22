@@ -1,4 +1,4 @@
-package crontab
+package controller
 
 import (
 	"context"
@@ -57,7 +57,7 @@ DataTypeNameWeight
 - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
 
-func (impl *googleFitAppCrontaberImpl) ProcessAllQueuedDataTask() error {
+func (impl *GoogleFitAppControllerImpl) ProcessAllQueuedData() error {
 	impl.Logger.Debug("starting task...")
 
 	// DEVELOPERS NOTE:
@@ -91,7 +91,7 @@ func (impl *googleFitAppCrontaberImpl) ProcessAllQueuedDataTask() error {
 	return nil
 }
 
-func (impl *googleFitAppCrontaberImpl) processForQueuedData(ctx context.Context, dp *gfdp_ds.GoogleFitDataPoint) error {
+func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context, dp *gfdp_ds.GoogleFitDataPoint) error {
 	// DEVELOPERS NOTE:
 	// The following code will extract the data-point `value` based on the
 	// datatype we are importing into our system.
