@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	_ "time/tzdata"
 
 	_ "github.com/google/wire"   // Add dependency on this package from our app.
 	_ "go.uber.org/automaxprocs" // Automatically set GOMAXPROCS to match Linux container CPU quota.
