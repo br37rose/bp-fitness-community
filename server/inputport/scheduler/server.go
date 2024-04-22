@@ -4,6 +4,7 @@ import (
 	"log/slog"
 
 	dscheduler "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
+	googlefitapp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/scheduler"
 	googlefitdp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 )
@@ -18,6 +19,7 @@ type schedulerInputPort struct {
 	Logger                      *slog.Logger
 	DistributedScheduler        dscheduler.DistributedSchedulerAdapter
 	GoogleFitDataPointScheduler googlefitdp_task.GoogleFitDataPointScheduler
+	GoogleFitAppScheduler       googlefitapp_task.GoogleFitAppScheduler
 }
 
 func NewInputPort(
@@ -25,6 +27,7 @@ func NewInputPort(
 	loggerp *slog.Logger,
 	ds dscheduler.DistributedSchedulerAdapter,
 	gfdp googlefitdp_task.GoogleFitDataPointScheduler,
+	gfa googlefitapp_task.GoogleFitAppScheduler,
 ) InputPortServer {
 	// Initialize.
 
@@ -34,6 +37,7 @@ func NewInputPort(
 		Logger:                      loggerp,
 		DistributedScheduler:        ds,
 		GoogleFitDataPointScheduler: gfdp,
+		GoogleFitAppScheduler:       gfa,
 	}
 
 	return p

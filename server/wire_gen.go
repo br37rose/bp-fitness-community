@@ -39,6 +39,7 @@ import (
 	crontab2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	datastore17 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	httptransport15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	scheduler2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/scheduler"
 	controller15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/crontab"
 	datastore16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
@@ -92,7 +93,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
-	scheduler2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
+	scheduler3 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -204,7 +205,8 @@ func InitializeEvent() Application {
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
 	googleFitDataPointScheduler := scheduler.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, dataPointStorer, googleFitDataPointStorer, userStorer)
-	schedulerInputPortServer := scheduler2.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler)
+	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, userStorer)
+	schedulerInputPortServer := scheduler3.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler)
 	application := NewApplication(slogLogger, distributedSchedulerAdapter, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
 	return application
 }

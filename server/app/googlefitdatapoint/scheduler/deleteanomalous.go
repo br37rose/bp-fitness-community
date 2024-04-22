@@ -5,10 +5,13 @@ import (
 	"log/slog"
 )
 
-func (impl *googleFitAppSchedulerImpl) RunEveryMinuteDeleteAllAnomalousData() error {
+func (impl *googleFitDataPointSchedulerImpl) RunEveryMinuteDeleteAllAnomalousData() error {
 	impl.Logger.Debug("scheduled every minute: delete all anomalous data")
 	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
 		impl.Logger.Debug("running delete all anomalous data...")
+		if err := impl.deleteAllAnomalousData(); err != nil {
+			impl.Logger.Error("error with pinging scheduler", slog.Any("err", err))
+		}
 		impl.Logger.Debug("finished running delete all anomalous data")
 	})
 	if err != nil {
@@ -17,7 +20,7 @@ func (impl *googleFitAppSchedulerImpl) RunEveryMinuteDeleteAllAnomalousData() er
 	return nil
 }
 
-func (impl *googleFitAppSchedulerImpl) deleteAllAnomalousData() error {
+func (impl *googleFitDataPointSchedulerImpl) deleteAllAnomalousData() error {
 	ctx := context.Background()
 	res, err := impl.GoogleFitDataPointStorer.ListByAnomalousDetection(ctx)
 	if err != nil {
