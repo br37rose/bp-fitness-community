@@ -19,6 +19,7 @@ import (
 // GoogleFitDataPointController Interface for organization business logic controller.
 type GoogleFitDataPointController interface {
 	ListByFilter(ctx context.Context, f *dp_s.GoogleFitDataPointPaginationListFilter) (*dp_s.GoogleFitDataPointPaginationListResult, error)
+	DeleteAllAnomalousData() error
 }
 
 type GoogleFitDataPointControllerImpl struct {
