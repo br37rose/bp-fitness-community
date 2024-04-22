@@ -2,8 +2,8 @@ package redis
 
 import (
 	"context"
-	"crypto/tls"
 	"log/slog"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 
@@ -27,9 +27,11 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 		// Configure the manditory options:
 		clusterOptions := &redis.ClusterOptions{
 			Addrs: appCfg.Redis.Addresses,
-			TLSConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
+			// TLSConfig: &tls.Config{
+			// 	InsecureSkipVerify: true,
+			// },
+			DisableIndentity: true, // Disable set-info on connect
+			DialTimeout:      1 * time.Minute,
 		}
 
 		// Configure the optional options:
@@ -68,9 +70,11 @@ func NewProvider(appCfg *c.Conf, logger *slog.Logger) redis.UniversalClient {
 	// Configure the manditory options:
 	opts := &redis.Options{
 		Addr: addr,
-		TLSConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
+		// TLSConfig: &tls.Config{
+		// 	InsecureSkipVerify: true,
+		// },
+		DisableIndentity: true, // Disable set-info on connect
+		DialTimeout:      1 * time.Minute,
 	}
 
 	// Configure the optional options:
