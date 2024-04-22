@@ -12,6 +12,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// TODO: PLEASE MOVE CODE TO `SCHEDULER`: https://github.com/bci-innovation-labs/bp8fitnesscommunity/tree/main/server/app/fitnessplan/scheduler
+
 // exercisePlan represents the structured fitness plan returned by the OpenAI API.
 type exercisePlan struct {
 	WeeklyFitnessPlans []*fp_d.WeeklyFitnessPlan   `json:"weekly_fitness_plans"`

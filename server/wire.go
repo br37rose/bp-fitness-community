@@ -33,6 +33,7 @@ import (
 	exercise_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
 	fitnessplan_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	fitnessplan_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
+	fitnessplan_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/scheduler"
 	gateway_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
 	gateway_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	googlefitapp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
@@ -200,6 +201,7 @@ func InitializeEvent() Application {
 		googlefitapp_task.NewScheduler,
 		ap_task.NewScheduler,
 		rp_task.NewScheduler,
+		fitnessplan_task.NewScheduler,
 		scheduler.NewInputPort,
 
 		tp_s.NewDatastore,

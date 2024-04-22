@@ -34,6 +34,7 @@ import (
 	httptransport5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
 	controller13 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	datastore14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
+	scheduler5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	controller16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
@@ -95,7 +96,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
-	scheduler5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
+	scheduler6 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -210,7 +211,8 @@ func InitializeEvent() Application {
 	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, userStorer)
 	aggregatePointScheduler := scheduler3.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, aggregatePointController)
 	rankPointScheduler := scheduler4.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, rankPointController)
-	schedulerInputPortServer := scheduler5.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler)
+	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, fitnessPlanController)
+	schedulerInputPortServer := scheduler6.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler, fitnessPlanScheduler)
 	application := NewApplication(slogLogger, distributedSchedulerAdapter, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
 	return application
 }
