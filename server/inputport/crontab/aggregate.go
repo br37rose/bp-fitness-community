@@ -1,5 +1,7 @@
 package crontab
 
+// DEPRECATED
+
 import (
 	"context"
 	"log/slog"
