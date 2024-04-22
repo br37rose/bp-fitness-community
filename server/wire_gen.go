@@ -212,7 +212,7 @@ func InitializeEvent() Application {
 	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, googleFitAppController)
 	aggregatePointScheduler := scheduler3.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, aggregatePointController)
 	rankPointScheduler := scheduler4.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, rankPointController)
-	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, fitnessPlanController)
+	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, fitnessPlanStorer, openAIConnector, fitnessPlanController)
 	schedulerInputPortServer := scheduler6.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler, fitnessPlanScheduler)
 	application := NewApplication(slogLogger, distributedSchedulerAdapter, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
 	return application
