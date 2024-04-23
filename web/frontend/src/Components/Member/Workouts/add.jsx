@@ -2,7 +2,15 @@ import { useState, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faArrowLeft,
+  faFilter,
+  faSearch,
+  faSave,
+  faFilterCircleXmark,
+  faClose,
+} from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import FormTextareaField from "../../Reusable/FormTextareaField";
@@ -19,6 +27,16 @@ import { getExerciseListAPI } from "../../../API/Exercise";
 import ExerciseDisplay from "../../Reusable/ExerciseDisplay";
 import { postWorkoutCreateAPI } from "../../../API/workout";
 import DragSortListForSelectedWorkouts from "../../Reusable/draglistforSelectWorkouts";
+import Modal from "../../Reusable/modal";
+import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
+import FormSelectField from "../../Reusable/FormSelectField";
+import {
+  EXERCISE_CATEGORY_OPTIONS_WITH_EMPTY_OPTION,
+  EXERCISE_GENDER_OPTIONS_WITH_EMPTY_OPTION,
+  EXERCISE_MOMENT_TYPE_OPTIONS_WITH_EMPTY_OPTION,
+  EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION,
+  EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION,
+} from "../../../Constants/FieldOptions";
 
 function MemberWorkoutAdd() {
   const [topAlertMessage, setTopAlertMessage] =
@@ -36,6 +54,15 @@ function MemberWorkoutAdd() {
   const [listdata, setlistdata] = useState([]);
   const [selectableExcercises, setselectableExcercises] = useState(listdata);
   const [forceURL, setForceURL] = useState("");
+  const [exersizeLoading, setexersizeLoading] = useState(true);
+  const [showExerciseFilter, setshowExerciseFilter] = useState(false);
+  const [temporarySearchText, setTemporarySearchText] = useState("");
+  const [actualSearchText, setActualSearchText] = useState("");
+  const [category, setCategory] = useState("");
+  const [movementType, setMovementType] = useState("");
+  const [status, setStatus] = useState("");
+  const [gender, setGender] = useState("");
+  const [videoType, setVideoType] = useState("");
 
   const onSubmitClick = () => {
     // Logic to submit data
@@ -91,11 +118,34 @@ function MemberWorkoutAdd() {
     setFetching(false);
   }
 
-  const getAllExcericses = () => {
+  const getAllExcericses = (clear = false, search = "") => {
+    setexersizeLoading(true);
     let params = new Map();
     params.set("page_size", 1000000);
     params.set("sort_field", "created");
     params.set("sort_order", "-1");
+    if ((!clear && actualSearchText !== "") || search != "") {
+      if (search) {
+        params.set("search", search);
+      } else {
+        params.set("search", actualSearchText);
+      }
+    }
+    if (!clear && category !== "") {
+      params.set("category", category);
+    }
+    if (!clear && movementType !== "") {
+      params.set("movement_type", movementType);
+    }
+    if (!clear && status !== "") {
+      params.set("status", status);
+    }
+    if (!clear && gender !== "") {
+      params.set("gender", gender);
+    }
+    if (!clear && videoType !== "") {
+      params.set("video_type", videoType);
+    }
 
     getExerciseListAPI(
       params,
@@ -126,7 +176,30 @@ function MemberWorkoutAdd() {
 
   function onExerciseListDone() {
     setFetching(false);
+    setexersizeLoading(false);
   }
+
+  const onSearchButtonClick = (e) => {
+    setActualSearchText(temporarySearchText);
+    getAllExcericses(false, temporarySearchText);
+    setshowExerciseFilter(false);
+  };
+
+  function ApplyFilter() {
+    getAllExcericses();
+    setshowExerciseFilter(false);
+  }
+  const onClearFilterClick = (e) => {
+    setshowExerciseFilter(false);
+    setActualSearchText("");
+    setTemporarySearchText("");
+    setStatus("");
+    setCategory("");
+    setMovementType("");
+    setVideoType("");
+    setGender("");
+    getAllExcericses(true);
+  };
 
   useEffect(() => {
     getAllExcericses();
@@ -257,18 +330,179 @@ function MemberWorkoutAdd() {
                     </div>
                     <div className="column">
                       <div className="exercise-column">
-                        <span>Exercises </span>{" "}
-                        <span className="label is-inline is-small has-text-grey ">
-                          Click or drag item to add
-                        </span>
-                        <ExerciseDisplay
-                          wrapperclass={"excersizeWrapper"}
-                          exercises={selectableExcercises}
-                          isdraggable
-                          onAdd={onDrop}
-                          showindex={false}
-                          showDescription={false}
-                        />
+                        <div className="is-flex is-justify-content-space-between">
+                          <div>
+                            <span>Exercises </span>{" "}
+                            <span className="label is-inline is-small has-text-grey ">
+                              Click or drag item to add
+                            </span>
+                          </div>
+                          <button
+                            className="button is-small is-primary mr-2 is-light"
+                            onClick={() => setshowExerciseFilter(true)}
+                          >
+                            <FontAwesomeIcon icon={faFilter} />
+                            &nbsp;Filter
+                          </button>
+                          <Modal
+                            isOpen={showExerciseFilter}
+                            onClose={() => setshowExerciseFilter(false)}
+                          >
+                            <div className="box">
+                              <div className="heading is-size-5">Filter</div>
+                              <div class="columns mt-1">
+                                <div class="column">
+                                  <FormInputFieldWithButton
+                                    label={"Search"}
+                                    name="temporarySearchText"
+                                    type="text"
+                                    placeholder="Search by name"
+                                    value={temporarySearchText}
+                                    helpText=""
+                                    onChange={(e) =>
+                                      setTemporarySearchText(e.target.value)
+                                    }
+                                    isRequired={true}
+                                    maxWidth="100%"
+                                    buttonLabel={
+                                      <>
+                                        <FontAwesomeIcon
+                                          className="fas"
+                                          icon={faSearch}
+                                        />
+                                      </>
+                                    }
+                                    onButtonClick={onSearchButtonClick}
+                                  />
+                                </div>
+                                <div class="column">
+                                  <FormSelectField
+                                    label="Category"
+                                    name="category"
+                                    placeholder="Pick"
+                                    selectedValue={category}
+                                    errorText={errors && errors.category}
+                                    helpText=""
+                                    onChange={(e) =>
+                                      setCategory(parseInt(e.target.value))
+                                    }
+                                    options={
+                                      EXERCISE_CATEGORY_OPTIONS_WITH_EMPTY_OPTION
+                                    }
+                                  />
+                                </div>
+                                <div class="column">
+                                  <FormSelectField
+                                    label="Movement Type"
+                                    name="movementType"
+                                    placeholder="Pick"
+                                    selectedValue={movementType}
+                                    errorText={errors && errors.movementType}
+                                    helpText=""
+                                    onChange={(e) =>
+                                      setMovementType(parseInt(e.target.value))
+                                    }
+                                    options={
+                                      EXERCISE_MOMENT_TYPE_OPTIONS_WITH_EMPTY_OPTION
+                                    }
+                                  />
+                                </div>
+                                <div class="column">
+                                  <FormSelectField
+                                    label="Status"
+                                    name="status"
+                                    placeholder="Pick"
+                                    selectedValue={status}
+                                    errorText={errors && errors.status}
+                                    helpText=""
+                                    onChange={(e) =>
+                                      setStatus(parseInt(e.target.value))
+                                    }
+                                    options={
+                                      EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION
+                                    }
+                                  />
+                                </div>
+                                <div class="column">
+                                  <FormSelectField
+                                    label="Gender"
+                                    name="gender"
+                                    placeholder="Pick"
+                                    selectedValue={gender}
+                                    errorText={errors && errors.gender}
+                                    helpText=""
+                                    onChange={(e) => setGender(e.target.value)}
+                                    options={
+                                      EXERCISE_GENDER_OPTIONS_WITH_EMPTY_OPTION
+                                    }
+                                  />
+                                </div>
+                                <div class="column">
+                                  <FormSelectField
+                                    label="Video Type"
+                                    name="videoType"
+                                    placeholder="Pick"
+                                    selectedValue={videoType}
+                                    errorText={errors && errors.videoType}
+                                    helpText=""
+                                    onChange={(e) =>
+                                      setVideoType(e.target.value)
+                                    }
+                                    options={
+                                      EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION
+                                    }
+                                  />
+                                </div>
+                              </div>
+                              <div className="is-flex is-justify-content-flex-end">
+                                <button
+                                  className="button is-small is-success"
+                                  onClick={ApplyFilter}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faSave}
+                                    className="mr-1"
+                                  />
+                                  Apply
+                                </button>
+                                <button
+                                  className="button is-small is-primary ml-2"
+                                  onClick={() => setshowExerciseFilter(false)}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faClose}
+                                    className="mr-1"
+                                  />
+                                  Close
+                                </button>
+                                <button
+                                  className="button is-small is-secondary ml-2 is-light"
+                                  onClick={onClearFilterClick}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faFilterCircleXmark}
+                                    className="mr-1"
+                                  />
+                                  Clear filter
+                                </button>
+                              </div>
+                            </div>
+                          </Modal>
+                        </div>
+                        {exersizeLoading ? (
+                          <PageLoadingContent
+                            displayMessage={"Please wait..."}
+                          />
+                        ) : (
+                          <ExerciseDisplay
+                            wrapperclass={"excersizeWrapper"}
+                            exercises={selectableExcercises}
+                            isdraggable
+                            onAdd={onDrop}
+                            showindex={false}
+                            showDescription={false}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
