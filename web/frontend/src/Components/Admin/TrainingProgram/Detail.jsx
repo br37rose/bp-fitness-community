@@ -8,11 +8,8 @@ import {
   faGauge,
   faEye,
   faTable,
-  faSave,
-  faCancel,
-  faArrowUpRightFromSquare,
-  faEdit,
   faCalendarPlus,
+  faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
@@ -20,19 +17,14 @@ import { useParams } from "react-router-dom";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
 import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
-import { getWorkoutListApi } from "../../../API/workout";
 import {
   deleteTrainingProgAPI,
   getTrainingProgDetailAPI,
-  patchTrainingProgAPI,
 } from "../../../API/trainingProgram";
 import PhasePanel from "./phasepanel";
-import WorkoutDisplay from "../../Reusable/WorkoutsDisplay";
-import Modal from "../../Reusable/modal";
-import FormInputField from "../../Reusable/FormInputField";
-import Accordion from "../../Reusable/accordion";
+import FitnessPlanDisplay from "../../Reusable/FitnessPlanDisplay";
 
-function AdminTPDetail() {
+function AdminTPDetailView() {
   // URL Parameters
   const { id } = useParams();
 
@@ -47,41 +39,9 @@ function AdminTPDetail() {
   const [isFetching, setFetching] = useState(false);
   const [forceURL, setForceURL] = useState("");
   const [datum, setDatum] = useState({});
-  const [listData, setListData] = useState([]);
   const [selectedWorkoutForDeletion, setSelectedWorkoutForDeletion] =
     useState(null);
-  const [showAddWorkoutModal, setShowAddWorkoutModal] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState(null);
-  const [isModified, setIsModified] = useState(false);
-
-  const [selectedWorkoutForRoutine, setselectedWorkoutForRoutine] = useState(
-    {}
-  );
-  const [getSelectedWorkouts, setgetSelectedWorkouts] = useState({});
-  // Event handling
-  const handleAddWorkoutClick = (phase) => {
-    setSelectedPhase(phase);
-    setShowAddWorkoutModal(true);
-  };
-
-  const handleAddWorkoutModalClose = () => {
-    setShowAddWorkoutModal(false);
-  };
-
-  const handleInputChange = (index, field, value) => {
-    const updatedSelectedWorkouts = { ...selectedWorkoutForRoutine };
-    const selectedPhaseId = selectedPhase.id;
-
-    // Find the selected workout by index
-    const selectedWorkout = updatedSelectedWorkouts[selectedPhaseId][index];
-
-    // Update the corresponding property
-    selectedWorkout[field] = value;
-
-    // Update the state
-    setselectedWorkoutForRoutine(updatedSelectedWorkouts);
-    setIsModified(true);
-  };
 
   // API
 
@@ -111,22 +71,6 @@ function AdminTPDetail() {
     deleteTrainingProgAPI(id, ondeleteSuccess, ondeleteError, onDeleteDone);
     setSelectedWorkoutForDeletion(null);
   }
-  // Misc.
-  useEffect(() => {
-    if (JSON.stringify(datum) !== JSON.stringify({}) && !listData.length) {
-      setFetching(true);
-      let query = new Map();
-      query.set("sort_field", "created");
-      query.set("sort_order", -1);
-      if (datum.userId) {
-        query.set("user_id", datum.userId);
-        query.set("visibility", 2); //admin+personal
-      }
-
-      getWorkoutListApi(query, onListSuccess, onListError, onListDone);
-    }
-    return () => {};
-  }, [datum]);
 
   // Callbacks
   function onDetailSuccess(response) {
@@ -153,7 +97,6 @@ function AdminTPDetail() {
           updatedWorkoutForRoutine[tp.id] = [];
         }
       });
-      setselectedWorkoutForRoutine(updatedWorkoutForRoutine);
     }
   }
 
@@ -189,91 +132,12 @@ function AdminTPDetail() {
     setFetching(false);
   }
 
-  function onListSuccess(resp) {
-    setListData(resp.results);
-  }
-
-  function onListError(er) {
-    setErrors(er);
-    setTopAlertStatus("danger");
-    setTopAlertMessage("Failed deleting");
-    setTimeout(() => {
-      setTopAlertMessage("");
-    }, 2000);
-  }
-
-  function onListDone() {
-    setFetching(false);
-  }
-
-  const handleSaveButtonClick = () => {
-    let phase = new Array();
-    // Iterate over each entry in the frontend object
-    for (const phaseId in selectedWorkoutForRoutine) {
-      if (selectedWorkoutForRoutine.hasOwnProperty(phaseId)) {
-        const routines = selectedWorkoutForRoutine[phaseId];
-        const phaseRoutines = routines.map((routine) => ({
-          workout_id: routine.id,
-          routine_day: parseInt(routine.day),
-          routine_week: parseInt(routine.week),
-        }));
-        let phaseVal =
-          datum.trainingPhases &&
-          datum.trainingPhases.find((phase) => phase.id === phaseId);
-        // Create PhaseRequestIDO object
-        phase.push({
-          phase_id: phaseId,
-          phase: phaseVal && phaseVal.phase,
-          routines: phaseRoutines,
-        });
-      }
-    }
-    setFetching(true);
-    let payload = {
-      phases: phase,
-    };
-    patchTrainingProgAPI(id, payload, onPatchOK, onPatchError, onDone);
-    setIsModified(false);
-  };
-  function onPatchOK(response) {
-    setTopAlertStatus("success");
-    setTopAlertMessage("Program updated");
-    setTimeout(() => {
-      setTopAlertMessage("");
-    }, 2000);
-    setForceURL("/admin/training-program");
-  }
-
-  function onPatchError(apiErr) {
-    setErrors(apiErr);
-    setTopAlertStatus("danger");
-    setTopAlertMessage("Failed updating");
-    setTimeout(() => {
-      setTopAlertMessage("");
-    }, 2000);
-    scrollToTop();
-  }
-
   function onDone() {
     setFetching(false);
   }
-
-  const handleSaveSelectedWorkouts = () => {
-    const currentWorkouts = selectedWorkoutForRoutine[selectedPhase.id] || [];
-    const initialWorkouts = getSelectedWorkouts[selectedPhase.id] || [];
-
-    // Check if the current and initial workouts are different
-    const hasChanges =
-      JSON.stringify(currentWorkouts) !== JSON.stringify(initialWorkouts);
-
-    setIsModified(hasChanges);
-    setselectedWorkoutForRoutine((prevState) => ({
-      ...prevState,
-      [selectedPhase.id]: getSelectedWorkouts[selectedPhase.id],
-    }));
-    setShowAddWorkoutModal(false);
+  const handleAddWorkoutClick = (phase) => {
+    setSelectedPhase(phase);
   };
-
   // Helper function to scroll to the top of the page
   const scrollToTop = () => {
     var scroll = Scroll.animateScroll;
@@ -282,6 +146,81 @@ function AdminTPDetail() {
 
   if (forceURL !== "") {
     return <Navigate to={forceURL} />;
+  }
+  const getYouTubeVideoId = (url) => {
+    const match = url.match(/[?&]v=([^&]+)/);
+    return match && match[1];
+  };
+
+  function transformResponseForFitnessPlan(phase) {
+    let plan = [
+      {
+        title: phase.name,
+        dailyPlans: new Array(),
+      },
+    ];
+    const setInstruction = (exc) => {
+      let inst = exc.excercise && exc.excercise.description;
+      if (exc.sets) {
+        inst =
+          inst +
+          "\n " +
+          "This has to be done for a set of " +
+          exc.sets +
+          "times.";
+      }
+      if (exc.restPeriodInSecs) {
+        inst =
+          inst +
+          "\n " +
+          "Give a rest period of around  " +
+          exc.restPeriodInSecs +
+          "seconds.";
+      }
+      if (exc.targetTimeInSecs) {
+        inst =
+          inst +
+          "\n " +
+          "Try to complete in  " +
+          exc.targetTimeInSecs +
+          "seconds.";
+      }
+
+      return inst;
+    };
+    const getTitle = (trainingDays) => {
+      if (!trainingDays) {
+        return "";
+      }
+      if (trainingDays.length) {
+        return (
+          "Week - " + trainingDays[0].week + ": Day - " + trainingDays[0].day
+        );
+      } else {
+        return "";
+      }
+    };
+    phase.trainingRoutines.map((tr) =>
+      plan[0].dailyPlans.push({
+        title: getTitle(tr.trainingDays),
+        instructions: tr.description,
+        planDetails:
+          tr.workout.workoutExercises && tr.workout.workoutExercises.length > 0
+            ? tr.workout.workoutExercises.map((exc) => ({
+                id: exc.id,
+                name: exc.exerciseName,
+                videoUrl:
+                  exc.excercise.videoType == 2
+                    ? getYouTubeVideoId(exc.excercise.videoUrl)
+                    : exc.excercise.videoUrl,
+                thumbnailUrl: exc.excercise.thumbnailUrl,
+                description: setInstruction(exc),
+                videoType: exc.excercise.videoType,
+              }))
+            : new Array(),
+      })
+    );
+    return plan;
   }
 
   return (
@@ -370,6 +309,14 @@ function AdminTPDetail() {
               </div>
               <div className="column has-text-right">
                 <Link
+                  to={`/admin/training-program/${id}/edit`}
+                  className="button is-primary is-small is-fullwidth-mobile mr-2"
+                  type="button"
+                >
+                  <FontAwesomeIcon className="mdi" icon={faEdit} />
+                  &nbsp;Edit
+                </Link>
+                <Link
                   onClick={(e, s) => {
                     setSelectedWorkoutForDeletion(datum);
                   }}
@@ -390,19 +337,7 @@ function AdminTPDetail() {
                   <strong>Detail</strong>
                 </Link>
               </li>
-              <li>
-                {isModified && (
-                  <div className="mt-3">
-                    <button
-                      className="button is-success is-small"
-                      onClick={handleSaveButtonClick}
-                    >
-                      <FontAwesomeIcon icon={faSave} />
-                      <span>&nbsp;Save changes</span>
-                    </button>
-                  </div>
-                )}
-              </li>
+              <li></li>
             </ul>
           </div>
 
@@ -428,97 +363,21 @@ function AdminTPDetail() {
                     <>
                       <div className="is-flex is-justify-content-space-between is-align-items-center mb-1">
                         <span>Phase: {selectedPhase.name}</span>
-                        <button
-                          className="button is-primary is-small mr-1 ml-2 "
-                          onClick={() => setShowAddWorkoutModal(true)}
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                          Add/Edit Workouts
-                        </button>
                       </div>
 
-                      {selectedWorkoutForRoutine &&
-                      selectedWorkoutForRoutine[selectedPhase.id] &&
-                      selectedWorkoutForRoutine[selectedPhase.id].length ? (
-                        selectedWorkoutForRoutine[selectedPhase.id].map(
-                          (routine, index) => (
-                            <div key={index}>
-                              <Accordion
-                                head={
-                                  <span>
-                                    {routine.name}
-                                    <Link
-                                      className="ml-1"
-                                      to={"/admin/workouts/" + routine.id}
-                                      target="_blank"
-                                    >
-                                      <FontAwesomeIcon
-                                        size="sm"
-                                        icon={faArrowUpRightFromSquare}
-                                      />
-                                    </Link>
-                                  </span>
-                                }
-                                content={
-                                  <>
-                                    <div className="panel-block">
-                                      <p>{routine.description}</p>
-                                    </div>
-                                    <div className="columns px-2">
-                                      <div className="column">
-                                        <FormInputField
-                                          label={"Week"}
-                                          placeholder={"week"}
-                                          maxWidth={"120px"}
-                                          type="number"
-                                          value={routine.week}
-                                          onChange={(e) =>
-                                            handleInputChange(
-                                              index,
-                                              "week",
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                      <div className="column">
-                                        <FormInputField
-                                          label={"Day"}
-                                          placeholder={"day"}
-                                          maxWidth={"120px"}
-                                          type="number"
-                                          value={routine.day}
-                                          onChange={(e) =>
-                                            handleInputChange(
-                                              index,
-                                              "day",
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    </div>
-                                    {routine.workoutExercises &&
-                                      routine.workoutExercises.map((we, i) => (
-                                        <>
-                                          <div className="box">
-                                            <span>
-                                              {i + 1}. {we.exerciseName}
-                                            </span>
-                                            <span className="label is-inline is-small ml-1">
-                                              {we.set || 0} reps -{" "}
-                                              {we.restPeriodInSecs} sec rest
-                                            </span>
-                                          </div>
-                                        </>
-                                      ))}
-                                  </>
-                                }
-                                isOpenByDefault={index === 0}
-                              />
-                            </div>
-                          )
-                        )
+                      {selectedPhase.trainingRoutines &&
+                      selectedPhase.trainingRoutines.length > 0 ? (
+                        selectedPhase.trainingRoutines.map((tr, i) => (
+                          <>
+                            <FitnessPlanDisplay
+                              label={tr.name}
+                              key={tr.name + i}
+                              weeklyFitnessPlans={transformResponseForFitnessPlan(
+                                selectedPhase
+                              )}
+                            />
+                          </>
+                        ))
                       ) : (
                         // Show message if no workouts available
                         <section className="hero is-medium has-background-white-ter mt-1">
@@ -529,7 +388,8 @@ function AdminTPDetail() {
                             </p>
                             <p className="subtitle">
                               No workouts available in this phase. to get.Click
-                              add workouts started creating your first workout.
+                              edit workouts to get started creating your first
+                              workout.
                             </p>
                           </div>
                         </section>
@@ -539,48 +399,6 @@ function AdminTPDetail() {
                 </div>
               </div>
 
-              <Modal
-                isOpen={showAddWorkoutModal}
-                onClose={handleAddWorkoutModalClose}
-                contentLabel="Add Workout Modal"
-              >
-                <h2>Add Workout</h2>
-                {selectedPhase && (
-                  <div>
-                    <div className="is-flex is-justify-content-space-between">
-                      <span>Phase: {selectedPhase.name}</span>
-                      <div>
-                        <button
-                          className="button is-small is-success"
-                          onClick={handleSaveSelectedWorkouts}
-                        >
-                          <FontAwesomeIcon icon={faSave} className="mr-1" />
-                          Save Selecteds
-                        </button>
-                        <button
-                          className="button is-small is-primary mr-1 ml-1"
-                          onClick={() => setShowAddWorkoutModal(false)}
-                        >
-                          <FontAwesomeIcon icon={faCancel} className="mr-1" />
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                    <WorkoutDisplay
-                      workouts={listData}
-                      initialState={
-                        selectedWorkoutForRoutine[selectedPhase.id] || []
-                      }
-                      getSelectedWorkouts={(wr) => {
-                        setgetSelectedWorkouts({
-                          ...getSelectedWorkouts,
-                          [selectedPhase.id]: wr,
-                        });
-                      }}
-                    />
-                  </div>
-                )}
-              </Modal>
               <FormErrorBox errors={errors} />
             </>
           )}
@@ -590,4 +408,4 @@ function AdminTPDetail() {
   );
 }
 
-export default AdminTPDetail;
+export default AdminTPDetailView;

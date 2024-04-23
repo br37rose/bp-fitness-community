@@ -73,7 +73,7 @@ import (
 	controller4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/controller"
 	datastore4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/datastore"
 	httptransport4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
-	controller21 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/controller"
+	controller22 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/controller"
 	datastore20 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/datastore"
 	httptransport20 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/httptransport"
 	controller2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/controller"
@@ -88,7 +88,7 @@ import (
 	controller10 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/controller"
 	datastore11 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/datastore"
 	httptransport10 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/videocontent/httptransport"
-	controller22 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/controller"
+	controller21 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/controller"
 	datastore21 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	httptransport21 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
@@ -197,9 +197,9 @@ func InitializeEvent() Application {
 	handler18 := httptransport19.NewHandler(slogLogger, biometricController)
 	trainingProgramStorer := datastore20.NewDatastore(conf, slogLogger, client)
 	workoutStorer := datastore21.NewDatastore(conf, slogLogger, client)
-	trainingprogramController := controller21.NewController(conf, slogLogger, provider, client, trainingProgramStorer, workoutStorer, userStorer)
+	workoutController := controller21.NewController(conf, slogLogger, provider, client, workoutStorer, exerciseStorer)
+	trainingprogramController := controller22.NewController(conf, slogLogger, provider, client, trainingProgramStorer, workoutStorer, userStorer, workoutController)
 	handler19 := httptransport20.NewHandler(slogLogger, trainingprogramController)
-	workoutController := controller22.NewController(conf, slogLogger, provider, client, workoutStorer, exerciseStorer)
 	handler20 := httptransport21.NewHandler(slogLogger, workoutController)
 	questionStorer := datastore22.NewDatastore(conf, slogLogger, client)
 	questionController := controller23.NewController(conf, slogLogger, provider, client, questionStorer)
