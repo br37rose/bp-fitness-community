@@ -1,5 +1,7 @@
 package crontab
 
+// DEPRECATED
+
 import (
 	"context"
 	"encoding/json"
@@ -12,11 +14,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// TODO: PLEASE MOVE CODE TO `SCHEDULER`: https://github.com/bci-innovation-labs/bp8fitnesscommunity/tree/main/server/app/fitnessplan/scheduler
+
 // exercisePlan represents the structured fitness plan returned by the OpenAI API.
 type exercisePlan struct {
-	WeeklyFitnessPlans   []*fp_d.WeeklyFitnessPlan   `json:"weekly_fitness_plans"`
-	RecommendedExercises []*fp_d.FitnessPlanExercise `json:"recommended_exercises"`
-	Instructions         string                      `json:"instructions"`
+	WeeklyFitnessPlans []*fp_d.WeeklyFitnessPlan   `json:"weekly_fitness_plans"`
+	MainExercises      []*fp_d.FitnessPlanExercise `json:"main_exercises"`
+	Instructions       string                      `json:"instructions"`
 }
 
 // updateFitnessPlans retrieves queued fitness plans, processes them using the OpenAI API, and updates their status and details.
@@ -56,6 +60,7 @@ func (port *crontabInputPort) updateFitnessPlans() {
 						fp.Error = fmt.Sprintf("Error while unmarshaling data=%s", err.Error())
 						break
 					}
+
 					status = fp_d.StatusInProgress
 
 					_, err := port.OpenAIConnector.SubmitToolOutputs(ctx, fp.ThreadID, fp.RunnerID, openai.SubmitToolOutputsRequest{
@@ -86,7 +91,7 @@ func (port *crontabInputPort) updateFitnessPlans() {
 		}
 
 		if plan != nil {
-			fp.Exercises = plan.RecommendedExercises
+			fp.Exercises = plan.MainExercises
 			fp.Instructions = plan.Instructions
 			fp.WeeklyFitnessPlans = plan.WeeklyFitnessPlans
 		}

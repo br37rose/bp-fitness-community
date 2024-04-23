@@ -9,6 +9,7 @@ package main
 import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
@@ -17,6 +18,7 @@ import (
 	controller18 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/controller"
 	datastore19 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	httptransport17 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/httptransport"
+	scheduler3 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/scheduler"
 	controller7 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/controller"
 	datastore5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/datastore"
 	httptransport7 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/httptransport"
@@ -32,16 +34,19 @@ import (
 	httptransport5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
 	controller13 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	datastore14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
+	scheduler5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	controller16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
 	crontab2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	datastore17 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	httptransport15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	scheduler2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/scheduler"
 	controller15 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/crontab"
 	datastore16 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	httptransport14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/httptransport"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/scheduler"
 	controller12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
 	datastore12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
 	httptransport12 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
@@ -64,6 +69,7 @@ import (
 	controller19 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 	httptransport18 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/httptransport"
+	scheduler4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/scheduler"
 	controller4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/controller"
 	datastore4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/datastore"
 	httptransport4 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
@@ -90,6 +96,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
+	scheduler6 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -103,6 +110,7 @@ import (
 import (
 	_ "github.com/google/wire"
 	_ "go.uber.org/automaxprocs"
+	_ "time/tzdata"
 )
 
 // Injectors from wire.go:
@@ -111,6 +119,7 @@ func InitializeEvent() Application {
 	slogLogger := logger.NewProvider()
 	conf := config.New()
 	universalClient := redis.NewProvider(conf, slogLogger)
+	distributedSchedulerAdapter := distributedscheduler.NewAdapter(slogLogger, universalClient)
 	provider := uuid.NewProvider()
 	timeProvider := time.NewProvider()
 	jwtProvider := jwt.NewProvider(conf)
@@ -176,7 +185,7 @@ func InitializeEvent() Application {
 	googleFitAppStorer := datastore17.NewDatastore(conf, slogLogger, client)
 	dataPointStorer := datastore18.NewDatastore(conf, slogLogger, client)
 	aggregatePointStorer := datastore19.NewDatastore(conf, slogLogger, client)
-	googleFitAppController := controller16.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, googleCloudPlatformAdapter, organizationStorer, googleFitAppStorer, userStorer, dataPointStorer, aggregatePointStorer)
+	googleFitAppController := controller16.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, googleCloudPlatformAdapter, organizationStorer, googleFitDataPointStorer, googleFitAppStorer, userStorer, dataPointStorer, aggregatePointStorer)
 	handler14 := httptransport15.NewHandler(slogLogger, googleFitAppController)
 	dataPointController := controller17.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, userStorer, dataPointStorer)
 	handler15 := httptransport16.NewHandler(slogLogger, dataPointController)
@@ -199,6 +208,12 @@ func InitializeEvent() Application {
 	googleFitDataPointCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitDataPointController, userStorer)
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
-	application := NewApplication(slogLogger, universalClient, inputPortServer, crontabInputPortServer)
+	googleFitDataPointScheduler := scheduler.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, googleFitDataPointController)
+	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, googleFitAppController)
+	aggregatePointScheduler := scheduler3.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, aggregatePointController)
+	rankPointScheduler := scheduler4.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, rankPointController)
+	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, fitnessPlanStorer, openAIConnector, fitnessPlanController)
+	schedulerInputPortServer := scheduler6.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler, fitnessPlanScheduler)
+	application := NewApplication(slogLogger, distributedSchedulerAdapter, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
 	return application
 }

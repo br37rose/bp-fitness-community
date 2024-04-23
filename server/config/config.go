@@ -52,7 +52,7 @@ type redisConfig struct {
 	IsClusterConfiguration bool     `env:"BP8_BACKEND_REDIS_IS_CLUSTER_CONFIGURATION,required"`
 	Addresses              []string `env:"BP8_BACKEND_REDIS_ADDRESSES,required"`
 	Username               string   `env:"BP8_BACKEND_REDIS_USERNAME"`
-	Password               string   `env:"BP8_BACKEND_REDIS_PASSWORD,required"`
+	Password               string   `env:"BP8_BACKEND_REDIS_PASSWORD"`
 }
 
 type cacheConfig struct {
@@ -136,7 +136,7 @@ func New() *Conf {
 	c.Redis.IsClusterConfiguration = getEnvBool("BP8_BACKEND_REDIS_IS_CLUSTER_CONFIGURATION", true, false)
 	c.Redis.Addresses = getEnvStrings("BP8_BACKEND_REDIS_ADDRESSES", true)
 	c.Redis.Username = getEnvString("BP8_BACKEND_REDIS_USERNAME", false)
-	c.Redis.Password = getEnvString("BP8_BACKEND_REDIS_PASSWORD", true)
+	c.Redis.Password = getEnvString("BP8_BACKEND_REDIS_PASSWORD", false)
 
 	// Cache configuration
 	c.Cache.URI = getEnvString("BP8_BACKEND_CACHE_URI", true)

@@ -843,3 +843,8 @@ export const RESTPERIOD_OPTIONS = [
   { value: 50, label: "55 sec" },
   { value: 60, label: "60 sec" },
 ];
+
+export const QUESTIONNAIRE_STATUS_OPTIONS = [
+  { value: 1, label: "Active" },
+  { value: 2, label: "Archived" },
+];

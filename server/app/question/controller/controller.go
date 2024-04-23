@@ -20,10 +20,11 @@ type QuestionController interface {
 }
 
 type QuestionRequest struct {
-	Question      string                `json:"question"`
-	IsMultiSelect bool                  `json:"isMultiSelect"`
-	Content       []q_s.QuestionContent `json:"content"`
-	Status        bool                  `json:"status"`
+	Title         string   `json:"title"`
+	Subtitle      string   `json:"subtitle"`
+	IsMultiSelect bool     `json:"is_multiselect"`
+	Options       []string `json:"options"`
+	Status        bool     `json:"status"`
 }
 
 type QuestionControllerImpl struct {

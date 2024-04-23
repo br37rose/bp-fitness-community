@@ -1,3 +1,4 @@
+import DataDisplayRowText from "./DataDisplayRowText";
 import DraggableItem from "./dragable";
 import { useState } from "react";
 
@@ -25,10 +26,11 @@ function ExerciseDisplay({
 
   const exerciseItemJSX = (exercise, index) => (
     <div key={index} className="mb-3 exercise-item">
-      <h2 className="mb-3 has-text-weight-medium is-size-6">
+      <h2 className="mb-3 has-text-weight-bold is-size-6">
         {showindex && `${index + 1}. `}
         {exercise.name}
       </h2>
+      {exercise.instructions && <p>{exercise.instructions}</p>}
       {showDescription && (
         <div>
           <p className="mb-3 exercise-description">

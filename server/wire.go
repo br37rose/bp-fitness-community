@@ -8,6 +8,7 @@ import (
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
@@ -16,6 +17,7 @@ import (
 	ap_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/controller"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	ap_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/httptransport"
+	ap_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/scheduler"
 	attachment_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/controller"
 	attachment_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/datastore"
 	attachment_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/attachment/httptransport"
@@ -31,16 +33,19 @@ import (
 	exercise_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
 	fitnessplan_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	fitnessplan_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
+	fitnessplan_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/scheduler"
 	gateway_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
 	gateway_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	googlefitapp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/controller"
 	googlefitapp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/crontab"
 	googlefitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
+	googlefitapp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/scheduler"
 	googlefitdp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/controller"
 	googlefitdp_cron "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/crontab"
 	googlefitdp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/datastore"
 	googlefitdp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/httptransport"
+	googlefitdp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/scheduler"
 	inv_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/controller"
 	inv_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/datastore"
 	inv_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/invoice/httptransport"
@@ -63,6 +68,7 @@ import (
 	rp_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 	rp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/httptransport"
+	rp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/scheduler"
 	tag_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/controller"
 	tag_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/datastore"
 	tag_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/tag/httptransport"
@@ -90,6 +96,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	fitnessplan_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -117,6 +124,7 @@ func InitializeEvent() Application {
 		mongodb_p.NewProvider,
 		mongodbcache.NewCache,
 		redis.NewProvider,
+		distributedscheduler.NewAdapter,
 		gcp_a.NewAdapter,
 		openai.NewOpenAIConnector,
 		s3_storage.NewStorage,
@@ -188,6 +196,14 @@ func InitializeEvent() Application {
 		middleware.NewMiddleware,
 		crontab.NewInputPort,
 		http.NewInputPort,
+
+		googlefitdp_task.NewScheduler,
+		googlefitapp_task.NewScheduler,
+		ap_task.NewScheduler,
+		rp_task.NewScheduler,
+		fitnessplan_task.NewScheduler,
+		scheduler.NewInputPort,
+
 		tp_s.NewDatastore,
 		tp_c.NewController,
 		tp_http.NewHandler,

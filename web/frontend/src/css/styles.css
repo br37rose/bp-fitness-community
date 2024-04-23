@@ -11767,3 +11767,17 @@ a.has-text-danger-dark:focus {
   background-color: transparent;
   cursor: pointer;
 }
+
+.button .fas {
+  margin-right: 5px;
+}
+
+.bg-1 {
+  background-color: #d7c278;
+}
+
+.button-primary {
+  outline: none;
+  border: none;
+  border-radius: 5px;
+}

@@ -8,92 +8,110 @@
 
 version: "3.8"
 services:
-  redis1:
-    container_name: bp8fitnesscommunity_redis1
-    image: docker.io/bitnami/redis-cluster:7.2
-    volumes:
-      - redis2_data:/bitnami/redis/data
-    ports:
-      - 6370:6370
-      - 16370:16370
-    environment:
-      - 'REDIS_PASSWORD=bitnami'
-      - 'REDIS_PORT_NUMBER=6370'
-      - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
-
-  redis2:
-    container_name: bp8fitnesscommunity_redis2
-    image: docker.io/bitnami/redis-cluster:7.2
-    volumes:
-      - redis3_data:/bitnami/redis/data
-    ports:
-      - 6371:6371
-      - 16371:16371
-    environment:
-      - 'REDIS_PASSWORD=bitnami'
-      - 'REDIS_PORT_NUMBER=6371'
-      - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
-
-  redis3:
-    container_name: bp8fitnesscommunity_redis3
-    image: docker.io/bitnami/redis-cluster:7.2
-    volumes:
-      - redis4_data:/bitnami/redis/data
-    ports:
-      - 6372:6372
-      - 16372:16372
-    environment:
-      - 'REDIS_PASSWORD=bitnami'
-      - 'REDIS_PORT_NUMBER=6372'
-      - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
-
-  redis4:
-    container_name: bp8fitnesscommunity_redis4
-    image: docker.io/bitnami/redis-cluster:7.2
-    volumes:
-      - redis5_data:/bitnami/redis/data
-    ports:
-      - 6373:6373
-      - 16373:16373
-    environment:
-      - 'REDIS_PASSWORD=bitnami'
-      - 'REDIS_PORT_NUMBER=6373'
-      - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
-
-  redis5:
-    container_name: bp8fitnesscommunity_redis5
-    image: docker.io/bitnami/redis-cluster:7.2
-    volumes:
-      - redis6_data:/bitnami/redis/data
-    ports:
-      - 6374:6374
-      - 16374:16374
-    environment:
-      - 'REDIS_PASSWORD=bitnami'
-      - 'REDIS_PORT_NUMBER=6374'
-      - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
-
-  redis6:
-    container_name: bp8fitnesscommunity_redis6
-    image: docker.io/bitnami/redis-cluster:7.2
-    volumes:
-      - redis6_data:/bitnami/redis/data
-    ports:
-      - 6375:6375
-      - 16375:16375
-    depends_on:
-      - redis1
-      - redis2
-      - redis3
-      - redis4
-      - redis5
-    environment:
-      - 'REDIS_PASSWORD=bitnami'
-      - 'REDIS_PORT_NUMBER=6375'
-      - 'REDISCLI_AUTH=bitnami'
-      - 'REDIS_CLUSTER_REPLICAS=1'
-      - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
-      - 'REDIS_CLUSTER_CREATOR=yes'
+  # redis1:
+  #   container_name: bp8fitnesscommunity_redis1
+  #   image: docker.io/bitnami/redis-cluster:7.2
+  #   volumes:
+  #     - redis1_data:/bitnami/redis/data
+  #   ports:
+  #     - 6370:6370
+  #     - 16370:16370
+  #   environment:
+  #     - 'REDIS_PASSWORD=bitnami'
+  #     - 'REDIS_PORT_NUMBER=6370'
+  #     - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+  #   #attach: false # Disable redis console logs here.
+  #
+  # redis2:
+  #   container_name: bp8fitnesscommunity_redis2
+  #   image: docker.io/bitnami/redis-cluster:7.2
+  #   volumes:
+  #     - redis2_data:/bitnami/redis/data
+  #   ports:
+  #     - 6371:6371
+  #     - 16371:16371
+  #   environment:
+  #     - 'REDIS_PASSWORD=bitnami'
+  #     - 'REDIS_PORT_NUMBER=6371'
+  #     - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+  #   #attach: false # Disable redis console logs here.
+  #
+  # redis3:
+  #   container_name: bp8fitnesscommunity_redis3
+  #   image: docker.io/bitnami/redis-cluster:7.2
+  #   volumes:
+  #     - redis3_data:/bitnami/redis/data
+  #   ports:
+  #     - 6372:6372
+  #     - 16372:16372
+  #   environment:
+  #     - 'REDIS_PASSWORD=bitnami'
+  #     - 'REDIS_PORT_NUMBER=6372'
+  #     - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+  #   #attach: false # Disable redis console logs here.
+  #
+  # redis4:
+  #   container_name: bp8fitnesscommunity_redis4
+  #   image: docker.io/bitnami/redis-cluster:7.2
+  #   volumes:
+  #     - redis4_data:/bitnami/redis/data
+  #   ports:
+  #     - 6373:6373
+  #     - 16373:16373
+  #   environment:
+  #     - 'REDIS_PASSWORD=bitnami'
+  #     - 'REDIS_PORT_NUMBER=6373'
+  #     - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+  #   #attach: false # Disable redis console logs here.
+  #
+  # redis5:
+  #   container_name: bp8fitnesscommunity_redis5
+  #   image: docker.io/bitnami/redis-cluster:7.2
+  #   volumes:
+  #     - redis5_data:/bitnami/redis/data
+  #   ports:
+  #     - 6374:6374
+  #     - 16374:16374
+  #   environment:
+  #     - 'REDIS_PASSWORD=bitnami'
+  #     - 'REDIS_PORT_NUMBER=6374'
+  #     - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+  #   #attach: false # Disable redis console logs here.
+  #
+  # redis6:
+  #   container_name: bp8fitnesscommunity_redis6
+  #   image: docker.io/bitnami/redis-cluster:7.2
+  #   volumes:
+  #     - redis6_data:/bitnami/redis/data
+  #   ports:
+  #     - 6375:6375
+  #     - 16375:16375
+  #   depends_on:
+  #     - redis1
+  #     - redis2
+  #     - redis3
+  #     - redis4
+  #     - redis5
+  #   environment:
+  #     - 'REDIS_PASSWORD=bitnami'
+  #     - 'REDIS_PORT_NUMBER=6375'
+  #     - 'REDISCLI_AUTH=bitnami'
+  #     - 'REDIS_CLUSTER_REPLICAS=1'
+  #     - 'REDIS_NODES=redis1:6370 redis2:6371 redis3:6372 redis4:6373 redis5:6374 redis6:6375'
+  #     - 'REDIS_CLUSTER_CREATOR=yes'
+  #   #attach: false # Disable redis console logs here.
+  redis:
+      # https://pimylifeup.com/redis-docker/
+      container_name: bp8fitnesscommunity_redis
+      image: redis:alpine
+      command: 'redis-server --save 60 1 --loglevel warning --requirepass ${BP8_BACKEND_REDIS_PASSWORD}'
+      ports:
+        - 6379:6379
+      stdin_open: true
+      restart: always
+      volumes:
+        - redis_data:/data
+      # attach: false # Disable console logs here.
   db1:
     container_name: bp8fitnesscommunity_db1
     image: mongo:7.0
@@ -168,7 +186,7 @@ services:
     volumes:
       - "db3_data:/data/db"
       - "db3_config:/data/configdb"
-    attach: false # Disable console logs here.
+    # attach: false # Disable console logs here.
 
   mongo-express:
     container_name: bp8fitnesscommunity_db_admin
@@ -261,22 +279,24 @@ services:
       - db1
       - db2
       - db3
-      - redis1
-      - redis2
-      - redis3
-      - redis4
-      - redis5
-      - redis6
+      - redis
+      # - redis1
+      # - redis2
+      # - redis3
+      # - redis4
+      # - redis5
+      # - redis6
     links:
       - db1
       - db2
       - db3
-      - redis1
-      - redis2
-      - redis3
-      - redis4
-      - redis5
-      - redis6
+      - redis
+      # - redis1
+      # - redis2
+      # - redis3
+      # - redis4
+      # - redis5
+      # - redis6
     volumes: # Connect the local filesystem with the docker filesystem. DO NOT REMOVE.
       - ./:/go/src/github.com/bci-innovation-labs/bp8fitnesscommunity-backend # IMPORTANT: Required for hotreload via `CompileDaemon`.
       - app_data:/data
@@ -305,9 +325,11 @@ volumes:
   db1_config:
   db2_config:
   db3_config:
-  redis1_data:
-  redis2_data:
-  redis3_data:
-  redis4_data:
-  redis5_data:
-  redis6_data:
+  # redis1_data:
+  # redis2_data:
+  # redis3_data:
+  # redis4_data:
+  # redis5_data:
+  # redis6_data:
+  redis_data:
+  # redis_conf:

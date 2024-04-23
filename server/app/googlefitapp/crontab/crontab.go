@@ -13,9 +13,8 @@ import (
 )
 
 type GoogleFitAppCrontaber interface {
-	RefreshTokensFromGoogleJob() error
-	PullDataFromGoogleJob() error
-	ProcessAllQueuedDataTask() error
+	// RefreshTokensFromGoogleJob() error
+	// PullDataFromGoogleJob() error
 }
 
 // Handler Creates http request handler

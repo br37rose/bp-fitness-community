@@ -19,9 +19,10 @@ const (
 
 type Question struct {
 	ID            primitive.ObjectID `bson:"_id" json:"id"`
-	Question      string             `bson:"question" json:"question"`
+	Title         string             `bson:"title" json:"title"`
+	Subtitle      string             `bson:"subtitle" json:"subtitle"`
 	IsMultiSelect bool               `bson:"is_multiselect" json:"is_multiselect"`
-	Content       []QuestionContent  `bson:"content" json:"content"`
+	Options       []string           `bson:"options" json:"options"`
 	Status        bool               `bson:"status" json:"status"`
 
 	CreatedAt          time.Time          `bson:"created_at" json:"created_at,omitempty"`
@@ -32,12 +33,6 @@ type Question struct {
 	ModifiedByUserName string             `bson:"modified_by_user_name" json:"modified_by_user_name"`
 }
 
-type QuestionContent struct {
-	Title    string   `json:"title"`
-	Subtitle string   `json:"subtitle,omitempty"`
-	Options  []string `json:"options,omitempty"`
-}
-
 type QuestionListFilter struct {
 	// Pagination related.
 	Cursor    primitive.ObjectID
@@ -46,7 +41,7 @@ type QuestionListFilter struct {
 	SortOrder int8 // 1=ascending | -1=descending
 
 	IsMultiSelect bool // Filter by whether the question allows multi-select
-	Status        []int8
+	Status        bool
 }
 
 type QuestionListResult struct {
