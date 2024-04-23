@@ -25,15 +25,18 @@ export const Onboarding = () => {
   const [isFetching, setFetching] = useState(false);
   const [errors, setErrors] = useState({});
   const [listData, setListData] = useState(null);
+  const [forceURL, setForceURL] = useState("");
 
   function OnListSuccess(response) {
-    if (response.results !== null) {
+    if (response && response.results && response.results.length > 0) {
+      console.log("OnListSuccess");
       setListData(response);
       //   if (response.hasNextPage) {
       //     setNextCursor(response.nextCursor); // For pagination purposes.
       //   }
     } else {
       setListData(null);
+      setForceURL("/dashboard");
       //   setNextCursor("");
     }
   }
@@ -74,13 +77,17 @@ export const Onboarding = () => {
     };
   }, []);
 
+  if (forceURL !== "") {
+    return <Navigate to={forceURL} />;
+  }
+
   return (
     <>
       {isFetching ? (
         <PageLoadingContent displayMessage={"Please wait..."} />
       ) : (
         <>
-          {listData && (
+          {listData && listData.results.length > 0 && (
             <OnBoardingQuestionWizard questions={listData.results} />
           )}
         </>
@@ -207,18 +214,18 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
     }
   };
 
-  //   const renderQuestionContent = () => {
-  //     const currentQuestion = questions[currentQuestionIndex];
-  //     if (!currentQuestion || !currentQuestion.content) {
-  //       return <div>Question data is incomplete or missing.</div>;
-  //     }
-  //     // Assuming content is a function that returns JSX
-  //     return currentQuestion.content({
-  //       onSelect: handleSelect,
-  //       selectedAnswers: answers[currentQuestion.questionId],
-  //       isMultiSelect: currentQuestion.isMultiSelect,
-  //     });
-  //   };
+  // const renderQuestionContent = () => {
+  //   const currentQuestion = questions[currentQuestionIndex];
+  //   if (!currentQuestion || !currentQuestion.content) {
+  //     return <div>Question data is incomplete or missing.</div>;
+  //   }
+  //   // Assuming content is a function that returns JSX
+  //   return currentQuestion.content({
+  //     onSelect: handleSelect,
+  //     selectedAnswers: answers[currentQuestion.questionId],
+  //     isMultiSelect: currentQuestion.isMultiSelect,
+  //   });
+  // };
 
   const renderQuestionContent = () => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -254,7 +261,7 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
             ))}
           </div>
           <div className="column">
-            <figure className="image">
+            <figure className="image py-0 px-6">
               <img
                 src="https://www.transparentlabs.com/cdn/shop/articles/how_long_muscle_1200x1200.jpg?v=1602607728"
                 alt="Fitness"
