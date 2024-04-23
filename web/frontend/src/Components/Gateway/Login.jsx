@@ -14,7 +14,12 @@ import FormErrorBox from "../Reusable/FormErrorBox";
 import { postLoginAPI } from "../../API/gateway";
 import PageLoadingContent from "../Reusable/PageLoadingContent";
 import { onHamburgerClickedState, currentUserState } from "../../AppState";
-import { ROOT_ROLE_ID, ADMIN_ROLE_ID, TRAINER_ROLE_ID, MEMBER_ROLE_ID } from "../../Constants/App";
+import {
+  ROOT_ROLE_ID,
+  ADMIN_ROLE_ID,
+  TRAINER_ROLE_ID,
+  MEMBER_ROLE_ID,
+} from "../../Constants/App";
 
 function Login() {
   ////
@@ -81,52 +86,61 @@ function Login() {
     // Store in persistance storage in the browser.
     setCurrentUser(response.user);
 
-    if (response.user.otpEnabled === undefined || response.user.otpEnabled === null || response.user.otpEnabled === "" || response.user.otpEnabled === false) {
-        // Proceed to redirect the user based on their assigned role.
-        switch (response.user.role) {
-          case ROOT_ROLE_ID:
-            console.log(
-              "onLoginSuccess: user is executive (root) admin, redirecting to admin dashboard..."
-            );
-            // setForceURL("/admin/dashboard");
-            alert(
-              "unsupported user role detected - executive (`root`) user accounts are not supported at this time."
-            );
-            break;
-          case ADMIN_ROLE_ID:
-            console.log(
-              "onLoginSuccess: user is admin, redirecting to admin dashboard..."
-            );
-            setForceURL("/admin/dashboard");
-            break;
-          case TRAINER_ROLE_ID:
-            console.log(
-              "onLoginSuccess: user is trainer, redirecting to trainer dashboard..."
-            );
-            setForceURL("/trainer/dashboard");
-            break;
-          case MEMBER_ROLE_ID:
-            console.log(
-              "onLoginSuccess: user is member, redirecting to member dashboard..."
-            );
+    if (
+      response.user.otpEnabled === undefined ||
+      response.user.otpEnabled === null ||
+      response.user.otpEnabled === "" ||
+      response.user.otpEnabled === false
+    ) {
+      // Proceed to redirect the user based on their assigned role.
+      switch (response.user.role) {
+        case ROOT_ROLE_ID:
+          console.log(
+            "onLoginSuccess: user is executive (root) admin, redirecting to admin dashboard..."
+          );
+          // setForceURL("/admin/dashboard");
+          alert(
+            "unsupported user role detected - executive (`root`) user accounts are not supported at this time."
+          );
+          break;
+        case ADMIN_ROLE_ID:
+          console.log(
+            "onLoginSuccess: user is admin, redirecting to admin dashboard..."
+          );
+          setForceURL("/admin/dashboard");
+          break;
+        case TRAINER_ROLE_ID:
+          console.log(
+            "onLoginSuccess: user is trainer, redirecting to trainer dashboard..."
+          );
+          setForceURL("/trainer/dashboard");
+          break;
+        case MEMBER_ROLE_ID:
+          console.log(
+            "onLoginSuccess: user is member, redirecting to member dashboard...",
+            response.user.onboardingCompleted
+          );
+          if (!response.user.onboardingCompleted) {
+            setForceURL("/onboarding");
+          } else {
             setForceURL("/dashboard");
-            break;
-          default:
-            console.log("onLoginSuccess: critical error");
-            alert(
-              "onLoginSuccess: unsupported user role detected - please contact system administrator."
-            );
-        }
+          }
+          break;
+        default:
+          console.log("onLoginSuccess: critical error");
+          alert(
+            "onLoginSuccess: unsupported user role detected - please contact system administrator."
+          );
+      }
     } else {
-        if (response.user.otpVerified === false) {
-            console.log("onLoginSuccess | redirecting to 2fa setup wizard");
-            setForceURL("/login/2fa/step-1");
-        } else {
-            console.log("onLoginSuccess | redirecting to 2fa validation");
-            setForceURL("/login/2fa");
-        }
+      if (response.user.otpVerified === false) {
+        console.log("onLoginSuccess | redirecting to 2fa setup wizard");
+        setForceURL("/login/2fa/step-1");
+      } else {
+        console.log("onLoginSuccess | redirecting to 2fa validation");
+        setForceURL("/login/2fa");
+      }
     }
-
   }
 
   function onLoginError(apiErr) {
@@ -282,9 +296,11 @@ function Login() {
                             </label>
                             <div class="control has-icons-left has-icons-right">
                               <input
-                                class={`input ${errors && errors.email && "is-danger"
-                                  } ${validation && validation.email && "is-success"
-                                  }`}
+                                class={`input ${
+                                  errors && errors.email && "is-danger"
+                                } ${
+                                  validation && validation.email && "is-success"
+                                }`}
                                 type="email"
                                 placeholder="Email"
                                 value={email}
@@ -308,11 +324,13 @@ function Login() {
                             </label>
                             <div class="control has-icons-left has-icons-right">
                               <input
-                                class={`input ${errors && errors.password && "is-danger"
-                                  } ${validation &&
+                                class={`input ${
+                                  errors && errors.password && "is-danger"
+                                } ${
+                                  validation &&
                                   validation.password &&
                                   "is-success"
-                                  }`}
+                                }`}
                                 type="password"
                                 placeholder="Password"
                                 value={password}
@@ -349,10 +367,7 @@ function Login() {
                           </div>
                           <div class="level-item has-text-centered">
                             <div>
-                              <Link
-                                to="/register"
-                                className="is-size-7-tablet"
-                              >
+                              <Link to="/register" className="is-size-7-tablet">
                                 Create an Account
                               </Link>
                             </div>

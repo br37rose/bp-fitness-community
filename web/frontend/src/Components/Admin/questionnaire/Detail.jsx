@@ -304,7 +304,7 @@ function AdminQuestionnaireDetail() {
                       </div>
                       <div class="column is-half has-text-right">
                         <Link
-                          to={`/admin/video-category/${id}/update`}
+                          to={`/admin/questions/${id}/update`}
                           class="button is-warning is-fullwidth-mobile"
                         >
                           <FontAwesomeIcon className="fas" icon={faPencil} />
