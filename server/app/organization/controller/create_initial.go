@@ -2,10 +2,10 @@ package controller
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"log/slog"
 
 	o_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/datastore"
 	u_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
