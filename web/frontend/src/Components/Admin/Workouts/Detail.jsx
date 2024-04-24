@@ -24,6 +24,7 @@ import {
 } from "../../../Constants/App";
 import { deleteWorkoutAPI, getWorkoutDetailAPI } from "../../../API/workout";
 import Vimeo from "@u-wave/react-vimeo";
+import YouTubeVideo from "../../Reusable/YoutubePlayer";
 
 function AdminWorkoutDetail() {
   ////
@@ -337,29 +338,12 @@ function AdminWorkoutDetail() {
                                   case EXERCISE_VIDEO_TYPE_YOUTUBE:
                                     return (
                                       <>
-                                        <video
-                                          style={{
-                                            width: "100%",
-                                            height: "100%",
-                                          }}
-                                          controls
-                                          poster={
-                                            exercise.excercise.thumbnailUrl
-                                          }
-                                        >
-                                          <source
-                                            src={
-                                              exercise.excercise.videoObjectUrl
-                                            }
-                                            type="video/mp4"
-                                          />
-                                        </video>
-                                        <a
-                                          href={exercise.excercise.videoUrl}
-                                          target="_blank"
-                                        >
-                                          VideoLink
-                                        </a>
+                                        <YouTubeVideo
+                                          width={"100%"}
+                                          height={"auto"}
+                                          videoId={exercise.excercise.videoUrl}
+                                          minHeight={"50vh"}
+                                        />
                                       </>
                                     );
                                   case EXERCISE_VIDEO_TYPE_VIMEO:

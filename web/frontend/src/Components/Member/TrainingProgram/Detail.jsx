@@ -8,9 +8,6 @@ import {
   faGauge,
   faEye,
   faTable,
-  faSave,
-  faCancel,
-  faArrowUpRightFromSquare,
   faEdit,
   faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,13 +21,8 @@ import { getWorkoutListApi } from "../../../API/workout";
 import {
   deleteTrainingProgAPI,
   getTrainingProgDetailAPI,
-  patchTrainingProgAPI,
 } from "../../../API/trainingProgram";
 import PhasePanel from "./phasepanel";
-import WorkoutDisplay from "../../Reusable/WorkoutsDisplay";
-import Modal from "../../Reusable/modal";
-import FormInputField from "../../Reusable/FormInputField";
-import Accordion from "../../Reusable/accordion";
 import FitnessPlanDisplay from "../../Reusable/FitnessPlanDisplay";
 
 function MemberTPDetail() {
@@ -181,11 +173,6 @@ function MemberTPDetail() {
     setFetching(false);
   }
 
-  const getYouTubeVideoId = (url) => {
-    const match = url.match(/[?&]v=([^&]+)/);
-    return match && match[1];
-  };
-
   function transformResponseForFitnessPlan(phase) {
     let plan = [
       {
@@ -243,10 +230,7 @@ function MemberTPDetail() {
             ? tr.workout.workoutExercises.map((exc) => ({
                 id: exc.id,
                 name: exc.exerciseName,
-                videoUrl:
-                  exc.excercise.videoType == 2
-                    ? getYouTubeVideoId(exc.excercise.videoUrl)
-                    : exc.excercise.videoUrl,
+                videoUrl: exc.excercise.videoUrl,
                 thumbnailUrl: exc.excercise.thumbnailUrl,
                 description: setInstruction(exc),
                 videoType: exc.excercise.videoType,
@@ -353,7 +337,7 @@ function MemberTPDetail() {
               </div>
               <div className="column has-text-right">
                 <Link
-                  to={`/admin/training-program/${id}/edit`}
+                  to={`/training-program/${id}/edit`}
                   className="button is-primary is-small is-fullwidth-mobile mr-2"
                   type="button"
                 >

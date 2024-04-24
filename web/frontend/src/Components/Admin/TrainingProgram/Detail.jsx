@@ -147,10 +147,6 @@ function AdminTPDetailView() {
   if (forceURL !== "") {
     return <Navigate to={forceURL} />;
   }
-  const getYouTubeVideoId = (url) => {
-    const match = url.match(/[?&]v=([^&]+)/);
-    return match && match[1];
-  };
 
   function transformResponseForFitnessPlan(phase) {
     let plan = [
@@ -209,10 +205,7 @@ function AdminTPDetailView() {
             ? tr.workout.workoutExercises.map((exc) => ({
                 id: exc.id,
                 name: exc.exerciseName,
-                videoUrl:
-                  exc.excercise.videoType == 2
-                    ? getYouTubeVideoId(exc.excercise.videoUrl)
-                    : exc.excercise.videoUrl,
+                videoUrl: exc.excercise.videoUrl,
                 thumbnailUrl: exc.excercise.thumbnailUrl,
                 description: setInstruction(exc),
                 videoType: exc.excercise.videoType,

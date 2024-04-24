@@ -511,42 +511,6 @@ function AdminWorkoutAdd() {
                     </div>
                   </div>
                 </div>
-                {/* <div
-                  className={`modal ${showExerciseFilter ? "is-active" : ""}`}
-                >
-                  <div className="modal-background"></div>
-                  <div className="modal-card">
-                    <header className="modal-card-head">
-                      <p className="modal-card-title">Are you sure?</p>
-                      <button
-                        className="delete"
-                        aria-label="close"
-                        onClick={() => setshowExerciseFilter(false)}
-                      ></button>
-                    </header>
-                    <section className="modal-card-body">
-                      You are about to <b>archive</b> this exercise; it will no
-                      longer appear on your dashboard nor will the exercise be
-                      able to log into their account. This action can be undone
-                      but you'll need to contact the system administrator. Are
-                      you sure you would like to continue?
-                    </section>
-                    <footer className="modal-card-foot">
-                      <button
-                        className="button is-success"
-                        onClick={() => setshowExerciseFilter(false)}
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        className="button"
-                        onClick={() => setshowExerciseFilter(false)}
-                      >
-                        Cancel
-                      </button>
-                    </footer>
-                  </div>
-                </div> */}
               </>
             )}
           </div>
