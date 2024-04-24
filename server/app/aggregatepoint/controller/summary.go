@@ -15,6 +15,33 @@ import (
 )
 
 type AggregatePointSummaryResponse struct {
+	CaloriesBurnedThisDay     *ap_s.AggregatePoint `bson:"calories_burned_this_day" json:"calories_burned_this_day"`
+	CaloriesBurnedLastDay     *ap_s.AggregatePoint `bson:"calories_burned_last_day" json:"calories_burned_last_day"`
+	CaloriesBurnedThisISOWeek *ap_s.AggregatePoint `bson:"calories_burned_this_iso_week" json:"calories_burned_this_iso_week"`
+	CaloriesBurnedLastISOWeek *ap_s.AggregatePoint `bson:"calories_burned_last_iso_week" json:"calories_burned_last_iso_week"`
+	CaloriesBurnedThisMonth   *ap_s.AggregatePoint `bson:"calories_burned_this_month" json:"calories_burned_this_month"`
+	CaloriesBurnedLastMonth   *ap_s.AggregatePoint `bson:"calories_burned_last_month" json:"calories_burned_last_month"`
+	CaloriesBurnedThisYear    *ap_s.AggregatePoint `bson:"calories_burned_this_year" json:"calories_burned_this_year"`
+	CaloriesBurnedLastYear    *ap_s.AggregatePoint `bson:"calories_burned_last_year" json:"calories_burned_last_year"`
+
+	StepCountDeltaThisDay     *ap_s.AggregatePoint `bson:"step_count_delta_this_day" json:"step_count_delta_this_day"`
+	StepCountDeltaLastDay     *ap_s.AggregatePoint `bson:"step_count_delta_last_day" json:"step_count_delta_last_day"`
+	StepCountDeltaThisISOWeek *ap_s.AggregatePoint `bson:"step_count_delta_this_iso_week" json:"step_count_delta_this_iso_week"`
+	StepCountDeltaLastISOWeek *ap_s.AggregatePoint `bson:"step_count_delta_last_iso_week" json:"step_count_delta_last_iso_week"`
+	StepCountDeltaThisMonth   *ap_s.AggregatePoint `bson:"step_count_delta_this_month" json:"step_count_delta_this_month"`
+	StepCountDeltaLastMonth   *ap_s.AggregatePoint `bson:"step_count_delta_last_month" json:"step_count_delta_last_month"`
+	StepCountDeltaThisYear    *ap_s.AggregatePoint `bson:"step_count_delta_this_year" json:"step_count_delta_this_year"`
+	StepCountDeltaLastYear    *ap_s.AggregatePoint `bson:"step_count_delta_last_year" json:"step_count_delta_last_year"`
+
+	DistanceDeltaThisDay     *ap_s.AggregatePoint `bson:"distance_delta_this_day" json:"distance_delta_this_day"`
+	DistanceDeltaLastDay     *ap_s.AggregatePoint `bson:"distance_delta_last_day" json:"distance_delta_last_day"`
+	DistanceDeltaThisISOWeek *ap_s.AggregatePoint `bson:"distance_delta_this_iso_week" json:"distance_delta_this_iso_week"`
+	DistanceDeltaLastISOWeek *ap_s.AggregatePoint `bson:"distance_delta_last_iso_week" json:"distance_delta_last_iso_week"`
+	DistanceDeltaThisMonth   *ap_s.AggregatePoint `bson:"distance_delta_this_month" json:"distance_delta_this_month"`
+	DistanceDeltaLastMonth   *ap_s.AggregatePoint `bson:"distance_delta_last_month" json:"distance_delta_last_month"`
+	DistanceDeltaThisYear    *ap_s.AggregatePoint `bson:"distance_delta_this_year" json:"distance_delta_this_year"`
+	DistanceDeltaLastYear    *ap_s.AggregatePoint `bson:"distance_delta_last_year" json:"distance_delta_last_year"`
+
 	HeartRateThisDay     *ap_s.AggregatePoint `bson:"heart_rate_this_day" json:"heart_rate_this_day"`
 	HeartRateLastDay     *ap_s.AggregatePoint `bson:"heart_rate_last_day" json:"heart_rate_last_day"`
 	HeartRateThisISOWeek *ap_s.AggregatePoint `bson:"heart_rate_this_iso_week" json:"heart_rate_this_iso_week"`
@@ -23,15 +50,6 @@ type AggregatePointSummaryResponse struct {
 	HeartRateLastMonth   *ap_s.AggregatePoint `bson:"heart_rate_last_month" json:"heart_rate_last_month"`
 	HeartRateThisYear    *ap_s.AggregatePoint `bson:"heart_rate_this_year" json:"heart_rate_this_year"`
 	HeartRateLastYear    *ap_s.AggregatePoint `bson:"heart_rate_last_year" json:"heart_rate_last_year"`
-
-	StepsCounterThisDay     *ap_s.AggregatePoint `bson:"steps_counter_this_day" json:"steps_counter_this_day"`
-	StepsCounterLastDay     *ap_s.AggregatePoint `bson:"steps_counter_last_day" json:"steps_counter_last_day"`
-	StepsCounterThisISOWeek *ap_s.AggregatePoint `bson:"steps_counter_this_iso_week" json:"steps_counter_this_iso_week"`
-	StepsCounterLastISOWeek *ap_s.AggregatePoint `bson:"steps_counter_last_iso_week" json:"steps_counter_last_iso_week"`
-	StepsCounterThisMonth   *ap_s.AggregatePoint `bson:"steps_counter_this_month" json:"steps_counter_this_month"`
-	StepsCounterLastMonth   *ap_s.AggregatePoint `bson:"steps_counter_last_month" json:"steps_counter_last_month"`
-	StepsCounterThisYear    *ap_s.AggregatePoint `bson:"steps_counter_this_year" json:"steps_counter_this_year"`
-	StepsCounterLastYear    *ap_s.AggregatePoint `bson:"steps_counter_last_year" json:"steps_counter_last_year"`
 }
 
 func (impl *AggregatePointControllerImpl) GetSummary(ctx context.Context, userID primitive.ObjectID) (*AggregatePointSummaryResponse, error) {
@@ -104,10 +122,10 @@ func (impl *AggregatePointControllerImpl) GetSummary(ctx context.Context, userID
 
 	// TODO: In the future use golang goroutines to improve performance.
 
-	if !u.PrimaryHealthTrackingDevice.HeartRateBPMMetricID.IsZero() {
-		if err := impl.summarizeHeartRateBPM(ctx, u, res); err != nil {
-			impl.Logger.Error("failed summarizing heart rate (bpm)",
-				slog.String("metric_id", u.PrimaryHealthTrackingDevice.HeartRateBPMMetricID.Hex()),
+	if !u.PrimaryHealthTrackingDevice.CaloriesBurnedMetricID.IsZero() {
+		if err := impl.summarizeCaloriesBurned(ctx, u, res); err != nil {
+			impl.Logger.Error("failed summarizing calories burned",
+				slog.String("metric_id", u.PrimaryHealthTrackingDevice.CaloriesBurnedMetricID.Hex()),
 				slog.Any("error", err))
 			return nil, err
 		}
@@ -115,8 +133,26 @@ func (impl *AggregatePointControllerImpl) GetSummary(ctx context.Context, userID
 
 	if !u.PrimaryHealthTrackingDevice.StepCountDeltaMetricID.IsZero() {
 		if err := impl.summarizeStepCountDelta(ctx, u, res); err != nil {
-			impl.Logger.Error("failed summarizing heart rate (bpm)",
+			impl.Logger.Error("failed summarizing step counter delta",
 				slog.String("metric_id", u.PrimaryHealthTrackingDevice.StepCountDeltaMetricID.Hex()),
+				slog.Any("error", err))
+			return nil, err
+		}
+	}
+
+	if !u.PrimaryHealthTrackingDevice.DistanceDeltaMetricID.IsZero() {
+		if err := impl.summarizeDistanceDelta(ctx, u, res); err != nil {
+			impl.Logger.Error("failed summarizing distance delta",
+				slog.String("metric_id", u.PrimaryHealthTrackingDevice.DistanceDeltaMetricID.Hex()),
+				slog.Any("error", err))
+			return nil, err
+		}
+	}
+
+	if !u.PrimaryHealthTrackingDevice.HeartRateBPMMetricID.IsZero() {
+		if err := impl.summarizeHeartRateBPM(ctx, u, res); err != nil {
+			impl.Logger.Error("failed summarizing heart rate (bpm)",
+				slog.String("metric_id", u.PrimaryHealthTrackingDevice.HeartRateBPMMetricID.Hex()),
 				slog.Any("error", err))
 			return nil, err
 		}

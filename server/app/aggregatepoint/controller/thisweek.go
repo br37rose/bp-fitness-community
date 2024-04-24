@@ -69,7 +69,7 @@ func (impl *AggregatePointControllerImpl) AggregateThisISOWeekForAllActiveGoogle
 			- - - - - - - - - - - - - - - - - - - - - - - - - - -
 			DataTypeNameCyclingWheelRevolutionRPM
 			DataTypeNameCyclingWheelRevolutionCumulative
-			DataTypeNameDistanceDelta
+			DataTypeNameDistanceDelta         [DONE]
 			DataTypeNameLocationSample
 			DataTypeNameSpeed
 			- - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -95,6 +95,7 @@ func (impl *AggregatePointControllerImpl) AggregateThisISOWeekForAllActiveGoogle
 		metricIDs := []primitive.ObjectID{
 			gfa.CaloriesBurnedMetricID,
 			gfa.StepCountDeltaMetricID,
+			gfa.DistanceDeltaMetricID,
 			gfa.HeartRateBPMMetricID,
 			//TODO: Add more health sensors here...
 		}
