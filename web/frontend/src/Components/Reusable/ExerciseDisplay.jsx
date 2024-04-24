@@ -1,4 +1,5 @@
 import DataDisplayRowText from "./DataDisplayRowText";
+import YouTubeVideo from "./YoutubePlayer";
 import DraggableItem from "./dragable";
 import { useState } from "react";
 
@@ -48,10 +49,24 @@ function ExerciseDisplay({
           </p>
         </div>
       )}
-      <video className="exercise-video" poster={exercise.thumbnailUrl} controls>
-        <source src={exercise.videoUrl} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      {exercise.videoUrl &&
+        (exercise.videoType == 2 ? (
+          <YouTubeVideo
+            width={"100%"}
+            height={"auto"}
+            videoId={exercise.videoUrl}
+            minHeight={"50vh"}
+          />
+        ) : (
+          <video
+            className="exercise-video"
+            poster={exercise.thumbnailUrl}
+            controls
+          >
+            <source src={exercise.videoUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        ))}
     </div>
   );
 

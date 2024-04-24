@@ -10,6 +10,7 @@ import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/datastore"
 	tp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/trainingprogram/datastore"
 	u_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
+	wrk_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/controller"
 	wk_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
@@ -24,13 +25,14 @@ type TrainingprogramController interface {
 }
 
 type TrainingprogramControllerImpl struct {
-	Config        *config.Conf
-	Logger        *slog.Logger
-	UUID          uuid.Provider
-	DbClient      *mongo.Client
-	TpStorer      tp_s.TrainingProgramStorer
-	WorkoutStorer wk_s.WorkoutStorer
-	UserStorer    u_s.UserStorer
+	Config            *config.Conf
+	Logger            *slog.Logger
+	UUID              uuid.Provider
+	DbClient          *mongo.Client
+	TpStorer          tp_s.TrainingProgramStorer
+	WorkoutStorer     wk_s.WorkoutStorer
+	WorkoutController wrk_c.WorkoutController
+	UserStorer        u_s.UserStorer
 }
 
 func NewController(
@@ -41,15 +43,17 @@ func NewController(
 	tp_store tp_s.TrainingProgramStorer,
 	exc_storer wk_s.WorkoutStorer,
 	us_storer u_s.UserStorer,
+	wrk_contr wrk_c.WorkoutController,
 ) TrainingprogramController {
 	impl := &TrainingprogramControllerImpl{
-		Config:        appCfg,
-		Logger:        loggerp,
-		UUID:          uuidp,
-		DbClient:      client,
-		TpStorer:      tp_store,
-		WorkoutStorer: exc_storer,
-		UserStorer:    us_storer,
+		Config:            appCfg,
+		Logger:            loggerp,
+		UUID:              uuidp,
+		DbClient:          client,
+		TpStorer:          tp_store,
+		WorkoutStorer:     exc_storer,
+		UserStorer:        us_storer,
+		WorkoutController: wrk_contr,
 	}
 	return impl
 }

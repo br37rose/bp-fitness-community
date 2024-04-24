@@ -1,4 +1,3 @@
-import { React } from "react";
 import "bulma/css/bulma.min.css";
 import "./css/styles.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -55,7 +54,6 @@ import MemberFitnessPlanSubmissionForm from "./Components/Member/FitnessPlan/Det
 import MemberFitnessPlanDetail from "./Components/Member/FitnessPlan/Detail";
 import MemberFitnessPlanList from "./Components/Member/FitnessPlan/List";
 import MemberFitnessPlanAdd from "./Components/Member/FitnessPlan/Add";
-import MemberVideoContentDetail from "./Components/Member/VideoCollection/VideoContent/Detail";
 import MemberVideoContentList from "./Components/Member/VideoCollection/VideoContent/List";
 import MemberVideoCollectionDetail from "./Components/Member/VideoCollection/Detail";
 import MemberVideoCollectionList from "./Components/Member/Videos/VideoCategories/Collections/List";
@@ -79,7 +77,6 @@ import TopAlertBanner from "./Components/Misc/TopAlertBanner";
 import Sidebar from "./Components/Menu/Sidebar";
 import Topbar from "./Components/Menu/Top";
 import NotFoundError from "./Components/Misc/NotFoundError";
-import NotImplementedError from "./Components/Misc/NotImplementedError";
 import AccountTwoFactorAuthenticationDetail from "./Components/Account/2FA/View";
 import AccountEnableTwoFactorAuthentication from "./Components/Account/2FA/EnableView";
 import EmailVerification from "./Components/Gateway/EmailVerification";
@@ -91,7 +88,6 @@ import AccountWearableTechLaunchpad from "./Components/Account/WearableTech/Laun
 import AccountSubscriptionDetailAndCancel from "./Components/Account/Subscription/Subscription";
 import AccountInvoiceList from "./Components/Account/Subscription/Invoice/List";
 import AccountTagList from "./Components/Account/DetailForTags";
-import AccountDetail from "./Components/Account/Detail";
 import AccountUpdate from "./Components/Account/Update";
 import AccountChangePassword from "./Components/Account/ChangePassword";
 import ForgotPassword from "./Components/Gateway/ForgotPassword";
@@ -112,7 +108,6 @@ import MemberWorkoutList from "./Components/Member/Workouts/list";
 import MemberWorkoutAdd from "./Components/Member/Workouts/add";
 import MemberWorkoutDetail from "./Components/Member/Workouts/Detail";
 import MemberWorkoutEdit from "./Components/Member/Workouts/update";
-import AdminTPDetail from "./Components/Admin/TrainingProgram/Detail";
 import MemberTrainingProgramList from "./Components/Member/TrainingProgram/list";
 import MemberTrainingProgramAdd from "./Components/Member/TrainingProgram/add";
 import MemberTPDetail from "./Components/Member/TrainingProgram/Detail";
@@ -121,6 +116,9 @@ import AdminQuestionnaireAdd from "./Components/Admin/questionnaire/Add";
 import AdminQuestionnaireDetail from "./Components/Admin/questionnaire/Detail";
 import AdminQuestionnaireUpdate from "./Components/Admin/questionnaire/Update";
 import Onboarding from "./Components/Reusable/Wizard/Wizard";
+import AdminTPDetailView from "./Components/Admin/TrainingProgram/Detail";
+import AdminTPDetail from "./Components/Admin/TrainingProgram/Update";
+import MemberTPUpdate from "./Components/Member/TrainingProgram/Update";
 
 function AppRoute() {
   return (
@@ -343,6 +341,11 @@ function AppRoute() {
                   <Route
                     exact
                     path="/admin/training-program/:id"
+                    element={<AdminTPDetailView />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/training-program/:id/edit"
                     element={<AdminTPDetail />}
                   />
                   <Route
@@ -564,6 +567,12 @@ function AppRoute() {
                   />
 
                   <Route exact path="/onboarding" element={<Onboarding />} />
+
+                  <Route
+                    exact
+                    path="/training-program/:id/edit"
+                    element={<MemberTPUpdate />}
+                  />
 
                   {/*
                                         -----------------------------------------------
