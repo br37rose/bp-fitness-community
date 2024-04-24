@@ -115,6 +115,7 @@ import AdminQuestionnaireList from "./Components/Admin/questionnaire/List";
 import AdminQuestionnaireAdd from "./Components/Admin/questionnaire/Add";
 import AdminQuestionnaireDetail from "./Components/Admin/questionnaire/Detail";
 import AdminQuestionnaireUpdate from "./Components/Admin/questionnaire/Update";
+import Onboarding from "./Components/Reusable/Wizard/Wizard";
 import AdminTPDetailView from "./Components/Admin/TrainingProgram/Detail";
 import AdminTPDetail from "./Components/Admin/TrainingProgram/Update";
 import MemberTPUpdate from "./Components/Member/TrainingProgram/Update";
@@ -564,6 +565,9 @@ function AppRoute() {
                     path="/training-program/:id"
                     element={<MemberTPDetail />}
                   />
+
+                  <Route exact path="/onboarding" element={<Onboarding />} />
+
                   <Route
                     exact
                     path="/training-program/:id/edit"

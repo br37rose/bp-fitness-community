@@ -422,10 +422,6 @@ function MemberDashboard() {
   //// Component rendering.
   ////
 
-  if (!currentUser.onboardingCompleted && currentUser.role !== 2) {
-    return <Onboarding />;
-  }
-
   return (
     <Layout breadcrumbItems={breadcrumbItems}>
       {/* Wizard Component */}
