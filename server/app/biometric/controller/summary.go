@@ -215,7 +215,9 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 		// - generateSummaryDataForStepsDelta
 		// - generateSummarySummaryForCaloriesBurned
 		// - generateSummaryDataForCaloriesBurned
-		numWorkers := 7
+		// - generateSummarySummaryForDistanceDelta
+		// - generateSummaryDataForDistanceDelta
+		numWorkers := 9
 
 		// Create a channel to collect errors from goroutines.
 		errCh := make(chan error, numWorkers)
@@ -270,6 +272,22 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 		}()
 		go func() {
 			if err := impl.generateSummaryDataForCaloriesBurned(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		// go func() {
+		// 	if err := impl.generateSummaryRankingsForHR(sessCtx, u, res, &mu, &wg); err != nil {
+		// 		errCh <- err
+		// 	}
+		// }()
+		// ---> Distance Delta:
+		go func() {
+			if err := impl.generateSummarySummaryForDistanceDelta(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		go func() {
+			if err := impl.generateSummaryDataForDistanceDelta(sessCtx, u, res, &mu, &wg); err != nil {
 				errCh <- err
 			}
 		}()
