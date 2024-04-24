@@ -519,18 +519,18 @@ function MemberDashboard() {
                           <div class="ml-6">
                             <h5 class="is-size-2 is-size-4-mobile  has-text-centered has-text-weight-semibold">
                               {datum &&
-                                datum.stepsCounterThisDaySummary &&
-                                datum.stepsCounterThisDaySummary.sum}
+                                datum.stepCountDeltaThisDaySummary &&
+                                datum.stepCountDeltaThisDaySummary.sum}
                               <span class="is-size-5 has-text-weight-semibold is-size-6-mobile">
                                 &nbsp;Total Steps
                               </span>
                             </h5>
                             <AverageAndTimeComparison
                               lastDay={
-                                datum && datum.stepsCounterLastDaySummary
+                                datum && datum.stepCountDeltaLastDaySummary
                               }
                               thisDay={
-                                datum && datum.stepsCounterThisDaySummary
+                                datum && datum.stepCountDeltaThisDaySummary
                               }
                               mode={2}
                             />

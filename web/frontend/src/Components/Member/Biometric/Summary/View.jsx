@@ -44,7 +44,7 @@ import {
   dataPointFilterSortState,
   dataPointFilterStatusState,
   dataPointFilterIsHeartRateState,
-  dataPointFilterIsStepsCounterState
+  dataPointFilterIsStepCountDeltaState
 } from "../../../../AppState";
 import PageLoadingContent from "../../../Reusable/PageLoadingContent";
 import BarChart from "../../../Reusable/Charts/Bar";
@@ -326,7 +326,7 @@ function MemberSummary() {
                                   </div>
                                   <div title="Steps Count average for today" className="media-content ">
                                     <p className="title has-text-weight-semibold is-7">Steps Count(Today)</p>
-                                    <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.stepsCounterThisDaySummary && Math.round(datum.stepsCounterThisDaySummary.average)} counts`}</p>
+                                    <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.stepCountDeltaThisDaySummary && Math.round(datum.stepCountDeltaThisDaySummary.average)} counts`}</p>
                                   </div>
                                 </div>
                               </div>
@@ -341,7 +341,7 @@ function MemberSummary() {
                                   </div>
                                   <div title="Steps Count average in the last 7 days" className="media-content ">
                                     <p className="title has-text-weight-semibold is-7">Steps Count(Week)</p>
-                                    <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.stepsCounterThisIsoWeekSummary && Math.round(datum.stepsCounterThisIsoWeekSummary.average)} counts`}</p>
+                                    <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.stepCountDeltaThisIsoWeekSummary && Math.round(datum.stepCountDeltaThisIsoWeekSummary.average)} counts`}</p>
                                   </div>
                                 </div>
                               </div>
@@ -367,14 +367,14 @@ function MemberSummary() {
                           <div className="columns">
                             {/* Doughnut Chart */}
                             <div className="column is-one-third">
-                              <BarChart data={transformData(datum.stepsCounterThisDayData, 'Steps Count', 'Steps Count - Today', 'hours', 1)} />
+                              <BarChart data={transformData(datum.stepCountDeltaThisDayData, 'Steps Count', 'Steps Count - Today', 'hours', 1)} />
                             </div>
                             {/* Another Chart or Content */}
                             <div className="column is-one-third">
-                              <BarChart data={transformData(datum.stepsCounterThisIsoWeekData, 'Steps Count', 'Steps Count - Week', 'week', 1)} />
+                              <BarChart data={transformData(datum.stepCountDeltaThisIsoWeekData, 'Steps Count', 'Steps Count - Week', 'week', 1)} />
                             </div>
                             <div className="column is-one-third">
-                              <BarChart data={transformData(datum.stepsCounterThisMonthData, 'Steps Count', 'Steps Count - Month', 'month', 1)} />
+                              <BarChart data={transformData(datum.stepCountDeltaThisMonthData, 'Steps Count', 'Steps Count - Month', 'month', 1)} />
                             </div>
                           </div>
 

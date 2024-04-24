@@ -24,7 +24,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if thisDay != nil {
-		res.StepsCounterThisDaySummary = thisDay
+		res.StepCountDeltaThisDaySummary = thisDay
 	}
 
 	// --- Last Day --- //
@@ -40,7 +40,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if lastDay != nil {
-		res.StepsCounterLastDaySummary = lastDay
+		res.StepCountDeltaLastDaySummary = lastDay
 	}
 
 	// --- This ISO Week --- //
@@ -56,7 +56,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if thisWeek != nil {
-		res.StepsCounterThisISOWeekSummary = thisWeek
+		res.StepCountDeltaThisISOWeekSummary = thisWeek
 	}
 
 	// --- Last ISO Week --- //
@@ -72,7 +72,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if lastWeek != nil {
-		res.StepsCounterLastISOWeekSummary = lastWeek
+		res.StepCountDeltaLastISOWeekSummary = lastWeek
 	}
 
 	// --- This Month --- //
@@ -88,7 +88,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if thisMonth != nil {
-		res.StepsCounterThisMonthSummary = thisMonth
+		res.StepCountDeltaThisMonthSummary = thisMonth
 	}
 
 	// --- Last Month --- //
@@ -104,7 +104,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if lastMonth != nil {
-		res.StepsCounterLastMonthSummary = lastMonth
+		res.StepCountDeltaLastMonthSummary = lastMonth
 	}
 
 	// --- This Year --- //
@@ -120,7 +120,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if thisYear != nil {
-		res.StepsCounterThisYearSummary = thisYear
+		res.StepCountDeltaThisYearSummary = thisYear
 	}
 
 	// --- Last Year --- //
@@ -136,7 +136,7 @@ func (impl *BiometricControllerImpl) generateSummaryForStepCounter(ctx context.C
 		return err
 	}
 	if lastYear != nil {
-		res.StepsCounterLastYearSummary = lastYear
+		res.StepCountDeltaLastYearSummary = lastYear
 	}
 	return err
 }

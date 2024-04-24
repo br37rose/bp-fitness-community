@@ -34,7 +34,7 @@ import {
     dataPointFilterSortState,
     dataPointFilterStatusState,
     dataPointFilterIsHeartRateState,
-    dataPointFilterIsStepsCounterState
+    dataPointFilterIsStepCountDeltaState
 } from "../../../../AppState";
 import FormCheckboxField from "../../../Reusable/FormCheckboxField";
 import PageLoadingContent from "../../../Reusable/PageLoadingContent";
@@ -58,7 +58,7 @@ function MemberDataPointHistoricalTabularList() {
     const [actualSearchText, setActualSearchText] = useRecoilState(dataPointFilterActualSearchTextState); // Searching - The actual search query value to submit to the API.
     const [status, setStatus] = useRecoilState(dataPointFilterStatusState);
     const [isHeartRate, setIsHeartRate] = useRecoilState(dataPointFilterIsHeartRateState);
-    const [isStepsCounter, setIsStepsCounter] = useRecoilState(dataPointFilterIsStepsCounterState);
+    const [isStepsCounter, setIsStepsCounter] = useRecoilState(dataPointFilterIsStepCountDeltaState);
 
     ////
     //// Component states.

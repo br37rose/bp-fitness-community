@@ -8,23 +8,23 @@ import (
 	u_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 )
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounter(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
-	if err := impl.generateSummaryRankingsForStepsCounterToday(ctx, u, res); err != nil {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForStepCountDelta(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
+	if err := impl.generateSummaryRankingsForStepCountDeltaToday(ctx, u, res); err != nil {
 		return err
 	}
-	if err := impl.generateSummaryRankingsForStepsCounterISOWeek(ctx, u, res); err != nil {
+	if err := impl.generateSummaryRankingsForStepCountDeltaISOWeek(ctx, u, res); err != nil {
 		return err
 	}
-	if err := impl.generateSummaryRankingsForStepsCounterMonth(ctx, u, res); err != nil {
+	if err := impl.generateSummaryRankingsForStepCountDeltaMonth(ctx, u, res); err != nil {
 		return err
 	}
-	if err := impl.generateSummaryRankingsForStepsCounterYear(ctx, u, res); err != nil {
+	if err := impl.generateSummaryRankingsForStepCountDeltaYear(ctx, u, res); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterToday(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForStepCountDeltaToday(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
 
 	////
 	//// Generate the rankings for TODAY.
@@ -68,14 +68,14 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterToday
 		}
 
 		if rprp != nil {
-			res.StepsCounterThisDayRanking = rprp.Results
+			res.StepCountDeltaThisDayRanking = rprp.Results
 		}
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterISOWeek(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForStepCountDeltaISOWeek(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
 
 	////
 	//// Generate the rankings for ISO WEEK.
@@ -119,7 +119,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterISOWe
 		}
 
 		if rprp != nil {
-			res.StepsCounterThisISOWeekRanking = rprp.Results
+			res.StepCountDeltaThisISOWeekRanking = rprp.Results
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",
@@ -130,7 +130,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterISOWe
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterMonth(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForStepCountDeltaMonth(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
 
 	////
 	//// Generate the rankings for ISO WEEK.
@@ -174,7 +174,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterMonth
 		}
 
 		if rprp != nil {
-			res.StepsCounterThisMonthRanking = rprp.Results
+			res.StepCountDeltaThisMonthRanking = rprp.Results
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",
@@ -185,7 +185,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterMonth
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterYear(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryRankingsForStepCountDeltaYear(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
 	rp, err := impl.RankPointStorer.GetByCompositeKeyForThisYear(ctx, u.PrimaryHealthTrackingDeviceStepsCountMetricID, rp_d.FunctionSum)
 	if err != nil {
 		impl.Logger.Error("failed getting by composite key for year",
@@ -224,7 +224,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsCounterYear(
 		}
 
 		if rprp != nil {
-			res.StepsCounterThisYearRanking = rprp.Results
+			res.StepCountDeltaThisYearRanking = rprp.Results
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",

@@ -123,13 +123,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaToday(sessC
 
 	if thisDayList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", ap_s.PeriodHour),
 		// 	slog.Any("sort_field", thisDayFilter.SortField),
 		// 	slog.Any("sort_order", thisDayFilter.SortOrder),
 		// 	slog.Time("start", thisDayStart),
 		// 	slog.Time("end", thisDayEnd))
-		res.StepsCounterThisDayData = thisDayList.Results
+		res.StepCountDeltaThisDayData = thisDayList.Results
 	}
 
 	return nil
@@ -171,13 +171,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaYesterday(s
 
 	if lastDayList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", ap_s.PeriodHour),
 		// 	slog.Any("sort_field", lastDayList.SortField),
 		// 	slog.Any("sort_order", lastDayList.SortOrder),
 		// 	slog.Time("start", lastDayStart),
 		// 	slog.Time("end", lastDayEnd))
-		res.StepsCounterLastDayData = lastDayList.Results
+		res.StepCountDeltaLastDayData = lastDayList.Results
 	}
 	return nil
 }
@@ -224,13 +224,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaThisISOWeek
 
 	if thisISOWeekList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", ap_s.PeriodHour),
 		// 	slog.Any("sort_field", thisISOWeekFilter.SortField),
 		// 	slog.Any("sort_order", thisISOWeekFilter.SortOrder),
 		// 	slog.Time("start", thisISOWeekStart),
 		// 	slog.Time("end", thisISOWeekEnd))
-		res.StepsCounterThisISOWeekData = thisISOWeekList.Results
+		res.StepCountDeltaThisISOWeekData = thisISOWeekList.Results
 	}
 
 	return nil
@@ -272,13 +272,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaLastISOWeek
 
 	if lastISOWeekWeekList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", ap_s.PeriodHour),
 		// 	slog.Any("sort_field", lastISOWeekWeekFilter.SortField),
 		// 	slog.Any("sort_order", lastISOWeekWeekFilter.SortOrder),
 		// 	slog.Time("start", lastISOWeekWeekStart),
 		// 	slog.Time("end", lastISOWeekWeekEnd))
-		res.StepsCounterLastISOWeekData = lastISOWeekWeekList.Results
+		res.StepCountDeltaLastISOWeekData = lastISOWeekWeekList.Results
 	}
 
 	return nil
@@ -321,13 +321,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaThisMonth(s
 
 	if thisMonthList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", thisMonthFilter.Period),
 		// 	slog.Any("sort_field", thisMonthFilter.SortField),
 		// 	slog.Any("sort_order", thisMonthFilter.SortOrder),
 		// 	slog.Time("start", thisMonthStart),
 		// 	slog.Time("end", thisMonthEnd))
-		res.StepsCounterThisMonthData = thisMonthList.Results
+		res.StepCountDeltaThisMonthData = thisMonthList.Results
 	}
 
 	return nil
@@ -370,13 +370,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaLastMonth(s
 
 	if lastMonthList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", ap_s.PeriodHour),
 		// 	slog.Any("sort_field", lastMonthFilter.SortField),
 		// 	slog.Any("sort_order", lastMonthFilter.SortOrder),
 		// 	slog.Time("start", lastMonthStart),
 		// 	slog.Time("end", lastMonthEnd))
-		res.StepsCounterLastMonthData = lastMonthList.Results
+		res.StepCountDeltaLastMonthData = lastMonthList.Results
 	}
 
 	return nil
@@ -421,13 +421,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaThisYear(se
 
 	if thisYearList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", ap_s.PeriodHour),
 		// 	slog.Any("sort_field", thisYearFilter.SortField),
 		// 	slog.Any("sort_order", thisYearFilter.SortOrder),
 		// 	slog.Time("start", thisYearStart),
 		// 	slog.Time("end", thisYearEnd))
-		res.StepsCounterThisYearData = thisYearList.Results
+		res.StepCountDeltaThisYearData = thisYearList.Results
 	}
 
 	return nil
@@ -470,13 +470,13 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsDeltaLastYear(se
 
 	if lastYearList != nil {
 		// impl.Logger.Debug("debugging purposes only",
-		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepsCounterMetricID.Hex()),
+		// 	slog.String("metric_id", u.PrimaryHealthTrackingDeviceStepCountDeltaMetricID.Hex()),
 		// 	slog.Any("period", ap_s.PeriodHour),
 		// 	slog.Any("sort_field", lastYearFilter.SortField),
 		// 	slog.Any("sort_order", lastYearFilter.SortOrder),
 		// 	slog.Time("start", lastYearStart),
 		// 	slog.Time("end", lastYearEnd))
-		res.StepsCounterLastYearData = lastYearList.Results
+		res.StepCountDeltaLastYearData = lastYearList.Results
 	}
 
 	return nil

@@ -6,7 +6,7 @@ import (
 	u_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 )
 
-func (impl *BiometricControllerImpl) generateSummaryDataForStepsCounter(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
+func (impl *BiometricControllerImpl) generateSummaryDataForStepCountDelta(ctx context.Context, u *u_d.User, res *AggregatePointSummaryResponse) error {
 	// // --- Today --- //
 	// scdp, err := impl.DataPointStorer.ListForToday(ctx, []primitive.ObjectID{u.PrimaryHealthTrackingDeviceStepsCountMetricID})
 	// if err != nil {
@@ -16,7 +16,7 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsCounter(ctx cont
 	// 	return err
 	// }
 	// if scdp != nil {
-	// 	res.StepsCounterThisDayData = scdp.Results
+	// 	res.StepCountDeltaThisDayData = scdp.Results
 	// }
 	//
 	// // --- Yesterday --- //
@@ -28,7 +28,7 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsCounter(ctx cont
 	// 	return err
 	// }
 	// if scdp != nil {
-	// 	res.StepsCounterLastDayData = scdp.Results
+	// 	res.StepCountDeltaLastDayData = scdp.Results
 	// }
 	//
 	// // --- This ISO Week --- //
@@ -40,7 +40,7 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsCounter(ctx cont
 	// 	return err
 	// }
 	// if scdp != nil {
-	// 	res.StepsCounterThisISOWeekData = scdp.Results
+	// 	res.StepCountDeltaThisISOWeekData = scdp.Results
 	// }
 	//
 	// // --- Last ISO Week --- //
@@ -52,7 +52,7 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsCounter(ctx cont
 	// 	return err
 	// }
 	// if scdp != nil {
-	// 	res.StepsCounterLastISOWeekData = scdp.Results
+	// 	res.StepCountDeltaLastISOWeekData = scdp.Results
 	// }
 	//
 	// // --- This Month Week --- //
@@ -64,7 +64,7 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsCounter(ctx cont
 	// 	return err
 	// }
 	// if scdp != nil {
-	// 	res.StepsCounterThisMonthData = scdp.Results
+	// 	res.StepCountDeltaThisMonthData = scdp.Results
 	// }
 	//
 	// // --- Last Month Week --- //
@@ -76,7 +76,7 @@ func (impl *BiometricControllerImpl) generateSummaryDataForStepsCounter(ctx cont
 	// 	return err
 	// }
 	// if scdp != nil {
-	// 	res.StepsCounterLastMonthData = scdp.Results
+	// 	res.StepCountDeltaLastMonthData = scdp.Results
 	// }
 	return nil
 }

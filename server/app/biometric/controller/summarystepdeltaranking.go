@@ -106,7 +106,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaToday(s
 			mu.Lock()
 			defer mu.Unlock()
 
-			res.StepsCounterThisDayRanking = rprp.Results
+			res.StepCountDeltaThisDayRanking = rprp.Results
 		}
 	}
 
@@ -164,7 +164,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaISOWeek
 			mu.Lock()
 			defer mu.Unlock()
 
-			res.StepsCounterThisISOWeekRanking = rprp.Results
+			res.StepCountDeltaThisISOWeekRanking = rprp.Results
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",
@@ -226,7 +226,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaMonth(s
 			mu.Lock()
 			defer mu.Unlock()
 
-			res.StepsCounterThisMonthRanking = rprp.Results
+			res.StepCountDeltaThisMonthRanking = rprp.Results
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",
@@ -284,7 +284,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaYear(se
 			mu.Lock()
 			defer mu.Unlock()
 
-			res.StepsCounterThisYearRanking = rprp.Results
+			res.StepCountDeltaThisYearRanking = rprp.Results
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",

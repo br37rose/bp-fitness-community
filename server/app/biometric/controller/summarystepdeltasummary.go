@@ -12,7 +12,7 @@ import (
 	u_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 )
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounter(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDelta(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -34,62 +34,62 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounter(sessC
 
 	// --- This Hour --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterThisHour(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaThisHour(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- Last Hour --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterLastHour(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaLastHour(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 
 	// --- Today --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterToday(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaToday(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- Yesterday --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterYesterday(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaYesterday(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- This ISO Week --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterThisISOWeek(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaThisISOWeek(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- Last ISO Week --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterLastISOWeek(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaLastISOWeek(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- This Month --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterThisMonth(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaThisMonth(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- Last Month --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterLastMonth(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaLastMonth(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- This Year --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterThisYear(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaThisYear(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
 	// --- Last Year --- //
 	go func() {
-		if err := impl.generateSummarySummaryForStepsCounterLastYear(sessCtx, u, res, mu, wg); err != nil {
+		if err := impl.generateSummarySummaryForStepCountDeltaLastYear(sessCtx, u, res, mu, wg); err != nil {
 			//TODO
 		}
 	}()
@@ -97,7 +97,7 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounter(sessC
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisHour(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaThisHour(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -118,13 +118,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisHo
 	defer mu.Unlock()
 
 	if thisHour != nil {
-		res.StepsCounterThisHourSummary = thisHour
+		res.StepCountDeltaThisHourSummary = thisHour
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastHour(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaLastHour(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -147,13 +147,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastHo
 	defer mu.Unlock()
 
 	if lastHour != nil {
-		res.StepsCounterLastHourSummary = lastHour
+		res.StepCountDeltaLastHourSummary = lastHour
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterToday(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaToday(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -175,13 +175,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterToday(
 	defer mu.Unlock()
 
 	if thisDay != nil {
-		res.StepsCounterThisDaySummary = thisDay
+		res.StepCountDeltaThisDaySummary = thisDay
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterYesterday(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaYesterday(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -203,13 +203,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterYester
 	defer mu.Unlock()
 
 	if lastDay != nil {
-		res.StepsCounterLastDaySummary = lastDay
+		res.StepCountDeltaLastDaySummary = lastDay
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisISOWeek(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaThisISOWeek(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -231,13 +231,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisIS
 	defer mu.Unlock()
 
 	if thisWeek != nil {
-		res.StepsCounterThisISOWeekSummary = thisWeek
+		res.StepCountDeltaThisISOWeekSummary = thisWeek
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastISOWeek(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaLastISOWeek(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -259,13 +259,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastIS
 	defer mu.Unlock()
 
 	if lastWeek != nil {
-		res.StepsCounterLastISOWeekSummary = lastWeek
+		res.StepCountDeltaLastISOWeekSummary = lastWeek
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisMonth(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaThisMonth(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -287,13 +287,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisMo
 	defer mu.Unlock()
 
 	if thisMonth != nil {
-		res.StepsCounterThisMonthSummary = thisMonth
+		res.StepCountDeltaThisMonthSummary = thisMonth
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastMonth(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaLastMonth(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -315,13 +315,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastMo
 	defer mu.Unlock()
 
 	if lastMonth != nil {
-		res.StepsCounterLastMonthSummary = lastMonth
+		res.StepCountDeltaLastMonthSummary = lastMonth
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisYear(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaThisYear(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -343,13 +343,13 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterThisYe
 	defer mu.Unlock()
 
 	if thisYear != nil {
-		res.StepsCounterThisYearSummary = thisYear
+		res.StepCountDeltaThisYearSummary = thisYear
 	}
 
 	return nil
 }
 
-func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastYear(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
+func (impl *BiometricControllerImpl) generateSummarySummaryForStepCountDeltaLastYear(sessCtx mongo.SessionContext, u *u_d.User, res *AggregatePointSummaryResponse, mu *sync.Mutex, wg *sync.WaitGroup) error {
 	// Once this function has been completed (whether successfully or not) then
 	// update the `WaitGroup` that this goroutine is finished.
 	defer wg.Done()
@@ -371,7 +371,7 @@ func (impl *BiometricControllerImpl) generateSummarySummaryForStepsCounterLastYe
 	defer mu.Unlock()
 
 	if lastYear != nil {
-		res.StepsCounterLastYearSummary = lastYear
+		res.StepCountDeltaLastYearSummary = lastYear
 	}
 
 	return nil

@@ -352,8 +352,8 @@ export const dataPointFilterIsHeartRateState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const dataPointFilterIsStepsCounterState = atom({
-  key: "dataPointFilterIsStepsCounter",
+export const dataPointFilterIsStepCountDeltaState = atom({
+  key: "dataPointFilterIsStepCountDelta",
   default: true,
   effects_UNSTABLE: [persistAtom],
 });

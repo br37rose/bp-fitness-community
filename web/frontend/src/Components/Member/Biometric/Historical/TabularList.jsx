@@ -39,7 +39,7 @@ import {
     dataPointFilterSortState,
     dataPointFilterStatusState,
     dataPointFilterIsHeartRateState,
-    dataPointFilterIsStepsCounterState
+    dataPointFilterIsStepCountDeltaState
 } from "../../../../AppState";
 import FormMultiSelectField from "../../../Reusable/FormMultiSelectField";
 import FormCheckboxField from "../../../Reusable/FormCheckboxField";

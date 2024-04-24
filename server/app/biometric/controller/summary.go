@@ -49,34 +49,34 @@ type AggregatePointSummaryResponse struct {
 
 	//-----------------------------------------------------------------------------------------------------------------------------------
 
-	StepsCounterThisHourSummary    *ap_s.AggregatePoint `bson:"steps_counter_this_hour_summary" json:"steps_counter_this_hour_summary"`
-	StepsCounterLastHourSummary    *ap_s.AggregatePoint `bson:"steps_counter_last_hour_summary" json:"steps_counter_last_hour_summary"`
-	StepsCounterThisDaySummary     *ap_s.AggregatePoint `bson:"steps_counter_this_day_summary" json:"steps_counter_this_day_summary"`
-	StepsCounterLastDaySummary     *ap_s.AggregatePoint `bson:"steps_counter_last_day_summary" json:"steps_counter_last_day_summary"`
-	StepsCounterThisISOWeekSummary *ap_s.AggregatePoint `bson:"steps_counter_this_iso_week_summary" json:"steps_counter_this_iso_week_summary"`
-	StepsCounterLastISOWeekSummary *ap_s.AggregatePoint `bson:"steps_counter_last_iso_week_summary" json:"steps_counter_last_iso_week_summary"`
-	StepsCounterThisMonthSummary   *ap_s.AggregatePoint `bson:"steps_counter_this_month_summary" json:"steps_counter_this_month_summary"`
-	StepsCounterLastMonthSummary   *ap_s.AggregatePoint `bson:"steps_counter_last_month_summary" json:"steps_counter_last_month_summary"`
-	StepsCounterThisYearSummary    *ap_s.AggregatePoint `bson:"steps_counter_this_year_summary" json:"steps_counter_this_year_summary"`
-	StepsCounterLastYearSummary    *ap_s.AggregatePoint `bson:"steps_counter_last_year_summary" json:"steps_counter_last_year_summary"`
+	StepCountDeltaThisHourSummary    *ap_s.AggregatePoint `bson:"step_count_delta_this_hour_summary" json:"step_count_delta_this_hour_summary"`
+	StepCountDeltaLastHourSummary    *ap_s.AggregatePoint `bson:"step_count_delta_last_hour_summary" json:"step_count_delta_last_hour_summary"`
+	StepCountDeltaThisDaySummary     *ap_s.AggregatePoint `bson:"step_count_delta_this_day_summary" json:"step_count_delta_this_day_summary"`
+	StepCountDeltaLastDaySummary     *ap_s.AggregatePoint `bson:"step_count_delta_last_day_summary" json:"step_count_delta_last_day_summary"`
+	StepCountDeltaThisISOWeekSummary *ap_s.AggregatePoint `bson:"step_count_delta_this_iso_week_summary" json:"step_count_delta_this_iso_week_summary"`
+	StepCountDeltaLastISOWeekSummary *ap_s.AggregatePoint `bson:"step_count_delta_last_iso_week_summary" json:"step_count_delta_last_iso_week_summary"`
+	StepCountDeltaThisMonthSummary   *ap_s.AggregatePoint `bson:"step_count_delta_this_month_summary" json:"step_count_delta_this_month_summary"`
+	StepCountDeltaLastMonthSummary   *ap_s.AggregatePoint `bson:"step_count_delta_last_month_summary" json:"step_count_delta_last_month_summary"`
+	StepCountDeltaThisYearSummary    *ap_s.AggregatePoint `bson:"step_count_delta_this_year_summary" json:"step_count_delta_this_year_summary"`
+	StepCountDeltaLastYearSummary    *ap_s.AggregatePoint `bson:"step_count_delta_last_year_summary" json:"step_count_delta_last_year_summary"`
 
-	StepsCounterThisDayData     []*ap_s.AggregatePoint `bson:"steps_counter_this_day_data" json:"steps_counter_this_day_data"`
-	StepsCounterLastDayData     []*ap_s.AggregatePoint `bson:"steps_counter_last_day_data" json:"steps_counter_last_day_data"`
-	StepsCounterThisISOWeekData []*ap_s.AggregatePoint `bson:"steps_counter_this_iso_week_data" json:"steps_counter_this_iso_week_data"`
-	StepsCounterLastISOWeekData []*ap_s.AggregatePoint `bson:"steps_counter_last_iso_week_data" json:"steps_counter_last_iso_week_data"`
-	StepsCounterThisMonthData   []*ap_s.AggregatePoint `bson:"steps_counter_this_month_data" json:"steps_counter_this_month_data"`
-	StepsCounterLastMonthData   []*ap_s.AggregatePoint `bson:"steps_counter_last_month_data" json:"steps_counter_last_month_data"`
-	StepsCounterThisYearData    []*ap_s.AggregatePoint `bson:"steps_counter_this_year_data" json:"steps_counter_this_year_data"`
-	StepsCounterLastYearData    []*ap_s.AggregatePoint `bson:"steps_counter_last_year_data" json:"steps_counter_last_year_data"`
+	StepCountDeltaThisDayData     []*ap_s.AggregatePoint `bson:"step_count_delta_this_day_data" json:"step_count_delta_this_day_data"`
+	StepCountDeltaLastDayData     []*ap_s.AggregatePoint `bson:"step_count_delta_last_day_data" json:"step_count_delta_last_day_data"`
+	StepCountDeltaThisISOWeekData []*ap_s.AggregatePoint `bson:"step_count_delta_this_iso_week_data" json:"step_count_delta_this_iso_week_data"`
+	StepCountDeltaLastISOWeekData []*ap_s.AggregatePoint `bson:"step_count_delta_last_iso_week_data" json:"step_count_delta_last_iso_week_data"`
+	StepCountDeltaThisMonthData   []*ap_s.AggregatePoint `bson:"step_count_delta_this_month_data" json:"step_count_delta_this_month_data"`
+	StepCountDeltaLastMonthData   []*ap_s.AggregatePoint `bson:"step_count_delta_last_month_data" json:"step_count_delta_last_month_data"`
+	StepCountDeltaThisYearData    []*ap_s.AggregatePoint `bson:"step_count_delta_this_year_data" json:"step_count_delta_this_year_data"`
+	StepCountDeltaLastYearData    []*ap_s.AggregatePoint `bson:"step_count_delta_last_year_data" json:"step_count_delta_last_year_data"`
 
-	StepsCounterThisDayRanking     []*rp_s.RankPoint `bson:"steps_counter_this_day_ranking" json:"steps_counter_this_day_ranking"`
-	StepsCounterThisISOWeekRanking []*rp_s.RankPoint `bson:"steps_counter_this_iso_week_ranking" json:"steps_counter_this_iso_week_ranking"`
-	StepsCounterThisMonthRanking   []*rp_s.RankPoint `bson:"steps_counter_this_month_ranking" json:"steps_counter_this_month_ranking"`
-	StepsCounterThisYearRanking    []*rp_s.RankPoint `bson:"steps_counter_this_year_ranking" json:"steps_counter_this_year_ranking"`
-	// StepsCounterLastDayRanking     []*rp_s.RankPoint `bson:"steps_counter_last_day_ranking" json:"steps_counter_last_day_ranking"`
-	// StepsCounterLastISOWeekRanking []*rp_s.RankPoint `bson:"steps_counter_last_iso_week_ranking" json:"steps_counter_last_iso_week_ranking"`
-	// StepsCounterLastMonthRanking   []*rp_s.RankPoint `bson:"steps_counter_last_month_ranking" json:"steps_counter_last_month_ranking"`
-	// StepsCounterLastYearRanking    []*rp_s.RankPoint `bson:"steps_counter_last_year_ranking" json:"steps_counter_last_year_ranking"`
+	StepCountDeltaThisDayRanking     []*rp_s.RankPoint `bson:"step_count_delta_this_day_ranking" json:"step_count_delta_this_day_ranking"`
+	StepCountDeltaThisISOWeekRanking []*rp_s.RankPoint `bson:"step_count_delta_this_iso_week_ranking" json:"step_count_delta_this_iso_week_ranking"`
+	StepCountDeltaThisMonthRanking   []*rp_s.RankPoint `bson:"step_count_delta_this_month_ranking" json:"step_count_delta_this_month_ranking"`
+	StepCountDeltaThisYearRanking    []*rp_s.RankPoint `bson:"step_count_delta_this_year_ranking" json:"step_count_delta_this_year_ranking"`
+	// StepCountDeltaLastDayRanking     []*rp_s.RankPoint `bson:"step_count_delta_last_day_ranking" json:"step_count_delta_last_day_ranking"`
+	// StepCountDeltaLastISOWeekRanking []*rp_s.RankPoint `bson:"step_count_delta_last_iso_week_ranking" json:"step_count_delta_last_iso_week_ranking"`
+	// StepCountDeltaLastMonthRanking   []*rp_s.RankPoint `bson:"step_count_delta_last_month_ranking" json:"step_count_delta_last_month_ranking"`
+	// StepCountDeltaLastYearRanking    []*rp_s.RankPoint `bson:"step_count_delta_last_year_ranking" json:"step_count_delta_last_year_ranking"`
 
 	//-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -221,7 +221,7 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 		}()
 		// ---> Step Counter:
 		go func() {
-			if err := impl.generateSummarySummaryForStepsCounter(sessCtx, u, res, &mu, &wg); err != nil {
+			if err := impl.generateSummarySummaryForStepCountDelta(sessCtx, u, res, &mu, &wg); err != nil {
 				errCh <- err
 			}
 		}()
