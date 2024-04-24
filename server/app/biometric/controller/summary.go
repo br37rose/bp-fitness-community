@@ -108,6 +108,37 @@ type AggregatePointSummaryResponse struct {
 	// CaloriesBurnedLastISOWeekRanking []*rp_s.RankPoint `bson:"calories_burned_last_iso_week_ranking" json:"calories_burned_last_iso_week_ranking"`
 	// CaloriesBurnedLastMonthRanking   []*rp_s.RankPoint `bson:"calories_burned_last_month_ranking" json:"calories_burned_last_month_ranking"`
 	// CaloriesBurnedLastYearRanking    []*rp_s.RankPoint `bson:"calories_burned_last_year_ranking" json:"calories_burned_last_year_ranking"`
+
+	//-----------------------------------------------------------------------------------------------------------------------------------
+
+	DistanceDeltaThisHourSummary    *ap_s.AggregatePoint `bson:"distance_delta_this_hour_summary" json:"distance_delta_this_hour_summary"`
+	DistanceDeltaLastHourSummary    *ap_s.AggregatePoint `bson:"distance_delta_last_hour_summary" json:"distance_delta_last_hour_summary"`
+	DistanceDeltaThisDaySummary     *ap_s.AggregatePoint `bson:"distance_delta_this_day_summary" json:"distance_delta_this_day_summary"`
+	DistanceDeltaLastDaySummary     *ap_s.AggregatePoint `bson:"distance_delta_last_day_summary" json:"distance_delta_last_day_summary"`
+	DistanceDeltaThisISOWeekSummary *ap_s.AggregatePoint `bson:"distance_delta_this_iso_week_summary" json:"distance_delta_this_iso_week_summary"`
+	DistanceDeltaLastISOWeekSummary *ap_s.AggregatePoint `bson:"distance_delta_last_iso_week_summary" json:"distance_delta_last_iso_week_summary"`
+	DistanceDeltaThisMonthSummary   *ap_s.AggregatePoint `bson:"distance_delta_this_month_summary" json:"distance_delta_this_month_summary"`
+	DistanceDeltaLastMonthSummary   *ap_s.AggregatePoint `bson:"distance_delta_last_month_summary" json:"distance_delta_last_month_summary"`
+	DistanceDeltaThisYearSummary    *ap_s.AggregatePoint `bson:"distance_delta_this_year_summary" json:"distance_delta_this_year_summary"`
+	DistanceDeltaLastYearSummary    *ap_s.AggregatePoint `bson:"distance_delta_last_year_summary" json:"distance_delta_last_year_summary"`
+
+	DistanceDeltaThisDayData     []*ap_s.AggregatePoint `bson:"distance_delta_this_day_data" json:"distance_delta_this_day_data"`
+	DistanceDeltaLastDayData     []*ap_s.AggregatePoint `bson:"distance_delta_last_day_data" json:"distance_delta_last_day_data"`
+	DistanceDeltaThisISOWeekData []*ap_s.AggregatePoint `bson:"distance_delta_this_iso_week_data" json:"distance_delta_this_iso_week_data"`
+	DistanceDeltaLastISOWeekData []*ap_s.AggregatePoint `bson:"distance_delta_last_iso_week_data" json:"distance_delta_last_iso_week_data"`
+	DistanceDeltaThisMonthData   []*ap_s.AggregatePoint `bson:"distance_delta_this_month_data" json:"distance_delta_this_month_data"`
+	DistanceDeltaLastMonthData   []*ap_s.AggregatePoint `bson:"distance_delta_last_month_data" json:"distance_delta_last_month_data"`
+	DistanceDeltaThisYearData    []*ap_s.AggregatePoint `bson:"distance_delta_this_year_data" json:"distance_delta_this_year_data"`
+	DistanceDeltaLastYearData    []*ap_s.AggregatePoint `bson:"distance_delta_last_year_data" json:"distance_delta_last_year_data"`
+
+	DistanceDeltaThisDayRanking     []*rp_s.RankPoint `bson:"distance_delta_this_day_ranking" json:"distance_delta_this_day_ranking"`
+	DistanceDeltaThisISOWeekRanking []*rp_s.RankPoint `bson:"distance_delta_this_iso_week_ranking" json:"distance_delta_this_iso_week_ranking"`
+	DistanceDeltaThisMonthRanking   []*rp_s.RankPoint `bson:"distance_delta_this_month_ranking" json:"distance_delta_this_month_ranking"`
+	DistanceDeltaThisYearRanking    []*rp_s.RankPoint `bson:"distance_delta_this_year_ranking" json:"distance_delta_this_year_ranking"`
+	// DistanceDeltaLastDayRanking     []*rp_s.RankPoint `bson:"distance_delta_last_day_ranking" json:"distance_delta_last_day_ranking"`
+	// DistanceDeltaLastISOWeekRanking []*rp_s.RankPoint `bson:"distance_delta_last_iso_week_ranking" json:"distance_delta_last_iso_week_ranking"`
+	// DistanceDeltaLastMonthRanking   []*rp_s.RankPoint `bson:"distance_delta_last_month_ranking" json:"distance_delta_last_month_ranking"`
+	// DistanceDeltaLastYearRanking    []*rp_s.RankPoint `bson:"distance_delta_last_year_ranking" json:"distance_delta_last_year_ranking"`
 }
 
 func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID primitive.ObjectID) (*AggregatePointSummaryResponse, error) {
