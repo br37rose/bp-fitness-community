@@ -47,6 +47,8 @@ type AggregatePointSummaryResponse struct {
 	// HeartRateLastMonthRanking   []*rp_s.RankPoint `bson:"heart_rate_last_month_ranking" json:"heart_rate_last_month_ranking"`
 	// HeartRateLastYearRanking    []*rp_s.RankPoint `bson:"heart_rate_last_year_ranking" json:"heart_rate_last_year_ranking"`
 
+	//-----------------------------------------------------------------------------------------------------------------------------------
+
 	StepsCounterThisHourSummary    *ap_s.AggregatePoint `bson:"steps_counter_this_hour_summary" json:"steps_counter_this_hour_summary"`
 	StepsCounterLastHourSummary    *ap_s.AggregatePoint `bson:"steps_counter_last_hour_summary" json:"steps_counter_last_hour_summary"`
 	StepsCounterThisDaySummary     *ap_s.AggregatePoint `bson:"steps_counter_this_day_summary" json:"steps_counter_this_day_summary"`
@@ -75,6 +77,37 @@ type AggregatePointSummaryResponse struct {
 	// StepsCounterLastISOWeekRanking []*rp_s.RankPoint `bson:"steps_counter_last_iso_week_ranking" json:"steps_counter_last_iso_week_ranking"`
 	// StepsCounterLastMonthRanking   []*rp_s.RankPoint `bson:"steps_counter_last_month_ranking" json:"steps_counter_last_month_ranking"`
 	// StepsCounterLastYearRanking    []*rp_s.RankPoint `bson:"steps_counter_last_year_ranking" json:"steps_counter_last_year_ranking"`
+
+	//-----------------------------------------------------------------------------------------------------------------------------------
+
+	CaloriesBurnedThisHourSummary    *ap_s.AggregatePoint `bson:"calories_burned_this_hour_summary" json:"calories_burned_this_hour_summary"`
+	CaloriesBurnedLastHourSummary    *ap_s.AggregatePoint `bson:"calories_burned_last_hour_summary" json:"calories_burned_last_hour_summary"`
+	CaloriesBurnedThisDaySummary     *ap_s.AggregatePoint `bson:"calories_burned_this_day_summary" json:"calories_burned_this_day_summary"`
+	CaloriesBurnedLastDaySummary     *ap_s.AggregatePoint `bson:"calories_burned_last_day_summary" json:"calories_burned_last_day_summary"`
+	CaloriesBurnedThisISOWeekSummary *ap_s.AggregatePoint `bson:"calories_burned_this_iso_week_summary" json:"calories_burned_this_iso_week_summary"`
+	CaloriesBurnedLastISOWeekSummary *ap_s.AggregatePoint `bson:"calories_burned_last_iso_week_summary" json:"calories_burned_last_iso_week_summary"`
+	CaloriesBurnedThisMonthSummary   *ap_s.AggregatePoint `bson:"calories_burned_this_month_summary" json:"calories_burned_this_month_summary"`
+	CaloriesBurnedLastMonthSummary   *ap_s.AggregatePoint `bson:"calories_burned_last_month_summary" json:"calories_burned_last_month_summary"`
+	CaloriesBurnedThisYearSummary    *ap_s.AggregatePoint `bson:"calories_burned_this_year_summary" json:"calories_burned_this_year_summary"`
+	CaloriesBurnedLastYearSummary    *ap_s.AggregatePoint `bson:"calories_burned_last_year_summary" json:"calories_burned_last_year_summary"`
+
+	CaloriesBurnedThisDayData     []*ap_s.AggregatePoint `bson:"calories_burned_this_day_data" json:"calories_burned_this_day_data"`
+	CaloriesBurnedLastDayData     []*ap_s.AggregatePoint `bson:"calories_burned_last_day_data" json:"calories_burned_last_day_data"`
+	CaloriesBurnedThisISOWeekData []*ap_s.AggregatePoint `bson:"calories_burned_this_iso_week_data" json:"calories_burned_this_iso_week_data"`
+	CaloriesBurnedLastISOWeekData []*ap_s.AggregatePoint `bson:"calories_burned_last_iso_week_data" json:"calories_burned_last_iso_week_data"`
+	CaloriesBurnedThisMonthData   []*ap_s.AggregatePoint `bson:"calories_burned_this_month_data" json:"calories_burned_this_month_data"`
+	CaloriesBurnedLastMonthData   []*ap_s.AggregatePoint `bson:"calories_burned_last_month_data" json:"calories_burned_last_month_data"`
+	CaloriesBurnedThisYearData    []*ap_s.AggregatePoint `bson:"calories_burned_this_year_data" json:"calories_burned_this_year_data"`
+	CaloriesBurnedLastYearData    []*ap_s.AggregatePoint `bson:"calories_burned_last_year_data" json:"calories_burned_last_year_data"`
+
+	CaloriesBurnedThisDayRanking     []*rp_s.RankPoint `bson:"calories_burned_this_day_ranking" json:"calories_burned_this_day_ranking"`
+	CaloriesBurnedThisISOWeekRanking []*rp_s.RankPoint `bson:"calories_burned_this_iso_week_ranking" json:"calories_burned_this_iso_week_ranking"`
+	CaloriesBurnedThisMonthRanking   []*rp_s.RankPoint `bson:"calories_burned_this_month_ranking" json:"calories_burned_this_month_ranking"`
+	CaloriesBurnedThisYearRanking    []*rp_s.RankPoint `bson:"calories_burned_this_year_ranking" json:"calories_burned_this_year_ranking"`
+	// CaloriesBurnedLastDayRanking     []*rp_s.RankPoint `bson:"calories_burned_last_day_ranking" json:"calories_burned_last_day_ranking"`
+	// CaloriesBurnedLastISOWeekRanking []*rp_s.RankPoint `bson:"calories_burned_last_iso_week_ranking" json:"calories_burned_last_iso_week_ranking"`
+	// CaloriesBurnedLastMonthRanking   []*rp_s.RankPoint `bson:"calories_burned_last_month_ranking" json:"calories_burned_last_month_ranking"`
+	// CaloriesBurnedLastYearRanking    []*rp_s.RankPoint `bson:"calories_burned_last_year_ranking" json:"calories_burned_last_year_ranking"`
 }
 
 func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID primitive.ObjectID) (*AggregatePointSummaryResponse, error) {

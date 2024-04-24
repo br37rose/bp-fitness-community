@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"log/slog"
-
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -73,10 +71,10 @@ func (impl RankPointStorerImpl) ListByFilter(ctx context.Context, f *RankPointPa
 		filter["$and"] = conditions
 	}
 
-	impl.Logger.Debug("listing filter:", // For debugging purposes only.
-		slog.Any("filter", filter),
-		slog.Any("sort_field", f.SortField),
-		slog.Any("sort_order", f.SortOrder))
+	// impl.Logger.Debug("listing filter:", // For debugging purposes only.
+	// 	slog.Any("filter", filter),
+	// 	slog.Any("sort_field", f.SortField),
+	// 	slog.Any("sort_order", f.SortOrder))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
 	options, err := impl.newPaginationOptions(f)
