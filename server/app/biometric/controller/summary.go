@@ -206,15 +206,16 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 		}
 
 		// Variable stores the number of goroutines we expect to wait for. We
-		// set value of `1` because we have the following sensors we want to
+		// set value of `7` because we have the following sensors we want to
 		// process in the background as goroutines:
-		// - heart rate (summary)
-		// - heart rate (data)
-		// - heart rate (ranking)
-		// - step counter delta (summary)
-		// - step counter delta (data)
-		// - step counter delta (summary)
-		numWorkers := 5
+		// - generateSummarySummaryForHR
+		// - generateSummaryDataForHR
+		// - generateSummaryRankingsForHR
+		// - generateSummarySummaryForStepCountDelta
+		// - generateSummaryDataForStepsDelta
+		// - generateSummarySummaryForCaloriesBurned
+		// - generateSummaryDataForCaloriesBurned
+		numWorkers := 7
 
 		// Create a channel to collect errors from goroutines.
 		errCh := make(chan error, numWorkers)
@@ -261,6 +262,22 @@ func (impl *BiometricControllerImpl) GetSummary(ctx context.Context, userID prim
 				errCh <- err
 			}
 		}()
+		// ---> Calories Burned:
+		go func() {
+			if err := impl.generateSummarySummaryForCaloriesBurned(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		go func() {
+			if err := impl.generateSummaryDataForCaloriesBurned(sessCtx, u, res, &mu, &wg); err != nil {
+				errCh <- err
+			}
+		}()
+		// go func() {
+		// 	if err := impl.generateSummaryRankingsForHR(sessCtx, u, res, &mu, &wg); err != nil {
+		// 		errCh <- err
+		// 	}
+		// }()
 
 		// Create a goroutine to close the error channel when all workers are done
 		go func() {
