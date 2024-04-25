@@ -58,9 +58,6 @@ function AdminQuestionnaireList() {
   const [previousCursors, setPreviousCursors] = useState([]); // Pagination
   const [nextCursor, setNextCursor] = useState(""); // Pagination
   const [currentCursor, setCurrentCursor] = useState(""); // Pagination
-  const [forceURL, setForceURL] = useState("");
-  const [selectedQuestionForDeletion, setSelectedQuestionForDeletion] =
-    useState(null);
 
   ////
   //// API.
