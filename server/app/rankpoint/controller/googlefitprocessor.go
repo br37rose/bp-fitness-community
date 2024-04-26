@@ -168,6 +168,16 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 						slog.Any("error", err))
 					return err
 				}
+				if u == nil {
+					err := fmt.Errorf("user does not exist id: %v", gfa.UserID)
+					impl.Logger.Error("",
+						slog.Any("google_fit_app_id", gfa.ID),
+						slog.Any("metric_id", metricID),
+						slog.Int("period", int(period)),
+						slog.Int("metric_type", int(metricType)),
+						slog.Any("error", err))
+					return err
+				}
 
 				rp = &rp_s.RankPoint{
 					ID:                     primitive.NewObjectID(),
