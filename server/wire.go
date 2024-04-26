@@ -31,6 +31,9 @@ import (
 	exercise_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/controller"
 	exercise_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	exercise_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
+	fc_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnesschallenge/controller"
+	fc_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnesschallenge/datastore"
+	fc_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnesschallenge/httptransport"
 	fitnessplan_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	fitnessplan_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	fitnessplan_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/scheduler"
@@ -213,6 +216,9 @@ func InitializeEvent() Application {
 		q_s.NewDatastore,
 		q_c.NewController,
 		q_http.NewHandler,
+		fc_s.NewDatastore,
+		fc_c.NewController,
+		fc_http.NewHandler,
 		NewApplication)
 	return Application{}
 }

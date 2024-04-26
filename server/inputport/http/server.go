@@ -12,6 +12,7 @@ import (
 	biometric_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/biometric/httptransport"
 	datapoint_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/httptransport"
 	exercise_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
+	challenge "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnesschallenge/httptransport"
 	gateway_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/httptransport"
 	googlefitapp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/httptransport"
 	googlefitdp_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitdatapoint/httptransport"
@@ -70,6 +71,7 @@ type httpInputPort struct {
 	TrainingProgram          *tp_http.Handler
 	Workout                  *w_http.Handler
 	Question                 *q_http.Handler
+	FitnessChallenge         *challenge.Handler
 }
 
 func NewInputPort(
@@ -100,6 +102,7 @@ func NewInputPort(
 	tp *tp_http.Handler,
 	w *w_http.Handler,
 	q *q_http.Handler,
+	c *challenge.Handler,
 ) InputPortServer {
 	// Initialize the ServeMux.
 	mux := http.NewServeMux()
@@ -146,6 +149,7 @@ func NewInputPort(
 		TrainingProgram:          tp,
 		Workout:                  w,
 		Question:                 q,
+		FitnessChallenge:         c,
 	}
 
 	// Attach the HTTP server controller to the ServerMux.
@@ -452,6 +456,22 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.Question.UpdateByID(w, r, p[3])
 	case n == 4 && p[1] == "v1" && p[2] == "questions" && r.Method == http.MethodDelete:
 		port.Question.DeleteByID(w, r, p[3])
+
+		// --- FITNESS PLAN --- //
+	case n == 3 && p[1] == "v1" && p[2] == "fitness-challenge" && r.Method == http.MethodGet:
+		port.FitnessChallenge.List(w, r)
+	case n == 3 && p[1] == "v1" && p[2] == "fitness-challenge" && r.Method == http.MethodPost:
+		port.FitnessChallenge.Create(w, r)
+	case n == 4 && p[1] == "v1" && p[2] == "fitness-challenge" && r.Method == http.MethodGet:
+		port.FitnessChallenge.GetByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "fitness-challenge" && r.Method == http.MethodPut:
+		port.FitnessChallenge.UpdateByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "fitness-challenge" && r.Method == http.MethodDelete:
+		port.FitnessChallenge.DeleteByID(w, r, p[3])
+	case n == 5 && p[1] == "v1" && p[2] == "fitness-challenge" && p[4] == "participation" && r.Method == http.MethodPatch:
+		port.FitnessChallenge.ChangeParticipationStatus(w, r, p[3])
+	case n == 5 && p[1] == "v1" && p[2] == "fitness-challenge" && p[4] == "leaderboard" && r.Method == http.MethodGet:
+		port.FitnessChallenge.GetChallengeLeaderBoard(w, r, p[3])
 
 	// --- CATCH ALL: D.N.E. ---
 	default:

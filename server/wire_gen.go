@@ -32,6 +32,9 @@ import (
 	controller5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/controller"
 	datastore7 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	httptransport5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/httptransport"
+	controller24 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnesschallenge/controller"
+	datastore23 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnesschallenge/datastore"
+	httptransport23 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnesschallenge/httptransport"
 	controller13 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/controller"
 	datastore14 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	scheduler5 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/scheduler"
@@ -204,7 +207,10 @@ func InitializeEvent() Application {
 	questionStorer := datastore22.NewDatastore(conf, slogLogger, client)
 	questionController := controller23.NewController(conf, slogLogger, provider, client, questionStorer)
 	handler21 := httptransport22.NewHandler(slogLogger, questionController)
-	inputPortServer := http.NewInputPort(conf, slogLogger, middlewareMiddleware, handler, httptransportHandler, handler2, handler3, handler4, handler5, handler6, handler7, handler8, handler9, handler10, handler11, stripeHandler, fitnessplanHandler, handler12, handler13, handler14, handler15, handler16, handler17, handler18, handler19, handler20, handler21)
+	fitnessChallengeStorer := datastore23.NewDatastore(conf, slogLogger, client)
+	fitnessChallengeController := controller24.NewController(conf, slogLogger, provider, client, fitnessChallengeStorer, workoutStorer, userStorer, workoutController, rankPointController)
+	handler22 := httptransport23.NewHandler(slogLogger, fitnessChallengeController)
+	inputPortServer := http.NewInputPort(conf, slogLogger, middlewareMiddleware, handler, httptransportHandler, handler2, handler3, handler4, handler5, handler6, handler7, handler8, handler9, handler10, handler11, stripeHandler, fitnessplanHandler, handler12, handler13, handler14, handler15, handler16, handler17, handler18, handler19, handler20, handler21, handler22)
 	googleFitDataPointCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitDataPointController, userStorer)
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
