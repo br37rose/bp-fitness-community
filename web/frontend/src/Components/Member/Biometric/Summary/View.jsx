@@ -500,6 +500,7 @@ function MemberSummary() {
                       {/* end Biometric Summary Row for Calories Burned + Distance Delta */}
                       {/* Biometric Graphs Rows */}
                       <div className="columns is-multiline">
+                        {/* ------ ROW 1 ------ */}
                         {/* Heart Rate (Today) */}
                         <div className="column is-one-third">
                           <BarChart
@@ -539,6 +540,7 @@ function MemberSummary() {
                           />
                         </div>
                         {/* end Heart Rate (Month) */}
+                        {/* ------ ROW 2 ------ */}
                         {/* Steps Count Delta (Today) */}
                         <div className="column is-one-third">
                           <BarChart
@@ -577,9 +579,49 @@ function MemberSummary() {
                             )}
                           />
                         </div>
+                        {/* end Steps Count Delta (Month) */}
+                        {/* ------ ROW 3 ------ */}
+                        {/* Calories Burned (Today) */}
+                        <div className="column is-one-third">
+                          <BarChart
+                            data={transformData(
+                              datum.caloriesBurnedThisDayData,
+                              "Calories Burnede",
+                              "Calories Burned - Today",
+                              "hours",
+                              1,
+                            )}
+                          />
+                        </div>
+                        {/* end Heart Rate (Today) */}
+                        {/* Heart Rate (Week) */}
+                        <div className="column is-one-third">
+                          <BarChart
+                            data={transformData(
+                              datum.caloriesBurnedThisIsoWeekData,
+                              "Calories Burned",
+                              "Calories Burned - Week",
+                              "week",
+                              1,
+                            )}
+                          />
+                        </div>
+                        {/* end Heart Rate (Week) */}
+                        {/* Heart Rate (Month) */}
+                        <div className="column is-one-third">
+                          <BarChart
+                            data={transformData(
+                              datum.caloriesBurnedThisMonthData,
+                              "Calories Burned",
+                              "Calories Burned - Month",
+                              "month",
+                              1,
+                            )}
+                          />
+                        </div>
+                        {/* end Heart Rate (Month) */}
                       </div>
-                      {/* end Steps Count Delta (Month) */}
-                      {/* Table */}
+                      {/* end Biometric Graphs Rows */}
                       {/* ??? */}
                       <div className="columns">
                         {/* <div className="column is-half">
