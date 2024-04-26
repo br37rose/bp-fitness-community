@@ -289,6 +289,7 @@ function MemberSummary() {
                     // Section 1: Biometrics content
                     <div className="section">
                       <div className="columns">
+                        {/* Heart Rate (Today) */}
                         <div className="column is-one-fourth">
                           <div className="box">
                             <div className="media">
@@ -312,6 +313,8 @@ function MemberSummary() {
                             </div>
                           </div>
                         </div>
+                        {/* end Heart Rate (Today) */}
+                        {/* Heart Rate (Week) */}
                         <div className="column is-one-fourth">
                           <div className="box">
                             <div className="media">
@@ -335,6 +338,8 @@ function MemberSummary() {
                             </div>
                           </div>
                         </div>
+                        {/* end Heart Rate */}
+                        {/* Steps (Today) */}
                         <div className="column is-one-fourth">
                           <div className="box">
                             <div className="media">
@@ -358,6 +363,8 @@ function MemberSummary() {
                             </div>
                           </div>
                         </div>
+                        {/* end Steps (Today) */}
+                        {/* Steps (Week) */}
                         <div className="column is-one-fourth">
                           <div className="box">
                             <div className="media">
@@ -381,10 +388,11 @@ function MemberSummary() {
                             </div>
                           </div>
                         </div>
+                        {/* end Steps (Week) */}
                       </div>{" "}
                       {/* Graphs Row */}
                       <div className="columns">
-                        {/* Doughnut Chart */}
+                        {/* Heart Rate Charts */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -421,7 +429,7 @@ function MemberSummary() {
                         </div>
                       </div>
                       <div className="columns">
-                        {/* Doughnut Chart */}
+                        {/* Steps Count Charts */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -520,10 +528,10 @@ function MemberSummary() {
             </div>
             <div class="column is-half has-text-right">
               {/*
-                            <Link to={`/account/wearable-tech`} class="button is-success is-fullwidth-mobile">
-                                <FontAwesomeIcon className="fas" icon={faPlus} />&nbsp;Register Wearable
-                            </Link>
-                            */}
+                <Link to={`/account/wearable-tech`} class="button is-success is-fullwidth-mobile">
+                    <FontAwesomeIcon className="fas" icon={faPlus} />&nbsp;Register Wearable
+                </Link>
+                */}
             </div>
           </div>
         </div>
