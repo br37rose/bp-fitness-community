@@ -9,8 +9,8 @@ package main
 import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/eventscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/storage/s3"
@@ -121,8 +121,6 @@ import (
 func InitializeEvent() Application {
 	slogLogger := logger.NewProvider()
 	conf := config.New()
-	universalClient := redis.NewProvider(conf, slogLogger)
-	distributedSchedulerAdapter := distributedscheduler.NewAdapter(slogLogger, universalClient)
 	provider := uuid.NewProvider()
 	timeProvider := time.NewProvider()
 	jwtProvider := jwt.NewProvider(conf)
@@ -214,12 +212,14 @@ func InitializeEvent() Application {
 	googleFitDataPointCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitDataPointController, userStorer)
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
-	googleFitDataPointScheduler := scheduler.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, distributedSchedulerAdapter, googleFitDataPointController)
-	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, googleFitAppController)
-	aggregatePointScheduler := scheduler3.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, aggregatePointController)
-	rankPointScheduler := scheduler4.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, rankPointController)
-	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, distributedSchedulerAdapter, fitnessPlanStorer, openAIConnector, fitnessPlanController)
-	schedulerInputPortServer := scheduler6.NewInputPort(conf, slogLogger, distributedSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler, fitnessPlanScheduler)
-	application := NewApplication(slogLogger, distributedSchedulerAdapter, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
+	universalClient := redis.NewProvider(conf, slogLogger)
+	eventSchedulerAdapter := eventscheduler.NewAdapter(slogLogger, universalClient)
+	googleFitDataPointScheduler := scheduler.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, eventSchedulerAdapter, googleFitDataPointController)
+	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, googleFitAppController)
+	aggregatePointScheduler := scheduler3.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, aggregatePointController)
+	rankPointScheduler := scheduler4.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, rankPointController)
+	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, fitnessPlanStorer, openAIConnector, fitnessPlanController)
+	schedulerInputPortServer := scheduler6.NewInputPort(conf, slogLogger, eventSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler, fitnessPlanScheduler)
+	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
 	return application
 }

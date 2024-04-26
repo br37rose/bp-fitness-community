@@ -1,4 +1,4 @@
-package distributedscheduler
+package eventscheduler
 
 import (
 	"log"
@@ -11,10 +11,10 @@ import (
 	redis "github.com/redis/go-redis/v9"
 )
 
-// DistributedSchedulerAdapter interface provides the functions necessary for
+// EventSchedulerAdapter interface provides the functions necessary for
 // your application to submit tasks to be executed in the background assuming
 // your application has multiple instances running concurrently in the cloud.
-type DistributedSchedulerAdapter interface {
+type EventSchedulerAdapter interface {
 	Start() error
 	Shutdown() error
 	ScheduleOneTimeFunc(function any, parameters ...any) error
@@ -22,14 +22,14 @@ type DistributedSchedulerAdapter interface {
 	ScheduleEveryFifteenMinutesFunc(function any, parameters ...any) error
 }
 
-type distributedSchedulerAdapter struct {
+type eventSchedulerAdapter struct {
 	Logger    *slog.Logger
 	Redis     redis.UniversalClient
 	Scheduler gocron.Scheduler
 	Locker    gocron.Locker
 }
 
-func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) DistributedSchedulerAdapter {
+func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) EventSchedulerAdapter {
 	loggerp.Debug("initializing scheduler...")
 	if redisClient != nil {
 		loggerp.Debug("redis connected to scheduler")
@@ -51,7 +51,7 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) Distrib
 		}
 
 		loggerp.Debug("initialized scheduler")
-		return &distributedSchedulerAdapter{
+		return &eventSchedulerAdapter{
 			Logger:    loggerp,
 			Redis:     redisClient,
 			Locker:    locker,
@@ -73,22 +73,22 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) Distrib
 	}
 
 	loggerp.Debug("initialized scheduler")
-	return &distributedSchedulerAdapter{
+	return &eventSchedulerAdapter{
 		Logger:    loggerp,
 		Scheduler: s,
 	}
 }
 
-func (adapt *distributedSchedulerAdapter) Start() error {
+func (adapt *eventSchedulerAdapter) Start() error {
 	adapt.Scheduler.Start()
 	return nil
 }
 
-func (adapt *distributedSchedulerAdapter) Shutdown() error {
+func (adapt *eventSchedulerAdapter) Shutdown() error {
 	return adapt.Scheduler.Shutdown()
 }
 
-func (adapt *distributedSchedulerAdapter) ScheduleOneTimeFunc(function any, parameters ...any) error {
+func (adapt *eventSchedulerAdapter) ScheduleOneTimeFunc(function any, parameters ...any) error {
 	// xxx, err1 := adapt.Locker.Lock(context.Background(), "test-1-2-3")
 	// if err1 != nil {
 	// 	return err1
@@ -126,7 +126,7 @@ func (adapt *distributedSchedulerAdapter) ScheduleOneTimeFunc(function any, para
 	return nil
 }
 
-func (adapt *distributedSchedulerAdapter) ScheduleEveryMinuteFunc(function any, parameters ...any) error {
+func (adapt *eventSchedulerAdapter) ScheduleEveryMinuteFunc(function any, parameters ...any) error {
 	// xxx, err1 := adapt.Locker.Lock(context.Background(), "test-1-2-3")
 	// if err1 != nil {
 	// 	return err1
@@ -165,7 +165,7 @@ func (adapt *distributedSchedulerAdapter) ScheduleEveryMinuteFunc(function any, 
 	return nil
 }
 
-func (adapt *distributedSchedulerAdapter) ScheduleEveryFifteenMinutesFunc(function any, parameters ...any) error {
+func (adapt *eventSchedulerAdapter) ScheduleEveryFifteenMinutesFunc(function any, parameters ...any) error {
 	// xxx, err1 := adapt.Locker.Lock(context.Background(), "test-1-2-3")
 	// if err1 != nil {
 	// 	return err1

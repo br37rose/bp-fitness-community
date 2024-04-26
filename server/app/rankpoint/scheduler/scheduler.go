@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	dscheduler "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
+	escheduler "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/eventscheduler"
 	ap_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/controller"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 )
@@ -18,30 +18,30 @@ type RankPointScheduler interface {
 
 // Handler Creates http request handler
 type rankPointSchedulerImpl struct {
-	Logger               *slog.Logger
-	Kmutex               kmutex.Provider
-	DistributedScheduler dscheduler.DistributedSchedulerAdapter
-	Controller           ap_c.RankPointController
+	Logger         *slog.Logger
+	Kmutex         kmutex.Provider
+	EventScheduler escheduler.EventSchedulerAdapter
+	Controller     ap_c.RankPointController
 }
 
 // NewHandler Constructor
 func NewScheduler(
 	loggerp *slog.Logger,
 	kmutexp kmutex.Provider,
-	ds dscheduler.DistributedSchedulerAdapter,
+	es escheduler.EventSchedulerAdapter,
 	c ap_c.RankPointController,
 ) RankPointScheduler {
 	return &rankPointSchedulerImpl{
-		Logger:               loggerp,
-		Kmutex:               kmutexp,
-		DistributedScheduler: ds,
-		Controller:           c,
+		Logger:         loggerp,
+		Kmutex:         kmutexp,
+		EventScheduler: es,
+		Controller:     c,
 	}
 }
 
 func (impl *rankPointSchedulerImpl) RunEveryMinuteRankToday() error {
 	impl.Logger.Debug("scheduled: rank today", slog.String("interval", "every minute"))
-	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		if err := impl.Controller.GenerateGlobalRankingForTodayUsingActiveGoogleFitApps(context.Background()); err != nil {
 			impl.Logger.Error("failed ranking today",
 				slog.Any("error", err))
@@ -56,7 +56,7 @@ func (impl *rankPointSchedulerImpl) RunEveryMinuteRankToday() error {
 
 func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisISOWeek() error {
 	impl.Logger.Debug("scheduled: rank this iso week", slog.String("interval", "every minute"))
-	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		if err := impl.Controller.GenerateGlobalRankingForThisISOWeekUsingActiveGoogleFitApps(context.Background()); err != nil {
 			impl.Logger.Error("failed ranking this iso week",
 				slog.Any("error", err))
@@ -71,7 +71,7 @@ func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisISOWeek() error {
 
 func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisMonth() error {
 	impl.Logger.Debug("scheduled: rank this month", slog.String("interval", "every minute"))
-	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		if err := impl.Controller.GenerateGlobalRankingForThisMonthUsingActiveGoogleFitApps(context.Background()); err != nil {
 			impl.Logger.Error("failed ranking this month",
 				slog.Any("error", err))
@@ -86,7 +86,7 @@ func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisMonth() error {
 
 func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisYear() error {
 	impl.Logger.Debug("scheduled: rank this year", slog.String("interval", "every minute"))
-	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		if err := impl.Controller.GenerateGlobalRankingForThisYearUsingActiveGoogleFitApps(context.Background()); err != nil {
 			impl.Logger.Error("failed ranking this year",
 				slog.Any("error", err))

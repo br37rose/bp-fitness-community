@@ -3,7 +3,7 @@ package scheduler
 import (
 	"log/slog"
 
-	dscheduler "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
+	escheduler "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/eventscheduler"
 	ap_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/scheduler"
 	fp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/scheduler"
 	googlefitapp_task "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/scheduler"
@@ -20,7 +20,7 @@ type InputPortServer interface {
 type schedulerInputPort struct {
 	Config                      *config.Conf
 	Logger                      *slog.Logger
-	DistributedScheduler        dscheduler.DistributedSchedulerAdapter
+	EventScheduler              escheduler.EventSchedulerAdapter
 	GoogleFitDataPointScheduler googlefitdp_task.GoogleFitDataPointScheduler
 	GoogleFitAppScheduler       googlefitapp_task.GoogleFitAppScheduler
 	AggregatePointScheduler     ap_task.AggregatePointScheduler
@@ -31,7 +31,7 @@ type schedulerInputPort struct {
 func NewInputPort(
 	configp *config.Conf,
 	loggerp *slog.Logger,
-	ds dscheduler.DistributedSchedulerAdapter,
+	es escheduler.EventSchedulerAdapter,
 	gfdp googlefitdp_task.GoogleFitDataPointScheduler,
 	gfa googlefitapp_task.GoogleFitAppScheduler,
 	ap ap_task.AggregatePointScheduler,
@@ -44,7 +44,7 @@ func NewInputPort(
 	p := &schedulerInputPort{
 		Config:                      configp,
 		Logger:                      loggerp,
-		DistributedScheduler:        ds,
+		EventScheduler:              es,
 		GoogleFitDataPointScheduler: gfdp,
 		GoogleFitAppScheduler:       gfa,
 		AggregatePointScheduler:     ap,
@@ -57,7 +57,7 @@ func NewInputPort(
 
 func (port *schedulerInputPort) Run() {
 	port.Logger.Info("scheduler server starting...")
-	port.DistributedScheduler.Start()
+	port.EventScheduler.Start()
 	port.ping()
 
 	// Schedule the following background tasks to run.
@@ -122,13 +122,13 @@ func (port *schedulerInputPort) Run() {
 
 func (port *schedulerInputPort) Shutdown() {
 	port.Logger.Info("scheduler server shutdown")
-	port.DistributedScheduler.Shutdown()
+	port.EventScheduler.Shutdown()
 }
 
 // ping function will send out a one-time task to verify the cluster is
 // successfullly connected.
 func (port *schedulerInputPort) ping() {
-	err := port.DistributedScheduler.ScheduleOneTimeFunc(func() {
+	err := port.EventScheduler.ScheduleOneTimeFunc(func() {
 		port.Logger.Info("scheduler pinged")
 	})
 	if err != nil {

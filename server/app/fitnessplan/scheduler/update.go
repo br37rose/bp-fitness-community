@@ -14,7 +14,7 @@ import (
 
 func (impl *fitnessPlanSchedulerImpl) RunEveryMinuteUpdateFitnessPlans() error {
 	impl.Logger.Debug("scheduled: update fitness plans", slog.String("interval", "every minute"))
-	err := impl.DistributedScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		impl.updateFitnessPlans()
 	})
 	if err != nil {

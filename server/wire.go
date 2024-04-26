@@ -8,8 +8,8 @@ import (
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/eventscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
 	s3_storage "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/storage/s3"
@@ -127,7 +127,7 @@ func InitializeEvent() Application {
 		mongodb_p.NewProvider,
 		mongodbcache.NewCache,
 		redis.NewProvider,
-		distributedscheduler.NewAdapter,
+		eventscheduler.NewAdapter,
 		gcp_a.NewAdapter,
 		openai.NewOpenAIConnector,
 		s3_storage.NewStorage,
