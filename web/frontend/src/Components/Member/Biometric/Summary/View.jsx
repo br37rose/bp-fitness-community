@@ -9,6 +9,8 @@ import {
   faRankingStar,
   faChartLine,
   faHeartbeat,
+  faRoad,
+  faFire,
   faFilterCircleXmark,
   faArrowLeft,
   faUsers,
@@ -288,7 +290,7 @@ function MemberSummary() {
                   {showBiometrics ? (
                     // Section 1: Biometrics content
                     <div className="section">
-                      {/* Biometric Summary Rows */}
+                      {/* Biometric Summary Row for Heart Rate + Step Count */}
                       <div className="columns">
                         {/* Heart Rate (Today) */}
                         <div className="column is-one-fourth">
@@ -391,6 +393,111 @@ function MemberSummary() {
                         </div>
                         {/* end Steps (Week) */}
                       </div>{" "}
+                      {/* end Biometric Summary Row for Heart Rate + Step Count */}
+                      {/* Biometric Summary Row for Calories Burned + Distance Delta */}
+                      <div className="columns">
+                        {/* Calories Burned (Today) */}
+                        <div className="column is-one-fourth">
+                          <div className="box">
+                            <div className="media">
+                              <div className="media-left">
+                                <span className="icon">
+                                  <FontAwesomeIcon
+                                    className="fas"
+                                    icon={faFire}
+                                  />
+                                </span>
+                              </div>
+                              <div
+                                title="Heart Rate average for today"
+                                className="media-content "
+                              >
+                                <p className="title has-text-weight-semibold is-7">
+                                  Calories Burned (Today)
+                                </p>
+                                <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.caloriesBurnedThisDaySummary && Math.round(datum.caloriesBurnedThisDaySummary.average)} kcal`}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {/* end Calories Burned (Today) */}
+                        {/* Calories Burned (Week) */}
+                        <div className="column is-one-fourth">
+                          <div className="box">
+                            <div className="media">
+                              <div className="media-left">
+                                <span className="icon">
+                                  <FontAwesomeIcon
+                                    className="fas"
+                                    icon={faFire}
+                                  />
+                                </span>
+                              </div>
+                              <div
+                                title="Heart Rate average in the last 7 days"
+                                className="media-content "
+                              >
+                                <p className="title has-text-weight-semibold is-7">
+                                  Calories Burned (Week)
+                                </p>
+                                <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.caloriesBurnedThisIsoWeekSummary && Math.round(datum.caloriesBurnedThisIsoWeekSummary.average)} kcal`}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {/* end Calories Burned */}
+                        {/* Distance Delta (Today) */}
+                        <div className="column is-one-fourth">
+                          <div className="box">
+                            <div className="media">
+                              <div className="media-left">
+                                <span className="icon">
+                                  <FontAwesomeIcon
+                                    className="fas"
+                                    icon={faRoad}
+                                  />
+                                </span>
+                              </div>
+                              <div
+                                title="Distance average for today"
+                                className="media-content "
+                              >
+                                <p className="title has-text-weight-semibold is-7">
+                                  Distance (Today)
+                                </p>
+                                <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.distanceDeltaThisDaySummary && Math.round(datum.distanceDeltaThisDaySummary.average)} m`}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {/* end Steps (Today) */}
+                        {/* Steps (Week) */}
+                        <div className="column is-one-fourth">
+                          <div className="box">
+                            <div className="media">
+                              <div className="media-left">
+                                <span className="icon">
+                                  <FontAwesomeIcon
+                                    className="fas"
+                                    icon={faRoad}
+                                  />
+                                </span>
+                              </div>
+                              <div
+                                title="Distance average in the last 7 days"
+                                className="media-content "
+                              >
+                                <p className="title has-text-weight-semibold is-7">
+                                  Distance (Week)
+                                </p>
+                                <p className="has-text-weight-semibold subtitle is-6">{`${datum && datum.distanceDeltaThisIsoWeekSummary && Math.round(datum.distanceDeltaThisIsoWeekSummary.average)} m`}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {/* end Steps (Week) */}
+                      </div>{" "}
+                      {/* end Biometric Summary Row for Calories Burned + Distance Delta */}
                       {/* Biometric Graphs Rows */}
                       <div className="columns">
                         {/* Heart Rate Charts */}
