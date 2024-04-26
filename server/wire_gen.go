@@ -9,6 +9,7 @@ package main
 import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedlocker"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/eventscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
@@ -129,13 +130,15 @@ func InitializeEvent() Application {
 	cacher := mongodbcache.NewCache(conf, slogLogger, client)
 	s3Storager := s3.NewStorage(conf, slogLogger, provider)
 	kmutexProvider := kmutex.NewProvider()
+	universalClient := redis.NewProvider(conf, slogLogger)
+	adapter := distributedlocker.NewAdapter(slogLogger, universalClient)
 	emailer := mailgun.NewEmailer(conf, slogLogger, provider)
 	templatedEmailer := templatedemailer.NewTemplatedEmailer(conf, slogLogger, provider, emailer)
 	paymentProcessor := stripe.NewPaymentProcessor(conf, slogLogger, provider)
 	rankPointStorer := datastore.NewDatastore(conf, slogLogger, client)
 	userStorer := datastore2.NewDatastore(conf, slogLogger, client)
 	organizationStorer := datastore3.NewDatastore(conf, slogLogger, client)
-	gatewayController := controller.NewController(conf, slogLogger, provider, jwtProvider, passwordProvider, cacher, s3Storager, client, kmutexProvider, templatedEmailer, paymentProcessor, rankPointStorer, userStorer, organizationStorer)
+	gatewayController := controller.NewController(conf, slogLogger, provider, jwtProvider, passwordProvider, cacher, s3Storager, client, kmutexProvider, adapter, templatedEmailer, paymentProcessor, rankPointStorer, userStorer, organizationStorer)
 	middlewareMiddleware := middleware.NewMiddleware(conf, slogLogger, provider, timeProvider, jwtProvider, gatewayController)
 	handler := httptransport.NewHandler(slogLogger, gatewayController)
 	userController := controller2.NewController(conf, slogLogger, provider, client, passwordProvider, userStorer)
@@ -212,7 +215,6 @@ func InitializeEvent() Application {
 	googleFitDataPointCrontaber := crontab.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitDataPointController, userStorer)
 	googleFitAppCrontaber := crontab2.NewCrontab(slogLogger, kmutexProvider, googleCloudPlatformAdapter, dataPointStorer, googleFitDataPointStorer, googleFitAppStorer, googleFitAppController, userStorer)
 	crontabInputPortServer := crontab3.NewInputPort(conf, slogLogger, userController, aggregatePointController, rankPointController, googleFitDataPointCrontaber, googleFitAppCrontaber, fitnessPlanStorer, openAIConnector)
-	universalClient := redis.NewProvider(conf, slogLogger)
 	eventSchedulerAdapter := eventscheduler.NewAdapter(slogLogger, universalClient)
 	googleFitDataPointScheduler := scheduler.NewScheduler(slogLogger, kmutexProvider, googleCloudPlatformAdapter, eventSchedulerAdapter, googleFitDataPointController)
 	googleFitAppScheduler := scheduler2.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, googleFitAppController)
