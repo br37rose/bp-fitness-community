@@ -202,7 +202,7 @@ function MemberSummary() {
 
     // Determine the chart type and additional properties based on the mode
     let dataset;
-    if (mode === 1) {
+    if (mode === 1) { // DEVELOPERS NOTE: ???
       dataset = {
         label: ` ${label}`,
         data: barData.map((item) => item.count),
@@ -211,7 +211,7 @@ function MemberSummary() {
         type: "line",
         order: 1,
       };
-    } else if (mode === 2) {
+    } else if (mode === 2) { // DEVELOPERS NOTE: ???
       dataset = {
         label: ` ${label}`,
         data: barData.map((item) => item.count),
@@ -224,7 +224,25 @@ function MemberSummary() {
         borderRadius: 5,
         borderSkipped: false,
       };
-    }
+  } else if (mode === 3) { // DEVELOPERS NOTE: `mode=3` is to get `averages` from API results.
+    dataset = {
+      label: ` ${label}`,
+      data: barData.map((item) => item.average),
+      borderColor: "#E1BD67",
+      backgroundColor: "#ffffff",
+      type: "line",
+      order: 1,
+    };
+} else if (mode === 4) { // DEVELOPERS NOTE: `mode=4` is to get `sum` from API results.
+    dataset = {
+      label: ` ${label}`,
+      data: barData.map((item) => item.sum),
+      borderColor: "#E1BD67",
+      backgroundColor: "#ffffff",
+      type: "line",
+      order: 1,
+    };
+  }
 
     const transformedData = {
       text: text,
@@ -509,7 +527,7 @@ function MemberSummary() {
                               "Heart Rate",
                               "Heart Rate - Today",
                               "hours",
-                              1,
+                              3,
                             )}
                           />
                         </div>
@@ -522,7 +540,7 @@ function MemberSummary() {
                               "Heart Rate",
                               "Heart Rate - Week",
                               "week",
-                              1,
+                              3,
                             )}
                           />
                         </div>
@@ -535,7 +553,7 @@ function MemberSummary() {
                               "Heart Rate",
                               "Heart Rate - Month",
                               "month",
-                              1,
+                              3,
                             )}
                           />
                         </div>
@@ -549,7 +567,7 @@ function MemberSummary() {
                               "Steps Count",
                               "Steps Count - Today",
                               "hours",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -562,7 +580,7 @@ function MemberSummary() {
                               "Steps Count",
                               "Steps Count - Week",
                               "week",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -575,7 +593,7 @@ function MemberSummary() {
                               "Steps Count",
                               "Steps Count - Month",
                               "month",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -589,7 +607,7 @@ function MemberSummary() {
                               "Calories Burnede",
                               "Calories Burned - Today",
                               "hours",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -602,7 +620,7 @@ function MemberSummary() {
                               "Calories Burned",
                               "Calories Burned - Week",
                               "week",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -615,7 +633,7 @@ function MemberSummary() {
                               "Calories Burned",
                               "Calories Burned - Month",
                               "month",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -629,7 +647,7 @@ function MemberSummary() {
                               "Distance",
                               "Distance - Today",
                               "hours",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -642,7 +660,7 @@ function MemberSummary() {
                               "Distance",
                               "Distance - Week",
                               "week",
-                              1,
+                              4,
                             )}
                           />
                         </div>
@@ -655,7 +673,7 @@ function MemberSummary() {
                               "Distance",
                               "Distance - Month",
                               "month",
-                              1,
+                              4,
                             )}
                           />
                         </div>
