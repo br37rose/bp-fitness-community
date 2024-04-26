@@ -593,8 +593,8 @@ function MemberSummary() {
                             )}
                           />
                         </div>
-                        {/* end Heart Rate (Today) */}
-                        {/* Heart Rate (Week) */}
+                        {/* end Calories Burned (Today) */}
+                        {/* Calories Burned (Week) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -606,8 +606,8 @@ function MemberSummary() {
                             )}
                           />
                         </div>
-                        {/* end Heart Rate (Week) */}
-                        {/* Heart Rate (Month) */}
+                        {/* end Calories Burned (Week) */}
+                        {/* Calories Burned (Month) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -619,7 +619,7 @@ function MemberSummary() {
                             )}
                           />
                         </div>
-                        {/* end Heart Rate (Month) */}
+                        {/* end Calories Burned (Month) */}
                       </div>
                       {/* end Biometric Graphs Rows */}
                       {/* ??? */}
