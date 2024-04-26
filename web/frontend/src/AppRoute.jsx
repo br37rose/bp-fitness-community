@@ -599,9 +599,11 @@ function AppRoute() {
                     path="/training-program/:id"
                     element={<MemberTPDetail />}
                   />
-
-                  <Route exact path="/onboarding" element={<Onboarding />} />
-
+                  <Route
+                    exact
+                    path="/onboarding"
+                    element={<Onboarding />}
+                  />
                   <Route
                     exact
                     path="/training-program/:id/edit"

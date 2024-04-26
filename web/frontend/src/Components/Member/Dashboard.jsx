@@ -129,22 +129,24 @@ function MemberDashboard() {
 
     if (mounted) {
       window.scrollTo(0, 0); // Start the page at the top of the page.
+
+      // if (currentUser && !forceURL) {
+      //     if (!currentUser.onboardingCompleted && currentUser.role === 4) {
+      //       setForceURL("/onboarding");
+      //     }
+      // }
+
       getDatum(currentUser);
     }
 
     return () => {
       mounted = false;
     };
-  }, [currentUser]);
+}, [currentUser, forceURL]);
 
-  useEffect(() => {
-    if (!currentUser.onboardingCompleted && currentUser.role === 4) {
-      setForceURL("/onboarding");
-    }
-  }, [currentUser]);
-
-  if (forceURL !== "") {
-    return <Navigate to={forceURL} />;
+  if (forceURL !== undefined && forceURL !== null && forceURL !== "") {
+      console.log("Redirecting to:", forceURL);
+      return <Navigate to={forceURL} />;
   }
 
   return (

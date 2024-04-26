@@ -196,6 +196,7 @@ function MemberQuestionnaireList() {
   ////
   //// Component rendering.
   ////
+
   const handleSelect = (questionId, selectedId, isMultiSelect) => {
     if (isMultiSelect) {
       const updatedSelections = answers[questionId]?.includes(selectedId)
@@ -206,6 +207,8 @@ function MemberQuestionnaireList() {
       setAnswers({ ...answers, [questionId]: [selectedId] }); // Wrap selectedId in an array
     }
   };
+  console.log("Beginning component rendering ...");
+  
   return (
     <div className="section">
       {/* Page */}
