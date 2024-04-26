@@ -129,7 +129,7 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
   function onAdminMemberUpdateSuccess(response) {
     // Add a temporary banner message in the app and then clear itself after 2 seconds.
     setTopAlertMessage("Member updated");
-    setTopAlertStatus("Workout Member");
+    setTopAlertStatus("Member");
     setTimeout(() => {
       setTopAlertMessage("");
     }, 2000);
@@ -168,21 +168,21 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
     }));
     const decamelizedData = {
       id: currentUser.id,
-      organization_id: currentUser.organizationID,
-      first_name: currentUser.firstName,
-      last_name: currentUser.lastName,
+      organization_id: currentUser.organization_id,
+      first_name: currentUser.first_name,
+      last_name: currentUser.last_name,
       email: currentUser.email,
       phone: currentUser.phone,
-      postal_code: currentUser.postalCode,
-      address_line_1: currentUser.addressLine1,
-      address_line_2: currentUser.addressLine2,
+      postal_code: currentUser.postal_code,
+      address_line_1: currentUser.address_line_1,
+      address_line_2: currentUser.address_line_2,
       city: currentUser.city,
       region: currentUser.region,
       country: currentUser.country,
       status: currentUser.status,
       password: currentUser.password,
       password_repeated: currentUser.passwordRepeated,
-      how_did_you_hear_about_us: currentUser.howDidYouHearAboutUs,
+      how_did_you_hear_about_us: currentUser.how_did_you_hear_about_us,
       how_did_you_hear_about_us_other: currentUser.howDidYouHearAboutUsOther,
       agree_promotions_email: currentUser.agreePromotionsEmail,
       onboarding_answers: onboardingAnswers,
@@ -213,19 +213,6 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
       setAnswers({ ...answers, [questionId]: [selectedId] }); // Wrap selectedId in an array
     }
   };
-
-  // const renderQuestionContent = () => {
-  //   const currentQuestion = questions[currentQuestionIndex];
-  //   if (!currentQuestion || !currentQuestion.content) {
-  //     return <div>Question data is incomplete or missing.</div>;
-  //   }
-  //   // Assuming content is a function that returns JSX
-  //   return currentQuestion.content({
-  //     onSelect: handleSelect,
-  //     selectedAnswers: answers[currentQuestion.questionId],
-  //     isMultiSelect: currentQuestion.isMultiSelect,
-  //   });
-  // };
 
   const renderQuestionContent = () => {
     const currentQuestion = questions[currentQuestionIndex];

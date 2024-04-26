@@ -60,7 +60,12 @@ const Card = ({ imgUrl, id, selected, buttonText, card, onSelect }) => (
   </div>
 );
 
-const SelectableOption = ({ option, isSelected, onSelect }) => (
+const SelectableOption = ({
+  option,
+  isSelected,
+  onSelect,
+  isFullScreen = true,
+}) => (
   <div className="field">
     <button
       id={option}
@@ -69,7 +74,13 @@ const SelectableOption = ({ option, isSelected, onSelect }) => (
       aria-pressed={isSelected}
       onClick={() => onSelect(option)}
       className={`button is-large is-fullwidth ${
-        isSelected ? "is-primary" : "is-dark"
+        isFullScreen
+          ? isSelected
+            ? "is-primary"
+            : "is-dark"
+          : isSelected
+          ? "is-primary"
+          : "button"
       }`}
     >
       <span>{option}</span>

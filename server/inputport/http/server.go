@@ -355,6 +355,8 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.FitnessPlan.GetByID(w, r, p[3])
 	case n == 4 && p[1] == "v1" && p[2] == "fitness-plan" && r.Method == http.MethodPut:
 		port.FitnessPlan.UpdateByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "fitness-plan" && r.Method == http.MethodDelete:
+		port.FitnessPlan.DeleteByID(w, r, p[3])
 
 	// --- NUTRITION PLAN --- //
 	case n == 3 && p[1] == "v1" && p[2] == "nutrition-plans" && r.Method == http.MethodGet:
@@ -365,6 +367,8 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 		port.NutritionPlan.GetByID(w, r, p[3])
 	case n == 4 && p[1] == "v1" && p[2] == "nutrition-plan" && r.Method == http.MethodPut:
 		port.NutritionPlan.UpdateByID(w, r, p[3])
+	case n == 4 && p[1] == "v1" && p[2] == "nutrition-plan" && r.Method == http.MethodDelete:
+		port.NutritionPlan.DeleteByID(w, r, p[3])
 
 		// --- GOOGLE FIT --- //
 	case n == 3 && p[1] == "v1" && p[2] == "google-login":
