@@ -11,15 +11,15 @@ import (
 	_ "go.uber.org/automaxprocs" // Automatically set GOMAXPROCS to match Linux container CPU quota.
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/eventscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 )
 
 type Application struct {
-	Logger          *slog.Logger
-	HttpServer      http.InputPortServer
-	CrontabServer   crontab.InputPortServer
-	SchedulerServer scheduler.InputPortServer
+	Logger               *slog.Logger
+	HttpServer           http.InputPortServer
+	CrontabServer        crontab.InputPortServer
+	EventSchedulerServer eventscheduler.InputPortServer
 }
 
 // NewApplication is application construction function which is automatically called by `Google Wire` dependency injection library.
@@ -27,13 +27,13 @@ func NewApplication(
 	loggerp *slog.Logger,
 	httpServer http.InputPortServer,
 	crontabServer crontab.InputPortServer,
-	schedulerServer scheduler.InputPortServer,
+	schedulerServer eventscheduler.InputPortServer,
 ) Application {
 	return Application{
-		Logger:          loggerp,
-		HttpServer:      httpServer,
-		CrontabServer:   crontabServer,
-		SchedulerServer: schedulerServer,
+		Logger:               loggerp,
+		HttpServer:           httpServer,
+		CrontabServer:        crontabServer,
+		EventSchedulerServer: schedulerServer,
 	}
 }
 
@@ -47,8 +47,8 @@ func (a Application) Execute() {
 	// Run in background the Crontab server.
 	go a.CrontabServer.Run()
 
-	// Run in background the Scheduler server.
-	go a.SchedulerServer.Run()
+	// Run in background the event scheduler server.
+	go a.EventSchedulerServer.Run()
 
 	a.Logger.Info("Application started")
 
@@ -61,7 +61,7 @@ func (a Application) Execute() {
 func (a Application) Shutdown() {
 	a.HttpServer.Shutdown()
 	a.CrontabServer.Shutdown()
-	a.SchedulerServer.Shutdown()
+	a.EventSchedulerServer.Shutdown()
 	a.Logger.Info("Application shutdown")
 }
 

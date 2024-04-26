@@ -94,13 +94,12 @@ import (
 	w_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/controller"
 	w_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	w_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
-
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
+	eventscheduler_port "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/eventscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	fitnessplan_http "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -201,14 +200,12 @@ func InitializeEvent() Application {
 		middleware.NewMiddleware,
 		crontab.NewInputPort,
 		http.NewInputPort,
-
 		googlefitdp_task.NewScheduler,
 		googlefitapp_task.NewScheduler,
 		ap_task.NewScheduler,
 		rp_task.NewScheduler,
 		fitnessplan_task.NewScheduler,
-		scheduler.NewInputPort,
-
+		eventscheduler_port.NewInputPort,
 		tp_s.NewDatastore,
 		tp_c.NewController,
 		tp_http.NewHandler,

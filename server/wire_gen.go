@@ -97,10 +97,10 @@ import (
 	httptransport21 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/httptransport"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	crontab3 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/crontab"
+	eventscheduler2 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/eventscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/fitnessplan"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/http/middleware"
-	scheduler6 "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/inputport/scheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/logger"
@@ -221,7 +221,7 @@ func InitializeEvent() Application {
 	aggregatePointScheduler := scheduler3.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, aggregatePointController)
 	rankPointScheduler := scheduler4.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, rankPointController)
 	fitnessPlanScheduler := scheduler5.NewScheduler(slogLogger, kmutexProvider, eventSchedulerAdapter, fitnessPlanStorer, openAIConnector, fitnessPlanController)
-	schedulerInputPortServer := scheduler6.NewInputPort(conf, slogLogger, eventSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler, fitnessPlanScheduler)
-	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer, schedulerInputPortServer)
+	eventschedulerInputPortServer := eventscheduler2.NewInputPort(conf, slogLogger, eventSchedulerAdapter, googleFitDataPointScheduler, googleFitAppScheduler, aggregatePointScheduler, rankPointScheduler, fitnessPlanScheduler)
+	application := NewApplication(slogLogger, inputPortServer, crontabInputPortServer, eventschedulerInputPortServer)
 	return application
 }

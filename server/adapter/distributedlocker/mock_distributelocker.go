@@ -1,4 +1,4 @@
-package distributelocker
+package distributedlocker
 
 import (
 	uuid "github.com/segmentio/ksuid"
