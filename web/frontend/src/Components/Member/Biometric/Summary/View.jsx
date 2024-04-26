@@ -539,7 +539,7 @@ function MemberSummary() {
                             )}
                           />
                         </div>
-                        {/* end Heart Rate (Month) */}
+                        {/* end Distance Delta (Month) */}
                         {/* ------ ROW 2 ------ */}
                         {/* Steps Count Delta (Today) */}
                         <div className="column is-one-third">
@@ -620,6 +620,46 @@ function MemberSummary() {
                           />
                         </div>
                         {/* end Calories Burned (Month) */}
+                        {/* ------ ROW 4 ------ */}
+                        {/* Distance Delta (Today) */}
+                        <div className="column is-one-third">
+                          <BarChart
+                            data={transformData(
+                              datum.heartRateThisDayData,
+                              "Distance",
+                              "Distance - Today",
+                              "hours",
+                              1,
+                            )}
+                          />
+                        </div>
+                        {/* end Distance Delta (Today) */}
+                        {/* Distance Delta (Week) */}
+                        <div className="column is-one-third">
+                          <BarChart
+                            data={transformData(
+                              datum.heartRateThisIsoWeekData,
+                              "Distance",
+                              "Distance - Week",
+                              "week",
+                              1,
+                            )}
+                          />
+                        </div>
+                        {/* end Distance Delta (Week) */}
+                        {/* Distance Delta (Month) */}
+                        <div className="column is-one-third">
+                          <BarChart
+                            data={transformData(
+                              datum.heartRateThisMonthData,
+                              "Distance",
+                              "Distance - Month",
+                              "month",
+                              1,
+                            )}
+                          />
+                        </div>
+                        {/* end Distance Delta (Month) */}
                       </div>
                       {/* end Biometric Graphs Rows */}
                       {/* ??? */}
