@@ -288,6 +288,7 @@ function MemberSummary() {
                   {showBiometrics ? (
                     // Section 1: Biometrics content
                     <div className="section">
+                      {/* Biometric Summary Rows */}
                       <div className="columns">
                         {/* Heart Rate (Today) */}
                         <div className="column is-one-fourth">
@@ -390,7 +391,7 @@ function MemberSummary() {
                         </div>
                         {/* end Steps (Week) */}
                       </div>{" "}
-                      {/* Graphs Row */}
+                      {/* Biometric Graphs Rows */}
                       <div className="columns">
                         {/* Heart Rate Charts */}
                         <div className="column is-one-third">
