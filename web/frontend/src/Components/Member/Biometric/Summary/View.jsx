@@ -470,8 +470,8 @@ function MemberSummary() {
                             </div>
                           </div>
                         </div>
-                        {/* end Steps (Today) */}
-                        {/* Steps (Week) */}
+                        {/* end Distance (Today) */}
+                        {/* Distance (Week) */}
                         <div className="column is-one-fourth">
                           <div className="box">
                             <div className="media">
@@ -495,12 +495,12 @@ function MemberSummary() {
                             </div>
                           </div>
                         </div>
-                        {/* end Steps (Week) */}
+                        {/* end Distance (Week) */}
                       </div>{" "}
                       {/* end Biometric Summary Row for Calories Burned + Distance Delta */}
                       {/* Biometric Graphs Rows */}
-                      <div className="columns">
-                        {/* Heart Rate Charts */}
+                      <div className="columns is-multiline">
+                        {/* Heart Rate (Today) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -512,7 +512,8 @@ function MemberSummary() {
                             )}
                           />
                         </div>
-                        {/* Another Chart or Content */}
+                        {/* end Heart Rate (Today) */}
+                        {/* Heart Rate (Week) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -524,6 +525,8 @@ function MemberSummary() {
                             )}
                           />
                         </div>
+                        {/* end Heart Rate (Week) */}
+                        {/* Heart Rate (Month) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -535,9 +538,8 @@ function MemberSummary() {
                             )}
                           />
                         </div>
-                      </div>
-                      <div className="columns">
-                        {/* Steps Count Charts */}
+                        {/* end Heart Rate (Month) */}
+                        {/* Steps Count Delta (Today) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -549,7 +551,8 @@ function MemberSummary() {
                             )}
                           />
                         </div>
-                        {/* Another Chart or Content */}
+                        {/* end Steps Count Delta (Today) */}
+                        {/* Steps Count Delta (Week) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -561,6 +564,8 @@ function MemberSummary() {
                             )}
                           />
                         </div>
+                        {/* end Steps Count Delta (Week) */}
+                        {/* Steps Count Delta (Month) */}
                         <div className="column is-one-third">
                           <BarChart
                             data={transformData(
@@ -573,35 +578,38 @@ function MemberSummary() {
                           />
                         </div>
                       </div>
+                      {/* end Steps Count Delta (Month) */}
                       {/* Table */}
+                      {/* ??? */}
                       <div className="columns">
                         {/* <div className="column is-half">
                                                                 <DoughnutChart data={barChartData} options={{ maintainAspectRatio: false }} />
                                                             </div> */}
                         {/* <div className="column">
-                                                                <div className="box">
-                                                                    <h3 className="title is-4">Top Selling Products</h3>
-                                                                    <table className="table is-fullwidth is-striped">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Product Name</th>
-                                                                                <th>Price</th>
-                                                                                <th>Rating</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {sampleTopSellingData.map((product, index) => (
-                                                                                <tr key={index}>
-                                                                                    <td>{product.name}</td>
-                                                                                    <td>{formatCurrency(product.price)}</td>
-                                                                                    <td>{'★'.repeat(product.rating)}</td>
-                                                                                </tr>
-                                                                            ))}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div> */}
+                            <div className="box">
+                                <h3 className="title is-4">Top Selling Products</h3>
+                                <table className="table is-fullwidth is-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <th>Price</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleTopSellingData.map((product, index) => (
+                                            <tr key={index}>
+                                                <td>{product.name}</td>
+                                                <td>{formatCurrency(product.price)}</td>
+                                                <td>{'★'.repeat(product.rating)}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> */}
                       </div>
+                      {/* end ??? */}
                     </div>
                   ) : (
                     // Section 2: Alternative content
