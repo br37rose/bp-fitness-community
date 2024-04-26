@@ -19,6 +19,7 @@ import {
   faSignOut,
   faCalendarPlus,
   faQuestionCircle,
+  faBolt,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -231,6 +232,18 @@ export default (props) => {
                 >
                   <FontAwesomeIcon className="fas" icon={faCalendarPlus} />
                   &nbsp;Training Program
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/admin/fitness-challenge"
+                  class={`has-text-grey-light ${
+                    location.pathname.includes("fitness-challenge") &&
+                    "is-active"
+                  }`}
+                >
+                  <FontAwesomeIcon className="fas" icon={faBolt} />
+                  &nbsp;Fitness Challenge
                 </a>
               </li>
               {/*
@@ -471,6 +484,18 @@ export default (props) => {
                     </a>
                   </li>
                 </ul>
+              </li>
+              <li>
+                <a
+                  href="/fitness-challenge"
+                  class={`has-text-grey-light ${
+                    location.pathname.includes("fitness-challenge") &&
+                    "is-active"
+                  }`}
+                >
+                  <FontAwesomeIcon className="fas" icon={faBolt} />
+                  &nbsp;fitness-challenge
+                </a>
               </li>
               {/*
                                 Videos, Exercises, Workouts, Programs, Fitness Plans, Nutrition Plans, Social Media Feed

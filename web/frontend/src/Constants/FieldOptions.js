@@ -848,3 +848,13 @@ export const QUESTIONNAIRE_STATUS_OPTIONS = [
   { value: 1, label: "Active" },
   { value: 2, label: "Archived" },
 ];
+
+export const FITNESS_CHALLENGE = [
+  { value: 1, label: "Calorie Crunch Challenge" },
+  { value: 2, label: "Step-Up Challenge" },
+  { value: 3, label: "Rest & Rise Challenge (Sleep Focus)" },
+  { value: 4, label: "Cardio King Challenge (VO2 Max Focus)" },
+  { value: 5, label: "Swim Stride Challenge" },
+  { value: 6, label: "Heartbeat Hero Challenge" },
+  { value: 7, label: "Oxygen Optimize Challenge (SpO2 Focus)" },
+];

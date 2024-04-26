@@ -119,6 +119,14 @@ import Onboarding from "./Components/Reusable/Wizard/Wizard";
 import AdminTPDetailView from "./Components/Admin/TrainingProgram/Detail";
 import AdminTPDetail from "./Components/Admin/TrainingProgram/Update";
 import MemberTPUpdate from "./Components/Member/TrainingProgram/Update";
+import AdminFitnessChallengeAdd from "./Components/Admin/FitnessChallenge/add";
+import FitenessChallengeAdminList from "./Components/Admin/FitnessChallenge/list";
+import AdminFitnessChallengeDetail from "./Components/Admin/FitnessChallenge/Detail";
+import LeaderboardGlobalTabularList from "./Components/Admin/FitnessChallenge/leaderboard";
+import AdminFitnessChallengeUpdate from "./Components/Admin/FitnessChallenge/update";
+import FitenessChallengeMemberList from "./Components/Member/FitnessChallenge/list";
+import MemberFitnessChallengeDetail from "./Components/Member/FitnessChallenge/Detail";
+import MemberLeaderboardGlobalTabularListForChallenge from "./Components/Member/FitnessChallenge/leaderboard";
 
 function AppRoute() {
   return (
@@ -395,6 +403,32 @@ function AppRoute() {
                     element={<AdminQuestionnaireUpdate />}
                   />
 
+                  <Route
+                    exact
+                    path="/admin/fitness-challenge"
+                    element={<FitenessChallengeAdminList />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/fitness-challenge/add"
+                    element={<AdminFitnessChallengeAdd />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/fitness-challenge/:id"
+                    element={<AdminFitnessChallengeDetail />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/fitness-challenge/:id/leaderboard"
+                    element={<LeaderboardGlobalTabularList />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/fitness-challenge/:id/update"
+                    element={<AdminFitnessChallengeUpdate />}
+                  />
+
                   {/*
                                         ---------------------------------------
                                         EVERYTHING BELOW BELONGS TO THE MEMBER.
@@ -572,6 +606,21 @@ function AppRoute() {
                     exact
                     path="/training-program/:id/edit"
                     element={<MemberTPUpdate />}
+                  />
+                  <Route
+                    exact
+                    path="/fitness-challenge"
+                    element={<FitenessChallengeMemberList />}
+                  />
+                  <Route
+                    exact
+                    path="/fitness-challenge/:id"
+                    element={<MemberFitnessChallengeDetail />}
+                  />
+                  <Route
+                    exact
+                    path="/fitness-challenge/:id/leaderboard"
+                    element={<MemberLeaderboardGlobalTabularListForChallenge />}
                   />
 
                   {/*
