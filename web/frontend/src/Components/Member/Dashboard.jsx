@@ -122,10 +122,6 @@ function MemberDashboard() {
     if (mounted) {
       window.scrollTo(0, 0); // Start the page at the top of the page.
 
-      if (!currentUser.onboardingCompleted && currentUser.role === 4) {
-        setForceURL("/onboarding");
-      }
-
       getDatum(currentUser);
     }
 
