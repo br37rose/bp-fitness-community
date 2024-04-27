@@ -29,15 +29,10 @@ export const Onboarding = () => {
 
   function OnListSuccess(response) {
     if (response && response.results && response.results.length > 0) {
-      console.log("OnListSuccess");
       setListData(response);
-      //   if (response.hasNextPage) {
-      //     setNextCursor(response.nextCursor); // For pagination purposes.
-      //   }
     } else {
       setListData(null);
       setForceURL("/dashboard");
-      //   setNextCursor("");
     }
   }
 
@@ -110,7 +105,7 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useRecoilState(quizAnswersState);
-  const [currentUser] = useRecoilState(currentUserState);
+  const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
@@ -120,7 +115,6 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
     if (!isLastQuestion) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      console.log("answers", answers);
       alert("Wizard Finished!");
       // Here you can implement additional logic upon finishing the wizard
     }
@@ -128,14 +122,15 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
 
   function onAdminMemberUpdateSuccess(response) {
     // Add a temporary banner message in the app and then clear itself after 2 seconds.
-    setTopAlertMessage("Member updated");
+    setTopAlertMessage("Member updated successfully");
     setTopAlertStatus("Member");
     setTimeout(() => {
       setTopAlertMessage("");
     }, 2000);
 
     // Redirect the user to a new page.
-    setForceURL("/admin/member/" + response.id);
+    setCurrentUser(response);
+    setForceURL("/dashboard");
   }
 
   function onAdminMemberUpdateError(apiErr) {
@@ -168,21 +163,21 @@ export const OnBoardingQuestionWizard = ({ questions }) => {
     }));
     const decamelizedData = {
       id: currentUser.id,
-      organization_id: currentUser.organization_id,
-      first_name: currentUser.first_name,
-      last_name: currentUser.last_name,
+      organization_id: currentUser.organizationId,
+      first_name: currentUser.firstName,
+      last_name: currentUser.lastName,
       email: currentUser.email,
       phone: currentUser.phone,
-      postal_code: currentUser.postal_code,
-      address_line_1: currentUser.address_line_1,
-      address_line_2: currentUser.address_line_2,
+      postal_code: currentUser.postalCode,
+      address_line_1: currentUser.addressLine1,
+      address_line_2: currentUser.addressLine2,
       city: currentUser.city,
       region: currentUser.region,
       country: currentUser.country,
       status: currentUser.status,
       password: currentUser.password,
       password_repeated: currentUser.passwordRepeated,
-      how_did_you_hear_about_us: currentUser.how_did_you_hear_about_us,
+      how_did_you_hear_about_us: currentUser.howDidYouHearAboutUs,
       how_did_you_hear_about_us_other: currentUser.howDidYouHearAboutUsOther,
       agree_promotions_email: currentUser.agreePromotionsEmail,
       onboarding_answers: onboardingAnswers,

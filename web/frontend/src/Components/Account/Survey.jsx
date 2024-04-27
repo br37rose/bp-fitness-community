@@ -15,10 +15,10 @@ import {
 } from "../../AppState";
 import PageLoadingContent from "../Reusable/PageLoadingContent";
 import { getQuestionnaireListApi } from "../../API/questionnaire";
-import { SelectableOption, Title } from "../Reusable/Wizard/Questions";
+import { SelectableOption } from "../Reusable/Wizard/Questions";
 import { putMemberUpdateAPI } from "../../API/member";
 
-function MemberQuestionnaireList() {
+function Survey() {
   ////
   //// Global state.
   ////
@@ -42,10 +42,6 @@ function MemberQuestionnaireList() {
   const [listData, setListData] = useState("");
 
   const [isFetching, setFetching] = useState(false);
-  const [pageSize, setPageSize] = useState(10); // Pagination
-  const [previousCursors, setPreviousCursors] = useState([]); // Pagination
-  const [nextCursor, setNextCursor] = useState(""); // Pagination
-  const [currentCursor, setCurrentCursor] = useState(""); // Pagination
   const [answers, setAnswers] = useRecoilState(quizAnswersState);
   // const [forceURL, setForceURL] = useState("");
 
@@ -58,12 +54,8 @@ function MemberQuestionnaireList() {
   function OnListSuccess(response) {
     if (response.results !== null) {
       setListData(response);
-      if (response.hasNextPage) {
-        setNextCursor(response.nextCursor); // For pagination purposes.
-      }
     } else {
       setListData([]);
-      setNextCursor("");
     }
   }
 
@@ -105,21 +97,21 @@ function MemberQuestionnaireList() {
     }));
     const decamelizedData = {
       id: currentUser.id,
-      organization_id: currentUser.organization_id,
-      first_name: currentUser.first_name,
-      last_name: currentUser.last_name,
+      organization_id: currentUser.organizationId,
+      first_name: currentUser.firstName,
+      last_name: currentUser.lastName,
       email: currentUser.email,
       phone: currentUser.phone,
-      postal_code: currentUser.postal_code,
-      address_line_1: currentUser.address_line_1,
-      address_line_2: currentUser.address_line_2,
+      postal_code: currentUser.postalCode,
+      address_line_1: currentUser.addressLine1,
+      address_line_2: currentUser.addressLine2,
       city: currentUser.city,
       region: currentUser.region,
       country: currentUser.country,
       status: currentUser.status,
       password: currentUser.password,
       password_repeated: currentUser.passwordRepeated,
-      how_did_you_hear_about_us: currentUser.how_did_you_hear_about_us,
+      how_did_you_hear_about_us: currentUser.howDidYouHearAboutUs,
       how_did_you_hear_about_us_other: currentUser.howDidYouHearAboutUsOther,
       agree_promotions_email: currentUser.agreePromotionsEmail,
       onboarding_answers: onboardingAnswers,
@@ -196,7 +188,6 @@ function MemberQuestionnaireList() {
   ////
   //// Component rendering.
   ////
-
   const handleSelect = (questionId, selectedId, isMultiSelect) => {
     if (isMultiSelect) {
       const updatedSelections = answers[questionId]?.includes(selectedId)
@@ -207,8 +198,6 @@ function MemberQuestionnaireList() {
       setAnswers({ ...answers, [questionId]: [selectedId] }); // Wrap selectedId in an array
     }
   };
-  console.log("Beginning component rendering ...");
-  
   return (
     <div className="section">
       {/* Page */}
@@ -232,24 +221,22 @@ function MemberQuestionnaireList() {
         ) : (
           <>
             <FormErrorBox errors={errors} />
-            {listData &&
-            listData.results &&
-            (listData.results.length > 0 || previousCursors.length > 0) ? (
+            {listData && listData.results && listData.results.length > 0 ? (
               <div>
                 {listData.results.map((datum, i) => (
                   <div className="mb-6">
-                    <div className="mb-3">
-                      <h1 className="title has-text-centered">
+                    <div>
+                      <h1 className="has-text-centered is-size-4">
                         <span className="mr-4">{i + 1}.</span>
                         {datum.title}
                       </h1>
                       {datum.subtitle && (
-                        <h2 className="subtitle is-size-3 has-text-centered mb-5">
+                        <h2 className="subtitle is-size-5 has-text-centered mt-1">
                           {datum.subtitle}
                         </h2>
                       )}
                     </div>
-                    <div className="columns">
+                    <div className="columns mt-3">
                       <div className="column">
                         {datum.options.map((option) => (
                           <SelectableOption
@@ -301,4 +288,4 @@ function MemberQuestionnaireList() {
   );
 }
 
-export default MemberQuestionnaireList;
+export default Survey;

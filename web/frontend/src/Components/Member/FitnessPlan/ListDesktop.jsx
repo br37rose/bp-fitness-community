@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Scroll from 'react-scroll';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarMinus, faCalendarPlus, faTrophy, faCalendar, faGauge, faSearch, faEye, faPencil, faTrashCan, faPlus, faArrowRight, faTable, faArrowUpRightFromSquare, faFilter, faRefresh, faCalendarCheck, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { useRecoilState } from 'recoil';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
-import FormErrorBox from "../../Reusable/FormErrorBox";
-import { PAGE_SIZE_OPTIONS, FITNESS_PLAN_STATUS_MAP } from "../../../Constants/FieldOptions";
+import {
+  PAGE_SIZE_OPTIONS,
+  FITNESS_PLAN_STATUS_MAP,
+} from "../../../Constants/FieldOptions";
 import DateTimeTextFormatter from "../../Reusable/DateTimeTextFormatter";
 
-
 function AdminFitnessPlanListDesktop(props) {
-  const { listData, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, onSelectFitnessPlanForDeletion } = props;
+  const {
+    listData,
+    setPageSize,
+    pageSize,
+    previousCursors,
+    onPreviousClicked,
+    onNextClicked,
+    onSelectFitnessPlanForDeletion,
+  } = props;
   return (
     <div className="b-table">
       <div className="table-wrapper has-mobile-cards">
@@ -31,17 +37,15 @@ function AdminFitnessPlanListDesktop(props) {
               listData.results.map(function (datum, i) {
                 return (
                   <tr key={`desktop_${datum.id}`}>
-                    <td data-label="Name">
-                      {datum.name}
-                    </td>
+                    <td data-label="Name">{datum.name}</td>
                     <td data-label="Status">
                       {FITNESS_PLAN_STATUS_MAP[datum.status]}
                     </td>
                     <td data-label="Created At">
-                        <DateTimeTextFormatter value={datum.createdAt} />
+                      <DateTimeTextFormatter value={datum.createdAt} />
                     </td>
                     <td data-label="Modified At">
-                        <DateTimeTextFormatter value={datum.modifiedAt} />
+                      <DateTimeTextFormatter value={datum.modifiedAt} />
                     </td>
                     <td className="is-actions-cell">
                       <div className="buttons is-right">
@@ -55,12 +59,19 @@ function AdminFitnessPlanListDesktop(props) {
                           className="button is-small is-dark"
                           type="button"
                         >
-                          <FontAwesomeIcon
-                            className="mdi"
-                            icon={faEye}
-                          />
+                          <FontAwesomeIcon className="mdi" icon={faEye} />
                           &nbsp;View
                         </Link>
+                        <button
+                          onClick={(e, ses) =>
+                            onSelectFitnessPlanForDeletion(e, datum)
+                          }
+                          className="button is-small is-danger"
+                          type="button"
+                        >
+                          <FontAwesomeIcon className="mdi" icon={faTrashCan} />
+                          &nbsp;Delete
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -75,9 +86,7 @@ function AdminFitnessPlanListDesktop(props) {
               <select
                 class={`input has-text-grey-light`}
                 name="pageSize"
-                onChange={(e) =>
-                  setPageSize(parseInt(e.target.value))
-                }
+                onChange={(e) => setPageSize(parseInt(e.target.value))}
               >
                 {PAGE_SIZE_OPTIONS.map(function (option, i) {
                   return (
@@ -94,10 +103,7 @@ function AdminFitnessPlanListDesktop(props) {
           </div>
           <div class="column is-half has-text-right">
             {previousCursors.length > 0 && (
-              <button
-                class="button"
-                onClick={onPreviousClicked}
-              >
+              <button class="button" onClick={onPreviousClicked}>
                 Previous
               </button>
             )}

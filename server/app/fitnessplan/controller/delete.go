@@ -15,16 +15,16 @@ import (
 
 func (impl *FitnessPlanControllerImpl) DeleteByID(ctx context.Context, id primitive.ObjectID) error {
 	// Extract from our session the following data.
-	// userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
-	// userRole := ctx.Value(constants.SessionUserRole).(int8)
+	userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
+	userRole := ctx.Value(constants.SessionUserRole).(int8)
 
 	// Apply protection based on ownership and role.
-	// if userRole != user_d.UserRoleRoot && userRole != user_d.UserRoleAdmin && user {
-	// 	impl.Logger.Error("authenticated user is not staff role error",
-	// 		slog.Any("role", userRole),
-	// 		slog.Any("userID", userID))
-	// 	return httperror.NewForForbiddenWithSingleField("message", "you role does not grant you access to this")
-	// }
+	if userRole != user_d.UserRoleRoot && userRole != user_d.UserRoleAdmin {
+		impl.Logger.Error("authenticated user is not staff role error",
+			slog.Any("role", userRole),
+			slog.Any("userID", userID))
+		return httperror.NewForForbiddenWithSingleField("message", "you role does not grant you access to this")
+	}
 
 	// Update the database.
 	fitnessplan, err := impl.GetByID(ctx, id)
@@ -54,16 +54,16 @@ func (impl *FitnessPlanControllerImpl) DeleteByID(ctx context.Context, id primit
 
 func (impl *FitnessPlanControllerImpl) PermanentlyDeleteByID(ctx context.Context, id primitive.ObjectID) error {
 	// Extract from our session the following data.
-	userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
-	userRole := ctx.Value(constants.SessionUserRole).(int8)
+	// userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
+	// userRole := ctx.Value(constants.SessionUserRole).(int8)
 
-	// Apply protection based on ownership and role.
-	if userRole != user_d.UserRoleRoot && userRole != user_d.UserRoleAdmin {
-		impl.Logger.Error("authenticated user is not staff role error",
-			slog.Any("role", userRole),
-			slog.Any("userID", userID))
-		return httperror.NewForForbiddenWithSingleField("message", "you role does not grant you access to this")
-	}
+	// // Apply protection based on ownership and role.
+	// if userRole != user_d.UserRoleRoot &&  userRole != user_d.UserRoleAdmin && userRole !={
+	// 	impl.Logger.Error("authenticated user is not staff role error",
+	// 		slog.Any("role", userRole),
+	// 		slog.Any("userID", userID))
+	// 	return httperror.NewForForbiddenWithSingleField("message", "you role does not grant you access to this")
+	// }
 
 	// Update the database.
 	fitnessplan, err := impl.GetByID(ctx, id)

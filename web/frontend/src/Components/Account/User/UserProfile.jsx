@@ -3,50 +3,22 @@ import { Link, Navigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faImage,
   faEllipsis,
-  faRepeat,
-  faTasks,
-  faTachometer,
-  faPlus,
   faArrowLeft,
-  faCheckCircle,
   faUserCircle,
   faGauge,
-  faPencil,
-  faIdCard,
-  faAddressBook,
-  faContactCard,
-  faChartPie,
   faKey,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
 import { getAccountDetailAPI } from "../../../API/Account";
 import FormErrorBox from "../../Reusable/FormErrorBox";
-import FormInputField from "../../Reusable/FormInputField";
-import FormTextareaField from "../../Reusable/FormTextareaField";
-import FormRadioField from "../../Reusable/FormRadioField";
-import FormMultiSelectField from "../../Reusable/FormMultiSelectField";
-import FormSelectField from "../../Reusable/FormSelectField";
-import FormCheckboxField from "../../Reusable/FormCheckboxField";
-import FormCountryField from "../../Reusable/FormCountryField";
-import FormRegionField from "../../Reusable/FormRegionField";
 import {
   topAlertMessageState,
   topAlertStatusState,
   currentUserState,
 } from "../../../AppState";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import {
-  SUBSCRIPTION_STATUS_WITH_EMPTY_OPTIONS,
-  SUBSCRIPTION_TINTERVAL_WITH_EMPTY_OPTIONS,
-} from "../../../Constants/FieldOptions";
-import FormTextRow from "../../Reusable/FormTextRow";
-import FormTextTagRow from "../../Reusable/FormTextTagRow";
-import FormTextYesNoRow from "../../Reusable/FormTextYesNoRow";
-import FormTextOptionRow from "../../Reusable/FormTextOptionRow";
-import DataDisplayRowImage from "../../Reusable/DataDisplayRowImage";
 import Layout from "../../Menu/Layout";
 import UserDetail from "./UserDetail";
 import UserInfo from "./UserInfo";
@@ -56,8 +28,7 @@ import AccountFriendList from "../Friend/Friend";
 import AccountWearableTechLaunchpad from "../WearableTech/Launchpad";
 import AccountSubscriptionDetailAndCancel from "../Subscription/Subscription";
 import AccountMoreLaunchpad from "../More/Launchpad";
-import Onboarding from "../../Reusable/Wizard/Wizard";
-import MemberQuestionnaireList from "../OnboardingQuestions";
+import Survey from "../Survey";
 
 function UserProfile() {
   ////
@@ -190,7 +161,7 @@ function UserProfile() {
       case "subscription":
         return <AccountSubscriptionDetailAndCancel />;
       case "survey":
-        return <MemberQuestionnaireList />;
+        return <Survey />;
       case "more":
         return <AccountMoreLaunchpad />;
       default:
