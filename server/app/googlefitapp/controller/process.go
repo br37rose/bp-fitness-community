@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
@@ -57,8 +58,6 @@ DataTypeNameWeight
 */
 
 func (impl *GoogleFitAppControllerImpl) ProcessAllQueuedData() error {
-	impl.Logger.Debug("starting task...")
-
 	// DEVELOPERS NOTE:
 	// Load up only the data we want to process in our application. In future
 	// if we want more data processed then add below:
@@ -78,6 +77,9 @@ func (impl *GoogleFitAppControllerImpl) ProcessAllQueuedData() error {
 			slog.Any("error", err))
 		return err
 	}
+	impl.Logger.Debug("processing all queued data...",
+		slog.Int("count", int(len(dpdp.Results))))
+
 	for _, dp := range dpdp.Results {
 		if err := impl.processForQueuedData(ctx, dp); err != nil {
 			impl.Logger.Error("failed transform queued google fit data point",
@@ -145,12 +147,12 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 		// FOR NOW WE DO NOT WANT TO ERROR, WE JUST WANT TO IGNORE THE
 		// RECORD AND MOVE ON... UNCOMMENT THE CODE BELOW WHEN YOU ARE
 		// READY TO IMPLEMENT DIFFERENT DATA TYPES.
-		return nil
+		// return nil
 
-		// err := fmt.Errorf("unsupported data type name: %s", dp.DataTypeName)
-		// impl.Logger.Error("",
-		// 	slog.Any("error", err))
-		// return err
+		err := fmt.Errorf("unsupported data type name: %s", dp.DataTypeName)
+		impl.Logger.Error("",
+			slog.Any("error", err))
+		return err
 	}
 
 	// DEVELOPERS NOTE:
@@ -195,6 +197,39 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 			slog.Time("end_at", dp.EndAt),
 			slog.Int("status", int(dp.Status)),
 		)
+	} else {
+		impl.Logger.Debug("datapoint already exists",
+			slog.String("data_type_name", dp.DataTypeName),
+			slog.String("metric_id", dp.MetricID.Hex()),
+			slog.Time("start_at", dp.StartAt),
+			slog.Time("end_at", dp.EndAt),
+			slog.Int("status", int(dp.Status)),
+		)
+		// // // STEP 1: Get our record.
+		// // dp, err := impl.DataPointStorer.GetByCompositeKey(ctx, dataPoint.MetricID, dataPoint.Timestamp)
+		// // if err != nil {
+		// // 	impl.Logger.Error("failed checking by datapoint by composite key",
+		// // 		slog.Any("error", err))
+		// // 	return err
+		// // }
+		//
+		// // STEP 2: Update our Google Fit datapoint to be `active` status.
+		// dp.Status = gfdp_ds.StatusActive
+		// if err := impl.GoogleFitDataPointStorer.UpdateByID(ctx, dp); err != nil {
+		// 	impl.Logger.Error("failed updating google fit data point",
+		// 		slog.Any("error", err))
+		// 	return err
+		// }
+		//
+		// // STEP 3: For debugging purposes update the console log.
+		// impl.Logger.Debug("updated datapoint",
+		// 	slog.String("data_type_name", dp.DataTypeName),
+		// 	slog.String("metric_id", dp.MetricID.Hex()),
+		// 	slog.Time("start_at", dp.StartAt),
+		// 	slog.Time("end_at", dp.EndAt),
+		// 	slog.Int("status", int(dp.Status)),
+		// )
 	}
+
 	return nil
 }

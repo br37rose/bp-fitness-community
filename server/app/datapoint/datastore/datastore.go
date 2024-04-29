@@ -48,6 +48,7 @@ type DataPointListResult struct {
 // DataPointStorer Interface for organization.
 type DataPointStorer interface {
 	CheckIfExistsByCompositeKey(ctx context.Context, metricID primitive.ObjectID, timestamp time.Time) (bool, error)
+	GetByCompositeKey(ctx context.Context, metricID primitive.ObjectID, timestamp time.Time) (*DataPoint, error)
 	GetByLatestTimestampAndMetricID(ctx context.Context, metricID primitive.ObjectID) (*DataPoint, error)
 	Create(ctx context.Context, m *DataPoint) error
 	ListByFilter(ctx context.Context, f *DataPointPaginationListFilter) (*DataPointPaginationListResult, error)
