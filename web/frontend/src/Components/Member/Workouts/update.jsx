@@ -32,13 +32,12 @@ import {
   EXERCISE_CATEGORY_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_GENDER_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_MOMENT_TYPE_OPTIONS_WITH_EMPTY_OPTION,
-  EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION,
 } from "../../../Constants/FieldOptions";
 import FormSelectField from "../../Reusable/FormSelectField";
 import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
 import Modal from "../../Reusable/modal";
-
+import FormMultiSelectFieldForTags from "../../Reusable/FormMultiSelectFieldForTags";
 function MemberWorkoutEdit() {
   const [topAlertMessage, setTopAlertMessage] =
     useRecoilState(topAlertMessageState);
@@ -64,7 +63,7 @@ function MemberWorkoutEdit() {
   const [status, setStatus] = useState("");
   const [gender, setGender] = useState("");
   const [videoType, setVideoType] = useState("");
-
+  const [tags, setTags] = useState([]);
   const { id } = useParams();
 
   const onSubmitClick = () => {
@@ -456,22 +455,7 @@ function MemberWorkoutEdit() {
                                     }
                                   />
                                 </div>
-                                <div class="column">
-                                  <FormSelectField
-                                    label="Status"
-                                    name="status"
-                                    placeholder="Pick"
-                                    selectedValue={status}
-                                    errorText={errors && errors.status}
-                                    helpText=""
-                                    onChange={(e) =>
-                                      setStatus(parseInt(e.target.value))
-                                    }
-                                    options={
-                                      EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION
-                                    }
-                                  />
-                                </div>
+
                                 <div class="column">
                                   <FormSelectField
                                     label="Gender"
@@ -500,6 +484,19 @@ function MemberWorkoutEdit() {
                                     options={
                                       EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION
                                     }
+                                  />
+                                </div>
+                                <div class="column">
+                                  <FormMultiSelectFieldForTags
+                                    label="Tags"
+                                    name="tags"
+                                    placeholder="Pick tags"
+                                    tags={tags}
+                                    setTags={setTags}
+                                    errorText={errors && errors.tags}
+                                    helpText=""
+                                    isRequired={true}
+                                    maxWidth="320px"
                                   />
                                 </div>
                               </div>

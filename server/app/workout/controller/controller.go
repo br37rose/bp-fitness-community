@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 
+	exc_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/controller"
 	exc "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	w_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
 	w_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/workout/datastore"
@@ -28,6 +29,7 @@ type WorkoutControllerImpl struct {
 	DbClient      *mongo.Client
 	WorkoutStorer w_s.WorkoutStorer
 	ExcStoreer    exc.ExerciseStorer
+	ExcController exc_c.ExerciseController
 }
 
 func NewController(
@@ -37,6 +39,7 @@ func NewController(
 	client *mongo.Client,
 	workout_store w_s.WorkoutStorer,
 	excStoreer exc.ExerciseStorer,
+	excController exc_c.ExerciseController,
 
 ) WorkoutController {
 	impl := &WorkoutControllerImpl{
@@ -46,6 +49,7 @@ func NewController(
 		DbClient:      client,
 		WorkoutStorer: workout_store,
 		ExcStoreer:    excStoreer,
+		ExcController: excController,
 	}
 	return impl
 }

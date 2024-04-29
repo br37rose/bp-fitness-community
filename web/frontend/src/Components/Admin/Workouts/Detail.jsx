@@ -325,6 +325,11 @@ function AdminWorkoutDetail() {
                                             height: "100%",
                                           }}
                                           controls
+                                          poster={
+                                            exercise.excercise
+                                              .thumbnailObjectUrl ||
+                                            exercise.excercise.thumbnailUrl
+                                          }
                                         >
                                           <source
                                             src={
@@ -348,10 +353,13 @@ function AdminWorkoutDetail() {
                                     );
                                   case EXERCISE_VIDEO_TYPE_VIMEO:
                                     return (
-                                      <Vimeo
-                                        video={`${exercise.excercise.videoUrl}`}
-                                        autoplay
-                                      />
+                                      <div className="vimeo-container">
+                                        <Vimeo
+                                          className="vimeo-wrapper"
+                                          video={`${exercise.excercise.videoUrl}`}
+                                          autoplay
+                                        />
+                                      </div>
                                     );
                                   default:
                                     return null;

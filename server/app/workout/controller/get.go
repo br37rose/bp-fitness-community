@@ -17,7 +17,7 @@ func (c *WorkoutControllerImpl) GetByID(ctx context.Context, id primitive.Object
 	}
 	for i, e := range m.WorkoutExercises {
 		if !e.IsRest && !e.ExerciseID.IsZero() {
-			exc, err := c.ExcStoreer.GetByID(ctx, e.ExerciseID)
+			exc, err := c.ExcController.GetByID(ctx, e.ExerciseID)
 			if err != nil {
 				return nil, err
 			}

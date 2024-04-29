@@ -91,7 +91,7 @@ function WorkoutDisplay({
       </div>
 
       <div className="panel">
-        {workout.workoutExercises.map((exercise, index) =>
+        {workout.workoutExercises?.map((exercise, index) =>
           isDraggable ? (
             <DraggableItem
               className={"exercise-item"}

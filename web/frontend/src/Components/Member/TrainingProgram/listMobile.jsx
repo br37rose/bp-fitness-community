@@ -60,7 +60,7 @@ function MemberTPListMobile(props) {
                 <div class="columns is-mobile">
                   <div class="column">
                     <Link
-                      to={`/workouts/${datum.id}`}
+                      to={`/training-program/${datum.id}`}
                       class="button is-small is-dark is-fullwidth"
                       type="button"
                     >

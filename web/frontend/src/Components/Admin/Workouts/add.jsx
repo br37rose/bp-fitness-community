@@ -33,6 +33,7 @@ import {
   EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION,
 } from "../../../Constants/FieldOptions";
 import FormSelectField from "../../Reusable/FormSelectField";
+import FormMultiSelectFieldForTags from "../../Reusable/FormMultiSelectFieldForTags";
 
 function AdminWorkoutAdd() {
   const [topAlertMessage, setTopAlertMessage] =
@@ -56,7 +57,7 @@ function AdminWorkoutAdd() {
   const [status, setStatus] = useState("");
   const [gender, setGender] = useState("");
   const [videoType, setVideoType] = useState("");
-
+  const [tags, setTags] = useState([]);
   const onSearchButtonClick = (e) => {
     setActualSearchText(temporarySearchText);
     getAllExcericses(false, temporarySearchText);
@@ -136,11 +137,15 @@ function AdminWorkoutAdd() {
     if (!clear && status !== "") {
       params.set("status", status);
     }
+    params.set("status_list", 1);
     if (!clear && gender !== "") {
       params.set("gender", gender);
     }
     if (!clear && videoType !== "") {
       params.set("video_type", videoType);
+    }
+    if (tags.length > 0) {
+      params.set("tags", tags);
     }
     getExerciseListAPI(
       params,
@@ -395,22 +400,7 @@ function AdminWorkoutAdd() {
                                     }
                                   />
                                 </div>
-                                <div class="column">
-                                  <FormSelectField
-                                    label="Status"
-                                    name="status"
-                                    placeholder="Pick"
-                                    selectedValue={status}
-                                    errorText={errors && errors.status}
-                                    helpText=""
-                                    onChange={(e) =>
-                                      setStatus(parseInt(e.target.value))
-                                    }
-                                    options={
-                                      EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION
-                                    }
-                                  />
-                                </div>
+
                                 <div class="column">
                                   <FormSelectField
                                     label="Gender"
@@ -439,6 +429,19 @@ function AdminWorkoutAdd() {
                                     options={
                                       EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION
                                     }
+                                  />
+                                </div>
+                                <div class="column">
+                                  <FormMultiSelectFieldForTags
+                                    label="Tags"
+                                    name="tags"
+                                    placeholder="Pick tags"
+                                    tags={tags}
+                                    setTags={setTags}
+                                    errorText={errors && errors.tags}
+                                    helpText=""
+                                    isRequired={true}
+                                    maxWidth="320px"
                                   />
                                 </div>
                               </div>
