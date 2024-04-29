@@ -311,7 +311,7 @@ func (c *FitnessPlanControllerImpl) listAvailableExcercises(ctx context.Context,
 
 	exerciseList := make([]string, 0, len(exercises.Results))
 	for _, exercise := range exercises.Results {
-		exerciseList = append(exerciseList, fmt.Sprintf("id=%s, name=%s, description=%s", exercise.ID.Hex(), exercise.Name, exercise.Description))
+		exerciseList = append(exerciseList, fmt.Sprintf("{ id=%s, name=%s, description=%s }", exercise.ID.Hex(), exercise.Name, exercise.Description))
 	}
 
 	return strings.Join(exerciseList, ","), nil

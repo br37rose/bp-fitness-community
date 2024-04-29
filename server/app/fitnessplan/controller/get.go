@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	domain "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -21,13 +22,32 @@ func (c *FitnessPlanControllerImpl) GetByID(ctx context.Context, id primitive.Ob
 			for i, dailyExercise := range dailyPlan.PlanDetails {
 				e, err := c.ExcerciseContr.GetByID(ctx, dailyExercise.ID)
 				if err != nil {
-					c.Logger.Error("excercise does not exist", slog.Any("error", err))
-					return nil, err
+					ex, err := c.ExcerciseContr.ListByFilter(ctx, &datastore.ExerciseListFilter{
+						ExcludeArchived: true,
+						SearchText:      dailyExercise.Name,
+						Gender:          domain.GenderMap[m.Gender],
+						SortField:       "created_at",
+						SortOrder:       -1,
+						PageSize:        1,
+					})
+
+					if err != nil {
+						c.Logger.Error("excercise does not exist", slog.Any("error", err))
+						continue
+					}
+					if len(ex.Results) > 0 {
+						e = ex.Results[0]
+					}
+				}
+
+				dailyPlan.PlanDetails[i].VideoURL = e.VideoObjectURL
+				if e.VideoObjectURL == "" {
+					dailyPlan.PlanDetails[i].VideoURL = e.VideoURL
 				}
 				dailyPlan.PlanDetails[i].Name = e.Name
 				dailyPlan.PlanDetails[i].Description = e.Description
-				dailyPlan.PlanDetails[i].VideoURL = e.VideoObjectURL
 				dailyPlan.PlanDetails[i].ThumbnailURL = e.ThumbnailObjectURL
+				dailyPlan.PlanDetails[i].VideoType = e.VideoType
 
 			}
 		}
@@ -41,8 +61,13 @@ func (c *FitnessPlanControllerImpl) GetByID(ctx context.Context, id primitive.Ob
 			return nil, err
 		}
 		m.Exercises[index].VideoURL = e.VideoObjectURL
+		if e.VideoObjectURL == "" {
+			m.Exercises[index].VideoURL = e.VideoURL
+		}
 		m.Exercises[index].ThumbnailURL = e.ThumbnailObjectURL
 		m.Exercises[index].Description = e.Description
+		m.Exercises[index].VideoType = e.VideoType
+
 	}
 
 	return m, err
