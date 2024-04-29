@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointPaginationListResult, error) {
@@ -13,6 +15,18 @@ func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatus(ctx context.Context)
 		SortField: "created_at",
 		SortOrder: 1,
 		Status:    StatusQueued,
+	}
+	return impl.ListByFilter(ctx, f)
+}
+
+func (impl GoogleFitDataPointStorerImpl) ListByQueuedStatusAndGfaID(ctx context.Context, googleFitAppID primitive.ObjectID) (*GoogleFitDataPointPaginationListResult, error) {
+	f := &GoogleFitDataPointPaginationListFilter{
+		Cursor:         "",
+		PageSize:       1_000_000_000,
+		SortField:      "created_at",
+		SortOrder:      1,
+		Status:         StatusQueued,
+		GoogleFitAppID: googleFitAppID,
 	}
 	return impl.ListByFilter(ctx, f)
 }

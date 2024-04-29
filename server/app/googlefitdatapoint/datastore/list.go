@@ -40,6 +40,9 @@ func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *Go
 	if len(f.DataTypeNames) > 0 {
 		filter["data_type_name"] = bson.M{"$in": f.DataTypeNames}
 	}
+	if !f.GoogleFitAppID.IsZero() {
+		filter["google_fit_app_id"] = f.GoogleFitAppID
+	}
 
 	// Create a slice to store conditions
 	var conditions []bson.M

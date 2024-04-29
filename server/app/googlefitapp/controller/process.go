@@ -91,6 +91,27 @@ func (impl *GoogleFitAppControllerImpl) ProcessAllQueuedData() error {
 	return nil
 }
 
+func (impl *GoogleFitAppControllerImpl) processForQueuedDataWithGfaID(ctx context.Context, gfaID primitive.ObjectID) error {
+	dpdp, err := impl.GoogleFitDataPointStorer.ListByQueuedStatusAndGfaID(ctx, gfaID)
+	if err != nil {
+		impl.Logger.Error("failed listing queued google fit data points",
+			slog.Any("google_fit_app_id", gfaID),
+			slog.Any("error", err))
+		return err
+	}
+	for _, dp := range dpdp.Results {
+		if err := impl.processForQueuedData(ctx, dp); err != nil {
+			impl.Logger.Error("failed transform queued google fit data point",
+				slog.Any("dp", dp),
+				slog.Any("error", err))
+			return err
+		}
+	}
+
+	impl.Logger.Debug("finished task")
+	return nil
+}
+
 func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context, dp *gfdp_ds.GoogleFitDataPoint) error {
 	// DEVELOPERS NOTE:
 	// The following code will extract the data-point `value` based on the

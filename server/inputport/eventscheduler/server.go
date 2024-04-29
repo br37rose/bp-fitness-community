@@ -67,7 +67,7 @@ func (port *schedulerInputPort) Run() {
 	if err := port.GoogleFitAppScheduler.RunEveryMinuteRefreshTokensFromGoogle(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
-	if err := port.GoogleFitAppScheduler.RunEveryProcessAllQueuedData(); err != nil {
+	if err := port.GoogleFitAppScheduler.RunEveryMinuteProcessAllQueuedData(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
 	if err := port.GoogleFitAppScheduler.RunEveryFifteenMinutesPullDataFromGoogle(); err != nil {

@@ -27,6 +27,7 @@ type GoogleFitDataPointPaginationListFilter struct {
 	// Filter related.
 	OrganizationID  primitive.ObjectID
 	BranchID        primitive.ObjectID
+	GoogleFitAppID  primitive.ObjectID
 	ExcludeArchived bool
 	SearchText      string
 	Status          int8

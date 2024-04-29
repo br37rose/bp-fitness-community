@@ -262,6 +262,23 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 		return err
 	}
 
-	impl.Logger.Debug("updated user account with google fit app")
+	impl.Logger.Debug("updated user account with google fit app, fetching latest data from google...")
+
+	// DEVELOPERS NOTE:
+	// The following code will run in the background the process of (1) fetching
+	// from Google the biometrics data for the user whom successfully registered
+	// their device, followed up by processing the queued data.
+	go func(gfapp *gfa_ds.GoogleFitApp) {
+		if err := impl.pullDataFromGoogleWithGfaID(context.Background(), gfapp.ID); err != nil {
+			impl.Logger.Error("pull data from google errorr", slog.Any("err", err))
+		}
+		impl.Logger.Debug("finished pull data from google")
+
+		if err := impl.processForQueuedDataWithGfaID(context.Background(), gfapp.ID); err != nil {
+			impl.Logger.Error("process queued data from google errorr", slog.Any("err", err))
+		}
+		impl.Logger.Debug("finished processing queued data from google")
+	}(gfa)
+
 	return nil
 }

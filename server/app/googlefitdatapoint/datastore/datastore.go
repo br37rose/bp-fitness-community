@@ -85,6 +85,7 @@ type GoogleFitDataPointStorer interface {
 	ListByFilter(ctx context.Context, m *GoogleFitDataPointPaginationListFilter) (*GoogleFitDataPointPaginationListResult, error)
 	// ListAsSelectOptionByFilter(ctx context.Context, f *GoogleFitDataPointPaginationListFilter) ([]*GoogleFitDataPointAsSelectOption, error)
 	ListByQueuedStatus(ctx context.Context) (*GoogleFitDataPointPaginationListResult, error)
+	ListByQueuedStatusAndGfaID(ctx context.Context, googleFitAppID primitive.ObjectID) (*GoogleFitDataPointPaginationListResult, error)
 	ListByQueuedStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error)
 	ListByActiveStatusInDataTypeNames(ctx context.Context, dataTypeNames []string) (*GoogleFitDataPointPaginationListResult, error)
 	ListByAnomalousDetection(ctx context.Context) (*GoogleFitDataPointPaginationListResult, error)

@@ -10,8 +10,10 @@ import (
 
 type GoogleFitAppScheduler interface {
 	RunEveryMinuteRefreshTokensFromGoogle() error
-	RunEveryProcessAllQueuedData() error
+	RunEveryMinuteProcessAllQueuedData() error
+	RunOnceAndStartImmediatelyProcessAllQueuedData() error
 	RunEveryFifteenMinutesPullDataFromGoogle() error
+	RunOnceAndStartImmediatelyPullDataFromGoogle() error
 }
 
 // Handler Creates http request handler
@@ -52,8 +54,23 @@ func (impl *googleFitAppSchedulerImpl) RunEveryMinuteRefreshTokensFromGoogle() e
 	return nil
 }
 
-func (impl *googleFitAppSchedulerImpl) RunEveryProcessAllQueuedData() error {
+func (impl *googleFitAppSchedulerImpl) RunEveryMinuteProcessAllQueuedData() error {
 	impl.Logger.Debug("scheduled: process queued data", slog.String("interval", "every minute"))
+	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
+		impl.Logger.Debug("running process queued data...")
+		if err := impl.Controller.ProcessAllQueuedData; err != nil {
+			impl.Logger.Error("process queued data error with scheduler", slog.Any("err", err))
+		}
+		impl.Logger.Debug("finished process queued data")
+	})
+	if err != nil {
+		impl.Logger.Error("error with scheduler", slog.Any("err", err))
+	}
+	return nil
+}
+
+func (impl *googleFitAppSchedulerImpl) RunOnceAndStartImmediatelyProcessAllQueuedData() error {
+	impl.Logger.Debug("scheduled: process queued data", slog.String("interval", "once"))
 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		impl.Logger.Debug("running process queued data...")
 		if err := impl.Controller.ProcessAllQueuedData; err != nil {
@@ -70,6 +87,21 @@ func (impl *googleFitAppSchedulerImpl) RunEveryProcessAllQueuedData() error {
 func (impl *googleFitAppSchedulerImpl) RunEveryFifteenMinutesPullDataFromGoogle() error {
 	impl.Logger.Debug("scheduled: pull data from google", slog.String("interval", "every minute"))
 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
+		impl.Logger.Debug("running pull data from google...")
+		if err := impl.Controller.PullDataFromGoogle; err != nil {
+			impl.Logger.Error("pull data from google error with scheduler", slog.Any("err", err))
+		}
+		impl.Logger.Debug("finished pull data from google")
+	})
+	if err != nil {
+		impl.Logger.Error("error with scheduler", slog.Any("err", err))
+	}
+	return nil
+}
+
+func (impl *googleFitAppSchedulerImpl) RunOnceAndStartImmediatelyPullDataFromGoogle() error {
+	impl.Logger.Debug("scheduled: pull data from google", slog.String("interval", "once"))
+	err := impl.EventScheduler.ScheduleOneTimeFunc(func() {
 		impl.Logger.Debug("running pull data from google...")
 		if err := impl.Controller.PullDataFromGoogle; err != nil {
 			impl.Logger.Error("pull data from google error with scheduler", slog.Any("err", err))
