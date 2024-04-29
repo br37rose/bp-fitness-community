@@ -26,7 +26,10 @@ import {
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
 import FormSelectField from "../../Reusable/FormSelectField";
 import { QUESTIONNAIRE_STATUS_OPTIONS } from "../../../Constants/FieldOptions";
-import { getQuestionnaireListApi } from "../../../API/questionnaire";
+import {
+  deleteQuestionnaireAPI,
+  getQuestionnaireListApi,
+} from "../../../API/questionnaire";
 import AdminQuestionnaireListDesktop from "./ListDesktop";
 import AdminQuestionnaireListMobile from "./ListMobile";
 
@@ -45,6 +48,8 @@ function AdminQuestionnaireList() {
   ); // Filtering + Searching
   const [status, setStatus] = useRecoilState(questionnaireFilterStatus);
   const [sort, setSort] = useRecoilState(questionnaireFilterSortState);
+  const [selectedQuestionForDeletion, setSelectedQuestionForDeletion] =
+    useState("");
 
   ////
   //// Component states.
@@ -58,6 +63,7 @@ function AdminQuestionnaireList() {
   const [previousCursors, setPreviousCursors] = useState([]); // Pagination
   const [nextCursor, setNextCursor] = useState(""); // Pagination
   const [currentCursor, setCurrentCursor] = useState(""); // Pagination
+  const [showModal, setShowModal] = useState(false);
 
   ////
   //// API.
@@ -77,10 +83,6 @@ function AdminQuestionnaireList() {
 
   function OnListErr(apiErr) {
     setErrors(apiErr);
-
-    // The following code will cause the screen to scroll to the top of
-    // the page. Please see ``react-scroll`` for more information:
-    // https://github.com/fisshy/react-scroll
     var scroll = Scroll.animateScroll;
     scroll.scrollToTop();
   }
@@ -151,6 +153,58 @@ function AdminQuestionnaireList() {
   //// Misc.
   ////
 
+  function onQuestionDeleteError(apiErr) {
+    setErrors(apiErr);
+
+    // Update notification.
+    setTopAlertStatus("danger");
+    setTopAlertMessage("Failed deleting");
+    setTimeout(() => {
+      setTopAlertMessage("");
+    }, 2000);
+
+    // The following code will cause the screen to scroll to the top of
+    // the page. Please see ``react-scroll`` for more information:
+    // https://github.com/fisshy/react-scroll
+    var scroll = Scroll.animateScroll;
+    scroll.scrollToTop();
+  }
+
+  function onQuestionDeleteSuccess(response) {
+    // Update notification.
+    setTopAlertStatus("success");
+    setTopAlertMessage("Question deleted");
+    setTimeout(() => {
+      setTopAlertMessage("");
+    }, 2000);
+
+    // Fetch again an updated list.
+    fetchList(currentCursor, pageSize, status, sort);
+  }
+  function onQuestionDeleteDone() {
+    setFetching(false);
+    setShowModal(false);
+  }
+
+  const onSelectQuestionForDeletion = (e, datum) => {
+    setSelectedQuestionForDeletion(datum);
+    setShowModal(true);
+  };
+  const onDeselectQuestionForDeletion = (e) => {
+    setSelectedQuestionForDeletion("");
+    setShowModal(false);
+  };
+
+  const onDeleteConfirmButtonClick = (e) => {
+    deleteQuestionnaireAPI(
+      selectedQuestionForDeletion.id,
+      onQuestionDeleteSuccess,
+      onQuestionDeleteError,
+      onQuestionDeleteDone
+    );
+    setSelectedQuestionForDeletion("");
+  };
+
   useEffect(() => {
     let mounted = true;
 
@@ -189,6 +243,48 @@ function AdminQuestionnaireList() {
               </li>
             </ul>
           </nav>
+
+          {showModal && (
+            <nav>
+              <div
+                className="modal is-active"
+                // className={`modal ${
+                //   selectedQuestionForDeletion ? "is-active" : ""
+                // }`}
+              >
+                <div className="modal-background"></div>
+                <div className="modal-card">
+                  <header className="modal-card-head">
+                    <p className="modal-card-title">Are you sure?</p>
+                    <button
+                      className="delete"
+                      aria-label="close"
+                      onClick={onDeselectQuestionForDeletion}
+                    ></button>
+                  </header>
+                  <section className="modal-card-body">
+                    You are about to <b>Delete</b> this Question; it will no
+                    longer appear on your dashboard. This action cannot be
+                    undone. Are you sure you would like to continue?
+                  </section>
+                  <footer className="modal-card-foot">
+                    <button
+                      className="button is-success"
+                      onClick={onDeleteConfirmButtonClick}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      className="button"
+                      onClick={onDeselectQuestionForDeletion}
+                    >
+                      Cancel
+                    </button>
+                  </footer>
+                </div>
+              </div>
+            </nav>
+          )}
 
           {/* Mobile Breadcrumbs */}
           <nav class="breadcrumb is-hidden-desktop" aria-label="breadcrumbs">
@@ -313,6 +409,9 @@ function AdminQuestionnaireList() {
                         previousCursors={previousCursors}
                         onPreviousClicked={onPreviousClicked}
                         onNextClicked={onNextClicked}
+                        onSelectQuestionForDeletion={
+                          onSelectQuestionForDeletion
+                        }
                       />
                     </div>
 
@@ -329,6 +428,9 @@ function AdminQuestionnaireList() {
                         previousCursors={previousCursors}
                         onPreviousClicked={onPreviousClicked}
                         onNextClicked={onNextClicked}
+                        onSelectQuestionForDeletion={
+                          onSelectQuestionForDeletion
+                        }
                       />
                     </div>
                   </div>

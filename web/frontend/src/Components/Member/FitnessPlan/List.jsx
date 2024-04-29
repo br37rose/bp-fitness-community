@@ -6,15 +6,10 @@ import {
   faFilterCircleXmark,
   faTrophy,
   faArrowLeft,
-  faUsers,
-  faEye,
-  faPencil,
-  faTrashCan,
   faPlus,
   faGauge,
   faArrowRight,
   faTable,
-  faArrowUpRightFromSquare,
   faRefresh,
   faFilter,
   faSearch,
@@ -22,7 +17,10 @@ import {
 import { useRecoilState } from "recoil";
 
 import FormErrorBox from "../../Reusable/FormErrorBox";
-import { getFitnessPlanListAPI, deleteFitnessPlanAPI } from "../../../API/FitnessPlan";
+import {
+  getFitnessPlanListAPI,
+  deleteFitnessPlanAPI,
+} from "../../../API/FitnessPlan";
 import {
   topAlertMessageState,
   topAlertStatusState,
@@ -31,28 +29,34 @@ import {
   videoCategoryFilterTemporarySearchTextState,
   videoCategoryFilterActualSearchTextState,
   videoCategoryFilterSortState,
-  videoCategoryFilterStatusState
+  videoCategoryFilterStatusState,
 } from "../../../AppState";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
 import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
-import { PAGE_SIZE_OPTIONS } from "../../../Constants/FieldOptions";
 import AdminFitnessPlanListDesktop from "./ListDesktop";
 import AdminFitnessPlanListMobile from "./ListMobile";
 import Layout from "../../Menu/Layout";
-
 
 function AdminFitnessPlanList() {
   ////
   //// Global state.
   ////
 
-  const [topAlertMessage, setTopAlertMessage] = useRecoilState(topAlertMessageState);
-  const [topAlertStatus, setTopAlertStatus] = useRecoilState(topAlertStatusState);
+  const [topAlertMessage, setTopAlertMessage] =
+    useRecoilState(topAlertMessageState);
+  const [topAlertStatus, setTopAlertStatus] =
+    useRecoilState(topAlertStatusState);
   const [currentUser] = useRecoilState(currentUserState);
-  const [showFilter, setShowFilter] = useRecoilState(videoCategoryFilterShowState); // Filtering + Searching
+  const [showFilter, setShowFilter] = useRecoilState(
+    videoCategoryFilterShowState
+  ); // Filtering + Searching
   const [sort, setSort] = useRecoilState(videoCategoryFilterSortState); // Sorting
-  const [temporarySearchText, setTemporarySearchText] = useRecoilState(videoCategoryFilterTemporarySearchTextState); // Searching - The search field value as your writes their query.
-  const [actualSearchText, setActualSearchText] = useRecoilState(videoCategoryFilterActualSearchTextState); // Searching - The actual search query value to submit to the API.
+  const [temporarySearchText, setTemporarySearchText] = useRecoilState(
+    videoCategoryFilterTemporarySearchTextState
+  ); // Searching - The search field value as your writes their query.
+  const [actualSearchText, setActualSearchText] = useRecoilState(
+    videoCategoryFilterActualSearchTextState
+  ); // Searching - The actual search query value to submit to the API.
   const [status, setStatus] = useRecoilState(videoCategoryFilterStatusState);
 
   ////
@@ -61,7 +65,8 @@ function AdminFitnessPlanList() {
 
   const [errors, setErrors] = useState({});
   const [listData, setListData] = useState("");
-  const [selectedFitnessPlanForDeletion, setSelectedFitnessPlanForDeletion] = useState("");
+  const [selectedFitnessPlanForDeletion, setSelectedFitnessPlanForDeletion] =
+    useState("");
   const [isFetching, setFetching] = useState(false);
   const [pageSize, setPageSize] = useState(10); // Pagination
   const [previousCursors, setPreviousCursors] = useState([]); // Pagination
@@ -73,7 +78,6 @@ function AdminFitnessPlanList() {
   ////
 
   function onFitnessPlanListSuccess(response) {
-    console.log("onFitnessPlanListSuccess: Starting...");
     if (response.results !== null) {
       setListData(response);
       if (response.hasNextPage) {
@@ -86,7 +90,6 @@ function AdminFitnessPlanList() {
   }
 
   function onFitnessPlanListError(apiErr) {
-    console.log("onFitnessPlanListError: Starting...");
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -97,22 +100,14 @@ function AdminFitnessPlanList() {
   }
 
   function onFitnessPlanListDone() {
-    console.log("onFitnessPlanListDone: Starting...");
     setFetching(false);
   }
 
   function onFitnessPlanDeleteSuccess(response) {
-    console.log("onFitnessPlanDeleteSuccess: Starting..."); // For debugging purposes only.
-
     // Update notification.
     setTopAlertStatus("success");
     setTopAlertMessage("FitnessPlan deleted");
     setTimeout(() => {
-      console.log(
-        "onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -121,18 +116,12 @@ function AdminFitnessPlanList() {
   }
 
   function onFitnessPlanDeleteError(apiErr) {
-    console.log("onFitnessPlanDeleteError: Starting..."); // For debugging purposes only.
     setErrors(apiErr);
 
     // Update notification.
     setTopAlertStatus("danger");
     setTopAlertMessage("Failed deleting");
     setTimeout(() => {
-      console.log(
-        "onFitnessPlanDeleteError: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -144,7 +133,6 @@ function AdminFitnessPlanList() {
   }
 
   function onFitnessPlanDeleteDone() {
-    console.log("onFitnessPlanDeleteDone: Starting...");
     setFetching(false);
   }
 
@@ -153,15 +141,15 @@ function AdminFitnessPlanList() {
   ////
   const breadcrumbItems = {
     items: [
-      { text: 'Dashboard', link: '/dashboard', isActive: false, icon: faGauge },
-      { text: 'Fitness Plans', link: '#', icon: faTrophy, isActive: true }
+      { text: "Dashboard", link: "/dashboard", isActive: false, icon: faGauge },
+      { text: "Fitness Plans", link: "#", icon: faTrophy, isActive: true },
     ],
     mobileBackLinkItems: {
       link: "/dashboard",
       text: "Back to Dashboard",
-      icon: faArrowLeft
-    }
-  }
+      icon: faArrowLeft,
+    },
+  };
 
   ////
   //// Event handling.
@@ -205,7 +193,6 @@ function AdminFitnessPlanList() {
   };
 
   const onNextClicked = (e) => {
-    console.log("onNextClicked");
     let arr = [...previousCursors];
     arr.push(currentCursor);
     setPreviousCursors(arr);
@@ -213,7 +200,6 @@ function AdminFitnessPlanList() {
   };
 
   const onPreviousClicked = (e) => {
-    console.log("onPreviousClicked");
     let arr = [...previousCursors];
     const previousCursor = arr.pop();
     setPreviousCursors(arr);
@@ -222,23 +208,18 @@ function AdminFitnessPlanList() {
 
   const onSearchButtonClick = (e) => {
     // Searching
-    console.log("Search button clicked...");
     setActualSearchText(temporarySearchText);
   };
 
   const onSelectFitnessPlanForDeletion = (e, datum) => {
-    console.log("onSelectFitnessPlanForDeletion", datum);
     setSelectedFitnessPlanForDeletion(datum);
   };
 
   const onDeselectFitnessPlanForDeletion = (e) => {
-    console.log("onDeselectFitnessPlanForDeletion");
     setSelectedFitnessPlanForDeletion("");
   };
 
   const onDeleteConfirmButtonClick = (e) => {
-    console.log("onDeleteConfirmButtonClick"); // For debugging purposes only.
-
     deleteFitnessPlanAPI(
       selectedFitnessPlanForDeletion.id,
       onFitnessPlanDeleteSuccess,
@@ -255,7 +236,7 @@ function AdminFitnessPlanList() {
     setTemporarySearchText("");
     setSort("no,1");
     setStatus(0);
-  }
+  };
 
   ////
   //// Misc.
@@ -280,12 +261,12 @@ function AdminFitnessPlanList() {
 
   return (
     <Layout breadcrumbItems={breadcrumbItems}>
-
       {/* Page */}
       <nav className="box">
         <div
-          className={`modal ${selectedFitnessPlanForDeletion ? "is-active" : ""
-            }`}
+          className={`modal ${
+            selectedFitnessPlanForDeletion ? "is-active" : ""
+          }`}
         >
           <div className="modal-background"></div>
           <div className="modal-card">
@@ -298,11 +279,9 @@ function AdminFitnessPlanList() {
               ></button>
             </header>
             <section className="modal-card-body">
-              You are about to <b>archive</b> this Fitness Plan; it will no longer
-              appear on your dashboard nor will the Fitness Plan be able to log
-              into their account. This action can be undone but you'll need
-              to contact the system administrator. Are you sure you would
-              like to continue?
+              You are about to <b>archive</b> this Fitness Plan; it will no
+              longer appear on your dashboard. This action cannot be undone. Are
+              you sure you want to continue?
             </section>
             <footer className="modal-card-foot">
               <button
@@ -329,31 +308,65 @@ function AdminFitnessPlanList() {
             </h1>
           </div>
           <div className="column has-text-right">
-            <button onClick={() => fetchList(currentCursor, pageSize, actualSearchText, status, sort)} class="is-fullwidth-mobile button is-link is-small" type="button">
-              <FontAwesomeIcon className="mdi" icon={faRefresh} />&nbsp;<span class="is-hidden-desktop is-hidden-tablet">Refresh</span>
+            <button
+              onClick={() =>
+                fetchList(
+                  currentCursor,
+                  pageSize,
+                  actualSearchText,
+                  status,
+                  sort
+                )
+              }
+              class="is-fullwidth-mobile button is-link is-small"
+              type="button"
+            >
+              <FontAwesomeIcon className="mdi" icon={faRefresh} />
+              &nbsp;
+              <span class="is-hidden-desktop is-hidden-tablet">Refresh</span>
             </button>
             &nbsp;
-            <button onClick={(e) => setShowFilter(!showFilter)} class="is-fullwidth-mobile button is-small is-primary" type="button">
-              <FontAwesomeIcon className="mdi" icon={faFilter} />&nbsp;Filter
+            <button
+              onClick={(e) => setShowFilter(!showFilter)}
+              class="is-fullwidth-mobile button is-small is-primary"
+              type="button"
+            >
+              <FontAwesomeIcon className="mdi" icon={faFilter} />
+              &nbsp;Filter
             </button>
             &nbsp;
-            <Link to={`/fitness-plans/add`} className="is-fullwidth-mobile button is-small is-success" type="button">
-              <FontAwesomeIcon className="mdi" icon={faPlus} />&nbsp;Request Plan
+            <Link
+              to={`/fitness-plans/add`}
+              className="is-fullwidth-mobile button is-small is-success"
+              type="button"
+            >
+              <FontAwesomeIcon className="mdi" icon={faPlus} />
+              &nbsp;Request Plan
             </Link>
           </div>
         </div>
 
         {/* FILTER */}
         {showFilter && (
-          <div class="has-background-white-bis" style={{ borderRadius: "15px", padding: "20px" }}>
-
+          <div
+            class="has-background-white-bis"
+            style={{ borderRadius: "15px", padding: "20px" }}
+          >
             {/* Filter Title + Clear Button */}
             <div class="columns is-mobile">
               <div class="column is-half">
-                <strong><u><FontAwesomeIcon className="mdi" icon={faFilter} />&nbsp;Filter</u></strong>
+                <strong>
+                  <u>
+                    <FontAwesomeIcon className="mdi" icon={faFilter} />
+                    &nbsp;Filter
+                  </u>
+                </strong>
               </div>
               <div class="column is-half has-text-right">
-                <Link onClick={onClearFilterClick}><FontAwesomeIcon className="mdi" icon={faFilterCircleXmark} />&nbsp;Clear Filter</Link>
+                <Link onClick={onClearFilterClick}>
+                  <FontAwesomeIcon className="mdi" icon={faFilterCircleXmark} />
+                  &nbsp;Clear Filter
+                </Link>
               </div>
             </div>
 
@@ -388,16 +401,15 @@ function AdminFitnessPlanList() {
           <>
             <FormErrorBox errors={errors} />
             {listData &&
-              listData.results &&
-              (listData.results.length > 0 || previousCursors.length > 0) ? (
+            listData.results &&
+            (listData.results.length > 0 || previousCursors.length > 0) ? (
               <div className="container">
-
                 {/*
                             ##################################################################
                             EVERYTHING INSIDE HERE WILL ONLY BE DISPLAYED ON A DESKTOP SCREEN.
                             ##################################################################
                         */}
-                <div class="is-hidden-touch" >
+                <div class="is-hidden-touch">
                   <AdminFitnessPlanListDesktop
                     listData={listData}
                     setPageSize={setPageSize}
@@ -405,7 +417,9 @@ function AdminFitnessPlanList() {
                     previousCursors={previousCursors}
                     onPreviousClicked={onPreviousClicked}
                     onNextClicked={onNextClicked}
-                    onSelectFitnessPlanForDeletion={onSelectFitnessPlanForDeletion}
+                    onSelectFitnessPlanForDeletion={
+                      onSelectFitnessPlanForDeletion
+                    }
                   />
                 </div>
 
@@ -422,10 +436,11 @@ function AdminFitnessPlanList() {
                     previousCursors={previousCursors}
                     onPreviousClicked={onPreviousClicked}
                     onNextClicked={onNextClicked}
-                    onSelectFitnessPlanForDeletion={onSelectFitnessPlanForDeletion}
+                    onSelectFitnessPlanForDeletion={
+                      onSelectFitnessPlanForDeletion
+                    }
                   />
                 </div>
-
               </div>
             ) : (
               <section className="hero is-medium has-background-white-ter">
@@ -439,13 +454,11 @@ function AdminFitnessPlanList() {
                     <b>
                       <Link to="/fitness-plans/add">
                         Click here&nbsp;
-                        <FontAwesomeIcon
-                          className="mdi"
-                          icon={faArrowRight}
-                        />
+                        <FontAwesomeIcon className="mdi" icon={faArrowRight} />
                       </Link>
                     </b>{" "}
-                    to get started requesting your first fitness plan from our team!
+                    to get started requesting your first fitness plan from our
+                    team!
                   </p>
                 </div>
               </section>
@@ -455,15 +468,21 @@ function AdminFitnessPlanList() {
 
         <div class="columns pt-5">
           <div class="column is-half">
-            <Link class="button is-fullwidth-mobile" to={`/dashboard`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
+            <Link class="button is-fullwidth-mobile" to={`/dashboard`}>
+              <FontAwesomeIcon className="fas" icon={faArrowLeft} />
+              &nbsp;Back to Dashboard
+            </Link>
           </div>
           <div class="column is-half has-text-right">
-            <Link to={`/fitness-plans/add`} class="button is-success is-fullwidth-mobile">
-              <FontAwesomeIcon className="fas" icon={faPlus} />&nbsp;Request Plan
+            <Link
+              to={`/fitness-plans/add`}
+              class="button is-success is-fullwidth-mobile"
+            >
+              <FontAwesomeIcon className="fas" icon={faPlus} />
+              &nbsp;Request Plan
             </Link>
           </div>
         </div>
-
       </nav>
     </Layout>
   );

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 import { PAGE_SIZE_OPTIONS } from "../../../Constants/FieldOptions";
 
@@ -12,6 +12,7 @@ function AdminQuestionnaireListDesktop(props) {
     previousCursors,
     onPreviousClicked,
     onNextClicked,
+    onSelectQuestionForDeletion,
   } = props;
   return (
     <div className="b-table">
@@ -55,6 +56,16 @@ function AdminQuestionnaireListDesktop(props) {
                           <FontAwesomeIcon className="mdi" icon={faEdit} />
                           &nbsp;Edit
                         </Link>
+                        <button
+                          onClick={(e, ses) =>
+                            onSelectQuestionForDeletion(e, datum)
+                          }
+                          className="button is-small is-danger"
+                          type="button"
+                        >
+                          <FontAwesomeIcon className="mdi" icon={faTrashCan} />
+                          &nbsp;Delete
+                        </button>
                       </div>
                     </td>
                   </tr>

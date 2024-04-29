@@ -36,14 +36,6 @@ import PageLoadingContent from "../Reusable/PageLoadingContent";
 import { formatDateStringWithTimezone } from "../../Helpers/timeUtility";
 import AverageAndTimeComparison from "../Reusable/AverageDateAndTimeComparison";
 import Layout from "../Menu/Layout";
-// import OnBoardingQuestionWizard, {
-//   onboarding,
-// } from "../Reusable/Wizard/Wizard";
-
-import Onboarding, {
-  OnBoardingQuestionWizard,
-} from "../Reusable/Wizard/Wizard";
-import { Title, SelectableOption, Card } from "../Reusable/Wizard/Questions";
 
 function MemberDashboard() {
   ////
@@ -130,23 +122,16 @@ function MemberDashboard() {
     if (mounted) {
       window.scrollTo(0, 0); // Start the page at the top of the page.
 
-      // if (currentUser && !forceURL) {
-      //     if (!currentUser.onboardingCompleted && currentUser.role === 4) {
-      //       setForceURL("/onboarding");
-      //     }
-      // }
-
       getDatum(currentUser);
     }
 
     return () => {
       mounted = false;
     };
-}, [currentUser, forceURL]);
+  }, [currentUser]);
 
   if (forceURL !== undefined && forceURL !== null && forceURL !== "") {
-      console.log("Redirecting to:", forceURL);
-      return <Navigate to={forceURL} />;
+    return <Navigate to={forceURL} />;
   }
 
   return (

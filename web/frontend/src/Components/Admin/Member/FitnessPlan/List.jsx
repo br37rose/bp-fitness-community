@@ -83,6 +83,7 @@ function AdminFitnessPlanList() {
   const [previousCursors, setPreviousCursors] = useState([]); // Pagination
   const [nextCursor, setNextCursor] = useState(""); // Pagination
   const [currentCursor, setCurrentCursor] = useState(""); // Pagination
+  const [showModal, setShowModal] = useState(false);
 
   ////
   //// API.
@@ -119,11 +120,6 @@ function AdminFitnessPlanList() {
     setTopAlertStatus("success");
     setTopAlertMessage("FitnessPlan deleted");
     setTimeout(() => {
-      console.log(
-        "onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -155,6 +151,7 @@ function AdminFitnessPlanList() {
 
   function onFitnessPlanDeleteDone() {
     setFetching(false);
+    setShowModal(false);
   }
 
   ////
@@ -218,14 +215,21 @@ function AdminFitnessPlanList() {
   };
 
   const onSelectFitnessPlanForDeletion = (e, datum) => {
+    console.log("slected fitness plan for deletion");
     setSelectedFitnessPlanForDeletion(datum);
+    setShowModal(true);
   };
 
   const onDeselectFitnessPlanForDeletion = (e) => {
     setSelectedFitnessPlanForDeletion("");
+    setShowModal(false);
   };
 
   const onDeleteConfirmButtonClick = (e) => {
+    console.log(
+      "calling delete  fitness pai",
+      selectedFitnessPlanForDeletion.id
+    );
     deleteFitnessPlanAPI(
       selectedFitnessPlanForDeletion.id,
       onFitnessPlanDeleteSuccess,
@@ -267,6 +271,46 @@ function AdminFitnessPlanList() {
 
   return (
     <>
+      {showModal && (
+        <nav className="box">
+          <div
+            className={`modal ${
+              selectedFitnessPlanForDeletion ? "is-active" : ""
+            }`}
+          >
+            <div className="modal-background"></div>
+            <div className="modal-card">
+              <header className="modal-card-head">
+                <p className="modal-card-title">Are you sure?</p>
+                <button
+                  className="delete"
+                  aria-label="close"
+                  onClick={onDeselectFitnessPlanForDeletion}
+                ></button>
+              </header>
+              <section className="modal-card-body">
+                You are about to <b>delete</b> this Fitness Plan; it will no
+                longer appear on your dashboard. This action cannot be undone.
+                Are you sure you want to continue?
+              </section>
+              <footer className="modal-card-foot">
+                <button
+                  className="button is-success"
+                  onClick={onDeleteConfirmButtonClick}
+                >
+                  Confirm
+                </button>
+                <button
+                  className="button"
+                  onClick={onDeselectFitnessPlanForDeletion}
+                >
+                  Cancel
+                </button>
+              </footer>
+            </div>
+          </div>
+        </nav>
+      )}
       <div className="container">
         <section className="section">
           {/* Desktop Breadcrumbs */}
@@ -492,7 +536,7 @@ function AdminFitnessPlanList() {
                         &nbsp;No Fitness Plans
                       </p>
                       <p className="subtitle">
-                        You currently have no fitness plans.{" "}
+                        You currently have no fitness plans.
                         <b>
                           <Link to="/fitness-plans/add">
                             Click here&nbsp;
@@ -501,7 +545,7 @@ function AdminFitnessPlanList() {
                               icon={faArrowRight}
                             />
                           </Link>
-                        </b>{" "}
+                        </b>
                         to get started requesting your first fitness plan from
                         our team!
                       </p>
