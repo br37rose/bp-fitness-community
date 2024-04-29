@@ -196,7 +196,9 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 				slog.Any("error", err))
 			return err
 		}
-		impl.Logger.Debug("created new google fit app")
+		impl.Logger.Debug("created new google fit app",
+			slog.String("gfa_id", gfa.ID.Hex()),
+		)
 
 		// Make a copy of all our Google Fit App to the user's account so the
 		// user can take advantage of this throughout our app. This copy only
@@ -232,7 +234,9 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 			SleepMetricID:                            gfa.SleepMetricID,
 			WeightMetricID:                           gfa.WeightMetricID,
 		}
-		impl.Logger.Debug("made copy of new google fit app with user account")
+		impl.Logger.Debug("made copy of new google fit app with user account",
+			slog.String("gfa_id", gfa.ID.Hex()),
+		)
 	} else {
 		gfa.Token = token
 		gfa.RequiresGoogleLoginAgain = false
@@ -268,19 +272,27 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 	// The following code will run in the background the process of (1) fetching
 	// from Google the biometrics data for the user whom successfully registered
 	// their device, followed up by processing the queued data.
-	go func(gfapp *gfa_ds.GoogleFitApp) {
-		impl.Logger.Debug("pulling initial data from google...", slog.Any("gfa_id", gfapp.ID.Hex()))
-		if err := impl.pullDataFromGoogleWithGfaID(context.Background(), gfapp.ID); err != nil {
-			impl.Logger.Error("pulling initial data from google errorr", slog.Any("err", err))
-		}
-		impl.Logger.Debug("finished pulling initial data from google", slog.Any("gfa_id", gfapp.ID.Hex()))
+	defer func() {
+		go func() {
+			impl.Logger.Debug("pulling initial data from google...", slog.Any("gfa_id", gfa.ID.Hex()))
+			if err := impl.pullDataFromGoogleWithGfaID(context.Background(), gfa.ID); err != nil {
+				impl.Logger.Error("pulling initial data from google error",
+					slog.Any("gfa_id", gfa.ID),
+					slog.Any("err", err),
+				)
+			}
+			impl.Logger.Debug("finished pulling initial data from google", slog.Any("gfa_id", gfa.ID.Hex()))
 
-		impl.Logger.Debug("processing queued initial historic data from google", slog.Any("gfa_id", gfapp.ID.Hex()))
-		if err := impl.processForQueuedDataWithGfaID(context.Background(), gfapp.ID); err != nil {
-			impl.Logger.Error("processing queued intiial historic data from google errorr", slog.Any("err", err))
-		}
-		impl.Logger.Debug("finished processing queued initial historic data from google", slog.Any("gfa_id", gfapp.ID.Hex()))
-	}(gfa)
+			impl.Logger.Debug("processing queued initial historic data from google", slog.Any("gfa_id", gfa.ID.Hex()))
+			if err := impl.processForQueuedDataWithGfaID(context.Background(), gfa.ID); err != nil {
+				impl.Logger.Error("processing queued intiial historic data from google error",
+					slog.Any("gfa_id", gfa.ID),
+					slog.Any("err", err),
+				)
+			}
+			impl.Logger.Debug("finished processing queued initial historic data from google", slog.Any("gfa_id", gfa.ID.Hex()))
+		}()
+	}()
 
 	return nil
 }

@@ -40,6 +40,7 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaID(ctx context.
 	gfa, err := impl.GoogleFitAppStorer.GetByID(ctx, gfaID)
 	if err != nil {
 		impl.Logger.Error("failed getting google fit app from database",
+			slog.String("gfa_id", gfaID.Hex()),
 			slog.Any("error", err))
 		return err
 	}
@@ -64,9 +65,10 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaID(ctx context.
 		gfa.Errors = ""
 		if err := impl.GoogleFitAppStorer.UpdateByID(ctx, gfa); err != nil {
 			impl.Logger.Error("failed updating google fit app in database",
+				slog.String("gfa_id", gfaID.Hex()),
 				slog.Any("error", err))
 		}
-		impl.Logger.Debug("updated google fit app with new token")
+		impl.Logger.Debug("updated google fit app with new token", slog.String("gfa_id", gfaID.Hex()))
 	})
 	if err != nil {
 		//
@@ -78,22 +80,28 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaID(ctx context.
 		gfa.Errors = err.Error()
 		if err := impl.GoogleFitAppStorer.UpdateByID(ctx, gfa); err != nil {
 			impl.Logger.Error("failed updating google fit app in database",
+				slog.String("gfa_id", gfaID.Hex()),
 				slog.Any("error", err))
 		}
 
 		u, err := impl.UserStorer.GetByID(ctx, gfa.UserID)
 		if err != nil {
 			impl.Logger.Error("failed getting user from database",
+				slog.String("gfa_id", gfaID.Hex()),
 				slog.Any("error", err))
 			return err
 		}
 		if u == nil {
 			err := fmt.Errorf("user does not exist for id: %s", gfa.UserID.Hex())
+			impl.Logger.Error("failed getting user from database",
+				slog.String("gfa_id", gfaID.Hex()),
+				slog.Any("error", err))
 			return err
 		}
 		u.PrimaryHealthTrackingDeviceRequiresLoginAgain = true
 		if err := impl.UserStorer.UpdateByID(ctx, u); err != nil {
 			impl.Logger.Error("failed updating user to database",
+				slog.String("gfa_id", gfaID.Hex()),
 				slog.Any("error", err))
 			return err
 		}

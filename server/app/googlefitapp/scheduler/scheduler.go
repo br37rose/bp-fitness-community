@@ -71,15 +71,17 @@ func (impl *googleFitAppSchedulerImpl) RunEveryMinuteProcessAllQueuedData() erro
 
 func (impl *googleFitAppSchedulerImpl) RunOnceAndStartImmediatelyProcessAllQueuedData() error {
 	impl.Logger.Debug("scheduled: process queued data", slog.String("interval", "once"))
-	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleOneTimeFunc(func() {
 		impl.Logger.Debug("running process queued data...")
-		if err := impl.Controller.ProcessAllQueuedData; err != nil {
+		if err := impl.Controller.ProcessAllQueuedData(); err != nil {
 			impl.Logger.Error("process queued data error with scheduler", slog.Any("err", err))
+			return
 		}
 		impl.Logger.Debug("finished process queued data")
 	})
 	if err != nil {
-		impl.Logger.Error("error with scheduler", slog.Any("err", err))
+		impl.Logger.Error("failed processing queued data with error from scheduler",
+			slog.Any("err", err))
 	}
 	return nil
 }

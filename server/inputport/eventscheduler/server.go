@@ -60,10 +60,15 @@ func (port *schedulerInputPort) Run() {
 	port.EventScheduler.Start()
 	port.ping()
 
-	// Schedule one-time jobs.
-	if err := port.AggregatePointScheduler.RunOnceAndStartImmediatelyAggregation(); err != nil {
-		port.Logger.Error("scheduler has error", slog.Any("err", err))
-	}
+	defer func() {
+		// Schedule one-time jobs.
+		if err := port.GoogleFitAppScheduler.RunOnceAndStartImmediatelyProcessAllQueuedData(); err != nil {
+			port.Logger.Error("scheduler failed for processing queued data ", slog.Any("err", err))
+		}
+		if err := port.AggregatePointScheduler.RunOnceAndStartImmediatelyAggregation(); err != nil {
+			port.Logger.Error("scheduler has error", slog.Any("err", err))
+		}
+	}()
 
 	// Schedule the following background tasks to run.
 	if err := port.GoogleFitDataPointScheduler.RunEveryMinuteDeleteAllAnomalousData(); err != nil {

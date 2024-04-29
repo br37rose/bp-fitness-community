@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
@@ -33,7 +32,7 @@ DataTypeNameWorkout
 - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DataTypeNameCyclingWheelRevolutionRPM
 DataTypeNameCyclingWheelRevolutionCumulative
-DataTypeNameDistanceDelta
+DataTypeNameDistanceDelta        [DONE]
 DataTypeNameLocationSample
 DataTypeNameSpeed
 - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,6 +65,7 @@ func (impl *GoogleFitAppControllerImpl) ProcessAllQueuedData() error {
 	dataTypeNames := []string{
 		gcp_a.DataTypeNameCaloriesBurned,
 		gcp_a.DataTypeNameStepCountDelta,
+		gcp_a.DataTypeNameDistanceDelta,
 		gcp_a.DataTypeNameHeartRateBPM,
 		//TODO: Add more health sensors here...
 	}
@@ -99,6 +99,11 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedDataWithGfaID(ctx contex
 			slog.Any("error", err))
 		return err
 	}
+
+	impl.Logger.Debug("processing queued datapoint",
+		slog.Int("count", int(len(dpdp.Results))),
+	)
+
 	for _, dp := range dpdp.Results {
 		if err := impl.processForQueuedData(ctx, dp); err != nil {
 			impl.Logger.Error("failed transform queued google fit data point",
@@ -126,16 +131,26 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 		if dp.StepCountDelta != nil {
 			val = float64(dp.StepCountDelta.Steps)
 		}
+	case gcp_a.DataTypeNameDistanceDelta:
+		if dp.DistanceDelta != nil {
+			val = float64(dp.DistanceDelta.Distance)
+		}
 	case gcp_a.DataTypeNameHeartRateBPM:
 		if dp.HeartRateBPM != nil {
 			val = float64(dp.HeartRateBPM.BPM)
 		}
 		//TODO: Add more health sensors here...
 	default:
-		err := fmt.Errorf("unsupported data type name: %s", dp.DataTypeName)
-		impl.Logger.Error("",
-			slog.Any("error", err))
-		return err
+		// DEVELOPERS NOTE:
+		// FOR NOW WE DO NOT WANT TO ERROR, WE JUST WANT TO IGNORE THE
+		// RECORD AND MOVE ON... UNCOMMENT THE CODE BELOW WHEN YOU ARE
+		// READY TO IMPLEMENT DIFFERENT DATA TYPES.
+		return nil
+
+		// err := fmt.Errorf("unsupported data type name: %s", dp.DataTypeName)
+		// impl.Logger.Error("",
+		// 	slog.Any("error", err))
+		// return err
 	}
 
 	// DEVELOPERS NOTE:
