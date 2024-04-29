@@ -137,7 +137,7 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaAndClient(ctx c
 	// at this moment and then hold onto it. There will be time delay for
 	// running all of the calls below. Afterwords we will save this variables
 	// time as the most recent time of our fetch.
-	lastFetchedAt := time.Now()
+	lastFetchedAtNow := time.Now()
 
 	// --- Activity --- //
 
@@ -290,7 +290,7 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaAndClient(ctx c
 	// Keep track of last fetch time.
 	//
 
-	gfa.LastFetchedAt = lastFetchedAt
+	gfa.LastFetchedAt = lastFetchedAtNow
 	if err := impl.GoogleFitAppStorer.UpdateByID(ctx, gfa); err != nil {
 		impl.Logger.Error("failed pulling weight data from google",
 			slog.Any("error", err))

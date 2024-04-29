@@ -262,22 +262,24 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 		return err
 	}
 
-	impl.Logger.Debug("updated user account with google fit app, fetching latest data from google...")
+	impl.Logger.Debug("updated user account with google fit app")
 
 	// DEVELOPERS NOTE:
 	// The following code will run in the background the process of (1) fetching
 	// from Google the biometrics data for the user whom successfully registered
 	// their device, followed up by processing the queued data.
 	go func(gfapp *gfa_ds.GoogleFitApp) {
+		impl.Logger.Debug("pulling initial data from google...", slog.Any("gfa_id", gfapp.ID.Hex()))
 		if err := impl.pullDataFromGoogleWithGfaID(context.Background(), gfapp.ID); err != nil {
-			impl.Logger.Error("pull data from google errorr", slog.Any("err", err))
+			impl.Logger.Error("pulling initial data from google errorr", slog.Any("err", err))
 		}
-		impl.Logger.Debug("finished pull data from google")
+		impl.Logger.Debug("finished pulling initial data from google", slog.Any("gfa_id", gfapp.ID.Hex()))
 
+		impl.Logger.Debug("processing queued initial historic data from google", slog.Any("gfa_id", gfapp.ID.Hex()))
 		if err := impl.processForQueuedDataWithGfaID(context.Background(), gfapp.ID); err != nil {
-			impl.Logger.Error("process queued data from google errorr", slog.Any("err", err))
+			impl.Logger.Error("processing queued intiial historic data from google errorr", slog.Any("err", err))
 		}
-		impl.Logger.Debug("finished processing queued data from google")
+		impl.Logger.Debug("finished processing queued initial historic data from google", slog.Any("gfa_id", gfapp.ID.Hex()))
 	}(gfa)
 
 	return nil

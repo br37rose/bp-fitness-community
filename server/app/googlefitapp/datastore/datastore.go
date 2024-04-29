@@ -50,6 +50,12 @@ type GoogleFitApp struct {
 	// The last time we made a fetch to Google API.
 	LastFetchedAt time.Time `bson:"last_fetched_at" json:"last_fetched_at,omitempty"`
 
+	// The last time we made a aggregation on the data.
+	LastAggregationAt time.Time `bson:"last_aggregation_at" json:"last_aggregation_at,omitempty"`
+
+	// The last time we made a ranking on the data.
+	LastRankingAt time.Time `bson:"last_ranking_at" json:"last_ranking_at,omitempty"`
+
 	ActivitySegmentMetricID                  primitive.ObjectID `bson:"activity_segment_metric_id" json:"activity_segment_metric_id,omitempty"`
 	BasalMetabolicRateMetricID               primitive.ObjectID `bson:"basal_metabolic_rate_metric_id" json:"basal_metabolic_rate_metric_id,omitempty"`
 	CaloriesBurnedMetricID                   primitive.ObjectID `bson:"calories_burned_metric_id" json:"calories_burned_metric_id,omitempty"`

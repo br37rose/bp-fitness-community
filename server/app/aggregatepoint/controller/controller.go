@@ -22,17 +22,19 @@ import (
 // AggregatePointController Interface for organization business logic controller.
 type AggregatePointController interface {
 	ListByFilter(ctx context.Context, f *ap_s.AggregatePointPaginationListFilter) (*ap_s.AggregatePointPaginationListResult, error)
-	AggregateThisHourForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateLastHourForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateTodayForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateYesterdayForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateThisISOWeekForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateLastISOWeekForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateThisMonthForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateLastMonthForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateThisYearForAllActiveGoogleFitApps(ctx context.Context) error
-	AggregateLastYearForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateThisHourForAllActiveGoogleFitApps(ctx context.Context) error    // DEPRECATED
+	AggregateLastHourForAllActiveGoogleFitApps(ctx context.Context) error    // DEPRECATED
+	AggregateTodayForAllActiveGoogleFitApps(ctx context.Context) error       // DEPRECATED
+	AggregateYesterdayForAllActiveGoogleFitApps(ctx context.Context) error   // DEPRECATED
+	AggregateThisISOWeekForAllActiveGoogleFitApps(ctx context.Context) error // DEPRECATED
+	AggregateLastISOWeekForAllActiveGoogleFitApps(ctx context.Context) error // DEPRECATED
+	AggregateThisMonthForAllActiveGoogleFitApps(ctx context.Context) error   // DEPRECATED
+	AggregateLastMonthForAllActiveGoogleFitApps(ctx context.Context) error   // DEPRECATED
+	AggregateThisYearForAllActiveGoogleFitApps(ctx context.Context) error    // DEPRECATED
+	AggregateLastYearForAllActiveGoogleFitApps(ctx context.Context) error    // DEPRECATED
 	GetSummary(ctx context.Context, userID primitive.ObjectID) (*AggregatePointSummaryResponse, error)
+	AggregateForAllActiveGoogleFitApps(ctx context.Context) error
+	AggregateForGoogleFitAppID(ctx context.Context, gfaID primitive.ObjectID) error
 }
 
 type AggregatePointControllerImpl struct {
