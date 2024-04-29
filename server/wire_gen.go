@@ -201,7 +201,7 @@ func InitializeEvent() Application {
 	handler18 := httptransport19.NewHandler(slogLogger, biometricController)
 	trainingProgramStorer := datastore20.NewDatastore(conf, slogLogger, client)
 	workoutStorer := datastore21.NewDatastore(conf, slogLogger, client)
-	workoutController := controller21.NewController(conf, slogLogger, provider, client, workoutStorer, exerciseStorer)
+	workoutController := controller21.NewController(conf, slogLogger, provider, client, workoutStorer, exerciseStorer, exerciseController)
 	trainingprogramController := controller22.NewController(conf, slogLogger, provider, client, trainingProgramStorer, workoutStorer, userStorer, workoutController)
 	handler19 := httptransport20.NewHandler(slogLogger, trainingprogramController)
 	handler20 := httptransport21.NewHandler(slogLogger, workoutController)

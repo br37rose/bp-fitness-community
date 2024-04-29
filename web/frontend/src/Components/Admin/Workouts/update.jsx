@@ -34,7 +34,7 @@ import {
   EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION,
 } from "../../../Constants/FieldOptions";
-
+import FormMultiSelectFieldForTags from "../../Reusable/FormMultiSelectFieldForTags";
 function AdminWorkoutUpdate() {
   const [topAlertMessage, setTopAlertMessage] =
     useRecoilState(topAlertMessageState);
@@ -58,7 +58,7 @@ function AdminWorkoutUpdate() {
   const [status, setStatus] = useState("");
   const [gender, setGender] = useState("");
   const [videoType, setVideoType] = useState("");
-
+  const [tags, setTags] = useState([]);
   const { id } = useParams();
 
   const onSubmitClick = () => {
@@ -144,6 +144,9 @@ function AdminWorkoutUpdate() {
     }
     if (!clear && videoType !== "") {
       params.set("video_type", videoType);
+    }
+    if (tags.length > 0) {
+      params.set("tags", tags);
     }
     getExerciseListAPI(
       params,
@@ -492,6 +495,20 @@ function AdminWorkoutUpdate() {
                                     }
                                   />
                                 </div>
+                                <div class="column">
+                                  <FormMultiSelectFieldForTags
+                                    label="Tags"
+                                    name="tags"
+                                    placeholder="Pick tags"
+                                    tags={tags}
+                                    setTags={setTags}
+                                    errorText={errors && errors.tags}
+                                    helpText=""
+                                    isRequired={true}
+                                    maxWidth="320px"
+                                  />
+                                </div>
+
                               </div>
                               <div className="is-flex is-justify-content-flex-end">
                                 <button

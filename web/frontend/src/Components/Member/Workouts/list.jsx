@@ -55,7 +55,7 @@ function MemberWorkoutList() {
   const [actualSearchText, setActualSearchText] = useRecoilState(
     videoCollectionsFilterActualSearchTextState
   ); // Searching - The actual search query value to submit to the API.
-  const [status, setStatus] = useRecoilState(videoCollectionsFilterStatusState);
+  const [status, setStatus] = useState(1)
   const [videoType, setVideoType] = useRecoilState(
     videoCollectionsFilterVideoTypeState
   );

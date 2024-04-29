@@ -68,7 +68,7 @@ function AdminTPListMobile(props) {
                 <div class="columns is-mobile">
                   <div class="column">
                     <Link
-                      to={`/admin/workouts/${datum.id}`}
+                      to={`/admin/training-program/${datum.id}`}
                       class="button is-small is-dark is-fullwidth"
                       type="button"
                     >

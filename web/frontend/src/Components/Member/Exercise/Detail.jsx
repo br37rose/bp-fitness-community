@@ -39,7 +39,8 @@ const VideoPlayer = ({ videoType, videoUrl, videoObjectUrl, thumbnailType, thumb
                     switch (videoType) {
                         case EXERCISE_VIDEO_TYPE_SIMPLE_STORAGE_SERVER: return (
                             <>
-                                <video style={{width:'100%', height:'100%'}} controls>
+                                <video style={{width:'100%', height:'100%'}} controls 
+                                >
                                     <source src={videoObjectUrl}
                                         type="video/mp4"
                                     />
