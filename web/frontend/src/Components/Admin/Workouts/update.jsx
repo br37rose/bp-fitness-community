@@ -508,7 +508,6 @@ function AdminWorkoutUpdate() {
                                     maxWidth="320px"
                                   />
                                 </div>
-
                               </div>
                               <div className="is-flex is-justify-content-flex-end">
                                 <button

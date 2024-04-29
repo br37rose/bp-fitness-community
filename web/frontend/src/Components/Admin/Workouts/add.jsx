@@ -137,14 +137,14 @@ function AdminWorkoutAdd() {
     if (!clear && status !== "") {
       params.set("status", status);
     }
-     params.set("status_list", 1);
+    params.set("status_list", 1);
     if (!clear && gender !== "") {
       params.set("gender", gender);
     }
     if (!clear && videoType !== "") {
       params.set("video_type", videoType);
     }
-      if (tags.length > 0) {
+    if (tags.length > 0) {
       params.set("tags", tags);
     }
     getExerciseListAPI(
@@ -367,7 +367,6 @@ function AdminWorkoutAdd() {
                                     }
                                     onButtonClick={onSearchButtonClick}
                                   />
-                                
                                 </div>
                                 <div class="column">
                                   <FormSelectField
@@ -401,7 +400,7 @@ function AdminWorkoutAdd() {
                                     }
                                   />
                                 </div>
-                              
+
                                 <div class="column">
                                   <FormSelectField
                                     label="Gender"
@@ -432,7 +431,7 @@ function AdminWorkoutAdd() {
                                     }
                                   />
                                 </div>
-                                 <div class="column">
+                                <div class="column">
                                   <FormMultiSelectFieldForTags
                                     label="Tags"
                                     name="tags"

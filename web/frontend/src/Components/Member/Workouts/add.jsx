@@ -410,7 +410,7 @@ function MemberWorkoutAdd() {
                                     }
                                   />
                                 </div>
-                               
+
                                 <div class="column">
                                   <FormSelectField
                                     label="Gender"
@@ -455,7 +455,6 @@ function MemberWorkoutAdd() {
                                     maxWidth="320px"
                                   />
                                 </div>
-
                               </div>
                               <div className="is-flex is-justify-content-flex-end">
                                 <button

@@ -32,7 +32,6 @@ import {
   EXERCISE_CATEGORY_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_GENDER_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_MOMENT_TYPE_OPTIONS_WITH_EMPTY_OPTION,
-  EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION,
 } from "../../../Constants/FieldOptions";
 import FormSelectField from "../../Reusable/FormSelectField";
@@ -456,7 +455,7 @@ function MemberWorkoutEdit() {
                                     }
                                   />
                                 </div>
-                               
+
                                 <div class="column">
                                   <FormSelectField
                                     label="Gender"
@@ -487,7 +486,7 @@ function MemberWorkoutEdit() {
                                     }
                                   />
                                 </div>
-                                 <div class="column">
+                                <div class="column">
                                   <FormMultiSelectFieldForTags
                                     label="Tags"
                                     name="tags"
@@ -498,7 +497,7 @@ function MemberWorkoutEdit() {
                                     helpText=""
                                     isRequired={true}
                                     maxWidth="320px"
-                                 />
+                                  />
                                 </div>
                               </div>
                               <div className="is-flex is-justify-content-flex-end">
