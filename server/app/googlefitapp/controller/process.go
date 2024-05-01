@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
@@ -147,12 +146,12 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 		// FOR NOW WE DO NOT WANT TO ERROR, WE JUST WANT TO IGNORE THE
 		// RECORD AND MOVE ON... UNCOMMENT THE CODE BELOW WHEN YOU ARE
 		// READY TO IMPLEMENT DIFFERENT DATA TYPES.
-		// return nil
+		return nil
 
-		err := fmt.Errorf("unsupported data type name: %s", dp.DataTypeName)
-		impl.Logger.Error("",
-			slog.Any("error", err))
-		return err
+		// err := fmt.Errorf("unsupported data type name: %s", dp.DataTypeName)
+		// impl.Logger.Error("",
+		// 	slog.Any("error", err))
+		// return err
 	}
 
 	// DEVELOPERS NOTE:
