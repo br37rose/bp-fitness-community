@@ -62,6 +62,7 @@ func (mid *middleware) Attach(fn http.HandlerFunc) http.HandlerFunc {
 	fn = mid.JWTProcessorMiddleware(fn)     // Note: Must be above `PreJWTProcessorMiddleware`.
 	fn = mid.PreJWTProcessorMiddleware(fn)  // Note: Must be above `URLProcessorMiddleware`.
 	fn = mid.URLProcessorMiddleware(fn)
+	fn = mid.RequestIDMiddleware(fn)
 	fn = mid.RateLimitMiddleware(fn)
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -106,9 +107,9 @@ func (mid *middleware) RateLimitMiddleware(fn http.HandlerFunc) http.HandlerFunc
 	}
 }
 
-// AttachRequestIDMiddleware will add a unique `request_id` to the context to
+// RequestIDMiddleware will add a unique `request_id` to the context to
 // allow you to track the lifecycle of a request.
-func (mid *middleware) AttachRequestIDMiddleware(fn http.HandlerFunc) http.HandlerFunc {
+func (mid *middleware) RequestIDMiddleware(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Open our program's context based on the request and save the
 		// slash-seperated array from our URL path.
