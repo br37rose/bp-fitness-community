@@ -222,16 +222,34 @@ function AccountWearableTechLaunchpad() {
 
   return (
     <div>
-      {wasGoogleFitRegistered && (
-        <>
-          <article class="message is-success">
-            <div class="message-body">
-              You have successfully registered your <strong>Google Fit</strong>{" "}
-              with us!
-            </div>
-          </article>
-        </>
-      )}
+      {/*
+          DEVELOPERS NOTE:
+          THIS IS IMPORTANT AS THE BACKEND SPECIFIES WHETHER THE REGISTRATION
+          WAS SUCCESSFUL OR NOT AND WE NEED TO LET THE USER KNOW THE STATUS.
+      */}
+      {wasGoogleFitRegistered !== undefined && wasGoogleFitRegistered !== null && wasGoogleFitRegistered !== "" &&
+      <>
+          {wasGoogleFitRegistered === "true" ? (
+            <>
+              <article class="message is-success">
+                <div class="message-body">
+                  You have successfully registered your <strong>Google Fit</strong>{" "}
+                  with us!
+                </div>
+              </article>
+            </>
+        ) : (
+            <>
+              <article class="message is-danger">
+                <div class="message-body">
+                  Registered <strong>Google Fit</strong> was unsuccessfuly, please try again.
+                </div>
+              </article>
+            </>
+          )}
+      </>
+      }
+
 
       <div className="columns">
         <div className="column">

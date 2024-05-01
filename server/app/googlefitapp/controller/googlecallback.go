@@ -68,12 +68,14 @@ func (impl *GoogleFitAppControllerImpl) GoogleCallback(ctx context.Context, stat
 		////
 
 		// If the `state` provided by Google does not exist in our system then
-		// we need to generate an error and do not proceed any further.
+		// we need to generate an error for console and do not proceed any
+		// further but redirect the user back with an error.
 		err := httperror.NewForBadRequestWithSingleField("state", "was not verified with bp8 fitness community system")
 		impl.Logger.Error("google callback failed verifying state",
 			slog.Any("state", state),
 			slog.Any("error", err))
-		return nil, err
+
+		return &GoogleCallbackResponse{URL: impl.Config.GoogleCloudPlatform.ErrorRedirectURI}, nil
 	}
 
 	// Start a transaction

@@ -97,6 +97,7 @@ type googleCloudPlatformAppConfig struct {
 	ClientSecret             string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_CLIENT_SECRET,required"`
 	AuthorizationRedirectURI string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTHORIZATION_REDIRECT_URI,required"`
 	SuccessRedirectURI       string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_SUCCESS_REDIRECT_URL,required"`
+	ErrorRedirectURI         string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_ERROR_REDIRECT_URL,required"`
 	// ProjectID                string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_PROJECT_ID,required"`
 	// AuthURI                  string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTH_URI,required"`
 	// TokenURI                 string `env:"BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_TOKEN_URI,required"`
@@ -174,6 +175,7 @@ func New() *Conf {
 	c.GoogleCloudPlatform.ClientSecret = getEnvString("BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_CLIENT_SECRET", true)
 	c.GoogleCloudPlatform.AuthorizationRedirectURI = getEnvString("BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_AUTHORIZATION_REDIRECT_URI", true)
 	c.GoogleCloudPlatform.SuccessRedirectURI = getEnvString("BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_SUCCESS_REDIRECT_URL", true)
+	c.GoogleCloudPlatform.ErrorRedirectURI = getEnvString("BP8_BACKEND_GOOGLE_CLOUD_PLATFORM_ERROR_REDIRECT_URL", true)
 
 	return &c
 }

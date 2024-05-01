@@ -29,11 +29,11 @@ func (impl *GoogleFitAppControllerImpl) GetGoogleLoginURL(ctx context.Context) (
 	rand.Read(b)
 	oauthState := base64.URLEncoding.EncodeToString(b)
 
-	// // DEVELOPERS NOTE: We need to temporary store this value for the oAuth 2.0
-	// // grant authorization when the user successfully authorizes.
-	// // (Please see `remote_devices_googlefit_utils` to see how this is used later on.)
-	// // Please note this function will save the code challenge if it was not
-	// // previousl saved, else do nothing.
+	// DEVELOPERS NOTE: We need to temporary store this value for the oAuth 2.0
+	// grant authorization when the user successfully authorizes.
+	// (Please see `remote_devices_googlefit_utils` to see how this is used later on.)
+	// Please note this function will save the code challenge if it was not
+	// previousl saved, else do nothing.
 	impl.CodeVerifierMap[userID] = oauthState
 
 	googleFitURL := impl.GCP.OAuth2GenerateAuthCodeURL(oauthState)
