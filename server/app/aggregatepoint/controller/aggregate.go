@@ -158,7 +158,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing this hour")
+		// impl.Logger.Debug("processing this hour")
 		start, end := timekit.HourRangeForNow(time.Now)
 		for _, metricID := range metricIDs {
 			if err := impl.aggregateForMetric(ctx, metricID, ap_s.PeriodDay, start, end); err != nil {
@@ -174,7 +174,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing last hour")
+		// impl.Logger.Debug("processing last hour")
 		start, end := timekit.HourRangeForNow(time.Now)
 
 		// Calculate last hours.
@@ -194,7 +194,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing today")
+		// impl.Logger.Debug("processing today")
 		start := timekit.Midnight(time.Now)
 		end := timekit.MidnightTomorrow(time.Now)
 		for _, metricID := range metricIDs {
@@ -211,7 +211,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing yesterday")
+		// impl.Logger.Debug("processing yesterday")
 		start := timekit.MidnightYesterday(time.Now)
 		end := timekit.Midnight(time.Now)
 		for _, metricID := range metricIDs {
@@ -228,7 +228,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing this iso week")
+		// impl.Logger.Debug("processing this iso week")
 		start := timekit.FirstDayOfThisISOWeek(time.Now)
 		end := timekit.FirstDayOfNextISOWeek(time.Now)
 		for _, metricID := range metricIDs {
@@ -245,7 +245,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing last iso week")
+		// impl.Logger.Debug("processing last iso week")
 		start := timekit.FirstDayOfLastISOWeek(time.Now)
 		end := timekit.FirstDayOfThisISOWeek(time.Now)
 		for _, metricID := range metricIDs {
@@ -262,7 +262,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing this month")
+		// impl.Logger.Debug("processing this month")
 		start := timekit.FirstDayOfThisMonth(time.Now)
 		end := timekit.FirstDayOfNextMonth(time.Now)
 		for _, metricID := range metricIDs {
@@ -279,7 +279,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing last month")
+		// impl.Logger.Debug("processing last month")
 		start := timekit.FirstDayOfLastMonth(time.Now)
 		end := timekit.FirstDayOfThisMonth(time.Now)
 		for _, metricID := range metricIDs {
@@ -296,7 +296,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing this year")
+		// impl.Logger.Debug("processing this year")
 		start := timekit.FirstDayOfThisYear(time.Now)
 		end := timekit.FirstDayOfNextYear(time.Now)
 		for _, metricID := range metricIDs {
@@ -313,7 +313,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// // Lock the mutex before accessing res
 		// mu.Lock()
 		// defer mu.Unlock()
-		impl.Logger.Debug("processing last year")
+		// impl.Logger.Debug("processing last year")
 		start := timekit.FirstDayOfLastYear(time.Now)
 		end := timekit.FirstDayOfThisYear(time.Now)
 		for _, metricID := range metricIDs {
