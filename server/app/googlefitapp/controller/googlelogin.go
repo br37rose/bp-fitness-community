@@ -54,74 +54,65 @@ func (impl *GoogleFitAppControllerImpl) GetGoogleLoginURL(ctx context.Context) (
 }
 
 func (impl *GoogleFitAppControllerImpl) setCodeVerifier(ctx context.Context, userID primitive.ObjectID, oauthState string) error {
-	impl.Logger.Debug("locking code verifier")
+	impl.Logger.Debug("locking code verifier", slog.String("func", "setCodeVerifier"))
 	impl.Kmutex.Lock("google-code-verifier")
 	defer impl.Kmutex.Unlock("google-code-verifier")
-	defer impl.Logger.Debug("unlocking code verifier")
+	defer impl.Logger.Debug("unlocking code verifier", slog.String("func", "setCodeVerifier"))
 
-	var codeVerifierMap map[primitive.ObjectID]string
+	var codeVerifierMap map[string]primitive.ObjectID
 	str, err := impl.Cache.Get(ctx, "google-code-verifier")
 	if err != nil {
 		impl.Logger.Warn("failed getting code verifier from cache", slog.Any("err", err))
-		codeVerifierMap = make(map[primitive.ObjectID]string, 0)
+		codeVerifierMap = make(map[string]primitive.ObjectID, 0)
 	}
 	if str != "" {
 		if err := json.Unmarshal([]byte(str), &codeVerifierMap); err != nil {
 			impl.Logger.Warn("failed unmarshalling code verifier", slog.Any("err", err))
-			codeVerifierMap = make(map[primitive.ObjectID]string, 0)
+			codeVerifierMap = make(map[string]primitive.ObjectID, 0)
 		}
 		impl.Logger.Debug("unmarshalled code verifier successfully")
 	}
 
-	codeVerifierMap[userID] = oauthState
+	codeVerifierMap[oauthState] = userID
 	bin, err := json.Marshal(codeVerifierMap)
 	if err != nil {
 		impl.Logger.Warn("failed marshalling code verifier", slog.Any("err", err))
 		return err
 	}
-	impl.Logger.Debug("marshalled code verifier successfully", slog.Any("code_verifier_map", codeVerifierMap))
+	impl.Logger.Debug("marshalled code verifier successfully",
+		slog.Any("code_verifier_map", codeVerifierMap))
 	return impl.Cache.SetWithExpiry(ctx, "google-code-verifier", string(bin), 15*time.Minute)
 }
 
 func (impl *GoogleFitAppControllerImpl) searchForUserIdFromCodeVerifier(ctx context.Context, oauthState string) (primitive.ObjectID, error) {
-	impl.Logger.Debug("locking code verifier")
+	impl.Logger.Debug("locking code verifier", slog.String("func", "searchForUserIdFromCodeVerifier"))
 	impl.Kmutex.Lock("google-code-verifier")
 	defer impl.Kmutex.Unlock("google-code-verifier")
-	defer impl.Logger.Debug("unlocked code verifier")
+	defer impl.Logger.Debug("unlocked code verifier", slog.String("func", "searchForUserIdFromCodeVerifier"))
 
-	var codeVerifierMap map[primitive.ObjectID]string
+	var codeVerifierMap map[string]primitive.ObjectID
 	str, err := impl.Cache.Get(ctx, "google-code-verifier")
 	if err != nil {
 		impl.Logger.Warn("failed getting code verifier from cache", slog.Any("err", err))
-		codeVerifierMap = make(map[primitive.ObjectID]string, 0)
+		codeVerifierMap = make(map[string]primitive.ObjectID, 0)
 	}
 	if str != "" {
 		if err := json.Unmarshal([]byte(str), &codeVerifierMap); err != nil {
 			impl.Logger.Warn("failed unmarshalling code verifier", slog.Any("err", err))
-			codeVerifierMap = make(map[primitive.ObjectID]string, 0)
+			codeVerifierMap = make(map[string]primitive.ObjectID, 0)
 		}
 	}
 
-	userIDs := make([]primitive.ObjectID, 0, len(codeVerifierMap))
-	for k := range codeVerifierMap {
-		userIDs = append(userIDs, k)
-	}
+	impl.Logger.Debug("successfully unmarshalled code verifier, preparing to lookup `oauth_state` ...",
+		slog.Any("code_verifier_map", codeVerifierMap),
+		slog.Any("oauth_state", oauthState))
 
-	impl.Logger.Debug("successfully unmarshalled code verifier",
-		slog.Any("user_ids", userIDs),
-		slog.Any("code_verifier_map", codeVerifierMap))
-
-	// Iterate through all the verification codes and try to match with our
-	// `state` provided by Google. If match is made then proceed with process
-	// it.
-	for _, userID := range userIDs {
-		codeVerifier := codeVerifierMap[userID]
-		if oauthState == codeVerifier {
-			impl.Logger.Debug("successfully found user_id in code verifier",
-				slog.Any("user_id", userID),
-				slog.Any("code_verifier_map", codeVerifierMap))
-			return userID, nil
-		}
+	userID := codeVerifierMap[oauthState]
+	if !userID.IsZero() {
+		impl.Logger.Debug("successfully found user_id in code verifier",
+			slog.Any("user_id", userID),
+			slog.Any("code_verifier_map", codeVerifierMap))
+		return userID, nil
 	}
 
 	impl.Logger.Warn("failled finding user_id in code verifier",
