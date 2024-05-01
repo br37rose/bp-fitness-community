@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log/slog"
 )
 
 func (impl EventLogStorerImpl) ListByFilter(ctx context.Context, f *EventLogListFilter) (*EventLogListResult, error) {
@@ -32,8 +31,8 @@ func (impl EventLogStorerImpl) ListByFilter(ctx context.Context, f *EventLogList
 		filter["status"] = f.Status
 	}
 
-	impl.Logger.Debug("listing filter:",
-		slog.Any("filter", filter))
+	// impl.Logger.Debug("listing filter:",
+	// 	slog.Any("filter", filter))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
 	options := options.Find().

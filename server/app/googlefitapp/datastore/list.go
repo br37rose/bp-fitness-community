@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"log/slog"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -32,8 +30,8 @@ func (impl GoogleFitAppStorerImpl) ListByFilter(ctx context.Context, f *GoogleFi
 		filter["status"] = f.Status
 	}
 
-	impl.Logger.Debug("listing filter:",
-		slog.Any("filter", filter))
+	// impl.Logger.Debug("listing filter:",
+	// 	slog.Any("filter", filter))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
 	options := options.Find().

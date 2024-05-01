@@ -198,13 +198,13 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 			slog.Int("status", int(dp.Status)),
 		)
 	} else {
-		impl.Logger.Debug("datapoint already exists",
-			slog.String("data_type_name", dp.DataTypeName),
-			slog.String("metric_id", dp.MetricID.Hex()),
-			slog.Time("start_at", dp.StartAt),
-			slog.Time("end_at", dp.EndAt),
-			slog.Int("status", int(dp.Status)),
-		)
+		// impl.Logger.Debug("datapoint already exists",
+		// 	slog.String("data_type_name", dp.DataTypeName),
+		// 	slog.String("metric_id", dp.MetricID.Hex()),
+		// 	slog.Time("start_at", dp.StartAt),
+		// 	slog.Time("end_at", dp.EndAt),
+		// 	slog.Int("status", int(dp.Status)),
+		// )
 		// // // STEP 1: Get our record.
 		// // dp, err := impl.DataPointStorer.GetByCompositeKey(ctx, dataPoint.MetricID, dataPoint.Timestamp)
 		// // if err != nil {

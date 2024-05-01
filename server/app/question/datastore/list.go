@@ -2,7 +2,6 @@ package datastore
 
 import (
 	"context"
-	"log/slog"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -30,7 +29,7 @@ func (impl *QuestionStorerImpl) ListByFilter(ctx context.Context, f *QuestionLis
 		filter["status"] = false
 	}
 
-	impl.Logger.Debug("listing filter:", slog.Any("filter", filter))
+	// impl.Logger.Debug("listing filter:", slog.Any("filter", filter))
 
 	// Include additional filters for cursor-based pagination pertaining to sorting and limit.
 	options := options.Find().

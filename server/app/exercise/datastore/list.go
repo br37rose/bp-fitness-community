@@ -2,7 +2,6 @@ package datastore
 
 import (
 	"context"
-	"log/slog"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -56,14 +55,14 @@ func (impl ExerciseStorerImpl) ListByFilter(ctx context.Context, f *ExerciseList
 		filter["tags.id"] = bson.M{"$all": f.AllTagIDs}
 	}
 
-	impl.Logger.Debug("listing",
-		slog.Any("names", f.Names),
-		slog.Any("in_tags", f.InTagIDs),
-		slog.Any("all_tags", f.AllTagIDs),
-		slog.Int("category", int(f.Category)),
-		slog.Int("video_type", int(f.VideoType)),
-		slog.Any("offer_id", f.OfferID),
-		slog.Int("status", int(f.Status)))
+	// impl.Logger.Debug("listing",
+	// 	slog.Any("names", f.Names),
+	// 	slog.Any("in_tags", f.InTagIDs),
+	// 	slog.Any("all_tags", f.AllTagIDs),
+	// 	slog.Int("category", int(f.Category)),
+	// 	slog.Int("video_type", int(f.VideoType)),
+	// 	slog.Any("offer_id", f.OfferID),
+	// 	slog.Int("status", int(f.Status)))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
 	options := options.Find().

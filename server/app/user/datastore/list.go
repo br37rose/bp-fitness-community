@@ -44,8 +44,8 @@ func (impl UserStorerImpl) ListByFilter(ctx context.Context, f *UserListFilter) 
 		filter["status"] = f.Status
 	}
 
-	impl.Logger.Debug("listing filter:",
-		slog.Any("filter", filter))
+	// impl.Logger.Debug("listing filter:",
+	// 	slog.Any("filter", filter))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
 	options := options.Find().

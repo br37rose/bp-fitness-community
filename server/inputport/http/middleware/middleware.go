@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/ratelimit"
 
 	gateway_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/gateway/controller"
@@ -99,6 +100,20 @@ func (mid *middleware) RateLimitMiddleware(fn http.HandlerFunc) http.HandlerFunc
 
 		lm.Take()
 		lmap.Store(host, lm)
+
+		// Flow to the next middleware.
+		fn(w, r.WithContext(ctx))
+	}
+}
+
+// AttachRequestIDMiddleware will add a unique `request_id` to the context to
+// allow you to track the lifecycle of a request.
+func (mid *middleware) AttachRequestIDMiddleware(fn http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Open our program's context based on the request and save the
+		// slash-seperated array from our URL path.
+		ctx := r.Context()
+		ctx = context.WithValue(ctx, constants.SessionRequestID, primitive.NewObjectID().Hex())
 
 		// Flow to the next middleware.
 		fn(w, r.WithContext(ctx))

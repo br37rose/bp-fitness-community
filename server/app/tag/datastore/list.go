@@ -5,8 +5,6 @@ import (
 	"log"
 	"time"
 
-	"log/slog"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -33,8 +31,8 @@ func (impl TagStorerImpl) ListByFilter(ctx context.Context, f *TagPaginationList
 		filter["text"] = bson.M{"$regex": primitive.Regex{Pattern: f.SearchText, Options: "i"}}
 	}
 
-	impl.Logger.Debug("listing filter:",
-		slog.Any("filter", filter))
+	// impl.Logger.Debug("listing filter:",
+	// 	slog.Any("filter", filter))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
 	options, err := impl.newPaginationOptions(f)

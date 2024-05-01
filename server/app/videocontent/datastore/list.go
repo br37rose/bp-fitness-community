@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log/slog"
 )
 
 func (impl VideoContentStorerImpl) ListByFilter(ctx context.Context, f *VideoContentListFilter) (*VideoContentListResult, error) {
@@ -47,11 +46,11 @@ func (impl VideoContentStorerImpl) ListByFilter(ctx context.Context, f *VideoCon
 		filter["offer_id"] = f.OfferID
 	}
 
-	impl.Logger.Debug("listing",
-		slog.Any("collection_id", f.CollectionID),
-		slog.Any("category_id", f.CategoryID),
-		slog.Int("video_type", int(f.VideoType)),
-		slog.Int("status", int(f.Status)))
+	// impl.Logger.Debug("listing",
+	// 	slog.Any("collection_id", f.CollectionID),
+	// 	slog.Any("category_id", f.CategoryID),
+	// 	slog.Int("video_type", int(f.VideoType)),
+	// 	slog.Int("status", int(f.Status)))
 
 	// Include additional filters for our cursor-based pagination pertaining to sorting and limit.
 	options := options.Find().

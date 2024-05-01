@@ -19,4 +19,5 @@ const (
 	SessionUserOrganizationID
 	SessionUserOrganizationName
 	SessionUserOTPValidated
+	SessionRequestID
 )

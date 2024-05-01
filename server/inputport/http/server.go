@@ -179,11 +179,13 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 	ctx := r.Context()
 	p := ctx.Value("url_split").([]string)
 	n := len(p)
-	port.Logger.Debug("Handling request",
-		slog.Int("n", n),
-		slog.String("m", r.Method),
-		slog.Any("p", p),
-	)
+
+	// For debugging purposes only.
+	// port.Logger.Debug("Handling request",
+	// 	slog.Int("n", n),
+	// 	slog.String("m", r.Method),
+	// 	slog.Any("p", p),
+	// )
 
 	switch {
 	// --- GATEWAY & PROFILE & DASHBOARD --- //
