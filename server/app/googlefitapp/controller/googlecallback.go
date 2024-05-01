@@ -37,30 +37,24 @@ func (impl *GoogleFitAppControllerImpl) GoogleCallback(ctx context.Context, stat
 			slog.Any("code", code),
 			slog.Any("state", state))
 
-		userIDs := make([]primitive.ObjectID, 0, len(impl.CodeVerifierMap))
-		for k := range impl.CodeVerifierMap {
-			userIDs = append(userIDs, k)
+		userID, err := impl.searchForUserIdFromCodeVerifier(sessCtx, state)
+		if err != nil {
+			return nil, err
 		}
 
-		// Iterate through all the verification codes and try to match with our
-		// `state` provided by Google. If match is made then proceed with process
-		// it.
-		for _, userID := range userIDs {
-			codeVerifier := impl.CodeVerifierMap[userID]
-			if state == codeVerifier {
-				if err := impl.attemptAuthorizationForKey(sessCtx, userID, code); err != nil {
-					impl.Logger.Error("google callback failed attempt authorization",
-						slog.Any("user_id", userID),
-						slog.Any("code", code),
-						slog.Any("error", err))
-					return nil, err
-				}
-
-				////
-				//// End transaction with success.
-				////
-				return &GoogleCallbackResponse{URL: impl.Config.GoogleCloudPlatform.SuccessRedirectURI}, nil
+		if !userID.IsZero() {
+			if err := impl.attemptAuthorizationForKey(sessCtx, userID, code); err != nil {
+				impl.Logger.Error("google callback failed attempt authorization",
+					slog.Any("user_id", userID),
+					slog.Any("code", code),
+					slog.Any("error", err))
+				return nil, err
 			}
+
+			////
+			//// End transaction with success.
+			////
+			return &GoogleCallbackResponse{URL: impl.Config.GoogleCloudPlatform.SuccessRedirectURI}, nil
 		}
 
 		////
@@ -70,10 +64,10 @@ func (impl *GoogleFitAppControllerImpl) GoogleCallback(ctx context.Context, stat
 		// If the `state` provided by Google does not exist in our system then
 		// we need to generate an error for console and do not proceed any
 		// further but redirect the user back with an error.
-		err := httperror.NewForBadRequestWithSingleField("state", "was not verified with bp8 fitness community system")
+		errNotVerified := httperror.NewForBadRequestWithSingleField("state", "was not verified with bp8 fitness community system")
 		impl.Logger.Error("google callback failed verifying state",
 			slog.Any("state", state),
-			slog.Any("error", err))
+			slog.Any("error", errNotVerified))
 
 		return &GoogleCallbackResponse{URL: impl.Config.GoogleCloudPlatform.ErrorRedirectURI}, nil
 	}

@@ -374,7 +374,7 @@ func (port *httpInputPort) HandleRequests(w http.ResponseWriter, r *http.Request
 	case n == 4 && p[1] == "v1" && p[2] == "nutrition-plan" && r.Method == http.MethodDelete:
 		port.NutritionPlan.DeleteByID(w, r, p[3])
 
-		// --- GOOGLE FIT --- //
+	// --- GOOGLE FIT --- //
 	case n == 3 && p[1] == "v1" && p[2] == "google-login":
 		port.GoogleFitApp.GetGoogleLoginURL(w, r)
 	case n == 5 && p[1] == "v1" && p[2] == "callback" && p[3] == "google" && p[4] == "auth":

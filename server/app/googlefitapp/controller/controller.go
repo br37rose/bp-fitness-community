@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
@@ -35,7 +34,6 @@ type GoogleFitAppControllerImpl struct {
 	UUID                     uuid.Provider
 	DbClient                 *mongo.Client
 	Cache                    mongodbcache.Cacher
-	CodeVerifierMap          map[primitive.ObjectID]string
 	Kmutex                   kmutex.Provider
 	GCP                      gcp_a.GoogleCloudPlatformAdapter
 	OrganizationStorer       organization_s.OrganizationStorer
@@ -67,7 +65,6 @@ func NewController(
 		UUID:                     uuidp,
 		DbClient:                 client,
 		Cache:                    cache,
-		CodeVerifierMap:          make(map[primitive.ObjectID]string, 0),
 		Kmutex:                   kmutexp,
 		GCP:                      gcpa,
 		OrganizationStorer:       org_storer,
