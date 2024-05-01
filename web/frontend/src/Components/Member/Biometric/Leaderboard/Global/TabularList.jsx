@@ -154,7 +154,7 @@ function MemberLeaderboardGlobalTabularList() {
         params.set("page_size", limit);
         params.set("page_size", "place");
         params.set("sort_order","ASC");
-        params.set("metric_types",parseInt(metricType));
+        params.set("metric_data_type_names",metricType);
         params.set("period", p);
         params.set("function", cf);
         params.set("user_id", user.id);

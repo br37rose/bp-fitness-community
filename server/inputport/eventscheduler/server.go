@@ -68,6 +68,9 @@ func (port *schedulerInputPort) Run() {
 		if err := port.AggregatePointScheduler.RunOnceAndStartImmediatelyAggregation(); err != nil {
 			port.Logger.Error("scheduler has error", slog.Any("err", err))
 		}
+		if err := port.RankPointScheduler.RunOnceAndStartImmediatelyRanking(); err != nil {
+			port.Logger.Error("scheduler has error", slog.Any("err", err))
+		}
 	}()
 
 	// Schedule the following background tasks to run.
@@ -86,19 +89,7 @@ func (port *schedulerInputPort) Run() {
 	if err := port.AggregatePointScheduler.RunEveryMinuteAggregation(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
-	if err := port.RankPointScheduler.RunEveryMinuteRankToday(); err != nil {
-		port.Logger.Error("scheduler has error", slog.Any("err", err))
-	}
-	if err := port.RankPointScheduler.RunEveryMinuteRankThisISOWeek(); err != nil {
-		port.Logger.Error("scheduler has error", slog.Any("err", err))
-	}
-	if err := port.RankPointScheduler.RunEveryMinuteRankThisMonth(); err != nil {
-		port.Logger.Error("scheduler has error", slog.Any("err", err))
-	}
-	if err := port.RankPointScheduler.RunEveryMinuteRankThisYear(); err != nil {
-		port.Logger.Error("scheduler has error", slog.Any("err", err))
-	}
-	if err := port.FitnessPlanScheduler.RunEveryMinuteUpdateFitnessPlans(); err != nil {
+	if err := port.RankPointScheduler.RunEveryMinuteRanking(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
 }

@@ -9,54 +9,54 @@ const (
 )
 
 const (
-	MetricTypeHeartRate            = 1
-	MetricTypeActivitySteps        = 2
-	MetricTypeActivityCalaries     = 3
-	MetricTypeActivityDistance     = 4
-	MetricTypeActivityElevation    = 5
-	MetricTypeActivityFloors       = 6
-	MetricTypeBreathingRate        = 7
-	MetricTypeHeartRateVariability = 8
-	MetricTypeOxygenSaturation     = 9
-	MetricTypeSleep                = 10
-	MetricTypeTemperature          = 11
-	MetricTypeCardioFitnessScore   = 12 // (a.k.a. V02 Max)
-	MetricTypeElectrocardiogram    = 13
+	MetricDataTypeNameHeartRate            = 1
+	MetricDataTypeNameActivitySteps        = 2
+	MetricDataTypeNameActivityCalaries     = 3
+	MetricDataTypeNameActivityDistance     = 4
+	MetricDataTypeNameActivityElevation    = 5
+	MetricDataTypeNameActivityFloors       = 6
+	MetricDataTypeNameBreathingRate        = 7
+	MetricDataTypeNameHeartRateVariability = 8
+	MetricDataTypeNameOxygenSaturation     = 9
+	MetricDataTypeNameSleep                = 10
+	MetricDataTypeNameTemperature          = 11
+	MetricDataTypeNameCardioFitnessScore   = 12 // (a.k.a. V02 Max)
+	MetricDataTypeNameElectrocardiogram    = 13
 )
 
-var MetricTypeToFitBitResource = map[int]string{
-	MetricTypeActivityCalaries:  "calories",
-	MetricTypeActivityDistance:  "distance",
-	MetricTypeActivityElevation: "elevation",
-	MetricTypeActivityFloors:    "floors",
-	MetricTypeActivitySteps:     "steps",
-	MetricTypeHeartRate:         "distance",
-	// MetricTypeBreathingRate:        "xxx",
-	// MetricTypeHeartRateVariability: "xxx",
-	// MetricTypeOxygenSaturation:     "xxx",
-	// MetricTypeSleep:                "xxx",
-	// MetricTypeTemperature:          "xxx",
-	// MetricTypeCardioFitnessScore:   "xxx",
-	// MetricTypeElectrocardiogram:    "xxx",
+var MetricDataTypeNameToFitBitResource = map[int]string{
+	MetricDataTypeNameActivityCalaries:  "calories",
+	MetricDataTypeNameActivityDistance:  "distance",
+	MetricDataTypeNameActivityElevation: "elevation",
+	MetricDataTypeNameActivityFloors:    "floors",
+	MetricDataTypeNameActivitySteps:     "steps",
+	MetricDataTypeNameHeartRate:         "distance",
+	// MetricDataTypeNameBreathingRate:        "xxx",
+	// MetricDataTypeNameHeartRateVariability: "xxx",
+	// MetricDataTypeNameOxygenSaturation:     "xxx",
+	// MetricDataTypeNameSleep:                "xxx",
+	// MetricDataTypeNameTemperature:          "xxx",
+	// MetricDataTypeNameCardioFitnessScore:   "xxx",
+	// MetricDataTypeNameElectrocardiogram:    "xxx",
 }
 
-var FitBitResourceToMetricType = map[string]int64{
-	"calories":  MetricTypeActivityCalaries,
-	"distance":  MetricTypeActivityDistance,
-	"elevation": MetricTypeActivityElevation,
-	"floors":    MetricTypeActivityFloors,
-	"steps":     MetricTypeActivitySteps,
-	"heartrate": MetricTypeHeartRate,
-	// MetricTypeActivityFloors:       "floors",
-	// MetricTypeActivitySteps:        "steps",
-	// MetricTypeHeartRate:            "distance",
-	// MetricTypeBreathingRate:        "xxx",
-	// MetricTypeHeartRateVariability: "xxx",
-	// MetricTypeOxygenSaturation:     "xxx",
-	// MetricTypeSleep:                "xxx",
-	// MetricTypeTemperature:          "xxx",
-	// MetricTypeCardioFitnessScore:   "xxx",
-	// MetricTypeElectrocardiogram:    "xxx",
+var FitBitResourceToMetricDataTypeName = map[string]int64{
+	"calories":  MetricDataTypeNameActivityCalaries,
+	"distance":  MetricDataTypeNameActivityDistance,
+	"elevation": MetricDataTypeNameActivityElevation,
+	"floors":    MetricDataTypeNameActivityFloors,
+	"steps":     MetricDataTypeNameActivitySteps,
+	"heartrate": MetricDataTypeNameHeartRate,
+	// MetricDataTypeNameActivityFloors:       "floors",
+	// MetricDataTypeNameActivitySteps:        "steps",
+	// MetricDataTypeNameHeartRate:            "distance",
+	// MetricDataTypeNameBreathingRate:        "xxx",
+	// MetricDataTypeNameHeartRateVariability: "xxx",
+	// MetricDataTypeNameOxygenSaturation:     "xxx",
+	// MetricDataTypeNameSleep:                "xxx",
+	// MetricDataTypeNameTemperature:          "xxx",
+	// MetricDataTypeNameCardioFitnessScore:   "xxx",
+	// MetricDataTypeNameElectrocardiogram:    "xxx",
 }
 
 const (

@@ -161,11 +161,12 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 	// `active` state b/c we've processed it.
 
 	dataPoint := &dp_s.DataPoint{
-		ID:        primitive.NewObjectID(),
-		MetricID:  dp.MetricID,
-		Timestamp: dp.EndAt,
-		Value:     val,
-		IsNull:    false,
+		ID:                 primitive.NewObjectID(),
+		MetricID:           dp.MetricID,
+		MetricDataTypeName: dp.DataTypeName,
+		Timestamp:          dp.EndAt,
+		Value:              val,
+		IsNull:             false,
 	}
 	exists, err := impl.DataPointStorer.CheckIfExistsByCompositeKey(ctx, dataPoint.MetricID, dataPoint.Timestamp)
 	if err != nil {

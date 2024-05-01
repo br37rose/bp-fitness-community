@@ -26,8 +26,8 @@ func (impl RankPointStorerImpl) ListByFilter(ctx context.Context, f *RankPointPa
 	if len(f.MetricIDs) > 0 {
 		filter["metric_id"] = bson.M{"$in": f.MetricIDs}
 	}
-	if len(f.MetricTypes) > 0 {
-		filter["metric_type"] = bson.M{"$in": f.MetricTypes}
+	if len(f.MetricDataTypeNames) > 0 {
+		filter["metric_data_type_name"] = bson.M{"$in": f.MetricDataTypeNames}
 	}
 	if f.Function > 0 {
 		filter["function"] = f.Function

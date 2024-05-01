@@ -17,11 +17,12 @@ import (
 )
 
 type DataPoint struct {
-	ID        primitive.ObjectID `bson:"_id" json:"id,omitempty"`
-	MetricID  primitive.ObjectID `bson:"metric_id" json:"metric_id,omitempty"`
-	Timestamp time.Time          `bson:"timestamp" json:"timestamp,omitempty"`
-	Value     float64            `bson:"value" json:"value"`
-	IsNull    bool               `bson:"is_null" json:"is_null"`
+	ID                 primitive.ObjectID `bson:"_id" json:"id,omitempty"`
+	MetricID           primitive.ObjectID `bson:"metric_id" json:"metric_id,omitempty"`
+	MetricDataTypeName string             `bson:"metric_data_type_name" json:"metric_data_type_name"`
+	Timestamp          time.Time          `bson:"timestamp" json:"timestamp,omitempty"`
+	Value              float64            `bson:"value" json:"value"`
+	IsNull             bool               `bson:"is_null" json:"is_null"`
 }
 
 type DataPointListFilter struct {

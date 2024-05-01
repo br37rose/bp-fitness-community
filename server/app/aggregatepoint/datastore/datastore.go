@@ -16,16 +16,17 @@ import (
 // Composite key = MetricID | Period | Start | End
 
 type AggregatePoint struct {
-	ID       primitive.ObjectID `bson:"_id" json:"id,omitempty"`
-	MetricID primitive.ObjectID `bson:"metric_id" json:"metric_id,omitempty"`
-	Period   int8               `bson:"period" json:"period"`
-	Start    time.Time          `bson:"start" json:"start"`
-	End      time.Time          `bson:"end" json:"end"`
-	Count    float64            `bson:"count" json:"count"`
-	Average  float64            `bson:"average" json:"average"`
-	Min      float64            `bson:"min" json:"min"`
-	Max      float64            `bson:"max" json:"max"`
-	Sum      float64            `bson:"sum" json:"sum"`
+	ID                 primitive.ObjectID `bson:"_id" json:"id,omitempty"`
+	MetricID           primitive.ObjectID `bson:"metric_id" json:"metric_id,omitempty"`
+	MetricDataTypeName string             `bson:"metric_data_type_name" json:"metric_data_type_name"`
+	Period             int8               `bson:"period" json:"period"`
+	Start              time.Time          `bson:"start" json:"start"`
+	End                time.Time          `bson:"end" json:"end"`
+	Count              float64            `bson:"count" json:"count"`
+	Average            float64            `bson:"average" json:"average"`
+	Min                float64            `bson:"min" json:"min"`
+	Max                float64            `bson:"max" json:"max"`
+	Sum                float64            `bson:"sum" json:"sum"`
 }
 
 type AggregatePointListFilter struct {

@@ -13,6 +13,7 @@ import (
 func (impl *AggregatePointControllerImpl) aggregateForMetric(
 	ctx context.Context,
 	metricID primitive.ObjectID,
+	metricDataTypeName string,
 	period int8,
 	startAt time.Time,
 	endAt time.Time,
@@ -32,16 +33,17 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 	if ap == nil {
 		// CASE 1 OF 2: Create
 		ap = &ap_s.AggregatePoint{
-			ID:       primitive.NewObjectID(),
-			MetricID: metricID,
-			Period:   period,
-			Start:    startAt,
-			End:      endAt,
-			Count:    response.Count,
-			Average:  response.Average,
-			Min:      response.Min,
-			Max:      response.Max,
-			Sum:      response.Sum,
+			ID:         primitive.NewObjectID(),
+			MetricID:   metricID,
+			MetricDataTypeName: metricDataTypeName,
+			Period:     period,
+			Start:      startAt,
+			End:        endAt,
+			Count:      response.Count,
+			Average:    response.Average,
+			Min:        response.Min,
+			Max:        response.Max,
+			Sum:        response.Sum,
 		}
 		if err := impl.AggregatePointStorer.Create(ctx, ap); err != nil {
 			impl.Logger.Error("failed creating",

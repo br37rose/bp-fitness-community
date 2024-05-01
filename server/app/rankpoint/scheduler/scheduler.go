@@ -10,10 +10,8 @@ import (
 )
 
 type RankPointScheduler interface {
-	RunEveryMinuteRankToday() error
-	RunEveryMinuteRankThisISOWeek() error
-	RunEveryMinuteRankThisMonth() error
-	RunEveryMinuteRankThisYear() error
+	RunEveryMinuteRanking() error
+	RunOnceAndStartImmediatelyRanking() error
 }
 
 // Handler Creates http request handler
@@ -39,62 +37,32 @@ func NewScheduler(
 	}
 }
 
-func (impl *rankPointSchedulerImpl) RunEveryMinuteRankToday() error {
-	impl.Logger.Debug("scheduled: rank today", slog.String("interval", "every minute"))
+func (impl *rankPointSchedulerImpl) RunEveryMinuteRanking() error {
+	impl.Logger.Debug("scheduled: ranking", slog.String("interval", "every minute"))
 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
-		if err := impl.Controller.GenerateGlobalRankingForTodayUsingActiveGoogleFitApps(context.Background()); err != nil {
-			impl.Logger.Error("failed ranking today",
+		if err := impl.Controller.GenerateGlobalRankingForActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed ranking",
 				slog.Any("error", err))
 			return
 		}
 	})
 	if err != nil {
-		impl.Logger.Error("rank today error with scheduler", slog.Any("err", err))
+		impl.Logger.Error("ranking error with scheduler", slog.Any("err", err))
 	}
 	return nil
 }
 
-func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisISOWeek() error {
-	impl.Logger.Debug("scheduled: rank this iso week", slog.String("interval", "every minute"))
-	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
-		if err := impl.Controller.GenerateGlobalRankingForThisISOWeekUsingActiveGoogleFitApps(context.Background()); err != nil {
-			impl.Logger.Error("failed ranking this iso week",
+func (impl *rankPointSchedulerImpl) RunOnceAndStartImmediatelyRanking() error {
+	impl.Logger.Debug("scheduled: ranking", slog.String("interval", "once"))
+	err := impl.EventScheduler.ScheduleOneTimeFunc(func() {
+		if err := impl.Controller.GenerateGlobalRankingForActiveGoogleFitApps(context.Background()); err != nil {
+			impl.Logger.Error("failed ranking",
 				slog.Any("error", err))
 			return
 		}
 	})
 	if err != nil {
-		impl.Logger.Error("rank this iso week error with scheduler", slog.Any("err", err))
-	}
-	return nil
-}
-
-func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisMonth() error {
-	impl.Logger.Debug("scheduled: rank this month", slog.String("interval", "every minute"))
-	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
-		if err := impl.Controller.GenerateGlobalRankingForThisMonthUsingActiveGoogleFitApps(context.Background()); err != nil {
-			impl.Logger.Error("failed ranking this month",
-				slog.Any("error", err))
-			return
-		}
-	})
-	if err != nil {
-		impl.Logger.Error("rank this month error with scheduler", slog.Any("err", err))
-	}
-	return nil
-}
-
-func (impl *rankPointSchedulerImpl) RunEveryMinuteRankThisYear() error {
-	impl.Logger.Debug("scheduled: rank this year", slog.String("interval", "every minute"))
-	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
-		if err := impl.Controller.GenerateGlobalRankingForThisYearUsingActiveGoogleFitApps(context.Background()); err != nil {
-			impl.Logger.Error("failed ranking this year",
-				slog.Any("error", err))
-			return
-		}
-	})
-	if err != nil {
-		impl.Logger.Error("rank this year error with scheduler", slog.Any("err", err))
+		impl.Logger.Error("ranking error with scheduler", slog.Any("err", err))
 	}
 	return nil
 }

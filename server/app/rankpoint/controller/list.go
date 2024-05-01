@@ -16,7 +16,7 @@ func (c *RankPointControllerImpl) ListByFilter(ctx context.Context, f *c_s.RankP
 		slog.String("SortField", f.SortField),
 		slog.Int("SortOrder", int(f.SortOrder)),
 		slog.Any("MetricIDs", f.MetricIDs),
-		slog.Any("MetricTypes", f.MetricTypes),
+		slog.Any("MetricDataTypeNames", f.MetricDataTypeNames),
 		slog.Any("Function", f.Function),
 		slog.Any("Period", f.Period),
 		slog.Time("CreatedAtGTE", f.CreatedAtGTE))

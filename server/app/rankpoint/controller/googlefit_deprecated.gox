@@ -68,7 +68,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForTodayUsingActiveGoo
 		DataTypeKeyVaginalSpotting   = 31 // https://developers.google.com/fit/datatypes/health#vaginal_spotting
 		DataTypeKeyWeight            = 32 // https://developers.google.com/fit/datatypes/health#weight
 	*/
-	metricTypes := []int8{
+	MetricDataTypeNames := []int8{
 		gcp_a.DataTypeKeyCaloriesBurned,
 		gcp_a.DataTypeKeyStepCountDelta,
 		gcp_a.DataTypeKeyHeartRateBPM,
@@ -81,7 +81,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForTodayUsingActiveGoo
 		rp_s.FunctionMin,
 		rp_s.FunctionMax,
 	}
-	for _, metricType := range metricTypes {
+	for _, MetricDataTypeName := range MetricDataTypeNames {
 		for _, funcType := range funcTypes {
 			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
 				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodDay, startDT, endDT); err != nil {
@@ -92,7 +92,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForTodayUsingActiveGoo
 						slog.Any("error", err))
 					return
 				}
-			}(gfas.Results, metricType, funcType, start, end)
+			}(gfas.Results, MetricDataTypeName, funcType, start, end)
 		}
 	}
 	return nil
@@ -116,7 +116,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisISOWeekUsingAct
 	start := timekit.FirstDayOfThisISOWeek(time.Now)
 	end := timekit.FirstDayOfNextISOWeek(time.Now)
 
-	metricTypes := []int8{
+	MetricDataTypeNames := []int8{
 		gcp_a.DataTypeKeyCaloriesBurned,
 		gcp_a.DataTypeKeyStepCountDelta,
 		gcp_a.DataTypeKeyHeartRateBPM,
@@ -129,7 +129,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisISOWeekUsingAct
 		rp_s.FunctionMin,
 		rp_s.FunctionMax,
 	}
-	for _, metricType := range metricTypes {
+	for _, MetricDataTypeName := range MetricDataTypeNames {
 		for _, funcType := range funcTypes {
 			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
 				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodWeek, startDT, endDT); err != nil {
@@ -140,7 +140,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisISOWeekUsingAct
 						slog.Any("error", err))
 					return
 				}
-			}(gfas.Results, metricType, funcType, start, end)
+			}(gfas.Results, MetricDataTypeName, funcType, start, end)
 		}
 	}
 
@@ -165,7 +165,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisMonthUsingActiv
 	start := timekit.FirstDayOfThisMonth(time.Now)
 	end := timekit.FirstDayOfNextMonth(time.Now)
 
-	metricTypes := []int8{
+	MetricDataTypeNames := []int8{
 		gcp_a.DataTypeKeyCaloriesBurned,
 		gcp_a.DataTypeKeyStepCountDelta,
 		gcp_a.DataTypeKeyHeartRateBPM,
@@ -178,7 +178,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisMonthUsingActiv
 		rp_s.FunctionMin,
 		rp_s.FunctionMax,
 	}
-	for _, metricType := range metricTypes {
+	for _, MetricDataTypeName := range MetricDataTypeNames {
 		for _, funcType := range funcTypes {
 			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
 				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodMonth, startDT, endDT); err != nil {
@@ -189,7 +189,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisMonthUsingActiv
 						slog.Any("error", err))
 					return
 				}
-			}(gfas.Results, metricType, funcType, start, end)
+			}(gfas.Results, MetricDataTypeName, funcType, start, end)
 		}
 	}
 
@@ -214,7 +214,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisYearUsingActive
 	start := timekit.FirstDayOfThisYear(time.Now)
 	end := timekit.FirstDayOfNextYear(time.Now)
 
-	metricTypes := []int8{
+	MetricDataTypeNames := []int8{
 		gcp_a.DataTypeKeyCaloriesBurned,
 		gcp_a.DataTypeKeyStepCountDelta,
 		gcp_a.DataTypeKeyHeartRateBPM,
@@ -227,7 +227,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisYearUsingActive
 		rp_s.FunctionMin,
 		rp_s.FunctionMax,
 	}
-	for _, metricType := range metricTypes {
+	for _, MetricDataTypeName := range MetricDataTypeNames {
 		for _, funcType := range funcTypes {
 			go func(list []*gfa_ds.GoogleFitApp, mt int8, ft int8, startDT time.Time, endDT time.Time) {
 				if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), list, mt, ft, rp_s.PeriodYear, startDT, endDT); err != nil {
@@ -238,7 +238,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForThisYearUsingActive
 						slog.Any("error", err))
 					return
 				}
-			}(gfas.Results, metricType, funcType, start, end)
+			}(gfas.Results, MetricDataTypeName, funcType, start, end)
 		}
 	}
 

@@ -3,9 +3,10 @@ package controller
 import (
 	"context"
 
-	metric "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
-	rank "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
+	rank "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 )
 
 func (c *FitnessChallengeControllerImpl) GetChallengeLeaderBoard(ctx context.Context, id primitive.ObjectID) (*rank.RankPointPaginationListResult, error) {
@@ -14,35 +15,35 @@ func (c *FitnessChallengeControllerImpl) GetChallengeLeaderBoard(ctx context.Con
 		return nil, err
 	}
 	users := chalenge.UserIDs
-	metritype := []int8{}
+	metritype := []string{}
 	for _, v := range chalenge.Rules {
 		// add more types here as and when implemented
 		switch v.Type {
 		case 1:
-			metritype = append(metritype, metric.DataTypeKeyCaloriesBurned)
+			metritype = append(metritype, gcp_a.DataTypeShortNameCaloriesBurned)
 		case 2:
-			metritype = append(metritype, metric.DataTypeKeyStepCountDelta)
+			metritype = append(metritype, gcp_a.DataTypeShortNameStepCountDelta)
 		case 3:
-			metritype = append(metritype, metric.DataTypeKeySleep)
+			metritype = append(metritype, gcp_a.DataTypeShortNameSleep)
 		case 4:
-			metritype = append(metritype, metric.DataTypeKeyOxygenSaturation)
+			metritype = append(metritype, gcp_a.DataTypeShortNameOxygenSaturation)
 		case 5:
-			metritype = append(metritype, metric.DataTypeKeyActivitySegment)
+			metritype = append(metritype, gcp_a.DataTypeShortNameActivitySegment)
 		case 6:
-			metritype = append(metritype, metric.DataTypeKeyHeartRateBPM)
+			metritype = append(metritype, gcp_a.DataTypeShortNameHeartRateBPM)
 		case 7:
-			metritype = append(metritype, metric.DataTypeKeyOxygenSaturation)
+			metritype = append(metritype, gcp_a.DataTypeShortNameOxygenSaturation)
 		}
 	}
 	response := new(rank.RankPointPaginationListResult)
 	for _, v := range users {
 		result, err := c.RankPoint.ListByFilter(ctx, &rank.RankPointPaginationListFilter{
-			UserID:      v,
-			StartGTE:    chalenge.StartTime,
-			MetricTypes: metritype,
-			SortField:   "metric_id",
-			SortOrder:   -1,
-			PageSize:    1,
+			UserID:              v,
+			StartGTE:            chalenge.StartTime,
+			MetricDataTypeNames: metritype,
+			SortField:           "metric_id",
+			SortOrder:           -1,
+			PageSize:            1,
 		})
 		if err != nil {
 			return nil, err

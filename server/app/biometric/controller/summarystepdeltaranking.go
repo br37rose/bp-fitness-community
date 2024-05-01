@@ -6,6 +6,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 
+	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	rp_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 	u_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 )
@@ -87,13 +88,13 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaToday(s
 		var endPlace uint64 = rp.Place + 2
 
 		impl.Logger.Debug("rank within place",
-			slog.Any("metric_type", "hr"),
+			slog.Any("metric_data_type_name", "hr"),
 			slog.Any("date_rank", "today"),
 			slog.Any("start_place", startPlace),
 			slog.Any("curr_place", rp.Place),
 			slog.Any("end_place", endPlace))
 
-		rprp, err := impl.RankPointStorer.ListWithinPlaceAndToday(sessCtx, []int8{rp_d.MetricTypeActivitySteps}, rp_d.FunctionAverage, rp_d.PeriodDay, startPlace, endPlace)
+		rprp, err := impl.RankPointStorer.ListWithinPlaceAndToday(sessCtx, []string{gcp_a.DataTypeShortNameStepCountDelta}, rp_d.FunctionAverage, rp_d.PeriodDay, startPlace, endPlace)
 		if err != nil {
 			impl.Logger.Error("failed getting list for today",
 				slog.String("metric_id", u.PrimaryHealthTrackingDevice.StepCountDeltaMetricID.Hex()),
@@ -145,13 +146,13 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaISOWeek
 		var endPlace uint64 = rp.Place + 2
 
 		impl.Logger.Debug("rank within place",
-			slog.Any("metric_type", "hr"),
+			slog.Any("metric_data_type_name", "hr"),
 			slog.Any("date_rank", "iso_week"),
 			slog.Any("start_place", startPlace),
 			slog.Any("curr_place", rp.Place),
 			slog.Any("end_place", endPlace))
 
-		rprp, err := impl.RankPointStorer.ListWithinPlaceAndISOWeek(sessCtx, []int8{rp_d.MetricTypeActivitySteps}, rp_d.FunctionAverage, rp_d.PeriodWeek, startPlace, endPlace)
+		rprp, err := impl.RankPointStorer.ListWithinPlaceAndISOWeek(sessCtx, []string{gcp_a.DataTypeShortNameStepCountDelta}, rp_d.FunctionAverage, rp_d.PeriodWeek, startPlace, endPlace)
 		if err != nil {
 			impl.Logger.Error("failed getting list for iso week",
 				slog.String("metric_id", u.PrimaryHealthTrackingDevice.StepCountDeltaMetricID.Hex()),
@@ -168,7 +169,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaISOWeek
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",
-			slog.Any("metric_type", "hr"),
+			slog.Any("metric_data_type_name", "hr"),
 			slog.Any("function", rp_d.FunctionAverage),
 			slog.Any("date_rank", "iso_week"))
 	}
@@ -207,13 +208,13 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaMonth(s
 		var endPlace uint64 = rp.Place + 2
 
 		impl.Logger.Debug("rank within place",
-			slog.Any("metric_type", "hr"),
+			slog.Any("metric_data_type_name", "hr"),
 			slog.Any("date_rank", "month"),
 			slog.Any("start_place", startPlace),
 			slog.Any("curr_place", rp.Place),
 			slog.Any("end_place", endPlace))
 
-		rprp, err := impl.RankPointStorer.ListWithinPlaceAndMonth(sessCtx, []int8{rp_d.MetricTypeActivitySteps}, rp_d.FunctionAverage, rp_d.PeriodMonth, startPlace, endPlace)
+		rprp, err := impl.RankPointStorer.ListWithinPlaceAndMonth(sessCtx, []string{gcp_a.DataTypeShortNameStepCountDelta}, rp_d.FunctionAverage, rp_d.PeriodMonth, startPlace, endPlace)
 		if err != nil {
 			impl.Logger.Error("failed getting list for month",
 				slog.String("metric_id", u.PrimaryHealthTrackingDevice.StepCountDeltaMetricID.Hex()),
@@ -230,7 +231,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaMonth(s
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",
-			slog.Any("metric_type", "hr"),
+			slog.Any("metric_data_type_name", "hr"),
 			slog.Any("date_rank", "month"))
 	}
 
@@ -265,13 +266,13 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaYear(se
 		var endPlace uint64 = rp.Place + 2
 
 		impl.Logger.Debug("rank within place",
-			slog.Any("metric_type", "hr"),
+			slog.Any("metric_data_type_name", "hr"),
 			slog.Any("date_rank", "year"),
 			slog.Any("start_place", startPlace),
 			slog.Any("curr_place", rp.Place),
 			slog.Any("end_place", endPlace))
 
-		rprp, err := impl.RankPointStorer.ListWithinPlaceAndYear(sessCtx, []int8{rp_d.MetricTypeActivitySteps}, rp_d.FunctionAverage, rp_d.PeriodYear, startPlace, endPlace)
+		rprp, err := impl.RankPointStorer.ListWithinPlaceAndYear(sessCtx, []string{gcp_a.DataTypeShortNameStepCountDelta}, rp_d.FunctionAverage, rp_d.PeriodYear, startPlace, endPlace)
 		if err != nil {
 			impl.Logger.Error("failed getting list for year",
 				slog.String("metric_id", u.PrimaryHealthTrackingDevice.StepCountDeltaMetricID.Hex()),
@@ -288,7 +289,7 @@ func (impl *BiometricControllerImpl) generateSummaryRankingsForStepsDeltaYear(se
 		}
 	} else {
 		impl.Logger.Debug("rank within place not found",
-			slog.Any("metric_type", "hr"),
+			slog.Any("metric_data_type_name", "hr"),
 			slog.Any("date_rank", "year"))
 	}
 

@@ -24,10 +24,7 @@ import (
 // RankPointController Interface for organization business logic controller.
 type RankPointController interface {
 	ListByFilter(ctx context.Context, f *rp_s.RankPointPaginationListFilter) (*rp_s.RankPointPaginationListResult, error)
-	GenerateGlobalRankingForTodayUsingActiveGoogleFitApps(ctx context.Context) error
-	GenerateGlobalRankingForThisISOWeekUsingActiveGoogleFitApps(ctx context.Context) error
-	GenerateGlobalRankingForThisMonthUsingActiveGoogleFitApps(ctx context.Context) error
-	GenerateGlobalRankingForThisYearUsingActiveGoogleFitApps(ctx context.Context) error
+	GenerateGlobalRankingForActiveGoogleFitApps(ctx context.Context) error
 }
 
 type RankPointControllerImpl struct {

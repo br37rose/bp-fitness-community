@@ -17,9 +17,9 @@ type HistoricDataRequest struct {
 	PageSize int64
 
 	// Filter related.
-	MetricType int8
-	Function   int8
-	Period     int8
+	MetricDataTypeName string
+	Function           int8
+	Period             int8
 }
 
 func validateHistoricDataRequest(dirtyData *HistoricDataRequest) error {
@@ -27,8 +27,8 @@ func validateHistoricDataRequest(dirtyData *HistoricDataRequest) error {
 	if dirtyData.PageSize == 0 {
 		e["page_size"] = "missing value"
 	}
-	if dirtyData.MetricType == 0 {
-		e["metric_type"] = "missing value"
+	if dirtyData.MetricDataTypeName == "" {
+		e["metric_data_type_name"] = "missing value"
 	}
 	if dirtyData.Function == 0 {
 		e["function"] = "missing value"
@@ -36,9 +36,9 @@ func validateHistoricDataRequest(dirtyData *HistoricDataRequest) error {
 	if dirtyData.Period == 0 {
 		e["period"] = "missing value"
 	}
-	if dirtyData.Function == rp_s.FunctionSum && dirtyData.MetricType == rp_s.MetricTypeHeartRate {
-		e["function"] = "sum cannot be used on heart rate"
-	}
+	// if dirtyData.Function == rp_s.FunctionSum && dirtyData.MetricDataTypeName == rp_s.MetricDataTypeNameHeartRate {
+	// 	e["function"] = "sum cannot be used on heart rate"
+	// }
 	if len(e) != 0 {
 		return httperror.NewForBadRequest(&e)
 	}
@@ -54,20 +54,20 @@ func (c *BiometricControllerImpl) HistoricData(ctx context.Context, req *Histori
 	c.Logger.Debug("leaderboard request",
 		slog.Any("cursor", req.Cursor),
 		slog.Int64("page_size", req.PageSize),
-		slog.Any("metric_type", req.MetricType),
+		slog.Any("metric_data_type_name", req.MetricDataTypeName),
 		slog.Any("function", req.Function),
 		slog.Any("period", req.Period))
 
 	// Create our custom filter in which we order from top ranked user data
 	// to the lowest ranked user data for the specific metric.
 	f := &rp_s.RankPointPaginationListFilter{
-		Cursor:      req.Cursor,
-		PageSize:    req.PageSize,
-		SortField:   "place",
-		SortOrder:   rp_s.OrderAscending,
-		MetricTypes: []int8{req.MetricType},
-		Function:    req.Function,
-		Period:      req.Period,
+		Cursor:              req.Cursor,
+		PageSize:            req.PageSize,
+		SortField:           "place",
+		SortOrder:           rp_s.OrderAscending,
+		MetricDataTypeNames: []string{req.MetricDataTypeName},
+		Function:            req.Function,
+		Period:              req.Period,
 	}
 
 	switch req.Period {

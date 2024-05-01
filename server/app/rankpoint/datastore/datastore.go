@@ -23,8 +23,8 @@ type RankPoint struct {
 	// Place represents the spot the user is in the global ranking, for example first place would be `1` and second place would be 2.
 	Place uint64 `bson:"place" json:"place"`
 
-	MetricType int8               `bson:"metric_type" json:"metric_type"`
-	MetricID   primitive.ObjectID `bson:"metric_id" json:"metric_id,omitempty"`
+	MetricDataTypeName string             `bson:"metric_data_type_name" json:"metric_data_type_name"`
+	MetricID           primitive.ObjectID `bson:"metric_id" json:"metric_id,omitempty"`
 
 	Function int8      `bson:"function" json:"function"`
 	Period   int8      `bson:"period" json:"period"`
@@ -63,11 +63,11 @@ type RankPointStorer interface {
 	GetByCompositeKeyForLastYear(ctx context.Context, metricID primitive.ObjectID, function int8) (*RankPoint, error)
 	Create(ctx context.Context, m *RankPoint) error
 	ListByFilter(ctx context.Context, f *RankPointPaginationListFilter) (*RankPointPaginationListResult, error)
-	ListWithinPlace(ctx context.Context, metricTypes []int8, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
-	ListWithinPlaceAndToday(ctx context.Context, metricTypes []int8, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
-	ListWithinPlaceAndISOWeek(ctx context.Context, metricTypes []int8, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
-	ListWithinPlaceAndMonth(ctx context.Context, metricTypes []int8, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
-	ListWithinPlaceAndYear(ctx context.Context, metricTypes []int8, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
+	ListWithinPlace(ctx context.Context, MetricDataTypeNames []string, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
+	ListWithinPlaceAndToday(ctx context.Context, MetricDataTypeNames []string, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
+	ListWithinPlaceAndISOWeek(ctx context.Context, MetricDataTypeNames []string, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
+	ListWithinPlaceAndMonth(ctx context.Context, MetricDataTypeNames []string, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
+	ListWithinPlaceAndYear(ctx context.Context, MetricDataTypeNames []string, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
 	UpdateByID(ctx context.Context, m *RankPoint) error
 	//TODO: Add more...
 }

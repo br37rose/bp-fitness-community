@@ -35,15 +35,7 @@ func (h *Handler) Leaderboard(w http.ResponseWriter, r *http.Request) {
 		f.PageSize = pageSize
 	}
 
-	metricType := int8(0)
-	metricTypeStr := query.Get("metric_type")
-	if metricTypeStr != "" {
-		mt, _ := strconv.ParseInt(metricTypeStr, 10, 64)
-		if mt != 0 {
-			metricType = int8(mt)
-		}
-	}
-	f.MetricType = metricType
+	f.MetricDataTypeName = query.Get("metric_data_type_name")
 
 	functionStr := query.Get("function")
 	if functionStr != "" {

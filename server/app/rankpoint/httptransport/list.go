@@ -83,18 +83,15 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	}
 	f.MetricIDs = metricIDs
 
-	metricTypes := make([]int8, 0)
-	metricTypesStr := query.Get("metric_types")
-	if metricTypesStr != "" {
-		arr := strings.Split(metricTypesStr, ",")
+	metricDataTypeNames := make([]string, 0)
+	MetricDataTypeNamesStr := query.Get("metric_data_type_names")
+	if MetricDataTypeNamesStr != "" {
+		arr := strings.Split(MetricDataTypeNamesStr, ",")
 		for _, mtStr := range arr {
-			mt, _ := strconv.ParseInt(mtStr, 10, 64)
-			if mt != 0 {
-				metricTypes = append(metricTypes, int8(mt))
-			}
+			metricDataTypeNames = append(metricDataTypeNames, mtStr)
 		}
 	}
-	f.MetricTypes = metricTypes
+	f.MetricDataTypeNames = metricDataTypeNames
 
 	periodStr := query.Get("period")
 	if periodStr != "" {

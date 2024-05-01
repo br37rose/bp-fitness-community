@@ -25,20 +25,20 @@ type RankPointPaginationListFilter struct {
 	SortOrder int8 // 1=ascending | -1=descending
 
 	// Filter related.
-	UserID       primitive.ObjectID
-	MetricIDs    []primitive.ObjectID
-	MetricTypes  []int8
-	Function     int8
-	Period       int8
-	CreatedAtGTE time.Time
-	StartGTE     time.Time
-	StartGT      time.Time
-	EndLTE       time.Time
-	EndLT        time.Time
-	PlaceGTE     uint64
-	PlaceGT      uint64
-	PlaceLTE     uint64
-	PlaceLT      uint64
+	UserID              primitive.ObjectID
+	MetricIDs           []primitive.ObjectID
+	MetricDataTypeNames []string
+	Function            int8
+	Period              int8
+	CreatedAtGTE        time.Time
+	StartGTE            time.Time
+	StartGT             time.Time
+	EndLTE              time.Time
+	EndLT               time.Time
+	PlaceGTE            uint64
+	PlaceGT             uint64
+	PlaceLTE            uint64
+	PlaceLT             uint64
 }
 
 // RankPointPaginationListResult represents the paginated list results for

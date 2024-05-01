@@ -7,18 +7,39 @@ import (
 	"sort"
 	"time"
 
+	"github.com/bartmika/timekit"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
 	gfa_ds "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
 )
 
-func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx context.Context, gfas []*gfa_ds.GoogleFitApp, metricType int8, function int8, period int8, start time.Time, end time.Time) error {
-	// Variable will be used to get all the rankings we have for the particular
-	// metric we are processing.
-	rankPoints := make([]*rp_s.RankPoint, 0)
+func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx context.Context, gfas []*gfa_ds.GoogleFitApp, period int8) error {
+	// // Variable will be used to get all the rankings we have for the particular
+	// // metric we are processing.
+	// rpsAvg := make([]*rp_s.RankPoint, 0)
+	// rpsSum := make([]*rp_s.RankPoint, 0)
+	// rpsCount := make([]*rp_s.RankPoint, 0)
+	rpsAvg := make(map[string][]*rp_s.RankPoint, 0)
+	rpsSum := make(map[string][]*rp_s.RankPoint, 0)
+	rpsCount := make(map[string][]*rp_s.RankPoint, 0)
+
+	var start time.Time
+	var end time.Time
+	switch period {
+	case rp_s.PeriodDay:
+		start = timekit.Midnight(time.Now)
+		end = timekit.MidnightTomorrow(time.Now)
+	default:
+		err := fmt.Errorf("period does not exist for value: %v", period)
+		return err
+	}
+
+	impl.Logger.Debug("processing rankings",
+		slog.Any("period_int", period),
+		slog.Time("start", start),
+		slog.Time("end", end),
+	)
 
 	for _, gfa := range gfas {
 		// // Lock this google fit gfa for modification and unlock when we are
@@ -26,272 +47,255 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 		impl.Kmutex.Lockf("gfa_%v", gfa.ID.Hex())
 		defer impl.Kmutex.Unlockf("gfa_%v", gfa.ID.Hex())
 
-		// Pick the metric ID based on metric type selected.
-		var metricID primitive.ObjectID
-		switch metricType { //TODO: Add more health sensors here...
-		case gcp_a.DataTypeKeyActivitySegment:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
+		u, err := impl.UserStorer.GetByID(ctx, gfa.UserID)
+		if err != nil {
+			impl.Logger.Error("failed getting user",
+				slog.Any("google_fit_app_id", gfa.ID),
+				slog.Int("period", int(period)),
+				slog.Any("error", err))
 			return err
-		case gcp_a.DataTypeKeyBasalMetabolicRate:
-			metricID = gfa.BasalMetabolicRateMetricID
-		case gcp_a.DataTypeKeyCaloriesBurned:
-			metricID = gfa.CaloriesBurnedMetricID
-		case gcp_a.DataTypeKeyCyclingPedalingCadence:
-			metricID = gfa.CyclingPedalingCadenceMetricID
-		case gcp_a.DataTypeKeyCyclingPedalingCumulative:
-			metricID = gfa.CyclingPedalingCumulativeMetricID
-		case gcp_a.DataTypeKeyHeartPoints:
-			metricID = gfa.HeartPointsMetricID
-		case gcp_a.DataTypeKeyMoveMinutes:
-			metricID = gfa.MoveMinutesMetricID
-		case gcp_a.DataTypeKeyPower:
-			metricID = gfa.PowerMetricID
-		case gcp_a.DataTypeKeyStepCountDelta:
-			metricID = gfa.StepCountDeltaMetricID
-		case gcp_a.DataTypeKeyStepCountCadence:
-			metricID = gfa.StepCountCadenceMetricID
-		case gcp_a.DataTypeKeyWorkout:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyCyclingWheelRevolutionRPM:
-			metricID = gfa.PowerMetricID
-		case gcp_a.DataTypeKeyCyclingWheelRevolutionCumulative:
-			metricID = gfa.CyclingWheelRevolutionCumulativeMetricID
-		case gcp_a.DataTypeKeyDistanceDelta:
-			metricID = gfa.DistanceDeltaMetricID
-		case gcp_a.DataTypeKeyLocationSample:
-			metricID = gfa.LocationSampleMetricID
-		case gcp_a.DataTypeKeySpeed:
-			metricID = gfa.SpeedMetricID
-		case gcp_a.DataTypeKeyHydration:
-			metricID = gfa.HydrationMetricID
-		case gcp_a.DataTypeKeyBloodGlucose:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyBloodPressure:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyBodyFatPercentage:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyBodyTemperature:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyCervicalMucus:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyCervicalPosition:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyHeartRateBPM:
-			metricID = gfa.HeartRateBPMMetricID
-		case gcp_a.DataTypeKeyHeight:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyOvulationTest:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyOxygenSaturation:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeySleep:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyVaginalSpotting:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		case gcp_a.DataTypeKeyWeight:
-			err := httperror.NewForBadRequestWithSingleField("metric_type", fmt.Sprintf("unsupported for value: %v", metricType))
-			impl.Logger.Error("unsupported metric type", slog.Any("error", err))
-			return err
-		default:
-			err := fmt.Errorf("does not exist for metric type: %v", metricType)
+		}
+		if u == nil {
+			err := fmt.Errorf("user does not exist id: %v", gfa.UserID)
 			impl.Logger.Error("",
 				slog.Any("google_fit_app_id", gfa.ID),
-				slog.Any("metric_id", metricID),
 				slog.Int("period", int(period)),
-				slog.Int("metric_type", int(metricType)),
 				slog.Any("error", err))
 			return err
 		}
 
-		agg, err := impl.AggregatePointStorer.GetByCompositeKey(ctx, metricID, period, start, end)
-		if err != nil {
-			impl.Logger.Error("aggregate point returned for composite key",
-				slog.Any("google_fit_app_id", gfa.ID),
-				slog.Any("metric_id", metricID),
-				slog.Int("period", int(period)),
-				slog.Int("metric_type", int(metricType)),
-				slog.Any("error", err))
-			return err
+		// Variable defines all the biometric sensors we want to process for
+		// this aggregation function.
+		metricIDs := []primitive.ObjectID{
+			gfa.CaloriesBurnedMetricID,
+			gfa.StepCountDeltaMetricID,
+			gfa.DistanceDeltaMetricID,
+			gfa.HeartRateBPMMetricID,
+			//TODO: Add more health sensors here...
 		}
-		if agg != nil {
-			rp, err := impl.RankPointStorer.GetByCompositeKey(ctx, metricID, function, period, start, end)
+
+		impl.Logger.Debug("aggregation starting...",
+			slog.String("gfa_id", gfa.ID.Hex()))
+
+		for _, metricID := range metricIDs {
+			agg, err := impl.AggregatePointStorer.GetByCompositeKey(ctx, metricID, period, start, end)
 			if err != nil {
-				impl.Logger.Error("rank point returned for composite key",
+				impl.Logger.Error("aggregate point returned for composite key",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
-					slog.Any("function", function),
 					slog.Int("period", int(period)),
-					slog.Int("metric_type", int(metricType)),
 					slog.Any("error", err))
 				return err
 			}
+			if agg != nil {
 
-			if rp == nil {
-
-				////
-				//// CASE 1 OF 2: No rank record, therefore create rank record.
-				////
-
-				u, err := impl.UserStorer.GetByID(ctx, gfa.UserID)
+				//
+				// Average
+				//
+				rpAvg, err := impl.RankPointStorer.GetByCompositeKey(ctx, metricID, rp_s.FunctionAverage, period, start, end)
 				if err != nil {
-					impl.Logger.Error("failed getting user",
+					impl.Logger.Error("rank point returned for composite key",
 						slog.Any("google_fit_app_id", gfa.ID),
 						slog.Any("metric_id", metricID),
-						slog.Any("function", function),
+						slog.Any("function", rp_s.FunctionAverage),
 						slog.Int("period", int(period)),
-						slog.Int("metric_type", int(metricType)),
-						slog.Any("error", err))
-					return err
-				}
-				if u == nil {
-					err := fmt.Errorf("user does not exist id: %v", gfa.UserID)
-					impl.Logger.Error("",
-						slog.Any("google_fit_app_id", gfa.ID),
-						slog.Any("metric_id", metricID),
-						slog.Int("period", int(period)),
-						slog.Int("metric_type", int(metricType)),
 						slog.Any("error", err))
 					return err
 				}
 
-				rp = &rp_s.RankPoint{
-					ID:                     primitive.NewObjectID(),
-					UserID:                 u.ID,
-					UserFirstName:          u.FirstName,
-					UserLastName:           u.LastName,
-					UserAvatarObjectExpiry: u.AvatarObjectExpiry,
-					UserAvatarObjectURL:    u.AvatarObjectURL,
-					UserAvatarObjectKey:    u.AvatarObjectKey,
-					UserAvatarFileType:     u.AvatarFileType,
-					UserAvatarFileName:     u.AvatarFileName,
-					Place:                  1_000_000_000, // Last Place.
-					MetricID:               metricID,
-					MetricType:             metricType,
-					Period:                 period,
-					Start:                  start,
-					End:                    end,
-					Function:               function,
-					OrganizationID:         gfa.OrganizationID,
-					OrganizationName:       gfa.OrganizationName,
+				if rpAvg == nil {
+					rpAvg = &rp_s.RankPoint{
+						ID:                     primitive.NewObjectID(),
+						UserID:                 u.ID,
+						UserFirstName:          u.FirstName,
+						UserLastName:           u.LastName,
+						UserAvatarObjectExpiry: u.AvatarObjectExpiry,
+						UserAvatarObjectURL:    u.AvatarObjectURL,
+						UserAvatarObjectKey:    u.AvatarObjectKey,
+						UserAvatarFileType:     u.AvatarFileType,
+						UserAvatarFileName:     u.AvatarFileName,
+						Place:                  1_000_000_000, // Last Place.
+						MetricID:               agg.MetricID,
+						MetricDataTypeName:     agg.MetricDataTypeName,
+						Period:                 period,
+						Start:                  start,
+						End:                    end,
+						Function:               rp_s.FunctionAverage,
+						OrganizationID:         gfa.OrganizationID,
+						OrganizationName:       gfa.OrganizationName,
+						Value:                  agg.Average,
+					}
+					if err := impl.RankPointStorer.Create(ctx, rpAvg); err != nil {
+						impl.Logger.Error("failed creating rank point",
+							slog.Any("error", err),
+							slog.Int("period", int(period)),
+							slog.Any("start", start),
+							slog.Any("end", end))
+						return err
+					}
+				} else {
+					rpAvg.Value = agg.Average
+					if err := impl.RankPointStorer.UpdateByID(ctx, rpAvg); err != nil {
+						impl.Logger.Error("failed updating rank point",
+							slog.Any("error", err),
+							slog.Int("period", int(period)),
+							slog.Any("start", start),
+							slog.Any("end", end))
+						return err
+					}
 				}
 
-				switch function {
-				case rp_s.FunctionAverage:
-					rp.Value = agg.Average
-				case rp_s.FunctionSum:
-					rp.Value = agg.Sum
-				}
+				rpsAvg[agg.MetricDataTypeName] = append(rpsAvg[agg.MetricDataTypeName], rpAvg)
 
-				if err := impl.RankPointStorer.Create(ctx, rp); err != nil {
-					impl.Logger.Error("failed creating rank point",
-						slog.Any("error", err),
-						slog.Any("function", function),
-						slog.Int("period", int(period)),
-						slog.Int("metric_type", int(metricType)),
-						slog.Any("start", start),
-						slog.Any("end", end))
-					return err
-				}
+				//
+				// Sum
+				//
 
-				rankPoints = append(rankPoints, rp)
-
-				impl.Logger.Debug("created rank point",
-					slog.Any("rp_id", rp.ID),
-					slog.Any("function", function),
-					slog.Int("period", int(period)),
-					slog.Int("metric_type", int(metricType)),
-					slog.Any("start", start),
-					slog.Any("end", end))
-			} else {
-
-				////
-				//// CASE 2 OF 2: Update existing rank record.
-				////
-
-				switch function {
-				case rp_s.FunctionAverage:
-					rp.Value = agg.Average
-					rp.MetricType = metricType
-				case rp_s.FunctionSum:
-					rp.Value = agg.Sum
-					rp.MetricType = metricType
-				}
-
-				if err := impl.RankPointStorer.UpdateByID(ctx, rp); err != nil {
-					impl.Logger.Error("failed updating rank point",
+				rpSum, err := impl.RankPointStorer.GetByCompositeKey(ctx, metricID, rp_s.FunctionSum, period, start, end)
+				if err != nil {
+					impl.Logger.Error("rank point returned for composite key",
 						slog.Any("google_fit_app_id", gfa.ID),
 						slog.Any("metric_id", metricID),
-						slog.Any("function", function),
+						slog.Any("function", rp_s.FunctionSum),
 						slog.Int("period", int(period)),
-						slog.Int("metric_type", int(metricType)),
 						slog.Any("error", err))
 					return err
 				}
 
-				rankPoints = append(rankPoints, rp)
+				if rpSum == nil {
+					rpSum = &rp_s.RankPoint{
+						ID:                     primitive.NewObjectID(),
+						UserID:                 u.ID,
+						UserFirstName:          u.FirstName,
+						UserLastName:           u.LastName,
+						UserAvatarObjectExpiry: u.AvatarObjectExpiry,
+						UserAvatarObjectURL:    u.AvatarObjectURL,
+						UserAvatarObjectKey:    u.AvatarObjectKey,
+						UserAvatarFileType:     u.AvatarFileType,
+						UserAvatarFileName:     u.AvatarFileName,
+						Place:                  1_000_000_000, // Last Place.
+						MetricID:               agg.MetricID,
+						MetricDataTypeName:     agg.MetricDataTypeName,
+						Period:                 period,
+						Start:                  start,
+						End:                    end,
+						Function:               rp_s.FunctionSum,
+						OrganizationID:         gfa.OrganizationID,
+						OrganizationName:       gfa.OrganizationName,
+						Value:                  agg.Sum,
+					}
+					if err := impl.RankPointStorer.Create(ctx, rpSum); err != nil {
+						impl.Logger.Error("failed creating rank point",
+							slog.Any("error", err),
+							slog.Int("period", int(period)),
+							slog.Any("start", start),
+							slog.Any("end", end))
+						return err
+					}
+				} else {
+					rpSum.Value = agg.Sum
+					if err := impl.RankPointStorer.UpdateByID(ctx, rpSum); err != nil {
+						impl.Logger.Error("failed updating rank point",
+							slog.Any("error", err),
+							slog.Int("period", int(period)),
+							slog.Any("start", start),
+							slog.Any("end", end))
+						return err
+					}
+				}
 
-				// For debugging purposes only.
-				impl.Logger.Debug("updated rank point",
-					slog.Any("rp_id", rp.ID),
-					slog.Any("function", function),
-					slog.Int("period", int(period)),
-					slog.Int("metric_type", int(metricType)),
-					slog.Any("start", start),
-					slog.Any("end", end))
+				rpsSum[agg.MetricDataTypeName] = append(rpsSum[agg.MetricDataTypeName], rpSum)
+
+				//
+				// Count
+				//
+
+				rpCount, err := impl.RankPointStorer.GetByCompositeKey(ctx, metricID, rp_s.FunctionCount, period, start, end)
+				if err != nil {
+					impl.Logger.Error("rank point returned for composite key",
+						slog.Any("google_fit_app_id", gfa.ID),
+						slog.Any("metric_id", metricID),
+						slog.Any("function", rp_s.FunctionCount),
+						slog.Int("period", int(period)),
+						slog.Any("error", err))
+					return err
+				}
+
+				if rpCount == nil {
+					rpCount = &rp_s.RankPoint{
+						ID:                     primitive.NewObjectID(),
+						UserID:                 u.ID,
+						UserFirstName:          u.FirstName,
+						UserLastName:           u.LastName,
+						UserAvatarObjectExpiry: u.AvatarObjectExpiry,
+						UserAvatarObjectURL:    u.AvatarObjectURL,
+						UserAvatarObjectKey:    u.AvatarObjectKey,
+						UserAvatarFileType:     u.AvatarFileType,
+						UserAvatarFileName:     u.AvatarFileName,
+						Place:                  1_000_000_000, // Last Place.
+						MetricID:               agg.MetricID,
+						MetricDataTypeName:     agg.MetricDataTypeName,
+						Period:                 period,
+						Start:                  start,
+						End:                    end,
+						Function:               rp_s.FunctionCount,
+						OrganizationID:         gfa.OrganizationID,
+						OrganizationName:       gfa.OrganizationName,
+						Value:                  agg.Count,
+					}
+					if err := impl.RankPointStorer.Create(ctx, rpCount); err != nil {
+						impl.Logger.Error("failed creating rank point",
+							slog.Any("error", err),
+							slog.Int("period", int(period)),
+							slog.Any("start", start),
+							slog.Any("end", end))
+						return err
+					}
+				} else {
+					rpCount.Value = agg.Count
+					if err := impl.RankPointStorer.UpdateByID(ctx, rpCount); err != nil {
+						impl.Logger.Error("failed updating rank point",
+							slog.Any("error", err),
+							slog.Int("period", int(period)),
+							slog.Any("start", start),
+							slog.Any("end", end))
+						return err
+					}
+				}
+
+				rpsCount[agg.MetricDataTypeName] = append(rpsCount[agg.MetricDataTypeName], rpCount)
 			}
-
 		}
 	}
 
+	for metricDataTypeName, rps := range rpsAvg {
+		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, period); err != nil {
+			return err
+		}
+	}
+	for metricDataTypeName, rps := range rpsSum {
+		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, period); err != nil {
+			return err
+		}
+	}
+	for metricDataTypeName, rps := range rpsCount {
+		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, period); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (impl *RankPointControllerImpl) sortForRankPoints(ctx context.Context, dtn string, rps []*rp_s.RankPoint, period int8) error {
 	////
 	//// Sorting the array by Place in descending order
 	////
 
-	// for _, rp := range rankPoints {
-	// 	// For debugging purposes only.
-	// 	impl.Logger.Error("pre-sorting rankpoint entry",
-	// 		slog.Any("id", rp.ID),
-	// 		slog.Any("value", rp.Value),
-	// 		slog.Any("plance", rp.Place))
-	// }
-
 	// Sort all the values from greatest value to lowest value.
-	sort.Slice(rankPoints, func(i, j int) bool {
-		return rankPoints[i].Value > rankPoints[j].Value
+	sort.Slice(rps, func(i, j int) bool {
+		return rps[i].Value > rps[j].Value
 	})
-
-	// for _, rp := range rankPoints {
-	// 	// For debugging purposes only.
-	// 	impl.Logger.Error("post-sorting rankpoint entry",
-	// 		slog.Any("id", rp.ID),
-	// 		slog.Any("value", rp.Value),
-	// 		slog.Any("plance", rp.Place))
-	// }
 
 	////
 	//// Iterate through the sorted array and attach the place in our rank order.
@@ -300,33 +304,15 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitApps(ctx cont
 	// Because we are starting from largest `value` to lowest `value` then
 	// we can start the rank `place` from the value `1` and increase going
 	// through the list.
-	for i, rp := range rankPoints {
+	for i, rp := range rps {
 		rp.Place = uint64(i + 1)
 		if err := impl.RankPointStorer.UpdateByID(ctx, rp); err != nil {
 			impl.Logger.Error("failed updating rank point",
-				slog.Any("function", function),
 				slog.Int("period", int(period)),
-				slog.Int("metric_type", int(metricType)),
 				slog.Any("error", err))
 			return err
 		}
 	}
-
-	// for _, rp := range rankPoints {
-	// 	// For debugging purposes only.
-	// 	impl.Logger.Error("exit-sorting rankpoint entry",
-	// 		slog.Any("id", rp.ID),
-	// 		slog.Any("value", rp.Value),
-	// 		slog.Any("plance", rp.Place))
-	// }
-
-	// For debugging purposes only.
-	impl.Logger.Debug("ranked all active google fit apps",
-		slog.Any("records_count", len(rankPoints)),
-		slog.Any("function", function),
-		slog.Int("period", int(period)),
-		slog.Any("start", start),
-		slog.Any("end", end))
 
 	return nil
 }
