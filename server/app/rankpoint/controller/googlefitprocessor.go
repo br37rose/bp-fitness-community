@@ -30,6 +30,15 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 	case rp_s.PeriodDay:
 		start = timekit.Midnight(time.Now)
 		end = timekit.MidnightTomorrow(time.Now)
+	case rp_s.PeriodWeek:
+		start = timekit.FirstDayOfThisISOWeek(time.Now)
+		end = timekit.FirstDayOfNextISOWeek(time.Now)
+	case rp_s.PeriodMonth:
+		start = timekit.FirstDayOfThisMonth(time.Now)
+		end = timekit.FirstDayOfNextMonth(time.Now)
+	case rp_s.PeriodYear:
+		start = timekit.FirstDayOfThisYear(time.Now)
+		end = timekit.FirstDayOfNextYear(time.Now)
 	default:
 		err := fmt.Errorf("period does not exist for value: %v", period)
 		return err
@@ -74,7 +83,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 			//TODO: Add more health sensors here...
 		}
 
-		impl.Logger.Debug("aggregation starting...",
+		impl.Logger.Debug("ranking starting...",
 			slog.String("gfa_id", gfa.ID.Hex()))
 
 		for _, metricID := range metricIDs {

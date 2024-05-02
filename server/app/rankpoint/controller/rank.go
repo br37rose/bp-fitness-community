@@ -49,7 +49,7 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForActiveGoogleFitApps
 	// - ISO Week
 	// - Month
 	// - Year
-	numWorkers := 1
+	numWorkers := 4
 
 	// Create a channel to collect errors from goroutines.
 	errCh := make(chan error, numWorkers)
@@ -76,62 +76,40 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForActiveGoogleFitApps
 		wg.Done() // We are done this background task.
 	}()
 
-	// // ------ ISO Week ------ //
-	// go func() {
-	// 	start := timekit.FirstDayOfThisISOWeek(time.Now)
-	// 	end := timekit.FirstDayOfNextISOWeek(time.Now)
-	// 	for _, MetricDataTypeName := range MetricDataTypeNames {
-	// 		for _, funcType := range funcTypes {
-	// 			if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), gfas.Results, MetricDataTypeName, funcType, rp_s.PeriodDay, start, end); err != nil {
-	// 				impl.Logger.Error("failed generating global rate ranking for iso week",
-	// 					slog.Any("date_range", "iso week"),
-	// 					slog.Any("mt", MetricDataTypeName),
-	// 					slog.Any("ft", funcType),
-	// 					slog.Any("error", err))
-	// 				return
-	// 			}
-	// 		}
-	// 	}
-	// 	wg.Done() // We are done this background task.
-	// }()
-	//
-	// // ------ Month ------ //
-	// go func() {
-	// 	start := timekit.FirstDayOfThisMonth(time.Now)
-	// 	end := timekit.FirstDayOfNextMonth(time.Now)
-	// 	for _, MetricDataTypeName := range MetricDataTypeNames {
-	// 		for _, funcType := range funcTypes {
-	// 			if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), gfas.Results, MetricDataTypeName, funcType, rp_s.PeriodDay, start, end); err != nil {
-	// 				impl.Logger.Error("failed generating global rate ranking for month",
-	// 					slog.Any("date_range", "month"),
-	// 					slog.Any("mt", MetricDataTypeName),
-	// 					slog.Any("ft", funcType),
-	// 					slog.Any("error", err))
-	// 				return
-	// 			}
-	// 		}
-	// 	}
-	// 	wg.Done() // We are done this background task.
-	// }()
-	//
-	// // ------ Year ------ //
-	// go func() {
-	// 	start := timekit.FirstDayOfThisYear(time.Now)
-	// 	end := timekit.FirstDayOfNextYear(time.Now)
-	// 	for _, MetricDataTypeName := range MetricDataTypeNames {
-	// 		for _, funcType := range funcTypes {
-	// 			if err := impl.processGlobalRanksForGoogleFitApps(context.Background(), gfas.Results, MetricDataTypeName, funcType, rp_s.PeriodDay, start, end); err != nil {
-	// 				impl.Logger.Error("failed generating global rate ranking for year",
-	// 					slog.Any("date_range", "year"),
-	// 					slog.Any("mt", MetricDataTypeName),
-	// 					slog.Any("ft", funcType),
-	// 					slog.Any("error", err))
-	// 				return
-	// 			}
-	// 		}
-	// 	}
-	// 	wg.Done() // We are done this background task.
-	// }()
+	// ------ ISO Week ------ //
+	go func() {
+		if err := impl.processGlobalRanksForGoogleFitAppsV2(context.Background(), gfas.Results, rp_s.PeriodWeek); err != nil {
+			impl.Logger.Error("failed generating global rate ranking for iso week",
+				slog.Any("period", "iso week"),
+				slog.Any("error", err))
+			return
+		}
+		wg.Done() // We are done this background task.
+	}()
+
+	// ------ Month ------ //
+	go func() {
+		if err := impl.processGlobalRanksForGoogleFitAppsV2(context.Background(), gfas.Results, rp_s.PeriodMonth); err != nil {
+			impl.Logger.Error("failed generating global rate ranking for month",
+				slog.Any("period", "month"),
+				slog.Any("error", err))
+			return
+		}
+		wg.Done() // We are done this background task.
+	}()
+
+	// ------ Year ------ //
+	go func() {
+		go func() {
+			if err := impl.processGlobalRanksForGoogleFitAppsV2(context.Background(), gfas.Results, rp_s.PeriodYear); err != nil {
+				impl.Logger.Error("failed generating global rate ranking for year",
+					slog.Any("period", "year"),
+					slog.Any("error", err))
+				return
+			}
+			wg.Done() // We are done this background task.
+		}()
+	}()
 
 	// Create a goroutine to close the error channel when all workers are done
 	go func() {
