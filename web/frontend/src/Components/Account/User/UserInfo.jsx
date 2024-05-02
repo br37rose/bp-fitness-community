@@ -87,11 +87,12 @@ const UserInfo = ({
 
             <div class="columns">
                 <div class="column is-half">
-                    <Link class="button is-medium is-fullwidth-mobile" to={"/dashboard"}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
+                    <Link class="button is-hidden-touch" to={"/dashboard"}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
+                    <Link to={"/dashboard"} class="button is-fullwidth is-hidden-desktop"><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
                 </div>
                 <div class="column is-half has-text-right">
-                    <Link to={"/account/update"} class="button is-medium is-primary is-hidden-touch"><FontAwesomeIcon className="fas" icon={faPencil} />&nbsp;Edit</Link>
-                    <Link to={"/account/update"} class="button is-medium is-primary is-fullwidth is-hidden-desktop"><FontAwesomeIcon className="fas" icon={faPencil} />&nbsp;Edit</Link>
+                    <Link to={"/account/update"} class="button is-primary is-hidden-touch"><FontAwesomeIcon className="fas" icon={faPencil} />&nbsp;Edit</Link>
+                    <Link to={"/account/update"} class="button is-primary is-fullwidth is-hidden-desktop"><FontAwesomeIcon className="fas" icon={faPencil} />&nbsp;Edit</Link>
                 </div>
             </div>
         </div>
