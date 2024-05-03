@@ -43,7 +43,7 @@ func (impl *googleFitAppSchedulerImpl) RunEveryMinuteRefreshTokensFromGoogle() e
 	impl.Logger.Debug("scheduled: refresh token", slog.String("interval", "every minute"))
 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		impl.Logger.Debug("running refresh token...")
-		if err := impl.Controller.RefreshTokensFromGoogle; err != nil {
+		if err := impl.Controller.RefreshTokensFromGoogle(); err != nil {
 			impl.Logger.Error("refresh token error with scheduler", slog.Any("err", err))
 		}
 		impl.Logger.Debug("finished refresh token")
@@ -58,7 +58,7 @@ func (impl *googleFitAppSchedulerImpl) RunEveryMinuteProcessAllQueuedData() erro
 	impl.Logger.Debug("scheduled: process queued data", slog.String("interval", "every minute"))
 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		impl.Logger.Debug("running process queued data...")
-		if err := impl.Controller.ProcessAllQueuedData; err != nil {
+		if err := impl.Controller.ProcessAllQueuedData(); err != nil {
 			impl.Logger.Error("process queued data error with scheduler", slog.Any("err", err))
 		}
 		impl.Logger.Debug("finished process queued data")
@@ -90,7 +90,7 @@ func (impl *googleFitAppSchedulerImpl) RunEveryFifteenMinutesPullDataFromGoogle(
 	impl.Logger.Debug("scheduled: pull data from google", slog.String("interval", "every minute"))
 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
 		impl.Logger.Debug("running pull data from google...")
-		if err := impl.Controller.PullDataFromGoogle; err != nil {
+		if err := impl.Controller.PullDataFromGoogle(); err != nil {
 			impl.Logger.Error("pull data from google error with scheduler", slog.Any("err", err))
 		}
 		impl.Logger.Debug("finished pull data from google")
@@ -105,7 +105,7 @@ func (impl *googleFitAppSchedulerImpl) RunOnceAndStartImmediatelyPullDataFromGoo
 	impl.Logger.Debug("scheduled: pull data from google", slog.String("interval", "once"))
 	err := impl.EventScheduler.ScheduleOneTimeFunc(func() {
 		impl.Logger.Debug("running pull data from google...")
-		if err := impl.Controller.PullDataFromGoogle; err != nil {
+		if err := impl.Controller.PullDataFromGoogle(); err != nil {
 			impl.Logger.Error("pull data from google error with scheduler", slog.Any("err", err))
 		}
 		impl.Logger.Debug("finished pull data from google")
