@@ -315,7 +315,7 @@ function AccountWearableTechLaunchpad() {
                           />{" "}
                         </Link>
                       </b>{" "}
-                      to get login again and meet the requirements of Google.
+                      to login again and meet the requirements of Google.
                     </p>
                   </div>
                 </section>
@@ -327,7 +327,20 @@ function AccountWearableTechLaunchpad() {
                       &nbsp;Google Fit Connected
                     </p>
                     <p className="subtitle">
-                      Your Google Fit fitness tracker is connected with us.{" "}
+                      Your Google Fit fitness tracker is connected with us - you are done!
+                    </p>
+                    <p>
+                    <i>
+                    If for any reason you need to login again then <b>
+                      <Link onClick={onRegisterClick}>
+                        click here&nbsp;
+                        <FontAwesomeIcon
+                          className="mdi"
+                          icon={faArrowUpRightFromSquare}
+                        />{" "}
+                      </Link>
+                    </b>{" "}to get redirected to Google's authentication portal.
+                    </i>
                     </p>
                   </div>
                 </section>
