@@ -1,27 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEllipsis,
   faArrowUpRightFromSquare,
   faHeartPulse,
   faArrowRight,
-  faTable,
-  faRepeat,
-  faTasks,
-  faTachometer,
-  faPlus,
   faArrowLeft,
-  faCheckCircle,
-  faUserCircle,
-  faGauge,
-  faPencil,
-  faIdCard,
-  faAddressBook,
-  faContactCard,
-  faChartPie,
-  faKey,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -36,30 +21,12 @@ import {
   topAlertStatusState,
   currentUserState,
 } from "../../../AppState";
-import {
-  SUBSCRIPTION_STATUS_WITH_EMPTY_OPTIONS,
-  SUBSCRIPTION_TINTERVAL_WITH_EMPTY_OPTIONS,
-} from "../../../Constants/FieldOptions";
-import FormErrorBox from "../../Reusable/FormErrorBox";
-import FormInputField from "../../Reusable/FormInputField";
-import FormTextareaField from "../../Reusable/FormTextareaField";
-import FormRadioField from "../../Reusable/FormRadioField";
-import FormMultiSelectField from "../../Reusable/FormMultiSelectField";
-import FormSelectField from "../../Reusable/FormSelectField";
-import FormCheckboxField from "../../Reusable/FormCheckboxField";
-import FormCountryField from "../../Reusable/FormCountryField";
-import FormRegionField from "../../Reusable/FormRegionField";
-import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import FormTextRow from "../../Reusable/FormTextRow";
-import FormTextTagRow from "../../Reusable/FormTextTagRow";
-import FormTextYesNoRow from "../../Reusable/FormTextYesNoRow";
-import FormTextOptionRow from "../../Reusable/FormTextOptionRow";
-import Layout from "../../Menu/Layout";
 
 function AccountWearableTechLaunchpad() {
   ////
   //// URL Parameters.
   ////
+  const navigate = useNavigate();
 
   const [searchParams] = useSearchParams(); // Special thanks via https://stackoverflow.com/a/65451140
 
@@ -91,6 +58,15 @@ function AccountWearableTechLaunchpad() {
   ////
   //// Event handling.
   ////
+  const handleNavigateToAccount = () => {
+    // e.preventDefault();
+    navigate("/account", { state: { activeTabProp: "wearableTech" } });
+  };
+
+  useEffect(() => {
+    console.log("calling handleNavigateToAccount");
+    handleNavigateToAccount();
+  }, []);
 
   const onRegisterClick = (e) => {
     e.preventDefault();
@@ -100,7 +76,7 @@ function AccountWearableTechLaunchpad() {
     getGoogleFitRegistrationURLAPI(
       onRegistrationSuccess,
       onRegistrationError,
-      onRegistrationDone,
+      onRegistrationDone
     );
   };
 
@@ -112,7 +88,7 @@ function AccountWearableTechLaunchpad() {
       "random",
       onCreateSimulatorSuccess,
       onCreateSimulatorError,
-      onCreateSimulatorDone,
+      onCreateSimulatorDone
     );
   };
 
@@ -203,7 +179,7 @@ function AccountWearableTechLaunchpad() {
       getAccountDetailAPI(
         onAccountDetailSuccess,
         onAccountDetailError,
-        onAccountDetailDone,
+        onAccountDetailDone
       );
     }
 
@@ -227,29 +203,31 @@ function AccountWearableTechLaunchpad() {
           THIS IS IMPORTANT AS THE BACKEND SPECIFIES WHETHER THE REGISTRATION
           WAS SUCCESSFUL OR NOT AND WE NEED TO LET THE USER KNOW THE STATUS.
       */}
-      {wasGoogleFitRegistered !== undefined && wasGoogleFitRegistered !== null && wasGoogleFitRegistered !== "" &&
-      <>
-          {wasGoogleFitRegistered === "true" ? (
-            <>
-              <article class="message is-success">
-                <div class="message-body">
-                  You have successfully registered your <strong>Google Fit</strong>{" "}
-                  with us!
-                </div>
-              </article>
-            </>
-        ) : (
-            <>
-              <article class="message is-danger">
-                <div class="message-body">
-                  Registered <strong>Google Fit</strong> was unsuccessfuly, please try again.
-                </div>
-              </article>
-            </>
-          )}
-      </>
-      }
-
+      {wasGoogleFitRegistered !== undefined &&
+        wasGoogleFitRegistered !== null &&
+        wasGoogleFitRegistered !== "" && (
+          <>
+            {wasGoogleFitRegistered === "true" ? (
+              <>
+                <article class="message is-success">
+                  <div class="message-body">
+                    You have successfully registered your{" "}
+                    <strong>Google Fit</strong> with us!
+                  </div>
+                </article>
+              </>
+            ) : (
+              <>
+                <article class="message is-danger">
+                  <div class="message-body">
+                    Registered <strong>Google Fit</strong> was unsuccessfuly,
+                    please try again.
+                  </div>
+                </article>
+              </>
+            )}
+          </>
+        )}
 
       <div className="columns">
         <div className="column">
@@ -271,7 +249,7 @@ function AccountWearableTechLaunchpad() {
                 <p className="subtitle">
                   Your Google Fit fitness tracker is not connected with us.{" "}
                   <b>
-                    <Link click={onRegisterClick}>
+                    <Link onClick={onRegisterClick}>
                       Click here&nbsp;
                       <FontAwesomeIcon
                         className="mdi"
@@ -306,7 +284,7 @@ function AccountWearableTechLaunchpad() {
                             />{" "}
                           </Link>
                         </b>{" "}
-                        attach a Google Fit simulator  with fake data.
+                        attach a Google Fit simulator with fake data.
                       </i>
                     </p>
                   </div>

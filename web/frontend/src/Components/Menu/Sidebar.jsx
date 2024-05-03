@@ -375,7 +375,8 @@ export default (props) => {
                   &nbsp;Exercises
                 </a>
               </li>
-              <li>
+              {/* {Hide videos for now} */}
+              {/* <li>
                 <a
                   href="/video-categories"
                   class={`has-text-grey-light ${
@@ -386,7 +387,7 @@ export default (props) => {
                   <FontAwesomeIcon className="fas" icon={faVideoCamera} />
                   &nbsp;Videos
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a
                   href="/fitness-plans"

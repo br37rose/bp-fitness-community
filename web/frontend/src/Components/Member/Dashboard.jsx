@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -42,6 +42,8 @@ function MemberDashboard() {
   //// Global state.
   ////
 
+  const navigate = useNavigate();
+
   const [topAlertMessage, setTopAlertMessage] =
     useRecoilState(topAlertMessageState);
   const [topAlertStatus, setTopAlertStatus] =
@@ -60,6 +62,11 @@ function MemberDashboard() {
   ////
   //// Event handling.
   ////
+
+  const handleNavigateToAccount = (e) => {
+    e.preventDefault();
+    navigate("/account", { state: { activeTabProp: "wearableTech" } });
+  };
 
   const getDatum = (user) => {
     if (user !== undefined && user !== null && user !== "") {
@@ -557,14 +564,14 @@ function MemberDashboard() {
                     <p className="subtitle">
                       You currently have no biometrics data.{" "}
                       <b>
-                        <Link to="/account/wearable-tech">
+                        <Link onClick={(e) => handleNavigateToAccount(e)}>
                           Click here&nbsp;
                           <FontAwesomeIcon
                             className="mdi"
                             icon={faArrowRight}
                           />
                         </Link>
-                      </b>{" "}
+                      </b>
                       to get started registering your wearable tech!
                     </p>
                   </div>

@@ -127,6 +127,8 @@ import AdminFitnessChallengeUpdate from "./Components/Admin/FitnessChallenge/upd
 import FitenessChallengeMemberList from "./Components/Member/FitnessChallenge/list";
 import MemberFitnessChallengeDetail from "./Components/Member/FitnessChallenge/Detail";
 import MemberLeaderboardGlobalTabularListForChallenge from "./Components/Member/FitnessChallenge/leaderboard";
+import AdminOrganizationDetail from "./Components/Admin/organization/Detail";
+import AdminOrganizationUpdate from "./Components/Admin/organization/update";
 
 function AppRoute() {
   return (
@@ -429,6 +431,17 @@ function AppRoute() {
                     element={<AdminFitnessChallengeUpdate />}
                   />
 
+                  <Route
+                    exact
+                    path="/admin/organization"
+                    element={<AdminOrganizationDetail />}
+                  />
+
+                  <Route
+                    exact
+                    path="/admin/organization/update"
+                    element={<AdminOrganizationUpdate />}
+                  />
                   {/*
                                         ---------------------------------------
                                         EVERYTHING BELOW BELONGS TO THE MEMBER.
@@ -536,11 +549,12 @@ function AppRoute() {
                     path="/video-collection/:vcid"
                     element={<MemberVideoCollectionDetail />}
                   />
-                  <Route
+                  {/* Hide video categories for members for now. */}
+                  {/* <Route
                     exact
                     path="/video-categories"
                     element={<MemberCategoriesList />}
-                  />
+                  /> */}
                   <Route
                     exact
                     path="/video-category/:vcatid/video-collections"
@@ -599,11 +613,7 @@ function AppRoute() {
                     path="/training-program/:id"
                     element={<MemberTPDetail />}
                   />
-                  <Route
-                    exact
-                    path="/onboarding"
-                    element={<Onboarding />}
-                  />
+                  <Route exact path="/onboarding" element={<Onboarding />} />
                   <Route
                     exact
                     path="/training-program/:id/edit"

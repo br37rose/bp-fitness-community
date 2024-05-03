@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -30,11 +30,13 @@ import AccountSubscriptionDetailAndCancel from "../Subscription/Subscription";
 import AccountMoreLaunchpad from "../More/Launchpad";
 import Survey from "../Survey";
 
-function UserProfile() {
+function UserProfile(props) {
   ////
   ////
   ////
 
+  const location = useLocation();
+  const activeTabProp = location.state?.activeTabProp || "detail";
   ////
   //// Global state.
   ////
@@ -52,7 +54,7 @@ function UserProfile() {
   const [isFetching, setFetching] = useState(false);
   const [forceURL, setForceURL] = useState("");
   const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
-  const [activeTab, setActiveTab] = useState("detail");
+  const [activeTab, setActiveTab] = useState(activeTabProp);
 
   ////
   //// Event handling.
