@@ -97,6 +97,7 @@ function MemberLeaderboardGlobalTabularList() {
 
     function onRankPointistSuccess(response) {
         console.log("onRankPointistSuccess: Starting...");
+        console.log("onRankPointistSuccess: Results:", response);
         if (response.results !== null) {
           setListRank(response);
           if (response.hasNextPage) {
@@ -353,7 +354,7 @@ function MemberLeaderboardGlobalTabularList() {
 
                     {listRank &&
                     listRank.results &&
-                    (listRank.results.length < 0 || previousCursors.length > 0) ? (
+                    (listRank.results.length > 0 || previousCursors.length > 0) ? (
                       <div className="container">
 
 
@@ -439,4 +440,3 @@ function MemberLeaderboardGlobalTabularList() {
 }
 
 export default MemberLeaderboardGlobalTabularList;
-
