@@ -495,7 +495,7 @@ export default (props) => {
                   }`}
                 >
                   <FontAwesomeIcon className="fas" icon={faBolt} />
-                  &nbsp;fitness-challenge
+                  &nbsp;Fitness Challenge
                 </a>
               </li>
               {/*
