@@ -360,7 +360,7 @@ const MemberExerciseList = () => {
                         {listData &&
                             listData.results &&
                             (listData.results.length > 0 || previousCursors.length > 0) ? (
-                            <div className="container">
+                            <div>
                                 {listData.results.map((excercise) => (
                                     <ExerciseComponent
                                         id={excercise.id}
