@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"time"
 
@@ -17,9 +18,9 @@ type LeaderboardRequest struct {
 	PageSize int64
 
 	// Filter related.
-	MetricDataTypeName string
-	Function           int8
-	Period             int8
+	MetricDataTypeNames []string
+	Function            int8
+	Period              int8
 }
 
 func validateLeaderboardRequest(dirtyData *LeaderboardRequest) error {
@@ -27,8 +28,8 @@ func validateLeaderboardRequest(dirtyData *LeaderboardRequest) error {
 	if dirtyData.PageSize == 0 {
 		e["page_size"] = "missing value"
 	}
-	if dirtyData.MetricDataTypeName == "" {
-		e["metric_data_type_name"] = "missing value"
+	if len(dirtyData.MetricDataTypeNames) == 0 {
+		e["metric_data_type_names"] = "missing value"
 	}
 	if dirtyData.Function == 0 {
 		e["function"] = "missing value"
@@ -51,13 +52,6 @@ func (c *BiometricControllerImpl) Leaderboard(ctx context.Context, req *Leaderbo
 		return nil, err
 	}
 
-	c.Logger.Debug("leaderboard request",
-		slog.Any("cursor", req.Cursor),
-		slog.Int64("page_size", req.PageSize),
-		slog.Any("metric_data_type_name", req.MetricDataTypeName),
-		slog.Any("function", req.Function),
-		slog.Any("period", req.Period))
-
 	// Create our custom filter in which we order from top ranked user data
 	// to the lowest ranked user data for the specific metric.
 	f := &rp_s.RankPointPaginationListFilter{
@@ -65,7 +59,7 @@ func (c *BiometricControllerImpl) Leaderboard(ctx context.Context, req *Leaderbo
 		PageSize:            req.PageSize,
 		SortField:           "place",
 		SortOrder:           rp_s.OrderAscending,
-		MetricDataTypeNames: []string{req.MetricDataTypeName},
+		MetricDataTypeNames: req.MetricDataTypeNames,
 		Function:            req.Function,
 		Period:              req.Period,
 	}
@@ -88,8 +82,17 @@ func (c *BiometricControllerImpl) Leaderboard(ctx context.Context, req *Leaderbo
 		f.EndLTE = timekit.FirstDayOfNextYear(time.Now)
 		break
 	default:
-		break
+		return nil, httperror.NewForBadRequestWithSingleField("period", fmt.Sprintf("unsupported period value: %v", req.Period))
 	}
+
+	c.Logger.Debug("leaderboard request",
+		slog.Any("cursor", req.Cursor),
+		slog.Int64("page_size", req.PageSize),
+		slog.Any("metric_data_type_names", req.MetricDataTypeNames),
+		slog.Any("function", req.Function),
+		slog.Any("period", req.Period),
+		slog.Time("start_gte", f.StartGTE),
+		slog.Time("end_lte", f.EndLTE))
 
 	list, err := c.RankPointStorer.ListByFilter(ctx, f)
 	if err != nil {

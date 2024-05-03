@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	bio_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/biometric/controller"
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
@@ -35,7 +36,10 @@ func (h *Handler) Leaderboard(w http.ResponseWriter, r *http.Request) {
 		f.PageSize = pageSize
 	}
 
-	f.MetricDataTypeName = query.Get("metric_data_type_name")
+	metricDataTypeNamesStr := query.Get("metric_data_type_names")
+	metricDataTypeNamesArr := strings.Split(metricDataTypeNamesStr, ",")
+	f.MetricDataTypeNames = metricDataTypeNamesArr
+	// log.Println("--->", f.MetricDataTypeNames)
 
 	functionStr := query.Get("function")
 	if functionStr != "" {
