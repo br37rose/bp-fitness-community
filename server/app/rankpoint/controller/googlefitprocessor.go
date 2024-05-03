@@ -45,7 +45,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 	}
 
 	impl.Logger.Debug("processing rankings",
-		slog.Any("period_int", period),
+		slog.Any("period", period),
 		slog.Time("start", start),
 		slog.Time("end", end),
 	)
@@ -83,8 +83,10 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 			//TODO: Add more health sensors here...
 		}
 
-		impl.Logger.Debug("ranking starting...",
-			slog.String("gfa_id", gfa.ID.Hex()))
+		impl.Logger.Debug("ranking starting for gfa",
+			slog.String("gfa_id", gfa.ID.Hex()),
+			slog.Any("metric_ids", metricIDs),
+		)
 
 		for _, metricID := range metricIDs {
 			agg, err := impl.AggregatePointStorer.GetByCompositeKey(ctx, metricID, period, start, end)
@@ -282,6 +284,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 			slog.String("metric_data_type_name", metricDataTypeName),
 			slog.Int("function", int(rp_s.FunctionAverage)),
 			slog.Int("period", int(period)),
+			slog.Int("rps_count", len(rps)),
 		)
 
 		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, rp_s.FunctionAverage, period); err != nil {
@@ -299,6 +302,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 			slog.String("metric_data_type_name", metricDataTypeName),
 			slog.Int("function", int(rp_s.FunctionSum)),
 			slog.Int("period", int(period)),
+			slog.Int("rps_count", len(rps)),
 		)
 
 		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, rp_s.FunctionSum, period); err != nil {
@@ -316,6 +320,7 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 			slog.String("metric_data_type_name", metricDataTypeName),
 			slog.Int("function", int(rp_s.FunctionCount)),
 			slog.Int("period", int(period)),
+			slog.Int("rps_count", len(rps)),
 		)
 		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, rp_s.FunctionCount, period); err != nil {
 			return err
