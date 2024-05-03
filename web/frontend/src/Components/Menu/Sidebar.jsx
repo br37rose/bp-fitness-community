@@ -472,7 +472,7 @@ export default (props) => {
                       &nbsp;My Summary
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       href="/biometrics/history/tableview"
                       class={`has-text-grey-light ${
@@ -483,7 +483,7 @@ export default (props) => {
                       <FontAwesomeIcon className="fas" icon={faChartLine} />
                       &nbsp;My History
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </li>
               <li>

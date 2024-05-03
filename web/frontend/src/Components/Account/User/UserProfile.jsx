@@ -67,10 +67,12 @@ function UserProfile(props) {
   ////
 
   function onAccountDetailSuccess(response) {
+    console.log("onAccountDetailSuccess: Starting...");
     setCurrentUser(response);
   }
 
   function onAccountDetailError(apiErr) {
+    console.log("onAccountDetailError: Starting...");
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -81,6 +83,7 @@ function UserProfile(props) {
   }
 
   function onAccountDetailDone() {
+    console.log("onAccountDetailDone: Starting...");
     setFetching(false);
   }
 
@@ -151,6 +154,11 @@ function UserProfile(props) {
   }, []);
 
   const renderTabContent = () => {
+    if (!activeTab) {
+      // Handle the case where activeTab is null or undefined
+      return <UserInfo {...currentUser} />;
+    }
+
     switch (activeTab) {
       case "detail":
         return <UserInfo {...currentUser} />;
@@ -160,10 +168,10 @@ function UserProfile(props) {
         return <AccountFriendList />;
       case "wearableTech":
         return <AccountWearableTechLaunchpad />;
-      case "subscription":
-        return <AccountSubscriptionDetailAndCancel />;
       case "survey":
         return <Survey />;
+      case "subscription":
+        return <AccountSubscriptionDetailAndCancel />;
       case "more":
         return <AccountMoreLaunchpad />;
       default:
@@ -191,21 +199,17 @@ function UserProfile(props) {
                 &nbsp;Account
               </p>
             </div>
-            <div class="column has-text-right">
-              {/* Mobile Specific */}
+            <div class="column has-text-right-tablet has-text-right-desktop">
               <Link
-                to={`/account/change-password`}
-                class="button is-medium is-success is-fullwidth is-hidden-desktop"
-                type="button"
+                class="button is-success is-hidden-touch"
+                to={"/account/change-password"}
               >
                 <FontAwesomeIcon className="mdi" icon={faKey} />
                 &nbsp;Change Password
               </Link>
-              {/* Desktop Specific */}
               <Link
-                to={`/account/change-password`}
-                class="button is-medium is-success is-hidden-touch"
-                type="button"
+                to={"/account/change-password"}
+                class="button is-success is-fullwidth is-hidden-desktop"
               >
                 <FontAwesomeIcon className="mdi" icon={faKey} />
                 &nbsp;Change Password
@@ -222,10 +226,10 @@ function UserProfile(props) {
         ) : (
           <>
             {currentUser && (
-              <div className="container">
-                <div className="columns">
+              <div>
+                <div className="columns is-mobile is-multiline">
                   {/* Left side box items */}
-                  <div className="column">
+                  <div className="column column is-one-quarter-desktop is-full-tablet is-full-mobile">
                     <div className="mb-5">
                       <UserDetail {...currentUser} />
                     </div>
@@ -233,10 +237,10 @@ function UserProfile(props) {
                   </div>
 
                   {/* Right side box items */}
-                  <div className="column">
+                  <div className="column column is-three-quarters-desktop is-full-tablet is-full-mobile">
                     {/* Tab Navigation */}
                     <div className="box">
-                      <div class="tabs">
+                      <div class="tabs is-centered is-boxed">
                         <ul>
                           <li
                             className={
@@ -274,6 +278,15 @@ function UserProfile(props) {
                           </li>
                           <li
                             className={
+                              activeTab === "survey" ? "is-active" : ""
+                            }
+                          >
+                            <a onClick={() => setActiveTab("survey")}>
+                              <strong>Survey</strong>
+                            </a>
+                          </li>
+                          <li
+                            className={
                               activeTab === "subscription" ? "is-active" : ""
                             }
                           >
@@ -281,18 +294,6 @@ function UserProfile(props) {
                               <strong>Subscription</strong>
                             </a>
                           </li>
-                          {currentUser.role === 4 && (
-                            <li
-                              className={
-                                activeTab === "survey" ? "is-active" : ""
-                              }
-                            >
-                              <a onClick={() => setActiveTab("survey")}>
-                                <strong>Survey</strong>
-                              </a>
-                            </li>
-                          )}
-
                           <li
                             className={activeTab === "more" ? "is-active" : ""}
                           >
@@ -308,11 +309,7 @@ function UserProfile(props) {
                           </li>
                         </ul>
                       </div>
-
-                      {currentUser.avatarObjectUrl !== undefined &&
-                        currentUser.avatarObjectUrl !== null && (
-                          <div className="column">{renderTabContent()}</div>
-                        )}
+                      <div>{renderTabContent()}</div>
                     </div>
                   </div>
                 </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -56,6 +56,9 @@ import {
 
 
 function MemberLeaderboardGlobalTabularList() {
+
+  let navigate = useNavigate();
+
     ////
     //// Global state.
     ////
@@ -124,6 +127,11 @@ function MemberLeaderboardGlobalTabularList() {
     ////
     //// Event handling.
     ////
+
+    const handleNavigateToAccount = (e) => {
+      e.preventDefault();
+      navigate('/account', { state: { activeTabProp: 'wearableTech' } });
+    };
 
     const onHeartRateButtonClick = (e) => {
       e.preventDefault(); // Do not remove this line!
@@ -345,7 +353,7 @@ function MemberLeaderboardGlobalTabularList() {
 
                     {listRank &&
                     listRank.results &&
-                    (listRank.results.length > 0 || previousCursors.length > 0) ? (
+                    (listRank.results.length < 0 || previousCursors.length > 0) ? (
                       <div className="container">
 
 
@@ -394,7 +402,7 @@ function MemberLeaderboardGlobalTabularList() {
                           <p className="subtitle">
                             You currently have no biometrics data.{" "}
                             <b>
-                              <Link to="/account/wearable-tech">
+                              <Link onClick={(e) => handleNavigateToAccount(e)}>
                                 Click here&nbsp;
                                 <FontAwesomeIcon
                                   className="mdi"
@@ -431,3 +439,4 @@ function MemberLeaderboardGlobalTabularList() {
 }
 
 export default MemberLeaderboardGlobalTabularList;
+

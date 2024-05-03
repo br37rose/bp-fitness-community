@@ -849,6 +849,13 @@ export const QUESTIONNAIRE_STATUS_OPTIONS = [
   { value: 2, label: "Archived" },
 ];
 
+export const USER_ROLE_MAP = {
+  1: "Root User",
+  2: "Admin",
+  3: "Trainer",
+  4: "User"
+};
+
 export const FITNESS_CHALLENGE = [
   { value: 1, label: "Calorie Crunch Challenge" },
   { value: 2, label: "Step-Up Challenge" },

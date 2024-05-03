@@ -3,7 +3,7 @@ import Breadcrumb from '../Reusable/Breadcrumb';
 
 const Layout = ({ children, breadcrumbItems }) => {
     return (
-        <div className="container">
+        <div className="container is-fluid">
             <section className="section">
                 {breadcrumbItems &&
                     <Breadcrumb breadcrumbItems={breadcrumbItems} />}

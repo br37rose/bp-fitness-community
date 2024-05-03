@@ -1,6 +1,10 @@
 import React from 'react';
+import { USER_ROLE_MAP } from '../../../Constants/FieldOptions';
 
-const UserDetail = ({ avatarObjectUrl, name }) => {
+const UserDetail = ({ avatarObjectUrl, name, role }) => {
+
+    const userRole = USER_ROLE_MAP[role];
+
     return (
         <div className="card">
             <div className="card-content">
@@ -13,7 +17,7 @@ const UserDetail = ({ avatarObjectUrl, name }) => {
                     <div className="column">
                         <div className="has-text-centered">
                             <p className="title is-6">{name}</p>
-                            <p className="subtitle is-italic has-text-link is-6">Software Engineer</p>
+                            <p className="subtitle is-italic has-text-link is-6">{userRole}</p>
                         </div>
                     </div>
                 </div>
