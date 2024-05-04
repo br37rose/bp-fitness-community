@@ -170,7 +170,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		// impl.Logger.Debug("processing this hour")
 		start, end := timekit.HourRangeForNow(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodHour, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodHour, start, end); err != nil {
 				impl.Logger.Error("failed aggregating this hour",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -190,7 +190,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start = start.Add((-1) * time.Hour)
 		end = end.Add((-1) * time.Hour)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodHour, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodHour, start, end); err != nil {
 				impl.Logger.Error("failed aggregating last hour",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -207,7 +207,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.Midnight(time.Now)
 		end := timekit.MidnightTomorrow(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodDay, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodDay, start, end); err != nil {
 				impl.Logger.Error("failed aggregating today",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -224,7 +224,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.MidnightYesterday(time.Now)
 		end := timekit.Midnight(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodDay, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodDay, start, end); err != nil {
 				impl.Logger.Error("failed aggregating yesterday",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -241,7 +241,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.FirstDayOfThisISOWeek(time.Now)
 		end := timekit.FirstDayOfNextISOWeek(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodWeek, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodWeek, start, end); err != nil {
 				impl.Logger.Error("failed aggregating this iso week",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -258,7 +258,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.FirstDayOfLastISOWeek(time.Now)
 		end := timekit.FirstDayOfThisISOWeek(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodWeek, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodWeek, start, end); err != nil {
 				impl.Logger.Error("failed aggregating last iso week",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -275,7 +275,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.FirstDayOfThisMonth(time.Now)
 		end := timekit.FirstDayOfNextMonth(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodMonth, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodMonth, start, end); err != nil {
 				impl.Logger.Error("failed aggregating this month",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -292,7 +292,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.FirstDayOfLastMonth(time.Now)
 		end := timekit.FirstDayOfThisMonth(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodMonth, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodMonth, start, end); err != nil {
 				impl.Logger.Error("failed aggregating last month",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -309,7 +309,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.FirstDayOfThisYear(time.Now)
 		end := timekit.FirstDayOfNextYear(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodYear, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodYear, start, end); err != nil {
 				impl.Logger.Error("failed aggregating this year",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),
@@ -326,7 +326,7 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		start := timekit.FirstDayOfLastYear(time.Now)
 		end := timekit.FirstDayOfThisYear(time.Now)
 		for _, metricID := range metricIDs {
-			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], ap_s.PeriodYear, start, end); err != nil {
+			if err := impl.aggregateForMetric(ctx, metricID, metricDataTypes[metricID], gfa.UserID, ap_s.PeriodYear, start, end); err != nil {
 				impl.Logger.Error("failed aggregating last year",
 					slog.Any("google_fit_app_id", gfa.ID),
 					slog.Any("metric_id", metricID),

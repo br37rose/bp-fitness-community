@@ -28,7 +28,7 @@ import {
 import { useRecoilState } from "recoil";
 
 import FormErrorBox from "../../../../Reusable/FormErrorBox";
-import { getRankPointListAPI } from "../../../../../API/RankPoint";
+import { getLeaderboardListAPI } from "../../../../../API/Biometric";
 import {
     topAlertMessageState,
     topAlertStatusState,
@@ -171,7 +171,7 @@ function MemberLeaderboardGlobalTabularList() {
         console.log("params:", params);
 
         // Make the submission to the API backend.
-        getRankPointListAPI(
+        getLeaderboardListAPI(
           params,
           onRankPointistSuccess,
           onRankPointistError,
@@ -242,6 +242,8 @@ function MemberLeaderboardGlobalTabularList() {
     ////
     //// Component rendering.
     ////
+
+    console.log("--->", listRank);
 
     return (
     <>

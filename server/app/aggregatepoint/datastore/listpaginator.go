@@ -25,13 +25,14 @@ type AggregatePointPaginationListFilter struct {
 	SortOrder int8 // 1=ascending | -1=descending
 
 	// Filter related.
-	MetricIDs    []primitive.ObjectID
-	Period       int8
-	CreatedAtGTE time.Time
-	StartGTE     time.Time
-	StartGT      time.Time
-	EndLTE       time.Time
-	EndLT        time.Time
+	MetricIDs           []primitive.ObjectID
+	MetricDataTypeNames []string
+	Period              int8
+	CreatedAtGTE        time.Time
+	StartGTE            time.Time
+	StartGT             time.Time
+	EndLTE              time.Time
+	EndLT               time.Time
 }
 
 // AggregatePointPaginationListResult represents the paginated list results for

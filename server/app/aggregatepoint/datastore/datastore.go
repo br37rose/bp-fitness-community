@@ -19,6 +19,7 @@ type AggregatePoint struct {
 	ID                 primitive.ObjectID `bson:"_id" json:"id,omitempty"`
 	MetricID           primitive.ObjectID `bson:"metric_id" json:"metric_id,omitempty"`
 	MetricDataTypeName string             `bson:"metric_data_type_name" json:"metric_data_type_name"`
+	UserID             primitive.ObjectID `bson:"user_id" json:"user_id,omitempty"`
 	Period             int8               `bson:"period" json:"period"`
 	Start              time.Time          `bson:"start" json:"start"`
 	End                time.Time          `bson:"end" json:"end"`

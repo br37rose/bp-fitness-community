@@ -4,7 +4,6 @@ import { DateTime } from "luxon";
 
 import {
     BP8_FITNESS_RANK_POINTS_API_ENDPOINT,
-    BP8_FITNESS_LEADERBOARD_API_ENDPOINT,
 } from "../Constants/API";
 
 
@@ -93,23 +92,3 @@ export function getRankPointListAPI(filtersMap = new Map(), onSuccessCallback, o
 // }
 
 // API.js
-
-export function getLeaderboardListAPI(filtersMap = new Map()) {
-    const axios = getCustomAxios();
-    let aURL = BP8_FITNESS_LEADERBOARD_API_ENDPOINT;
-
-    // Generate the query parameters for the URL based on the map.
-    filtersMap.forEach((value, key) => {
-        let decamelizedKey = decamelize(key);
-        aURL += aURL.includes('?') ? `&${decamelizedKey}=${value}` : `?${decamelizedKey}=${value}`;
-    });
-
-    // Return the Axios promise chain
-    return axios.get(aURL).then((successResponse) => {
-        const responseRank = successResponse.data;
-        return camelizeKeys(responseRank);
-    }).catch((error) => {
-        // In case of error, rethrow the error to be caught by the calling function
-        throw camelizeKeys(error);
-    });
-}

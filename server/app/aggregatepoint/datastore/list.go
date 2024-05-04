@@ -47,7 +47,13 @@ func (impl AggregatePointStorerImpl) ListByFilter(ctx context.Context, f *Aggreg
 	// if len(f.MetricIDs) > 0 {
 	// 	filter["metric_id"] = bson.M{"$in": f.MetricIDs}
 	// }
-	filter["metric_id"] = bson.M{"$in": f.MetricIDs}
+
+	if len(f.MetricIDs) > 0 {
+		filter["metric_id"] = bson.M{"$in": f.MetricIDs}
+	}
+	if len(f.MetricDataTypeNames) > 0 {
+		filter["metric_data_type_name"] = bson.M{"$in": f.MetricDataTypeNames}
+	}
 
 	// impl.Logger.Debug("listing filter:",
 	// 	slog.Any("filter", filter),
