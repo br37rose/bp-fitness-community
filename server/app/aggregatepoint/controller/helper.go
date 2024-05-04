@@ -14,6 +14,7 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 	ctx context.Context,
 	metricID primitive.ObjectID,
 	metricDataTypeName string,
+	userID primitive.ObjectID,
 	period int8,
 	startAt time.Time,
 	endAt time.Time,
@@ -33,17 +34,18 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 	if ap == nil {
 		// CASE 1 OF 2: Create
 		ap = &ap_s.AggregatePoint{
-			ID:         primitive.NewObjectID(),
-			MetricID:   metricID,
+			ID:                 primitive.NewObjectID(),
+			MetricID:           metricID,
 			MetricDataTypeName: metricDataTypeName,
-			Period:     period,
-			Start:      startAt,
-			End:        endAt,
-			Count:      response.Count,
-			Average:    response.Average,
-			Min:        response.Min,
-			Max:        response.Max,
-			Sum:        response.Sum,
+			UserID:             userID,
+			Period:             period,
+			Start:              startAt,
+			End:                endAt,
+			Count:              response.Count,
+			Average:            response.Average,
+			Min:                response.Min,
+			Max:                response.Max,
+			Sum:                response.Sum,
 		}
 		if err := impl.AggregatePointStorer.Create(ctx, ap); err != nil {
 			impl.Logger.Error("failed creating",
@@ -53,6 +55,7 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 		// For debugging purposes only.
 		impl.Logger.Debug("created aggregate point",
 			slog.String("metric_id", metricID.Hex()),
+			slog.String("suer_id", userID.Hex()),
 			slog.Int("period", int(period)),
 			slog.Time("start", startAt),
 			slog.Time("end", endAt),
@@ -64,6 +67,7 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 	} else {
 		// CASE 2 OF 2: Update
 		ap.MetricID = metricID
+		ap.UserID = userID
 		ap.Period = period
 		ap.Start = startAt
 		ap.End = endAt
