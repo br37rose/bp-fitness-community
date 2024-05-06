@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedmutex"
 	s3_storage "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/storage/s3"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
@@ -17,7 +18,6 @@ import (
 	rp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/rankpoint/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
 )
 
@@ -35,7 +35,7 @@ type RankPointControllerImpl struct {
 	DbClient                 *mongo.Client
 	Cache                    mongodbcache.Cacher
 	CodeVerifierMap          map[primitive.ObjectID]string
-	Kmutex                   kmutex.Provider
+	DistributedMutex         distributedmutex.Adapter
 	OrganizationStorer       organization_s.OrganizationStorer
 	UserStorer               user_s.UserStorer
 	GoogleFitAppStorer       gfa_ds.GoogleFitAppStorer
@@ -51,7 +51,7 @@ func NewController(
 	uuidp uuid.Provider,
 	client *mongo.Client,
 	cache mongodbcache.Cacher,
-	kmutexp kmutex.Provider,
+	dlocker distributedmutex.Adapter,
 	s3 s3_storage.S3Storager,
 	org_storer organization_s.OrganizationStorer,
 	usr_storer user_s.UserStorer,
@@ -68,7 +68,7 @@ func NewController(
 		DbClient:                 client,
 		Cache:                    cache,
 		CodeVerifierMap:          make(map[primitive.ObjectID]string, 0),
-		Kmutex:                   kmutexp,
+		DistributedMutex:         dlocker,
 		S3:                       s3,
 		OrganizationStorer:       org_storer,
 		UserStorer:               usr_storer,

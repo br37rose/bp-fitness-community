@@ -111,8 +111,8 @@ func (c *BiometricControllerImpl) HistoricData(ctx context.Context, req *Histori
 			slog.Any("plance", rp.Place))
 
 		if rp.UserAvatarObjectKey != "" && time.Now().After(rp.UserAvatarObjectExpiry) {
-			c.Kmutex.Lockf("rankpoint_%v_avatar_image", rp.ID.Hex())         // Step 1
-			defer c.Kmutex.Unlockf("rankpoint_%v_avatar_image", rp.ID.Hex()) // Step 2
+			c.DistributedMutex.Lockf(ctx, "rankpoint_%v_avatar_image", rp.ID.Hex())         // Step 1
+			defer c.DistributedMutex.Unlockf(ctx, "rankpoint_%v_avatar_image", rp.ID.Hex()) // Step 2
 
 			// Generate a presigned URL for today lasting 12 hours before expiring to becoming invalid.
 			expiryDur := time.Hour * 12

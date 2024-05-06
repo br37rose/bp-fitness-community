@@ -8,6 +8,7 @@ import (
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	gcp_a "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedmutex"
 	ap_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/aggregatepoint/datastore"
 	dp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/datapoint/datastore"
 	googlefitapp_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/googlefitapp/datastore"
@@ -15,7 +16,6 @@ import (
 	organization_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/organization/datastore"
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
 )
 
@@ -34,7 +34,7 @@ type GoogleFitAppControllerImpl struct {
 	UUID                     uuid.Provider
 	DbClient                 *mongo.Client
 	Cache                    mongodbcache.Cacher
-	Kmutex                   kmutex.Provider
+	DistributedMutex         distributedmutex.Adapter
 	GCP                      gcp_a.GoogleCloudPlatformAdapter
 	OrganizationStorer       organization_s.OrganizationStorer
 	GoogleFitDataPointStorer gfdp_s.GoogleFitDataPointStorer
@@ -50,7 +50,7 @@ func NewController(
 	uuidp uuid.Provider,
 	client *mongo.Client,
 	cache mongodbcache.Cacher,
-	kmutexp kmutex.Provider,
+	dlocker distributedmutex.Adapter,
 	gcpa gcp_a.GoogleCloudPlatformAdapter,
 	org_storer organization_s.OrganizationStorer,
 	gfdp_storer gfdp_s.GoogleFitDataPointStorer,
@@ -65,7 +65,7 @@ func NewController(
 		UUID:                     uuidp,
 		DbClient:                 client,
 		Cache:                    cache,
-		Kmutex:                   kmutexp,
+		DistributedMutex:         dlocker,
 		GCP:                      gcpa,
 		OrganizationStorer:       org_storer,
 		GoogleFitDataPointStorer: gfdp_storer,
