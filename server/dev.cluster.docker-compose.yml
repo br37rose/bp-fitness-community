@@ -108,7 +108,7 @@ services:
       ports:
         - 6379:6379
       stdin_open: true
-      restart: always
+      restart: unless-stopped
       volumes:
         - redis_data:/data
       # attach: false # Disable console logs here.
