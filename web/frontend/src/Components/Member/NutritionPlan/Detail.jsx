@@ -1,12 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
-import Scroll from 'react-scroll';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faClock, faRepeat, faTasks, faTachometer, faPlus, faArrowLeft, faCheckCircle, faUserCircle, faGauge, faPencil, faLeaf, faEye, faIdCard, faAddressBook, faContactCard, faChartPie, faCogs } from '@fortawesome/free-solid-svg-icons'
-import { useRecoilState } from 'recoil';
-import { useParams } from 'react-router-dom';
+import React, {useState, useEffect} from "react";
+import {Link, Navigate} from "react-router-dom";
+import Scroll from "react-scroll";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {
+	faTrash,
+	faClock,
+	faRepeat,
+	faTasks,
+	faTachometer,
+	faPlus,
+	faArrowLeft,
+	faCheckCircle,
+	faUserCircle,
+	faGauge,
+	faPencil,
+	faLeaf,
+	faEye,
+	faIdCard,
+	faAddressBook,
+	faContactCard,
+	faChartPie,
+	faCogs,
+} from "@fortawesome/free-solid-svg-icons";
+import {useRecoilState} from "recoil";
+import {useParams} from "react-router-dom";
 
-import { getNutritionPlanDetailAPI, deleteNutritionPlanAPI } from "../../../API/NutritionPlan";
+import {
+	getNutritionPlanDetailAPI,
+	deleteNutritionPlanAPI,
+} from "../../../API/NutritionPlan";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import FormInputField from "../../Reusable/FormInputField";
 import FormTextareaField from "../../Reusable/FormTextareaField";
@@ -17,7 +39,7 @@ import FormCheckboxField from "../../Reusable/FormCheckboxField";
 import FormCountryField from "../../Reusable/FormCountryField";
 import FormRegionField from "../../Reusable/FormRegionField";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
+import {topAlertMessageState, topAlertStatusState} from "../../../AppState";
 import DataDisplayRowText from "../../Reusable/DataDisplayRowText";
 import DataDisplayRowRadio from "../../Reusable/DataDisplayRowRadio";
 import FormTextTagRow from "../../Reusable/FormTextTagRow";
@@ -27,362 +49,447 @@ import DataDisplayRowMultiSelect from "../../Reusable/FormTextOptionRow";
 import DataDisplayRowMultiSelectStatic from "../../Reusable/DataDisplayRowMultiSelectStatic";
 import DataDisplayRowSelectStatic from "../../Reusable/DataDisplayRowSelectStatic";
 import {
-  HOME_GYM_EQUIPMENT_OPTIONS,
-  HOME_GYM_EQUIPMENT_MAP,
-  FEET_WITH_EMPTY_OPTIONS,
-  INCHES_WITH_EMPTY_OPTIONS,
-  GENDER_WITH_EMPTY_OPTIONS,
-  PHYSICAL_ACTIVITY_MAP,
-  PHYSICAL_ACTIVITY_WITH_EMPTY_OPTIONS,
-  WORKOUT_INTENSITY_WITH_EMPTY_OPTIONS,
-  DAYS_PER_WEEK_MAP,
-  DAYS_PER_WEEK_WITH_EMPTY_OPTIONS,
-  TIME_PER_DAY_MAP,
-  TIME_PER_DAY_WITH_EMPTY_OPTIONS,
-  MAX_WEEK_MAP,
-  MAX_WEEK_WITH_EMPTY_OPTIONS,
-  FITNESS_GOAL_MAP,
-  FITNESS_GOAL_OPTIONS,
-  WORKOUT_PREFERENCE_MAP,
-  WORKOUT_PREFERENCE_OPTIONS
+	HOME_GYM_EQUIPMENT_OPTIONS,
+	HOME_GYM_EQUIPMENT_MAP,
+	FEET_WITH_EMPTY_OPTIONS,
+	INCHES_WITH_EMPTY_OPTIONS,
+	GENDER_WITH_EMPTY_OPTIONS,
+	PHYSICAL_ACTIVITY_MAP,
+	PHYSICAL_ACTIVITY_WITH_EMPTY_OPTIONS,
+	WORKOUT_INTENSITY_WITH_EMPTY_OPTIONS,
+	DAYS_PER_WEEK_MAP,
+	DAYS_PER_WEEK_WITH_EMPTY_OPTIONS,
+	TIME_PER_DAY_MAP,
+	TIME_PER_DAY_WITH_EMPTY_OPTIONS,
+	MAX_WEEK_MAP,
+	MAX_WEEK_WITH_EMPTY_OPTIONS,
+	FITNESS_GOAL_MAP,
+	FITNESS_GOAL_OPTIONS,
+	WORKOUT_PREFERENCE_MAP,
+	WORKOUT_PREFERENCE_OPTIONS,
 } from "../../../Constants/FieldOptions";
 import {
-  FITNESS_GOAL_STATUS_QUEUED, FITNESS_GOAL_STATUS_ACTIVE,
-  FITNESS_GOAL_STATUS_ARCHIVED, FITNESS_GOAL_STATUS_ERROR,
-  GENDER_OTHER, GENDER_MALE, GENDER_FEMALE
+	FITNESS_GOAL_STATUS_QUEUED,
+	FITNESS_GOAL_STATUS_ACTIVE,
+	FITNESS_GOAL_STATUS_ARCHIVED,
+	FITNESS_GOAL_STATUS_ERROR,
+	GENDER_OTHER,
+	GENDER_MALE,
+	GENDER_FEMALE,
 } from "../../../Constants/App";
 import Layout from "../../Menu/Layout";
 
-
 function MemberNutritionPlanDetail() {
-  ////
-  //// URL Parameters.
-  ////
+	////
+	//// URL Parameters.
+	////
 
-  const { id } = useParams()
+	const {id} = useParams();
 
-  ////
-  //// Global state.
-  ////
+	////
+	//// Global state.
+	////
 
-  const [topAlertMessage, setTopAlertMessage] = useRecoilState(topAlertMessageState);
-  const [topAlertStatus, setTopAlertStatus] = useRecoilState(topAlertStatusState);
+	const [topAlertMessage, setTopAlertMessage] =
+		useRecoilState(topAlertMessageState);
+	const [topAlertStatus, setTopAlertStatus] =
+		useRecoilState(topAlertStatusState);
 
-  ////
-  //// Component states.
-  ////
+	////
+	//// Component states.
+	////
 
-  const [errors, setErrors] = useState({});
-  const [isFetching, setFetching] = useState(false);
-  const [forceURL, setForceURL] = useState("");
-  const [datum, setDatum] = useState({});
-  const [tabIndex, setTabIndex] = useState(1);
-  const [selectedNutritionPlanForDeletion, setSelectedNutritionPlanForDeletion] = useState(null);
+	const [errors, setErrors] = useState({});
+	const [isFetching, setFetching] = useState(false);
+	const [forceURL, setForceURL] = useState("");
+	const [datum, setDatum] = useState({});
+	const [tabIndex, setTabIndex] = useState(1);
+	const [
+		selectedNutritionPlanForDeletion,
+		setSelectedNutritionPlanForDeletion,
+	] = useState(null);
 
-  ////
-  //// Event handling.
-  ////
+	////
+	//// Event handling.
+	////
 
-  const onDeleteConfirmButtonClick = () => {
-    console.log("onDeleteConfirmButtonClick"); // For debugging purposes only.
+	const onDeleteConfirmButtonClick = () => {
+		console.log("onDeleteConfirmButtonClick"); // For debugging purposes only.
 
-    deleteNutritionPlanAPI(
-      selectedNutritionPlanForDeletion.id,
-      onNutritionPlanDeleteSuccess,
-      onNutritionPlanDeleteError,
-      onNutritionPlanDeleteDone
-    );
-    setSelectedNutritionPlanForDeletion(null);
-  }
+		deleteNutritionPlanAPI(
+			selectedNutritionPlanForDeletion.id,
+			onNutritionPlanDeleteSuccess,
+			onNutritionPlanDeleteError,
+			onNutritionPlanDeleteDone
+		);
+		setSelectedNutritionPlanForDeletion(null);
+	};
 
-  ////
-  //// API.
-  ////
+	////
+	//// API.
+	////
 
-  // --- Detail --- //
+	// --- Detail --- //
 
-  function onNutritionPlanDetailSuccess(response) {
-    console.log("onNutritionPlanDetailSuccess: Starting...");
-    setDatum(response);
-  }
+	function onNutritionPlanDetailSuccess(response) {
+		console.log("onNutritionPlanDetailSuccess: Starting...");
+		setDatum(response);
+	}
 
-  function onNutritionPlanDetailError(apiErr) {
-    console.log("onNutritionPlanDetailError: Starting...");
-    setErrors(apiErr);
+	function onNutritionPlanDetailError(apiErr) {
+		console.log("onNutritionPlanDetailError: Starting...");
+		setErrors(apiErr);
 
-    // The following code will cause the screen to scroll to the top of
-    // the page. Please see ``react-scroll`` for more information:
-    // https://github.com/fisshy/react-scroll
-    var scroll = Scroll.animateScroll;
-    scroll.scrollToTop();
-  }
+		// The following code will cause the screen to scroll to the top of
+		// the page. Please see ``react-scroll`` for more information:
+		// https://github.com/fisshy/react-scroll
+		var scroll = Scroll.animateScroll;
+		scroll.scrollToTop();
+	}
 
-  function onNutritionPlanDetailDone() {
-    console.log("onNutritionPlanDetailDone: Starting...");
-    setFetching(false);
-  }
+	function onNutritionPlanDetailDone() {
+		console.log("onNutritionPlanDetailDone: Starting...");
+		setFetching(false);
+	}
 
-  // --- Delete --- //
+	// --- Delete --- //
 
-  function onNutritionPlanDeleteSuccess(response) {
-    console.log("onNutritionPlanDeleteSuccess: Starting..."); // For debugging purposes only.
+	function onNutritionPlanDeleteSuccess(response) {
+		console.log("onNutritionPlanDeleteSuccess: Starting..."); // For debugging purposes only.
 
-    // Update notification.
-    setTopAlertStatus("success");
-    setTopAlertMessage("Nutrition plan deleted");
-    setTimeout(() => {
-      console.log(
-        "onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
-      setTopAlertMessage("");
-    }, 2000);
+		// Update notification.
+		setTopAlertStatus("success");
+		setTopAlertMessage("Nutrition plan deleted");
+		setTimeout(() => {
+			console.log(
+				"onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
+				topAlertMessage,
+				topAlertStatus
+			);
+			setTopAlertMessage("");
+		}, 2000);
 
-    // Redirect back to the video categories page.
-    setForceURL("/nutrition-plans");
-  }
+		// Redirect back to the video categories page.
+		setForceURL("/nutrition-plans");
+	}
 
-  function onNutritionPlanDeleteError(apiErr) {
-    console.log("onNutritionPlanDeleteError: Starting..."); // For debugging purposes only.
-    setErrors(apiErr);
+	function onNutritionPlanDeleteError(apiErr) {
+		console.log("onNutritionPlanDeleteError: Starting..."); // For debugging purposes only.
+		setErrors(apiErr);
 
-    // Update notification.
-    setTopAlertStatus("danger");
-    setTopAlertMessage("Failed deleting");
-    setTimeout(() => {
-      console.log(
-        "onNutritionPlanDeleteError: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
-      setTopAlertMessage("");
-    }, 2000);
+		// Update notification.
+		setTopAlertStatus("danger");
+		setTopAlertMessage("Failed deleting");
+		setTimeout(() => {
+			console.log(
+				"onNutritionPlanDeleteError: topAlertMessage, topAlertStatus:",
+				topAlertMessage,
+				topAlertStatus
+			);
+			setTopAlertMessage("");
+		}, 2000);
 
-    // The following code will cause the screen to scroll to the top of
-    // the page. Please see ``react-scroll`` for more information:
-    // https://github.com/fisshy/react-scroll
-    var scroll = Scroll.animateScroll;
-    scroll.scrollToTop();
-  }
+		// The following code will cause the screen to scroll to the top of
+		// the page. Please see ``react-scroll`` for more information:
+		// https://github.com/fisshy/react-scroll
+		var scroll = Scroll.animateScroll;
+		scroll.scrollToTop();
+	}
 
-  function onNutritionPlanDeleteDone() {
-    console.log("onNutritionPlanDeleteDone: Starting...");
-    setFetching(false);
-  }
+	function onNutritionPlanDeleteDone() {
+		console.log("onNutritionPlanDeleteDone: Starting...");
+		setFetching(false);
+	}
 
-  ////
-  //// BREADCRUMB
-  ////
-  const breadcrumbItems = {
-    items: [
-      { text: 'Dashboard', link: '/dashboard', isActive: false, icon: faGauge },
-      { text: 'Nutrition Plans', link: '/nutrition-plans', icon: faLeaf, isActive: false },
-      { text: 'Detail', link: '#', icon: faEye, isActive: true }
-    ],
-    mobileBackLinkItems: {
-      link: '/nutrition-plans',
-      text: 'Back to Nutrition Plans',
-      icon: faArrowLeft
-    }
-  }
+	////
+	//// BREADCRUMB
+	////
+	const breadcrumbItems = {
+		items: [
+			{text: "Dashboard", link: "/dashboard", isActive: false, icon: faGauge},
+			{
+				text: "Nutrition Plans",
+				link: "/nutrition-plans",
+				icon: faLeaf,
+				isActive: false,
+			},
+			{text: "Detail", link: "#", icon: faEye, isActive: true},
+		],
+		mobileBackLinkItems: {
+			link: "/nutrition-plans",
+			text: "Back to Nutrition Plans",
+			icon: faArrowLeft,
+		},
+	};
 
-  ////
-  //// Misc.
-  ////
+	////
+	//// Misc.
+	////
 
-  useEffect(() => {
-    let mounted = true;
+	useEffect(() => {
+		let mounted = true;
 
-    if (mounted) {
-      window.scrollTo(0, 0);  // Start the page at the top of the page.
+		if (mounted) {
+			window.scrollTo(0, 0); // Start the page at the top of the page.
 
-      setFetching(true);
-      getNutritionPlanDetailAPI(
-        id,
-        onNutritionPlanDetailSuccess,
-        onNutritionPlanDetailError,
-        onNutritionPlanDetailDone
-      );
-    }
+			setFetching(true);
+			getNutritionPlanDetailAPI(
+				id,
+				onNutritionPlanDetailSuccess,
+				onNutritionPlanDetailError,
+				onNutritionPlanDetailDone
+			);
+		}
 
-    return () => { mounted = false; }
-  }, []);
-  ////
-  //// Component rendering.
-  ////
+		return () => {
+			mounted = false;
+		};
+	}, []);
+	////
+	//// Component rendering.
+	////
 
-  if (forceURL !== "") {
-    return <Navigate to={forceURL} />
-  }
+	if (forceURL !== "") {
+		return <Navigate to={forceURL} />;
+	}
 
-  return (
-    <Layout breadcrumbItems={breadcrumbItems}>
+	return (
+		<Layout breadcrumbItems={breadcrumbItems}>
+			{/* Modal */}
+			<nav>
+				{/* Delete modal */}
+				<div
+					class={`modal ${
+						selectedNutritionPlanForDeletion !== null ? "is-active" : ""
+					}`}>
+					<div class="modal-background"></div>
+					<div class="modal-card">
+						<header class="modal-card-head">
+							<p class="modal-card-title">Are you sure?</p>
+							<button
+								class="delete"
+								aria-label="close"
+								onClick={(e, ses) =>
+									setSelectedNutritionPlanForDeletion(null)
+								}></button>
+						</header>
+						<section class="modal-card-body">
+							You are about to delete this nutrition plan and all the data
+							associated with it. This action is cannot be undone. Are you sure
+							you would like to continue?
+						</section>
+						<footer class="modal-card-foot">
+							<button
+								class="button is-success"
+								onClick={onDeleteConfirmButtonClick}>
+								Confirm
+							</button>
+							<button
+								class="button"
+								onClick={(e, ses) => setSelectedNutritionPlanForDeletion(null)}>
+								Cancel
+							</button>
+						</footer>
+					</div>
+				</div>
+			</nav>
 
-      {/* Modal */}
-      <nav>
-        {/* Delete modal */}
-        <div class={`modal ${selectedNutritionPlanForDeletion !== null ? 'is-active' : ''}`}>
-          <div class="modal-background"></div>
-          <div class="modal-card">
-            <header class="modal-card-head">
-              <p class="modal-card-title">Are you sure?</p>
-              <button class="delete" aria-label="close" onClick={(e, ses) => setSelectedNutritionPlanForDeletion(null)}></button>
-            </header>
-            <section class="modal-card-body">
-              You are about to delete this nutrition plan and all the data associated with it. This action is cannot be undone. Are you sure you would like to continue?
-            </section>
-            <footer class="modal-card-foot">
-              <button class="button is-success" onClick={onDeleteConfirmButtonClick}>Confirm</button>
-              <button class="button" onClick={(e, ses) => setSelectedNutritionPlanForDeletion(null)}>Cancel</button>
-            </footer>
-          </div>
-        </div>
-      </nav>
+			{/* Page */}
+			<div class="box">
+				{datum && (
+					<div class="columns">
+						<div class="column">
+							<p class="title is-4">
+								<FontAwesomeIcon className="fas" icon={faLeaf} />
+								&nbsp;Nutrition Plan
+							</p>
+						</div>
+						{datum.status === FITNESS_GOAL_STATUS_ACTIVE && (
+							<div class="column has-text-right">
+								<Link
+									to={`/nutrition-plan/${id}/update`}
+									class="button is-warning is-small is-fullwidth-mobile"
+									type="button">
+									<FontAwesomeIcon className="mdi" icon={faPencil} />
+									&nbsp;Edit & Re-request
+								</Link>
+								&nbsp;
+								<Link
+									onClick={(e, s) => {
+										setSelectedNutritionPlanForDeletion(datum);
+									}}
+									class="button is-danger is-small is-fullwidth-mobile"
+									type="button">
+									<FontAwesomeIcon className="mdi" icon={faTrash} />
+									&nbsp;Delete
+								</Link>
+							</div>
+						)}
+					</div>
+				)}
+				<FormErrorBox errors={errors} />
 
-      {/* Page */}
-      <div class="box">
-        {datum && <div class="columns">
-          <div class="column">
-            <p class="title is-4"><FontAwesomeIcon className="fas" icon={faLeaf} />&nbsp;Nutrition Plan</p>
-          </div>
-          {datum.status === FITNESS_GOAL_STATUS_ACTIVE && <div class="column has-text-right">
-            <Link to={`/nutrition-plan/${id}/update`} class="button is-warning is-small is-fullwidth-mobile" type="button">
-              <FontAwesomeIcon className="mdi" icon={faPencil} />&nbsp;Edit & Re-request
-            </Link>&nbsp;
-            <Link onClick={(e, s) => { setSelectedNutritionPlanForDeletion(datum) }} class="button is-danger is-small is-fullwidth-mobile" type="button">
-              <FontAwesomeIcon className="mdi" icon={faTrash} />&nbsp;Delete
-            </Link>
-          </div>}
-        </div>}
-        <FormErrorBox errors={errors} />
+				{/* <p class="pb-4">Please fill out all the required fields before submitting this form.</p> */}
 
-        {/* <p class="pb-4">Please fill out all the required fields before submitting this form.</p> */}
-
-        {isFetching
-          ?
-          <PageLoadingContent displayMessage={"Please wait..."} />
-          :
-          <>
-            {datum && <div class="container" key={datum.id}>
-              {/*
+				{isFetching ? (
+					<PageLoadingContent displayMessage={"Please wait..."} />
+				) : (
+					<>
+						{datum && (
+							<div key={datum.id}>
+								{/*
                                       ---------------------------------------------
                                       Queue Status GUI
                                       ---------------------------------------------
                                     */}
-              {datum.status === FITNESS_GOAL_STATUS_QUEUED
-                && <>
-                  <section className="hero is-medium has-background-white-ter">
-                    <div className="hero-body">
-                      <p className="title">
-                        <FontAwesomeIcon className="fas" icon={faClock} />
-                        &nbsp;Nutrition Plan Submitted
-                      </p>
-                      <p className="subtitle">
-                        You have successfully submitted this nutrition plan to our team. The estimated time until our team completes your nutrition plan will take about <b>1 or 2 days</b>. Please check back later.
-                      </p>
-                    </div>
-                  </section>
-                </>
-              }
+								{datum.status === FITNESS_GOAL_STATUS_QUEUED && (
+									<>
+										<section className="hero is-medium has-background-white-ter">
+											<div className="hero-body">
+												<p className="title">
+													<FontAwesomeIcon className="fas" icon={faClock} />
+													&nbsp;Nutrition Plan Submitted
+												</p>
+												<p className="subtitle">
+													You have successfully submitted this nutrition plan to
+													our team. The estimated time until our team completes
+													your nutrition plan will take about <b>1 or 2 days</b>
+													. Please check back later.
+												</p>
+											</div>
+										</section>
+									</>
+								)}
 
-              {/*
+								{/*
                                       ---------------------------------------------
                                       Active Status GUI
                                       ---------------------------------------------
                                     */}
-              {datum.status === FITNESS_GOAL_STATUS_ACTIVE
-                && <>
-                  {/* Tab navigation */}
+								{datum.status === FITNESS_GOAL_STATUS_ACTIVE && (
+									<>
+										{/* Tab navigation */}
 
-                  <div class="tabs is-medium is-size-7-mobile">
-                    <ul>
-                      <li class="is-active">
-                        <Link><strong>Detail</strong></Link>
-                      </li>
-                      <li>
-                        <Link to={`/nutrition-plan/${datum.id}/submission-form`}>Submission Form</Link>
-                      </li>
-                    </ul>
-                  </div>
+										<div class="tabs is-medium is-size-7-mobile">
+											<ul>
+												<li class="is-active">
+													<Link>
+														<strong>Detail</strong>
+													</Link>
+												</li>
+												<li>
+													<Link
+														to={`/nutrition-plan/${datum.id}/submission-form`}>
+														Submission Form
+													</Link>
+												</li>
+											</ul>
+										</div>
 
-                  <p class="title is-6">META</p>
-                  <hr />
+										<p class="title is-6">META</p>
+										<hr />
 
-                  <DataDisplayRowText
-                    label="Name"
-                    value={datum.name}
-                  />
+										<DataDisplayRowText label="Name" value={datum.name} />
 
-                  <p class="title is-6 pt-5"><FontAwesomeIcon className="fas" icon={faIdCard} />&nbsp;DETAIL</p>
-                  <hr />
+										<p class="title is-6 pt-5">
+											<FontAwesomeIcon className="fas" icon={faIdCard} />
+											&nbsp;DETAIL
+										</p>
+										<hr />
 
-                  <DataDisplayRowText
-                    label="Instructions"
-                    value={datum.instructions}
-                    type="text_with_linebreaks"
-                  />
-                </>
-              }
+										<DataDisplayRowText
+											label="Instructions"
+											value={datum.instructions}
+											type="text_with_linebreaks"
+										/>
+									</>
+								)}
 
-              <div class="columns pt-5">
-                <div class="column is-half">
-                  <Link class="button is-fullwidth-mobile" to={`/nutrition-plans`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to nutrition plans</Link>
-                </div>
-                <div class="column is-half has-text-right">
-                  {datum.status === FITNESS_GOAL_STATUS_ACTIVE &&
-                    <Link to={`/nutrition-plan/${id}/update`} class="button is-warning is-fullwidth-mobile"><FontAwesomeIcon className="fas" icon={faPencil} />&nbsp;Edit & Re-request</Link>
-                  }
-                </div>
-              </div>
+								<div class="columns pt-5">
+									<div class="column is-half">
+										<Link
+											class="button is-hidden-touch"
+											to={`/nutrition-plans`}>
+											<FontAwesomeIcon className="fas" icon={faArrowLeft} />
+											&nbsp;Back to nutrition plans
+										</Link>
+										<Link
+											class="button is-fullwidth is-hidden-desktop"
+											to={`/nutrition-plans`}>
+											<FontAwesomeIcon className="fas" icon={faArrowLeft} />
+											&nbsp;Back to nutrition plans
+										</Link>
+									</div>
+									<div class="column is-half has-text-right">
+										{datum.status === FITNESS_GOAL_STATUS_ACTIVE && (
+											<>
+												<Link
+													class="button is-warning is-hidden-touch"
+													to={`/nutrition-plan/${id}/update`}>
+													<FontAwesomeIcon className="fas" icon={faPencil} />
+													&nbsp;Edit & Re-request
+												</Link>
+												<Link
+													class="button is-warning is-fullwidth is-hidden-desktop"
+													to={`/nutrition-plan/${id}/update`}>
+													<FontAwesomeIcon className="fas" icon={faPencil} />
+													&nbsp;Edit & Re-request
+												</Link>
+											</>
+										)}
+									</div>
+								</div>
 
-              {/*
+								{/*
                                       ---------------------------------------------
                                       Archived Status GUI
                                       ---------------------------------------------
                                     */}
-              {datum.status === FITNESS_GOAL_STATUS_ARCHIVED
-                && <>
-                  <section className="hero is-medium has-background-white-ter">
-                    <div className="hero-body">
-                      <p className="title">
-                        <FontAwesomeIcon className="fas" icon={faClock} />
-                        &nbsp;Nutrition Plan Archived
-                      </p>
-                      <p className="subtitle">
-                        This nutrition plan has been archived.
-                      </p>
-                    </div>
-                  </section>
-                </>
-              }
+								{datum.status === FITNESS_GOAL_STATUS_ARCHIVED && (
+									<>
+										<section className="hero is-medium has-background-white-ter">
+											<div className="hero-body">
+												<p className="title">
+													<FontAwesomeIcon className="fas" icon={faClock} />
+													&nbsp;Nutrition Plan Archived
+												</p>
+												<p className="subtitle">
+													This nutrition plan has been archived.
+												</p>
+											</div>
+										</section>
+									</>
+								)}
 
-              {/*
+								{/*
                                       ---------------------------------------------
                                       Error Status GUI
                                       ---------------------------------------------
                                     */}
-              {datum.status === FITNESS_GOAL_STATUS_ERROR
-                && <>
-                  <section className="hero is-medium has-background-white-ter">
-                    <div className="hero-body">
-                      <p className="title">
-                        <FontAwesomeIcon className="fas" icon={faClock} />
-                        &nbsp;Nutrition Plan Problem
-                      </p>
-                      <p className="subtitle">
-                        There appears to be an problem with your fitness plan submission. We are investigating and working through the issue. Please check in again in another day.
-                      </p>
-                    </div>
-                  </section>
-                </>
-              }
-            </div>}
-          </>
-        }
-      </div>
-    </Layout>
-  );
+								{datum.status === FITNESS_GOAL_STATUS_ERROR && (
+									<>
+										<section className="hero is-medium has-background-white-ter">
+											<div className="hero-body">
+												<p className="title">
+													<FontAwesomeIcon className="fas" icon={faClock} />
+													&nbsp;Nutrition Plan Problem
+												</p>
+												<p className="subtitle">
+													There appears to be an problem with your fitness plan
+													submission. We are investigating and working through
+													the issue. Please check in again in another day.
+												</p>
+											</div>
+										</section>
+									</>
+								)}
+							</div>
+						)}
+					</>
+				)}
+			</div>
+		</Layout>
+	);
 }
 
 export default MemberNutritionPlanDetail;

@@ -20,17 +20,19 @@ function MemberLeaderboardGlobalTabularListMobile(props) {
             {listRank && listRank.results && listRank.results.map(function (datum, i) {
                 return <div class="pb-2" key={`mobile_tablet_${datum.id}`}>
                     <strong>Place:</strong>&nbsp;
-                    #{datum.place}
+                    {datum.place}
                     <br />
                     <br />
                     <strong>Picture:</strong>&nbsp;
                     {datum.userAvatarObjectUrl
                         ?
-                        <figure class="image is-128x128">
+                        <figure class="figure-img is-128x128">
                             <img src={datum.userAvatarObjectUrl} />
                         </figure>
                         :
-                        <>None</>
+                        <figure class="figure-img is-128x128">
+                            <img src="/static/default_user.jpg" />
+                        </figure>
                     }
                     <br />
                     <br />

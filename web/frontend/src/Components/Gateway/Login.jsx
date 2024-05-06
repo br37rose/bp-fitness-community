@@ -249,13 +249,13 @@ function Login() {
 
   return (
     <>
-      <div class="container column is-12">
+      <div class="column is-12">
         {isFetching && <PageLoadingContent displayMessage={"Please wait..."} />}
         {!isFetching && (
-          <div class="section">
+          <div>
             <section class="hero is-fullheight">
               <div class="hero-body">
-                <div class="container">
+                <div class="container is-fluid">
                   <div class="columns is-centered">
                     <div class="column is-one-third-tablet">
                       <div class="box is-rounded">
@@ -345,13 +345,13 @@ function Login() {
                             )}
                           </div>
                           <br />
-                          <button
-                            class="button is-medium is-block is-fullwidth is-primary"
+                          <Link
+                            class="button is-fullwidth is-primary"
                             type="button"
                             onClick={onButtonClick}
                           >
                             Login <FontAwesomeIcon icon={faArrowRight} />
-                          </button>
+                          </Link>
                         </form>
                         <br />
                         <nav class="level">

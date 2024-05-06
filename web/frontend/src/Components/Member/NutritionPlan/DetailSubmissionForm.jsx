@@ -221,12 +221,6 @@ function MemberNutritionPlanSubmissionForm() {
 
     return (
         <Layout breadcrumbItems={breadcrumbItems}>
-            {/* Mobile Breadcrumbs */}
-            <nav class="breadcrumb is-hidden-desktop" aria-label="breadcrumbs">
-                <ul>
-                    <li class=""><Link to="/nutrition-plans" aria-current="page"><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Nutrition Plans</Link></li>
-                </ul>
-            </nav>
 
             {/* Modal */}
             <nav>
@@ -268,7 +262,7 @@ function MemberNutritionPlanSubmissionForm() {
                     <PageLoadingContent displayMessage={"Please wait..."} />
                     :
                     <>
-                        {datum && <div class="container" key={datum.id}>
+                        {datum && <div key={datum.id}>
                             {/*
                                       ---------------------------------------------
                                       Queue Status GUI
@@ -440,10 +434,14 @@ function MemberNutritionPlanSubmissionForm() {
 
                             <div class="columns pt-5">
                                 <div class="column is-half">
-                                    <Link class="button is-fullwidth-mobile" to={`/nutrition-plans`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to nutrition plans</Link>
-                                </div>
-                                <div class="column is-half has-text-right">
-
+                                    <Link
+													class="button is-hidden-touch"
+													to={`/nutrition-plans`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to nutrition plans
+												</Link>
+												<Link
+													class="button is-fullwidth is-hidden-desktop"
+													to={`/nutrition-plans`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to nutrition plans
+												</Link>
                                 </div>
                             </div>
 

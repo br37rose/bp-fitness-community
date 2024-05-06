@@ -61,7 +61,7 @@ function AdminDashboard() {
 
   return (
     <>
-      <div class="container">
+      <div class="container is-fluid">
         <section class="section">
           <nav class="breadcrumb" aria-label="breadcrumbs">
             <ul>

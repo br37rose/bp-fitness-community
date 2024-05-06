@@ -164,12 +164,12 @@ function PasswordReset() {
 
     return (
         <>
-            <div class="container column is-12">
+            <div class="column is-12">
                 <div class="section">
 
                     <section class="hero is-fullheight">
                         <div class="hero-body">
-                            <div class="container">
+                            <div class="container is-fluid">
                                 <div class="columns is-centered">
                                     <div class="column is-one-third-tablet">
                                         <div class="box is-rounded">

@@ -197,7 +197,7 @@ function MemberLeaderboardGlobalTabularListForChallenge() {
 
   return (
     <>
-      <div className="container">
+      <div className="container is-fluid">
         <section className="section">
           {/* Desktop Breadcrumbs */}
           <nav class="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
@@ -314,7 +314,7 @@ function MemberLeaderboardGlobalTabularListForChallenge() {
                 {listRank &&
                 listRank.results &&
                 (listRank.results.length > 0 || previousCursors.length > 0) ? (
-                  <div className="container">
+                  <div>
                     {/*
                             ##################################################################
                             EVERYTHING INSIDE HERE WILL ONLY BE DISPLAYED ON A DESKTOP SCREEN.

@@ -254,18 +254,30 @@ function AdminNutritionPlanList() {
               {/* Desktop Breadcrumbs */}
               <nav className="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
                 <ul>
-                  <li className="">
-                    <Link to="/dashboard" aria-current="page">
-                      <FontAwesomeIcon className="fas" icon={faGauge} />
-                      &nbsp;Dashboard
-                    </Link>
-                  </li>
-                  <li className="is-active">
-                    <Link aria-current="page">
-                      <FontAwesomeIcon className="fas" icon={faLeaf} />
-                      &nbsp;Nutrition Plans
-                    </Link>
-                  </li>
+                <li className="">
+                                <Link to="/admin/dashboard" aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faGauge} />
+                                &nbsp;Dashboard
+                                </Link>
+                            </li>
+                            <li class="">
+                                <Link to="/admin/members" aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faUsers} />
+                                &nbsp;Members
+                                </Link>
+                            </li>
+                            <li class="">
+                                <Link to={`/admin/member/${uid}`} aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faEye} />
+                                &nbsp;Detail
+                                </Link>
+                            </li>
+                            <li className="is-active">
+                                <Link aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faLeaf} />
+                                &nbsp;Nutritional Plans
+                                </Link>
+                            </li>
                 </ul>
               </nav>
 

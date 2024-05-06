@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router-dom";
 
 const Footer = () => {
   const [currentDateTime, setCurrentDateTime] = useState("");
+  
+  const location = useLocation();
+  const isindexPage = location.pathname === '/'
 
   useEffect(() => {
     // Function to update current date and time
@@ -32,11 +36,11 @@ const Footer = () => {
 
   return (
     <footer className="footer-main px-5 py-4" role="contentinfo">
-      <div className="container">
+      <div className="container is-fluid">
         <div className="columns is-flex-wrap-wrap">
           <div className="column is-half-desktop">
             <div className="copy-right">
-              <p className="is-size-7" id="currentDateTime">
+              <p className="is-size-7 lightGrey" id="currentDateTime">
                 {currentDateTime} in Ontario <br />
                 Developed by
                 <a
@@ -53,9 +57,9 @@ const Footer = () => {
           <div className="column is-half-desktop">
             <div className="is-flex-desktop is-justify-content-end">
               <div className="">
-                <p className="is-size-7 mr-5" id="siteInfo">
+                <p className="is-size-7 mr-5 lightGrey" id="siteInfo">
                   <a
-                    href="https://ipregnancy.ca/bprust/privacy-policy/"
+                    href="https://bp8.ca/privacy-policy/"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -68,7 +72,7 @@ const Footer = () => {
               </div>
               <div style={{ maxWidth: "210px" }}>
                 <a href="#" aria-label="F45 Training Logo">
-                  <img src="/static/footer.png" alt="F45 Training Logo" />
+                  <img src={isindexPage ? "/static/logo.png":"/static/footer.png"} alt="F45 Training Logo" />
                 </a>
               </div>
             </div>
