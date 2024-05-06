@@ -283,15 +283,8 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 				slog.Time("end_at", dp.EndAt),
 				slog.Int("status", int(dp.Status)),
 			)
-			// // STEP 1: Get our record.
-			// dp, err := impl.DataPointStorer.GetByCompositeKey(ctx, dataPoint.MetricID, dataPoint.Timestamp)
-			// if err != nil {
-			// 	impl.Logger.Error("failed checking by datapoint by composite key",
-			// 		slog.Any("error", err))
-			// 	return err
-			// }
 
-			// STEP 2: Update our Google Fit datapoint to be `active` status.
+			// Update our Google Fit datapoint to be `active` status.
 			dp.Status = gfdp_ds.StatusActive
 			if err := impl.GoogleFitDataPointStorer.UpdateByID(ctx, dp); err != nil {
 				impl.Logger.Error("failed updating google fit data point",
