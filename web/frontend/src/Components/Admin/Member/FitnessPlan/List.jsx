@@ -470,7 +470,7 @@ function AdminFitnessPlanList() {
                     <div class="tabs is-medium is-size-7-mobile">
                       <ul>
                         <li>
-                          <Link to={`/admin/member/${uid}/fitness-plans`}>
+                          <Link to={`/admin/member/${uid}`}>
                             Detail
                           </Link>
                         </li>

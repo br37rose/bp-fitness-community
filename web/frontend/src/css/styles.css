@@ -22,7 +22,7 @@ body {
 .heading,
 .modal-card-title,
 .menu-label {
-  font-family: "Azonix", sans-serif;
+  font-family: "Arial", sans-serif;
   color: #000000; }
 
 .subtitle,
@@ -160,7 +160,7 @@ p {
   left: 0; }
 
 .table thead th {
-  font-family: "Azonix", sans-serif; }
+  font-family: "Arial", sans-serif; }
 
 .table tbody td {
   font-family: "Open Sans", sans-serif; }
@@ -179,8 +179,8 @@ p {
   height: 53px; }
 
 .figure-img {
-  width: 64px;
-  height: 64px;
+  width: 44px;
+  height: 44px;
   display: block;
   overflow: hidden;
   border-radius: 50%; }
@@ -546,7 +546,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: "Azonix", sans-serif; }
+  font-family: "Arial", sans-serif; }
 
 code,
 pre {
@@ -7291,7 +7291,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   font-weight: 700 !important; }
 
 .is-family-primary {
-  font-family: "Azonix", sans-serif !important; }
+  font-family: "Arial", sans-serif !important; }
 
 .is-family-secondary {
   font-family: "Open Sans", sans-serif !important; }

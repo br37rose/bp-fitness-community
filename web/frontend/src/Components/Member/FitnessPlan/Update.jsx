@@ -281,7 +281,7 @@ function AdminFitnessPlanUpdate() {
 
                 {isFetching && <PageLoadingContent displayMessage={"Please wait..."} />}
 
-                <div class="container">
+                <div>
 
                     <p class="title is-6">META</p>
                     <hr />
@@ -568,12 +568,28 @@ function AdminFitnessPlanUpdate() {
 
                     <div class="columns pt-5">
                         <div class="column is-half">
-                            <button class="button is-medium is-fullwidth-mobile" onClick={(e) => setShowCancelWarning(true)}><FontAwesomeIcon className="fas" icon={faTimesCircle} />&nbsp;Cancel</button>
+                        <Link
+											class="button is-hidden-touch"
+											onClick={(e) => setShowCancelWarning(true)}><FontAwesomeIcon className="fas" icon={faTimesCircle} />&nbsp;Cancel
+										</Link>
+										<Link
+											class="button is-fullwidth is-hidden-desktop"
+											onClick={(e) => setShowCancelWarning(true)}><FontAwesomeIcon className="fas" icon={faTimesCircle} />&nbsp;Cancel
+										</Link>
                         </div>
                         <div class="column is-half has-text-right">
-                            <button class="button is-medium is-primary is-fullwidth-mobile" onClick={onSubmitClick}><FontAwesomeIcon className="fas" icon={faCheckCircle} />&nbsp;Save & Submit to Team</button>
+                        <Link
+											class="button is-success is-hidden-touch"
+											onClick={onSubmitClick}><FontAwesomeIcon className="fas" icon={faCheckCircle} />&nbsp;Save & Submit to Team
+										</Link>
+										<Link
+											class="button is-success is-fullwidth is-hidden-desktop"
+											onClick={onSubmitClick}><FontAwesomeIcon className="fas" icon={faCheckCircle} />&nbsp;Save & Submit to Team
+										</Link>
                         </div>
                     </div>
+
+                    
 
                 </div>
             </div>

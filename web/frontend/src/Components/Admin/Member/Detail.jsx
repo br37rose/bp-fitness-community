@@ -329,21 +329,24 @@ function AdminMemberDetail() {
                       <ul>
                         <li class="is-active">
                           <Link>
-                            <strong>Detail</strong>
+                            Detail
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/admin/member/${datum.id}/tags`}>
-                            Tags
+                          <Link to={`/admin/member/${datum.id}/tags`}>Tags</Link>
+                        </li>
+                        <li>
+                          <Link to={`/admin/member/${datum.id}/fitness-plans`}>Fitness Plans
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/admin/member/${datum.id}/fitness-plans`}>
-                            Fitness Plans
+                          <Link to={`/admin/member/${datum.id}/nutrition-plans`}>
+                            Nutrition Plans
                           </Link>
                         </li>
                       </ul>
                     </div>
+                    
 
                     <p class="subtitle is-6">
                       <FontAwesomeIcon className="fas" icon={faIdCard} />

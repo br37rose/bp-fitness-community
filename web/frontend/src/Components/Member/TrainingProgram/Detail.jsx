@@ -252,7 +252,7 @@ function MemberTPDetail() {
   }
 
   return (
-    <div className="container">
+    <div className="container is-fluid">
       <section className="section">
         <nav className="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
           <ul>

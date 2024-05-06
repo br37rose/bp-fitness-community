@@ -173,7 +173,7 @@ function AccountDetail() {
                     ?
                     <PageLoadingContent displayMessage={"Please wait..."} />
                     : <>
-                        {currentUser && <div class="container">
+                        {currentUser && <div class="container is-fluid">
 
                             {/* Tab Navigation */}
                             <div class="tabs is-medium is-size-7-mobile">
