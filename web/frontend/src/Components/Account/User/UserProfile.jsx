@@ -276,15 +276,19 @@ function UserProfile(props) {
                               <strong>Wearable Tech</strong>
                             </a>
                           </li>
-                          <li
-                            className={
-                              activeTab === "survey" ? "is-active" : ""
-                            }
-                          >
-                            <a onClick={() => setActiveTab("survey")}>
-                              <strong>Survey</strong>
-                            </a>
-                          </li>
+
+                          {currentUser.role !== 2 && (
+                            <li
+                              className={
+                                activeTab === "survey" ? "is-active" : ""
+                              }
+                            >
+                              <a onClick={() => setActiveTab("survey")}>
+                                <strong>Survey</strong>
+                              </a>
+                            </li>
+                          )}
+
                           <li
                             className={
                               activeTab === "subscription" ? "is-active" : ""

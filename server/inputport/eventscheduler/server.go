@@ -92,6 +92,10 @@ func (port *schedulerInputPort) Run() {
 	if err := port.RankPointScheduler.RunEveryMinuteRanking(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
+	if err := port.FitnessPlanScheduler.RunEveryMinuteUpdateFitnessPlans(); err != nil {
+		port.Logger.Error("UpdateFitnessPlans scheduler has error", slog.Any("err", err))
+	}
+
 }
 
 func (port *schedulerInputPort) Shutdown() {
