@@ -8,9 +8,6 @@ import {
   topAlertMessageState,
   topAlertStatusState,
   currentUserState,
-  questionnaireFilterStatus,
-  questionnaireFilterShowState,
-  questionnaireFilterSortState,
   quizAnswersState,
 } from "../../AppState";
 import PageLoadingContent from "../Reusable/PageLoadingContent";
@@ -28,11 +25,6 @@ function Survey() {
   const [topAlertStatus, setTopAlertStatus] =
     useRecoilState(topAlertStatusState);
   const [currentUser] = useRecoilState(currentUserState);
-  const [showFilter, setShowFilter] = useRecoilState(
-    questionnaireFilterShowState
-  ); // Filtering + Searching
-  const [status, setStatus] = useRecoilState(questionnaireFilterStatus);
-  const [sort, setSort] = useRecoilState(questionnaireFilterSortState);
 
   ////
   //// Component states.
