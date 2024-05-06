@@ -118,10 +118,8 @@ function AccountMoreLaunchpad() {
             {/* Bottom Navigation */}
             < div className="columns pt-5" >
                 <div className="column is-half">
-                    <Link className="button is-medium is-fullwidth-mobile" to={`/dashboard`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
-                </div>
-                <div className="column is-half has-text-right">
-
+                    <Link class="button is-hidden-touch" to={`/dashboard`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
+                    <Link to={`/dashboard`} class="button is-fullwidth is-hidden-desktop"><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
                 </div>
             </div >
         </div >

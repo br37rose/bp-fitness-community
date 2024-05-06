@@ -390,7 +390,7 @@ function AdminNutritionPlanList() {
             {listData &&
               listData.results &&
               (listData.results.length > 0 || previousCursors.length > 0) ? (
-              <div className="container">
+              <div>
 
                 {/*
                             ##################################################################
@@ -454,15 +454,33 @@ function AdminNutritionPlanList() {
         )}
 
         <div class="columns pt-5">
-          <div class="column is-half">
-            <Link class="button is-fullwidth-mobile" to={`/dashboard`}><FontAwesomeIcon className="fas" icon={faArrowLeft} />&nbsp;Back to Dashboard</Link>
-          </div>
-          <div class="column is-half has-text-right">
-            <Link to={`/nutrition-plans/add`} class="button is-success is-fullwidth-mobile">
+					<div class="column is-half">
+						<Link class="button is-hidden-touch" to={`/dashboard`}>
+							<FontAwesomeIcon className="fas" icon={faArrowLeft} />
+							&nbsp;Back to Dashboard
+						</Link>
+						<Link
+							class="button is-fullwidth is-hidden-desktop"
+							to={`/dashboard`}>
+							<FontAwesomeIcon className="fas" icon={faArrowLeft} />
+							&nbsp;Back to Dashboard
+						</Link>
+					</div>
+					<div class="column is-half has-text-right">
+						<Link
+							class="button is-success is-hidden-touch"
+							to={`/nutrition-plans/add`}
+>
               <FontAwesomeIcon className="fas" icon={faPlus} />&nbsp;Request Plan
             </Link>
-          </div>
-        </div>
+						<Link
+							class="button is-success is-fullwidth is-hidden-desktop"
+							to={`/nutrition-plans/add`}
+>
+              <FontAwesomeIcon className="fas" icon={faPlus} />&nbsp;Request Plan
+            </Link>
+					</div>
+				</div>
 
       </div>
     </Layout>

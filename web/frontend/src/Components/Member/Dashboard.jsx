@@ -926,7 +926,7 @@ function MemberDashboard() {
                       </div>
                     </div>
                     <div class="columns">
-                      <div class="column is-half">
+                      <div class="column">
                         <div class="box has-text-centered hero is-medium is-dark custom-hero">
                           <div class="hero-body">
                             <p class="title">
@@ -955,7 +955,7 @@ function MemberDashboard() {
                           </div>
                         </div>
                       </div>
-                      <div class="column is-half">
+                      {/* <div class="column">
                         <div class="box has-text-centered hero is-medium is-dark custom-hero">
                           <div class="hero-body">
                             <p class="title">
@@ -983,7 +983,7 @@ function MemberDashboard() {
                             </p>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </section>

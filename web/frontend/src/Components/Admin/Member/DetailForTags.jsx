@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import Scroll from 'react-scroll';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUsers, faTrash, faEye, faArrowRight, faTable, faRepeat, faTasks, faTachometer, faPlus, faArrowLeft, faCheckCircle, faUserCircle, faGauge, faPencil, faIdCard, faAddressBook, faContactCard, faChartPie, faKey } from '@fortawesome/free-solid-svg-icons'
+import { faUsers, faTrash, faEye, faArrowRight, faTable, faRepeat, faTasks, faTachometer, faPlus, faArrowLeft, faCheckCircle, faUserCircle, faGauge, faPencil, faIdCard, faAddressBook, faContactCard, faChartPie, faKey, faTag } from '@fortawesome/free-solid-svg-icons'
 import { useRecoilState } from 'recoil';
 
 import { getMemberDetailAPI, putMemberUpdateAPI } from "../../../API/member";
@@ -281,9 +281,30 @@ function AdminMemberTagList() {
                     {/* Desktop Breadcrumbs */}
                     <nav class="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
                         <ul>
-                            <li class=""><Link to="/admin/dashboard" aria-current="page"><FontAwesomeIcon className="fas" icon={faGauge} />&nbsp;Dashboard</Link></li>
-                            <li class=""><Link to="/admin/members" aria-current="page"><FontAwesomeIcon className="fas" icon={faUsers} />&nbsp;Members</Link></li>
-                            <li class="is-active"><Link aria-current="page"><FontAwesomeIcon className="fas" icon={faEye} />&nbsp;Detail</Link></li>
+                            <li className="">
+                                <Link to="/admin/dashboard" aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faGauge} />
+                                &nbsp;Dashboard
+                                </Link>
+                            </li>
+                            <li class="">
+                                <Link to="/admin/members" aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faUsers} />
+                                &nbsp;Members
+                                </Link>
+                            </li>
+                            <li class="">
+                                <Link to={`/admin/member/${id}`} aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faEye} />
+                                &nbsp;Detail
+                                </Link>
+                            </li>
+                            <li className="is-active">
+                                <Link aria-current="page">
+                                <FontAwesomeIcon className="fas" icon={faTag} />
+                                &nbsp;Tags
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
 
@@ -433,14 +454,14 @@ function AdminMemberTagList() {
                                         <li class="is-active">
                                             <Link><strong>Tags</strong></Link>
                                         </li>
-                                        {/*
+                                        
                                         <li>
                                             <Link to={`/admin/member/${datum.id}/fitness-plans`}>Fitness Plans</Link>
                                         </li>
                                         <li>
                                             <Link to={`/admin/member/${datum.id}/nutrition-plans`}>Nutrition Plans</Link>
                                         </li>
-                                        */}
+                                       
                                       </ul>
                                     </div>
 
