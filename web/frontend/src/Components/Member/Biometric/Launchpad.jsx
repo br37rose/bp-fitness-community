@@ -108,7 +108,7 @@ function MemberBiometricLaunchpad() {
             </p>
           </div>
         </section>
-        {/* <section class="hero is-medium is-dark">
+        <section class="hero is-medium is-dark">
               <div class="hero-body">
                 <p class="title">
                   <FontAwesomeIcon className="fas" icon={faChartLine} />&nbsp;My History
@@ -120,7 +120,7 @@ function MemberBiometricLaunchpad() {
                   <Link to={"/biometrics/history/tableview"}>View&nbsp;<FontAwesomeIcon className="fas" icon={faArrowRight} /></Link>
                 </p>
               </div>
-            </section> */}
+            </section>
 
       </div>
     </Layout>
