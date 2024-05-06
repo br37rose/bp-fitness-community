@@ -69,6 +69,8 @@ type RankPointStorer interface {
 	ListWithinPlaceAndMonth(ctx context.Context, MetricDataTypeNames []string, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
 	ListWithinPlaceAndYear(ctx context.Context, MetricDataTypeNames []string, function int8, period int8, start, end uint64) (*RankPointPaginationListResult, error)
 	UpdateByID(ctx context.Context, m *RankPoint) error
+	DeleteByID(ctx context.Context, id primitive.ObjectID) error
+	DeleteAll(ctx context.Context) error
 	//TODO: Add more...
 }
 

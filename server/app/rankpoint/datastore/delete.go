@@ -15,3 +15,11 @@ func (impl RankPointStorerImpl) DeleteByID(ctx context.Context, id primitive.Obj
 	}
 	return nil
 }
+
+func (impl RankPointStorerImpl) DeleteAll(ctx context.Context) error {
+	_, err := impl.Collection.DeleteMany(ctx, bson.M{})
+	if err != nil {
+		return err
+	}
+	return nil
+}

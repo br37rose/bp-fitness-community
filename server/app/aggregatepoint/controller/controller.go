@@ -83,6 +83,9 @@ func NewController(
 		AggregatePointStorer:     ap_storer,
 	}
 	s.Logger.Debug("aggregate point controller initialization started...")
+	// if err := ap_storer.DeleteAll(context.Background()); err != nil {
+	// 	panic(err)
+	// }
 	s.Logger.Debug("aggregate point controller initialized")
 	return s
 }

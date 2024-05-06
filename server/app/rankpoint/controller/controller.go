@@ -79,6 +79,9 @@ func NewController(
 		RankPointStorer:          rp_storer,
 	}
 	s.Logger.Debug("rank point controller initialization started...")
+	// if err := rp_storer.DeleteAll(context.Background()); err != nil {
+	// 	panic(err)
+	// }
 	s.Logger.Debug("rank point controller initialized")
 	return s
 }
