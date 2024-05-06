@@ -27,6 +27,7 @@ type eventSchedulerAdapter struct {
 	Redis     redis.UniversalClient
 	Scheduler gocron.Scheduler
 	Locker    gocron.Locker
+	Elector   *Elector
 }
 
 func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) EventSchedulerAdapter {
@@ -39,12 +40,16 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) EventSc
 		}
 		location, _ := time.LoadLocation("America/Toronto")
 
+		elector := NewElector(loggerp, redisClient)
+		elector.Start()
+
 		s, err := gocron.NewScheduler(
 			gocron.WithLocation(location),
 			gocron.WithLogger(
 				loggerp,
 			),
-			gocron.WithDistributedLocker(locker), //tODO: FIGURE THIS OUT
+			gocron.WithDistributedLocker(locker),
+			gocron.WithDistributedElector(elector),
 		)
 		if err != nil {
 			log.Fatalf("failed staring new scheduler with error: %v", err)
@@ -56,6 +61,7 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) EventSc
 			Redis:     redisClient,
 			Locker:    locker,
 			Scheduler: s,
+			Elector:   elector,
 		}
 	}
 	loggerp.Warn("redis not connected to scheduler")
