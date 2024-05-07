@@ -6,10 +6,10 @@ import {
   faTrash,
   faArrowLeft,
   faGauge,
-  faEye,
   faTable,
   faCalendarPlus,
   faEdit,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
@@ -209,6 +209,7 @@ function AdminTPDetailView() {
                 thumbnailUrl: exc.excercise.thumbnailUrl,
                 description: setInstruction(exc),
                 videoType: exc.excercise.videoType,
+                videoObjectUrl: exc.excercise.videoObjectUrl,
               }))
             : new Array(),
       })
@@ -377,12 +378,22 @@ function AdminTPDetailView() {
                           <div className="hero-body">
                             <p className="title">
                               <FontAwesomeIcon className="fas" icon={faTable} />
-                              &nbsp;No Workouts
+                              &nbsp;No Workouts Added in This Phase
                             </p>
                             <p className="subtitle">
-                              No workouts available in this phase. to get.Click
-                              edit workouts to get started creating your first
-                              workout.
+                              No workouts are available in this phase. Click
+                              &nbsp;
+                              <Link
+                                to={`/admin/training-program/${id}/edit`}
+                                className=" is-primary is-small is-fullwidth-mobile mr-2"
+                              >
+                                <FontAwesomeIcon
+                                  className="mdi"
+                                  icon={faEdit}
+                                />
+                                &nbsp;Edit
+                              </Link>
+                              to get started adding workouts to this phase.
                             </p>
                           </div>
                         </section>
