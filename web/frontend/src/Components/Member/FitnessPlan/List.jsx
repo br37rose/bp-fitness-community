@@ -518,7 +518,7 @@ function AdminFitnessPlanList() {
             {listData &&
             listData.results &&
             (listData.results.length > 0 || previousCursors.length > 0) ? (
-              <div className="container">
+              <div>
                 {/*
                             ##################################################################
                             EVERYTHING INSIDE HERE WILL ONLY BE DISPLAYED ON A DESKTOP SCREEN.

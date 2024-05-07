@@ -359,16 +359,21 @@ function AccountTagList() {
             </nav>
             {/* Title + Options */}
             {currentUser && <div class="columns">
-                <div class="column">
-
-                </div>
                 <div class="column has-text-right">
-                    <Link onClick={(e) => setShowAddModal(true)} class="button is-medium is-success is-fullwidth-mobile" type="button">
+
+                    <Link class="button is-success is-hidden-touch" onClick={(e) => setShowAddModal(true)}
+>
                         <FontAwesomeIcon className="mdi" icon={faPlus} />&nbsp;New Tag
-                    </Link>
+							</Link>
+							<Link
+								class="button is-success is-fullwidth is-hidden-desktop"
+								onClick={(e) => setShowAddModal(true)}
+>
+                        <FontAwesomeIcon className="mdi" icon={faPlus} />&nbsp;New Tag
+							</Link>
                 </div>
             </div>}
-            {currentUser && <div class="container">
+            {currentUser && <div>
 
                 {currentUser.tags !== undefined && currentUser.tags !== null && currentUser.tags !== "" && currentUser.tags.length > 0
                     ?

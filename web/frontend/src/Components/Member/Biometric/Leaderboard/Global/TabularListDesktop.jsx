@@ -32,16 +32,18 @@ function MemberLeaderboardGlobalTabularListDesktop(props) {
                 return (
                   <tr key={`desktop_${datum.id}`}>
                     <td data-label="Timestamp">
-                        #{datum.place}
+                        {datum.place}
                     </td>
                     <td data-label="Picture">
                         {datum.userAvatarObjectUrl
                             ?
-                            <figure class="image is-128x128">
+                            <figure class="figure-img is-128x128">
                                 <img src={datum.userAvatarObjectUrl} />
                             </figure>
                             :
-                            <>None</>
+                            <figure class="figure-img is-128x128">
+                                <img src="/static/default_user.jpg" />
+                            </figure>
                         }
                     </td>
                     <td data-label="First Name">

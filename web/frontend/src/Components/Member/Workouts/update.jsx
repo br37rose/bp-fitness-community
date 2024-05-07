@@ -307,7 +307,7 @@ function MemberWorkoutEdit() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="container">
+      <div className="container is-fluid">
         <section className="section">
           <div className="box">
             <p className="title is-4">
@@ -324,7 +324,7 @@ function MemberWorkoutEdit() {
               <PageLoadingContent displayMessage={"Please wait..."} />
             ) : (
               <>
-                <div className="container">
+                <div className="container is-fluid">
                   <div className="columns">
                     <div className="column">
                       <FormTextareaField

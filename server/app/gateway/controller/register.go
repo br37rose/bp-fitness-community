@@ -61,8 +61,8 @@ func (impl *GatewayControllerImpl) MemberRegister(ctx context.Context, req *Memb
 	req.Email = strings.ToLower(req.Email)
 	req.Password = strings.ReplaceAll(req.Password, " ", "")
 
-	impl.Kmutex.Lockf("REGISTRATION-EMAIL-%v", req.Email)
-	defer impl.Kmutex.Unlockf("REGISTRATION-EMAIL-%v", req.Email)
+	impl.DistributedMutex.Lockf(ctx, "REGISTRATION-EMAIL-%v", req.Email)
+	defer impl.DistributedMutex.Unlockf(ctx, "REGISTRATION-EMAIL-%v", req.Email)
 
 	////
 	//// Start the transaction.

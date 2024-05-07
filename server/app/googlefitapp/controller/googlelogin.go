@@ -55,8 +55,8 @@ func (impl *GoogleFitAppControllerImpl) GetGoogleLoginURL(ctx context.Context) (
 
 func (impl *GoogleFitAppControllerImpl) setCodeVerifier(ctx context.Context, userID primitive.ObjectID, oauthState string) error {
 	impl.Logger.DebugContext(ctx, "locking code verifier", slog.String("func", "setCodeVerifier"))
-	impl.Kmutex.Lock("google-code-verifier")
-	defer impl.Kmutex.Unlock("google-code-verifier")
+	impl.DistributedMutex.Lock(ctx, "google-code-verifier")
+	defer impl.DistributedMutex.Unlock(ctx, "google-code-verifier")
 	defer impl.Logger.DebugContext(ctx, "unlocking code verifier", slog.String("func", "setCodeVerifier"))
 
 	var codeVerifierMap map[string]primitive.ObjectID
@@ -86,8 +86,8 @@ func (impl *GoogleFitAppControllerImpl) setCodeVerifier(ctx context.Context, use
 
 func (impl *GoogleFitAppControllerImpl) searchForUserIdFromCodeVerifier(ctx context.Context, oauthState string) (primitive.ObjectID, error) {
 	impl.Logger.DebugContext(ctx, "locking code verifier", slog.String("func", "searchForUserIdFromCodeVerifier"))
-	impl.Kmutex.Lock("google-code-verifier")
-	defer impl.Kmutex.Unlock("google-code-verifier")
+	impl.DistributedMutex.Lock(ctx, "google-code-verifier")
+	defer impl.DistributedMutex.Unlock(ctx, "google-code-verifier")
 	defer impl.Logger.DebugContext(ctx, "unlocked code verifier", slog.String("func", "searchForUserIdFromCodeVerifier"))
 
 	var codeVerifierMap map[string]primitive.ObjectID

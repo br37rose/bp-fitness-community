@@ -8,10 +8,21 @@ import {
   faEye,
   faArrowRight,
   faTable,
+  faRepeat,
+  faTasks,
+  faTachometer,
   faPlus,
   faArrowLeft,
+  faCheckCircle,
+  faUserCircle,
   faGauge,
   faPencil,
+  faIdCard,
+  faAddressBook,
+  faContactCard,
+  faChartPie,
+  faKey,
+  faTag,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -19,8 +30,26 @@ import { getMemberDetailAPI, putMemberUpdateAPI } from "../../../API/member";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import FormInputField from "../../Reusable/FormInputField";
 import FormTextareaField from "../../Reusable/FormTextareaField";
-import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
+import FormRadioField from "../../Reusable/FormRadioField";
+import FormMultiSelectField from "../../Reusable/FormMultiSelectField";
+import FormSelectField from "../../Reusable/FormSelectField";
+import FormCheckboxField from "../../Reusable/FormCheckboxField";
+import FormCountryField from "../../Reusable/FormCountryField";
+import FormRegionField from "../../Reusable/FormRegionField";
+import {
+  topAlertMessageState,
+  topAlertStatusState,
+  datumState,
+} from "../../../AppState";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
+import {
+  SUBSCRIPTION_STATUS_WITH_EMPTY_OPTIONS,
+  SUBSCRIPTION_TINTERVAL_WITH_EMPTY_OPTIONS,
+} from "../../../Constants/FieldOptions";
+import FormTextRow from "../../Reusable/FormTextRow";
+import FormTextTagRow from "../../Reusable/FormTextTagRow";
+import FormTextYesNoRow from "../../Reusable/FormTextYesNoRow";
+import FormTextOptionRow from "../../Reusable/FormTextOptionRow";
 
 function AdminMemberTagList() {
   ////
@@ -102,6 +131,8 @@ function AdminMemberTagList() {
   };
 
   const onEditButtonClick = () => {
+    console.log("onEditButtonClick: Beginning...");
+
     // Create a copy of our current logged in user and add in `tags` field
     // if it was not previously created.
     let modifiedMember = { ...datum };
@@ -123,6 +154,9 @@ function AdminMemberTagList() {
 
     // Update the user account.
     modifiedMember.tags = updatedTags;
+
+    // For debugging purposes only.
+    console.log("Modified Current User:", modifiedMember);
 
     // Make API call.
     onUpdateMember(
@@ -146,6 +180,9 @@ function AdminMemberTagList() {
 
     // Update the user account.
     modifiedMember.tags = updatedTags;
+
+    // For debugging purposes only.
+    console.log("Modified Current User:", modifiedMember);
 
     // Make API call.
     onUpdateMember(
@@ -193,10 +230,12 @@ function AdminMemberTagList() {
   // --- Detail --- //
 
   function onAccountDetailSuccess(response) {
+    console.log("onAccountDetailSuccess: Starting...");
     setDatum(response);
   }
 
   function onAccountDetailError(apiErr) {
+    console.log("onAccountDetailError: Starting...");
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -207,16 +246,27 @@ function AdminMemberTagList() {
   }
 
   function onAccountDetailDone() {
+    console.log("onAccountDetailDone: Starting...");
     setFetching(false);
   }
 
   // --- Update --- //
 
   function onAccountUpdateSuccess(response) {
+    // For debugging purposes only.
+    console.log("onAccountUpdateSuccess: Starting...");
+    console.log(response);
+
     // Add a temporary banner message in the app and then clear itself after 2 seconds.
     setTopAlertMessage("Account updated");
     setTopAlertStatus("success");
     setTimeout(() => {
+      console.log("onAccountUpdateSuccess: Delayed for 2 seconds.");
+      console.log(
+        "onAccountUpdateSuccess: topAlertMessage, topAlertStatus:",
+        topAlertMessage,
+        topAlertStatus
+      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -230,12 +280,19 @@ function AdminMemberTagList() {
   }
 
   function onAccountUpdateError(apiErr) {
+    console.log("onAccountUpdateError: Starting...");
     setErrors(apiErr);
 
     // Add a temporary banner message in the app and then clear itself after 2 seconds.
     setTopAlertMessage("Failed submitting");
     setTopAlertStatus("danger");
     setTimeout(() => {
+      console.log("onAccountUpdateError: Delayed for 2 seconds.");
+      console.log(
+        "onAccountUpdateError: topAlertMessage, topAlertStatus:",
+        topAlertMessage,
+        topAlertStatus
+      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -247,6 +304,7 @@ function AdminMemberTagList() {
   }
 
   function onAccountUpdateDone() {
+    console.log("onAccountUpdateDone: Starting...");
     setFetching(false);
   }
 
@@ -289,7 +347,7 @@ function AdminMemberTagList() {
           {/* Desktop Breadcrumbs */}
           <nav class="breadcrumb is-hidden-touch" aria-label="breadcrumbs">
             <ul>
-              <li class="">
+              <li className="">
                 <Link to="/admin/dashboard" aria-current="page">
                   <FontAwesomeIcon className="fas" icon={faGauge} />
                   &nbsp;Dashboard
@@ -301,10 +359,16 @@ function AdminMemberTagList() {
                   &nbsp;Members
                 </Link>
               </li>
-              <li class="is-active">
-                <Link aria-current="page">
+              <li class="">
+                <Link to={`/admin/member/${id}`} aria-current="page">
                   <FontAwesomeIcon className="fas" icon={faEye} />
                   &nbsp;Detail
+                </Link>
+              </li>
+              <li className="is-active">
+                <Link aria-current="page">
+                  <FontAwesomeIcon className="fas" icon={faTag} />
+                  &nbsp;Tags
                 </Link>
               </li>
             </ul>
@@ -520,18 +584,22 @@ function AdminMemberTagList() {
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/admin/member/${id}/profile`}>
-                            <strong>Profile</strong>
+                          <Link to={`/admin/member/${datum.id}/profile`}>
+                            Profile
                           </Link>
                         </li>
-                        {/*
-                                        <li>
-                                            <Link to={`/admin/member/${datum.id}/fitness-plans`}>Fitness Plans</Link>
-                                        </li>
-                                        <li>
-                                            <Link to={`/admin/member/${datum.id}/nutrition-plans`}>Nutrition Plans</Link>
-                                        </li>
-                                        */}
+                        <li>
+                          <Link to={`/admin/member/${datum.id}/fitness-plans`}>
+                            Fitness Plans
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to={`/admin/member/${datum.id}/nutrition-plans`}
+                          >
+                            Nutrition Plans
+                          </Link>
+                        </li>
                       </ul>
                     </div>
 

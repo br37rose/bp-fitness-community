@@ -36,8 +36,8 @@ func (impl *AggregatePointControllerImpl) AggregateForAllActiveGoogleFitApps(ctx
 	return nil
 }
 func (impl *AggregatePointControllerImpl) AggregateForGoogleFitAppID(ctx context.Context, gfaID primitive.ObjectID) error {
-	impl.Kmutex.Lockf("gfa_%v", gfaID.Hex())
-	defer impl.Kmutex.Unlockf("gfa_%v", gfaID.Hex())
+	impl.DistributedMutex.Lockf(ctx, "gfa_%v", gfaID.Hex())
+	defer impl.DistributedMutex.Unlockf(ctx, "gfa_%v", gfaID.Hex())
 
 	gfa, err := impl.GoogleFitAppStorer.GetByID(ctx, gfaID)
 	if err != nil {

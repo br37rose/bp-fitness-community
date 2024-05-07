@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedlocker"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedmutex"
 	pm "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/paymentprocessor/stripe"
 	s3_storage "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/storage/s3"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/templatedemailer"
@@ -22,7 +22,6 @@ import (
 	user_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/jwt"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/kmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/password"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/provider/uuid"
 )
@@ -57,8 +56,7 @@ type GatewayControllerImpl struct {
 	Cache              mongodbcache.Cacher
 	S3                 s3_storage.S3Storager
 	DbClient           *mongo.Client
-	Kmutex             kmutex.Provider
-	Locker             distributedlocker.Adapter
+	DistributedMutex   distributedmutex.Adapter
 	TemplatedEmailer   templatedemailer.TemplatedEmailer
 	PaymentProcessor   pm.PaymentProcessor
 	UserStorer         user_s.UserStorer
@@ -75,8 +73,7 @@ func NewController(
 	cache mongodbcache.Cacher,
 	s3 s3_storage.S3Storager,
 	client *mongo.Client,
-	kmux kmutex.Provider,
-	dloc distributedlocker.Adapter,
+	dmux distributedmutex.Adapter,
 	te templatedemailer.TemplatedEmailer,
 	paymentProcessor pm.PaymentProcessor,
 	rp_storer rp_s.RankPointStorer,
@@ -93,8 +90,7 @@ func NewController(
 		Cache:              cache,
 		TemplatedEmailer:   te,
 		DbClient:           client,
-		Kmutex:             kmux,
-		Locker:             dloc,
+		DistributedMutex:   dmux,
 		PaymentProcessor:   paymentProcessor,
 		RankPointStorer:    rp_storer,
 		UserStorer:         usr_storer,

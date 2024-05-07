@@ -35,8 +35,8 @@ func (c *RankPointControllerImpl) ListByFilter(ctx context.Context, f *c_s.RankP
 	// Iterate through all the rankings and if a s3 url expires then refresh.
 	for _, rp := range list.Results {
 		if rp.UserAvatarObjectKey != "" && time.Now().After(rp.UserAvatarObjectExpiry) {
-			c.Kmutex.Lockf("rankpoint_%v", rp.ID.Hex())         // Step 1
-			defer c.Kmutex.Unlockf("rankpoint_%v", rp.ID.Hex()) // Step 2
+			c.DistributedMutex.Lockf(ctx, "rankpoint_%v", rp.ID.Hex())         // Step 1
+			defer c.DistributedMutex.Unlockf(ctx, "rankpoint_%v", rp.ID.Hex()) // Step 2
 
 			u, err := c.UserStorer.GetByID(ctx, rp.UserID)
 			if err != nil {

@@ -168,7 +168,7 @@ function UserProfile(props) {
         return <AccountFriendList />;
       case "wearableTech":
         return <AccountWearableTechLaunchpad />;
-      case "survey":
+      case "profile":
         return <Survey />;
       case "subscription":
         return <AccountSubscriptionDetailAndCancel />;
@@ -276,15 +276,18 @@ function UserProfile(props) {
                               <strong>Wearable Tech</strong>
                             </a>
                           </li>
-                          <li
-                            className={
-                              activeTab === "survey" ? "is-active" : ""
-                            }
-                          >
-                            <a onClick={() => setActiveTab("survey")}>
-                              <strong>Survey</strong>
-                            </a>
-                          </li>
+
+                          {currentUser.role !== 2 && (
+                            <li
+                              className={
+                                activeTab === "profile" ? "is-active" : ""
+                              }
+                            >
+                              <a onClick={() => setActiveTab("profile")}>
+                                <strong>Profile</strong>
+                              </a>
+                            </li>
+                          )}
                           <li
                             className={
                               activeTab === "subscription" ? "is-active" : ""

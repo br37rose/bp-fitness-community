@@ -32,8 +32,8 @@ func (impl *GoogleFitAppControllerImpl) RefreshTokensFromGoogle() error {
 
 func (impl *GoogleFitAppControllerImpl) refreshTokenFromGoogle(ctx context.Context, gfaID primitive.ObjectID) error {
 	// Lock this google fit app
-	impl.Kmutex.Lockf("googlefitapp_%v", gfaID.Hex())
-	defer impl.Kmutex.Unlockf("googlefitapp_%v", gfaID.Hex())
+	impl.DistributedMutex.Lockf(ctx, "googlefitapp_%v", gfaID.Hex())
+	defer impl.DistributedMutex.Unlockf(ctx, "googlefitapp_%v", gfaID.Hex())
 
 	impl.Logger.Debug("checking gfa",
 		slog.String("gfa_id", gfaID.Hex()))

@@ -59,6 +59,8 @@ type AggregatePointStorer interface {
 	Create(ctx context.Context, m *AggregatePoint) error
 	ListByFilter(ctx context.Context, f *AggregatePointPaginationListFilter) (*AggregatePointPaginationListResult, error)
 	UpdateByID(ctx context.Context, m *AggregatePoint) error
+	DeleteByID(ctx context.Context, id primitive.ObjectID) error
+	DeleteAll(ctx context.Context) error
 	//TODO: Add more...
 }
 

@@ -9,7 +9,7 @@ package main
 import (
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cloudprovider/google"
-	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedlocker"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/distributedmutex"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/emailer/mailgun"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/eventscheduler"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/openai"
@@ -129,22 +129,22 @@ func InitializeEvent() Application {
 	client := mongodb.NewProvider(conf, slogLogger)
 	cacher := mongodbcache.NewCache(conf, slogLogger, client)
 	s3Storager := s3.NewStorage(conf, slogLogger, provider)
-	kmutexProvider := kmutex.NewProvider()
 	universalClient := redis.NewProvider(conf, slogLogger)
-	adapter := distributedlocker.NewAdapter(slogLogger, universalClient)
+	adapter := distributedmutex.NewAdapter(slogLogger, universalClient)
 	emailer := mailgun.NewEmailer(conf, slogLogger, provider)
 	templatedEmailer := templatedemailer.NewTemplatedEmailer(conf, slogLogger, provider, emailer)
 	paymentProcessor := stripe.NewPaymentProcessor(conf, slogLogger, provider)
 	rankPointStorer := datastore.NewDatastore(conf, slogLogger, client)
 	userStorer := datastore2.NewDatastore(conf, slogLogger, client)
 	organizationStorer := datastore3.NewDatastore(conf, slogLogger, client)
-	gatewayController := controller.NewController(conf, slogLogger, provider, jwtProvider, passwordProvider, cacher, s3Storager, client, kmutexProvider, adapter, templatedEmailer, paymentProcessor, rankPointStorer, userStorer, organizationStorer)
+	gatewayController := controller.NewController(conf, slogLogger, provider, jwtProvider, passwordProvider, cacher, s3Storager, client, adapter, templatedEmailer, paymentProcessor, rankPointStorer, userStorer, organizationStorer)
 	middlewareMiddleware := middleware.NewMiddleware(conf, slogLogger, provider, timeProvider, jwtProvider, gatewayController)
 	handler := httptransport.NewHandler(slogLogger, gatewayController)
 	userController := controller2.NewController(conf, slogLogger, provider, client, passwordProvider, userStorer)
 	httptransportHandler := httptransport2.NewHandler(slogLogger, userController)
 	organizationController := controller3.NewController(conf, slogLogger, provider, passwordProvider, s3Storager, client, templatedEmailer, organizationStorer, userStorer)
 	handler2 := httptransport3.NewHandler(slogLogger, organizationController)
+	kmutexProvider := kmutex.NewProvider()
 	tagStorer := datastore4.NewDatastore(conf, slogLogger, client)
 	tagController := controller4.NewController(conf, slogLogger, provider, s3Storager, passwordProvider, kmutexProvider, client, templatedEmailer, userStorer, tagStorer)
 	handler3 := httptransport4.NewHandler(slogLogger, tagController)
@@ -191,15 +191,15 @@ func InitializeEvent() Application {
 	googleFitAppStorer := datastore18.NewDatastore(conf, slogLogger, client)
 	dataPointStorer := datastore19.NewDatastore(conf, slogLogger, client)
 	aggregatePointStorer := datastore20.NewDatastore(conf, slogLogger, client)
-	googleFitAppController := controller17.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, googleCloudPlatformAdapter, organizationStorer, googleFitDataPointStorer, googleFitAppStorer, userStorer, dataPointStorer, aggregatePointStorer)
+	googleFitAppController := controller17.NewController(conf, slogLogger, provider, client, cacher, adapter, googleCloudPlatformAdapter, organizationStorer, googleFitDataPointStorer, googleFitAppStorer, userStorer, dataPointStorer, aggregatePointStorer)
 	handler14 := httptransport15.NewHandler(slogLogger, googleFitAppController)
 	dataPointController := controller18.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, userStorer, dataPointStorer)
 	handler15 := httptransport16.NewHandler(slogLogger, dataPointController)
-	aggregatePointController := controller19.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, organizationStorer, userStorer, googleFitAppStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer)
+	aggregatePointController := controller19.NewController(conf, slogLogger, provider, client, cacher, adapter, organizationStorer, userStorer, googleFitAppStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer)
 	handler16 := httptransport17.NewHandler(slogLogger, aggregatePointController)
-	rankPointController := controller20.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, userStorer, googleFitAppStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
+	rankPointController := controller20.NewController(conf, slogLogger, provider, client, cacher, adapter, s3Storager, organizationStorer, userStorer, googleFitAppStorer, googleFitDataPointStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	handler17 := httptransport18.NewHandler(slogLogger, rankPointController)
-	biometricController := controller21.NewController(conf, slogLogger, provider, client, cacher, kmutexProvider, s3Storager, organizationStorer, userStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
+	biometricController := controller21.NewController(conf, slogLogger, provider, client, cacher, adapter, s3Storager, organizationStorer, userStorer, dataPointStorer, aggregatePointStorer, rankPointStorer)
 	handler18 := httptransport19.NewHandler(slogLogger, biometricController)
 	trainingProgramStorer := datastore21.NewDatastore(conf, slogLogger, client)
 	workoutStorer := datastore22.NewDatastore(conf, slogLogger, client)

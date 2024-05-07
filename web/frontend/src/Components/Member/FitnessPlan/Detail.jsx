@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -275,12 +275,12 @@ function MemberFitnessPlanDetail() {
         ) : (
           <>
             {datum && (
-              <div class="container" key={datum.id}>
+              <div key={datum.id}>
                 {/*
-                                      ---------------------------------------------
-                                      Queue Status GUI
-                                      ---------------------------------------------
-                                    */}
+                  ---------------------------------------------
+                  Queue Status GUI
+                  ---------------------------------------------
+                */}
                 {(datum.status === FITNESS_GOAL_STATUS_QUEUED ||
                   datum.status === FITNESS_GOAL_STATUS_IN_PROGRESS ||
                   datum.status === FITNESS_GOAL_STATUS_PENDING) && (
@@ -303,10 +303,10 @@ function MemberFitnessPlanDetail() {
                 )}
 
                 {/*
-                                      ---------------------------------------------
-                                      Active Status GUI
-                                      ---------------------------------------------
-                                    */}
+                  ---------------------------------------------
+                  Active Status GUI
+                  ---------------------------------------------
+                */}
                 {datum.status === FITNESS_GOAL_STATUS_ACTIVE && (
                   <>
                     {/* Tab navigation */}
@@ -363,8 +363,12 @@ function MemberFitnessPlanDetail() {
 
                 <div class="columns pt-5">
                   <div class="column is-half">
+                    <Link class="button is-hidden-touch" to={`/fitness-plans`}>
+                      <FontAwesomeIcon className="fas" icon={faArrowLeft} />
+                      &nbsp;Back to fitness plans
+                    </Link>
                     <Link
-                      class="button is-fullwidth-mobile"
+                      class="button is-fullwidth is-hidden-desktop"
                       to={`/fitness-plans`}
                     >
                       <FontAwesomeIcon className="fas" icon={faArrowLeft} />
@@ -372,23 +376,28 @@ function MemberFitnessPlanDetail() {
                     </Link>
                   </div>
                   <div class="column is-half has-text-right">
-                    {datum.status === FITNESS_GOAL_STATUS_ACTIVE && (
-                      <Link
-                        to={`/fitness-plan/${id}/update`}
-                        class="button is-warning is-fullwidth-mobile"
-                      >
-                        <FontAwesomeIcon className="fas" icon={faPencil} />
-                        &nbsp;Edit & Re-request
-                      </Link>
-                    )}
+                    <Link
+                      class="button is-success is-hidden-touch"
+                      to={`/fitness-plan/${id}/update`}
+                    >
+                      <FontAwesomeIcon className="fas" icon={faPencil} />
+                      &nbsp;Edit & Re-request
+                    </Link>
+                    <Link
+                      class="button is-success is-fullwidth is-hidden-desktop"
+                      to={`/fitness-plan/${id}/update`}
+                    >
+                      <FontAwesomeIcon className="fas" icon={faPencil} />
+                      &nbsp;Edit & Re-request
+                    </Link>
                   </div>
                 </div>
 
                 {/*
-                                      ---------------------------------------------
-                                      Archived Status GUI
-                                      ---------------------------------------------
-                                    */}
+                  ---------------------------------------------
+                  Archived Status GUI
+                  ---------------------------------------------
+                */}
                 {datum.status === FITNESS_GOAL_STATUS_ARCHIVED && (
                   <>
                     <section className="hero is-medium has-background-white-ter">
@@ -406,10 +415,10 @@ function MemberFitnessPlanDetail() {
                 )}
 
                 {/*
-                                      ---------------------------------------------
-                                      Error Status GUI
-                                      ---------------------------------------------
-                                    */}
+                  ---------------------------------------------
+                  Error Status GUI
+                  ---------------------------------------------
+                */}
                 {datum.status === FITNESS_GOAL_STATUS_ERROR && (
                   <>
                     <section className="hero is-medium has-background-white-ter">

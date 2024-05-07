@@ -154,7 +154,7 @@ function MemberWorkoutDetail() {
 
   return (
     <>
-      <div class="container">
+      <div class="container is-fluid">
         <section class="section">
           {/* Desktop Breadcrumbs */}
           <nav class="breadcrumb is-hidden-touch" aria-label="breadcrumbs">

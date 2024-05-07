@@ -153,7 +153,7 @@ function AccountChangePassword() {
                     <PageLoadingContent displayMessage={"Submitting..."} />
                     :
                     <>
-                        <div class="container">
+                        <div class="container is-fluid">
 
                             <p class="subtitle is-6"><FontAwesomeIcon className="fas" icon={faKey} />&nbsp;Change Password</p>
                             <hr />

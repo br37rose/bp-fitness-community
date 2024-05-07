@@ -309,9 +309,7 @@ function AdminMemberDetail() {
                     <div class="tabs is-medium is-size-7-mobile">
                       <ul>
                         <li class="is-active">
-                          <Link>
-                            <strong>Detail</strong>
-                          </Link>
+                          <Link>Detail</Link>
                         </li>
                         <li>
                           <Link to={`/admin/member/${datum.id}/tags`}>
@@ -326,6 +324,13 @@ function AdminMemberDetail() {
                         <li>
                           <Link to={`/admin/member/${datum.id}/fitness-plans`}>
                             Fitness Plans
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to={`/admin/member/${datum.id}/nutrition-plans`}
+                          >
+                            Nutrition Plans
                           </Link>
                         </li>
                       </ul>

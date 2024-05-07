@@ -222,7 +222,7 @@ function MemberLeaderboardGlobalTabularList() {
 
     return (
     <>
-        <div className="container">
+        <div className="container is-fluid">
             <section className="section">
 
               {/* Desktop Breadcrumbs */}
@@ -334,7 +334,7 @@ function MemberLeaderboardGlobalTabularList() {
                     {listRank &&
                     listRank.results &&
                     (listRank.results.length > 0 || previousCursors.length > 0) ? (
-                      <div className="container">
+                      <div>
                         <div class="column has-text-right">
                             <Link class="button is-small" type="button" to="/biometrics/history/tableview">
                                 <FontAwesomeIcon className="mdi" icon={faTable} />
