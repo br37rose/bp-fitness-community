@@ -54,13 +54,15 @@ func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
 		RetryStrategy: backoff,
 	})
 	if err == redislock.ErrNotObtained {
-		a.Logger.Error("Could not obtain lock!")
+		a.Logger.Error("could not obtain lock!")
 	} else if err != nil {
 		a.Logger.Error("failed obtaining lock because of the following error: %v", err)
 		return
 	}
 
-	a.LockInstances[k] = lock
+	if a.LockInstances != nil { // Defensive code.
+		a.LockInstances[k] = lock
+	}
 }
 
 // Lockf function blocks the current thread if the lock key is currently locked.
