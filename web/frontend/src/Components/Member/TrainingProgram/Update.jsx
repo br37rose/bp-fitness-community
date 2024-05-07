@@ -13,6 +13,7 @@ import {
   faArrowUpRightFromSquare,
   faEdit,
   faCalendarPlus,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
@@ -105,6 +106,7 @@ function MemberTPUpdate() {
       mounted = false;
     };
   }, [id]);
+  console.log("selected phase", selectedPhase);
 
   // Delete
   function handleDeleteConfirmButtonClick() {
@@ -525,11 +527,22 @@ function MemberTPUpdate() {
                           <div className="hero-body">
                             <p className="title">
                               <FontAwesomeIcon className="fas" icon={faTable} />
-                              &nbsp;No Workouts
+                              &nbsp;No Workouts Added in This Phase
                             </p>
                             <p className="subtitle">
-                              No workouts available in this phase. to get.Click
-                              add workouts started creating your first workout.
+                              No workouts are available in this phase. Click
+                              &nbsp;
+                              <Link
+                                className=" is-primary is-small is-fullwidth-mobile mr-2"
+                                onClick={() => setShowAddWorkoutModal(true)}
+                              >
+                                <FontAwesomeIcon
+                                  className="mdi"
+                                  icon={faArrowRight}
+                                />
+                                &nbsp;here
+                              </Link>
+                              to get started adding workouts to this phase.
                             </p>
                           </div>
                         </section>

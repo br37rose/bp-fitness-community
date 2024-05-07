@@ -88,7 +88,7 @@ func (impl *TrainingprogramControllerImpl) TrainingProgramFromrequest(ctx contex
 		trainingPhases = append(trainingPhases, tphase)
 		// Get the weeks range of the next phase.
 		weekStart = weekEnd + 1
-		weekEnd = weekStart + tp.Weeks
+		weekEnd = weekStart + tp.Weeks - 1
 	}
 	tp.TrainingPhases = trainingPhases
 	return &tp, nil
