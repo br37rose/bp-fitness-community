@@ -82,8 +82,6 @@ function AdminMemberDetail() {
   ////
 
   const onDeleteConfirmButtonClick = () => {
-    console.log("onDeleteConfirmButtonClick"); // For debugging purposes only.
-
     deleteMemberAPI(
       selectedMemberForDeletion.id,
       onMemberDeleteSuccess,
@@ -100,12 +98,10 @@ function AdminMemberDetail() {
   // --- Detail --- //
 
   function onMemberDetailSuccess(response) {
-    console.log("onMemberDetailSuccess: Starting...");
     setDatum(response);
   }
 
   function onMemberDetailError(apiErr) {
-    console.log("onMemberDetailError: Starting...");
     setErrors(apiErr);
 
     // The following code will cause the screen to scroll to the top of
@@ -116,24 +112,16 @@ function AdminMemberDetail() {
   }
 
   function onMemberDetailDone() {
-    console.log("onMemberDetailDone: Starting...");
     setFetching(false);
   }
 
   // --- Delete --- //
 
   function onMemberDeleteSuccess(response) {
-    console.log("onMemberDeleteSuccess: Starting..."); // For debugging purposes only.
-
     // Update notification.
     setTopAlertStatus("success");
     setTopAlertMessage("Member deleted");
     setTimeout(() => {
-      console.log(
-        "onDeleteConfirmButtonClick: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -142,18 +130,12 @@ function AdminMemberDetail() {
   }
 
   function onMemberDeleteError(apiErr) {
-    console.log("onMemberDeleteError: Starting..."); // For debugging purposes only.
     setErrors(apiErr);
 
     // Update notification.
     setTopAlertStatus("danger");
     setTopAlertMessage("Failed deleting");
     setTimeout(() => {
-      console.log(
-        "onMemberDeleteError: topAlertMessage, topAlertStatus:",
-        topAlertMessage,
-        topAlertStatus
-      );
       setTopAlertMessage("");
     }, 2000);
 
@@ -165,7 +147,6 @@ function AdminMemberDetail() {
   }
 
   function onMemberDeleteDone() {
-    console.log("onMemberDeleteDone: Starting...");
     setFetching(false);
   }
 
@@ -335,6 +316,11 @@ function AdminMemberDetail() {
                         <li>
                           <Link to={`/admin/member/${datum.id}/tags`}>
                             Tags
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to={`/admin/member/${datum.id}/profile`}>
+                            Profile
                           </Link>
                         </li>
                         <li>

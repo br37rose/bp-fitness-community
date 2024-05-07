@@ -1,26 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
   faClock,
-  faRepeat,
-  faTasks,
-  faTachometer,
-  faPlus,
   faArrowLeft,
-  faCheckCircle,
-  faUserCircle,
   faGauge,
   faPencil,
   faTrophy,
   faEye,
   faIdCard,
-  faAddressBook,
-  faContactCard,
-  faChartPie,
-  faCogs,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
@@ -30,46 +20,11 @@ import {
   deleteFitnessPlanAPI,
 } from "../../../API/FitnessPlan";
 import FormErrorBox from "../../Reusable/FormErrorBox";
-import FormInputField from "../../Reusable/FormInputField";
-import FormTextareaField from "../../Reusable/FormTextareaField";
-import FormRadioField from "../../Reusable/FormRadioField";
-import FormMultiSelectField from "../../Reusable/FormMultiSelectField";
-import FormSelectField from "../../Reusable/FormSelectField";
-import FormCheckboxField from "../../Reusable/FormCheckboxField";
-import FormCountryField from "../../Reusable/FormCountryField";
-import FormRegionField from "../../Reusable/FormRegionField";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
 import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
 import DataDisplayRowText from "../../Reusable/DataDisplayRowText";
-import DataDisplayRowRadio from "../../Reusable/DataDisplayRowRadio";
-import FormTextTagRow from "../../Reusable/FormTextTagRow";
-import FormTextYesNoRow from "../../Reusable/FormTextYesNoRow";
-import FormTextOptionRow from "../../Reusable/FormTextOptionRow";
-import DataDisplayRowMultiSelect from "../../Reusable/FormTextOptionRow";
-import DataDisplayRowMultiSelectStatic from "../../Reusable/DataDisplayRowMultiSelectStatic";
-import DataDisplayRowSelectStatic from "../../Reusable/DataDisplayRowSelectStatic";
 import FitnessPlanDisplay from "../../Reusable/FitnessPlanDisplay";
 import ExerciseDisplay from "../../Reusable/ExerciseDisplay";
-import {
-  HOME_GYM_EQUIPMENT_OPTIONS,
-  HOME_GYM_EQUIPMENT_MAP,
-  FEET_WITH_EMPTY_OPTIONS,
-  INCHES_WITH_EMPTY_OPTIONS,
-  GENDER_WITH_EMPTY_OPTIONS,
-  PHYSICAL_ACTIVITY_MAP,
-  PHYSICAL_ACTIVITY_WITH_EMPTY_OPTIONS,
-  WORKOUT_INTENSITY_WITH_EMPTY_OPTIONS,
-  DAYS_PER_WEEK_MAP,
-  DAYS_PER_WEEK_WITH_EMPTY_OPTIONS,
-  TIME_PER_DAY_MAP,
-  TIME_PER_DAY_WITH_EMPTY_OPTIONS,
-  MAX_WEEK_MAP,
-  MAX_WEEK_WITH_EMPTY_OPTIONS,
-  FITNESS_GOAL_MAP,
-  FITNESS_GOAL_OPTIONS,
-  WORKOUT_PREFERENCE_MAP,
-  WORKOUT_PREFERENCE_OPTIONS,
-} from "../../../Constants/FieldOptions";
 import {
   FITNESS_GOAL_STATUS_QUEUED,
   FITNESS_GOAL_STATUS_ACTIVE,
@@ -77,9 +32,6 @@ import {
   FITNESS_GOAL_STATUS_ERROR,
   FITNESS_GOAL_STATUS_IN_PROGRESS,
   FITNESS_GOAL_STATUS_PENDING,
-  GENDER_OTHER,
-  GENDER_MALE,
-  GENDER_FEMALE,
 } from "../../../Constants/App";
 import Layout from "../../Menu/Layout";
 

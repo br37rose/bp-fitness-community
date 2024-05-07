@@ -12,6 +12,7 @@ import (
 	s3_storage "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/storage/s3"
 	exercise_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/controller"
 	exercise_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
+	qstn_c "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/question/controller"
 
 	domain "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	fitnessplan_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
@@ -33,18 +34,19 @@ type FitnessPlanController interface {
 }
 
 type FitnessPlanControllerImpl struct {
-	Config            *config.Conf
-	Logger            *slog.Logger
-	UUID              uuid.Provider
-	S3                s3_storage.S3Storager
-	Emailer           mg.Emailer
-	DbClient          *mongo.Client
-	Kmutex            kmutex.Provider
-	OpenAI            openai.OpenAIConnector
-	FitnessPlanStorer fitnessplan_s.FitnessPlanStorer
-	UserStorer        user_s.UserStorer
-	ExerciseStorer    exercise_s.ExerciseStorer
-	ExcerciseContr    exercise_d.ExerciseController
+	Config             *config.Conf
+	Logger             *slog.Logger
+	UUID               uuid.Provider
+	S3                 s3_storage.S3Storager
+	Emailer            mg.Emailer
+	DbClient           *mongo.Client
+	Kmutex             kmutex.Provider
+	OpenAI             openai.OpenAIConnector
+	FitnessPlanStorer  fitnessplan_s.FitnessPlanStorer
+	UserStorer         user_s.UserStorer
+	ExerciseStorer     exercise_s.ExerciseStorer
+	ExcerciseContr     exercise_d.ExerciseController
+	QuestionController qstn_c.QuestionController
 }
 
 func NewController(
@@ -60,20 +62,22 @@ func NewController(
 	ex_storer exercise_s.ExerciseStorer,
 	usr_storer user_s.UserStorer,
 	ex_contr exercise_d.ExerciseController,
+	qstn_contr qstn_c.QuestionController,
 ) FitnessPlanController {
 	s := &FitnessPlanControllerImpl{
-		Config:            appCfg,
-		Logger:            loggerp,
-		UUID:              uuidp,
-		S3:                s3,
-		Emailer:           emailer,
-		DbClient:          client,
-		Kmutex:            kmutexp,
-		OpenAI:            ai,
-		FitnessPlanStorer: org_storer,
-		UserStorer:        usr_storer,
-		ExerciseStorer:    ex_storer,
-		ExcerciseContr:    ex_contr,
+		Config:             appCfg,
+		Logger:             loggerp,
+		UUID:               uuidp,
+		S3:                 s3,
+		Emailer:            emailer,
+		DbClient:           client,
+		Kmutex:             kmutexp,
+		OpenAI:             ai,
+		FitnessPlanStorer:  org_storer,
+		UserStorer:         usr_storer,
+		ExerciseStorer:     ex_storer,
+		ExcerciseContr:     ex_contr,
+		QuestionController: qstn_contr,
 	}
 	s.Logger.Debug("fitnessplan controller initialization started...")
 	s.Logger.Debug("fitnessplan controller initialized")

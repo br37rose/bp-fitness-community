@@ -25,10 +25,10 @@ func (c *FitnessPlanControllerImpl) GetByID(ctx context.Context, id primitive.Ob
 					ex, err := c.ExcerciseContr.ListByFilter(ctx, &datastore.ExerciseListFilter{
 						ExcludeArchived: true,
 						SearchText:      dailyExercise.Name,
-						Gender:          domain.GenderMap[m.Gender],
-						SortField:       "created_at",
-						SortOrder:       -1,
-						PageSize:        1,
+						// Gender:          domain.GenderMap[m.Gender], TODO - get gender from user profile
+						SortField: "created_at",
+						SortOrder: -1,
+						PageSize:  1,
 					})
 
 					if err != nil {
@@ -62,10 +62,10 @@ func (c *FitnessPlanControllerImpl) GetByID(ctx context.Context, id primitive.Ob
 			ex, err := c.ExcerciseContr.ListByFilter(ctx, &datastore.ExerciseListFilter{
 				ExcludeArchived: true,
 				SearchText:      excercise.Name,
-				Gender:          domain.GenderMap[m.Gender],
-				SortField:       "created_at",
-				SortOrder:       -1,
-				PageSize:        1,
+				// Gender:          domain.GenderMap[m.Gender],TODO - get gender from user profile
+				SortField: "created_at",
+				SortOrder: -1,
+				PageSize:  1,
 			})
 
 			if err != nil {

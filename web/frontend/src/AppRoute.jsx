@@ -57,7 +57,6 @@ import MemberFitnessPlanAdd from "./Components/Member/FitnessPlan/Add";
 import MemberVideoContentList from "./Components/Member/VideoCollection/VideoContent/List";
 import MemberVideoCollectionDetail from "./Components/Member/VideoCollection/Detail";
 import MemberVideoCollectionList from "./Components/Member/Videos/VideoCategories/Collections/List";
-import MemberCategoriesList from "./Components/Member/Videos/VideoCategories/List";
 import MemberExerciseDetail from "./Components/Member/Exercise/Detail";
 import MemberExerciseList from "./Components/Member/Exercise/List";
 import MemberDashboard from "./Components/Member/Dashboard";
@@ -129,6 +128,7 @@ import MemberFitnessChallengeDetail from "./Components/Member/FitnessChallenge/D
 import MemberLeaderboardGlobalTabularListForChallenge from "./Components/Member/FitnessChallenge/leaderboard";
 import AdminOrganizationDetail from "./Components/Admin/organization/Detail";
 import AdminOrganizationUpdate from "./Components/Admin/organization/update";
+import AdminMemberProfileDetail from "./Components/Admin/Member/DetailForProfile";
 
 function AppRoute() {
   return (
@@ -316,6 +316,11 @@ function AppRoute() {
                     exact
                     path="/admin/member/:id/tags"
                     element={<AdminMemberTagList />}
+                  />
+                  <Route
+                    exact
+                    path="/admin/member/:id/profile"
+                    element={<AdminMemberProfileDetail />}
                   />
                   <Route
                     exact

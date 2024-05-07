@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,6 +13,7 @@ import {
   faRefresh,
   faFilter,
   faSearch,
+  faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -20,6 +21,7 @@ import FormErrorBox from "../../Reusable/FormErrorBox";
 import {
   getFitnessPlanListAPI,
   deleteFitnessPlanAPI,
+  postFitnessPlanCreateAPI,
 } from "../../../API/FitnessPlan";
 import {
   topAlertMessageState,
@@ -36,8 +38,11 @@ import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
 import AdminFitnessPlanListDesktop from "./ListDesktop";
 import AdminFitnessPlanListMobile from "./ListMobile";
 import Layout from "../../Menu/Layout";
+import FormInputField from "../../Reusable/FormInputField";
 
 function AdminFitnessPlanList() {
+  let navigate = useNavigate();
+
   ////
   //// Global state.
   ////
@@ -72,6 +77,9 @@ function AdminFitnessPlanList() {
   const [previousCursors, setPreviousCursors] = useState([]); // Pagination
   const [nextCursor, setNextCursor] = useState(""); // Pagination
   const [currentCursor, setCurrentCursor] = useState(""); // Pagination
+  const [showGenerateModal, setshowGenerateModal] = useState(false);
+  const [forceURL, setForceURL] = useState("");
+  const [name, setName] = useState("");
 
   ////
   //// API.
@@ -135,6 +143,11 @@ function AdminFitnessPlanList() {
   function onFitnessPlanDeleteDone() {
     setFetching(false);
   }
+
+  const handleNavigateToAccount = (e) => {
+    e.preventDefault();
+    navigate("/account", { state: { activeTabProp: "detail" } });
+  };
 
   ////
   //// BREADCRUMB
@@ -238,6 +251,54 @@ function AdminFitnessPlanList() {
     setStatus(0);
   };
 
+  const onGenerateFitnessplan = (e) => {
+    setFetching(true);
+    setErrors({});
+    setshowGenerateModal(false);
+
+    // To Snake-case for API from camel-case in React.
+    const decamelizedData = { name: name };
+    postFitnessPlanCreateAPI(
+      decamelizedData,
+      onMemberFitnessPlanAddSuccess,
+      onMemberFitnessPlanAddError,
+      onMemberFitnessPlanAddDone
+    );
+  };
+
+  function onMemberFitnessPlanAddSuccess(response) {
+    // Add a temporary banner message in the app and then clear itself after 2 seconds.
+    setTopAlertMessage("Fitness plan created");
+    setTopAlertStatus("success");
+    setTimeout(() => {
+      setTopAlertMessage("");
+    }, 2000);
+
+    // Redirect the user to a new page.
+    setForceURL("/fitness-plan/" + response.id);
+  }
+
+  function onMemberFitnessPlanAddError(apiErr) {
+    setErrors(apiErr);
+
+    // Add a temporary banner message in the app and then clear itself after 2 seconds.
+    setTopAlertMessage("Failed submitting");
+    setTopAlertStatus("danger");
+    setTimeout(() => {
+      setTopAlertMessage("");
+    }, 2000);
+
+    // The following code will cause the screen to scroll to the top of
+    // the page. Please see ``react-scroll`` for more information:
+    // https://github.com/fisshy/react-scroll
+    var scroll = Scroll.animateScroll;
+    scroll.scrollToTop();
+  }
+
+  function onMemberFitnessPlanAddDone() {
+    setFetching(false);
+  }
+
   ////
   //// Misc.
   ////
@@ -258,7 +319,9 @@ function AdminFitnessPlanList() {
   ////
   //// Component rendering.
   ////
-
+  if (forceURL !== "") {
+    return <Navigate to={forceURL} />;
+  }
   return (
     <Layout breadcrumbItems={breadcrumbItems}>
       {/* Page */}
@@ -293,6 +356,59 @@ function AdminFitnessPlanList() {
               <button
                 className="button"
                 onClick={onDeselectFitnessPlanForDeletion}
+              >
+                Cancel
+              </button>
+            </footer>
+          </div>
+        </div>
+        {/* generate Modal */}
+        <div class={`modal ${showGenerateModal ? "is-active" : ""}`}>
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Generate Fitness plan</p>
+              <button
+                class="delete"
+                aria-label="close"
+                onClick={() => setshowGenerateModal(false)}
+              ></button>
+            </header>
+            <section class="modal-card-body">
+              <FontAwesomeIcon icon={faExclamationCircle} color="#d7c278" /> You
+              are about to create a fitness plan based on your profile.
+              <br />
+              Plan will be based on your profile. if you wish to make any
+              changes in your profile ,please edit it here{" "}
+              <Link type="button" onClick={(e) => handleNavigateToAccount(e)}>
+                <FontAwesomeIcon className="mdi" icon={faArrowRight} />
+                &nbsp;Profile
+              </Link>
+              <br />
+              <br />
+              <FormInputField
+                label="Name:"
+                name="name"
+                placeholder="Fitness plan name"
+                value={name}
+                errorText={errors && errors.name}
+                helpText="Give this fitness plan a name you can use to keep track for your own purposes. Ex: `My Cardio-Plan`."
+                onChange={(e) => setName(e.target.value)}
+                isRequired={true}
+              />
+            </section>
+            <footer class="modal-card-foot">
+              <button
+                class="button is-success"
+                onClick={onGenerateFitnessplan}
+                disabled={!name}
+                title={!name && "Enter Name to submit"}
+              >
+                Confirm
+              </button>
+              <button
+                class="button"
+                onClick={() => setshowGenerateModal(false)}
               >
                 Cancel
               </button>
@@ -335,14 +451,13 @@ function AdminFitnessPlanList() {
               &nbsp;Filter
             </button>
             &nbsp;
-            <Link
-              to={`/fitness-plans/add`}
+            <button
               className="is-fullwidth-mobile button is-small is-success"
-              type="button"
+              onClick={() => setshowGenerateModal(true)}
             >
               <FontAwesomeIcon className="mdi" icon={faPlus} />
               &nbsp;Request Plan
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -452,7 +567,10 @@ function AdminFitnessPlanList() {
                   <p className="subtitle">
                     You currently have no fitness plans.{" "}
                     <b>
-                      <Link to="/fitness-plans/add">
+                      <Link
+                        type="button"
+                        onClick={() => setshowGenerateModal(true)}
+                      >
                         Click here&nbsp;
                         <FontAwesomeIcon className="mdi" icon={faArrowRight} />
                       </Link>
@@ -474,13 +592,13 @@ function AdminFitnessPlanList() {
             </Link>
           </div>
           <div class="column is-half has-text-right">
-            <Link
-              to={`/fitness-plans/add`}
+            <button
               class="button is-success is-fullwidth-mobile"
+              onClick={() => setshowGenerateModal(true)}
             >
               <FontAwesomeIcon className="fas" icon={faPlus} />
               &nbsp;Request Plan
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
