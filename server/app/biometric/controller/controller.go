@@ -33,7 +33,6 @@ type BiometricControllerImpl struct {
 	S3                   s3_storage.S3Storager
 	DbClient             *mongo.Client
 	Cache                mongodbcache.Cacher
-	CodeVerifierMap      map[primitive.ObjectID]string
 	DistributedMutex     distributedmutex.Adapter
 	OrganizationStorer   organization_s.OrganizationStorer
 	UserStorer           user_s.UserStorer
@@ -62,7 +61,6 @@ func NewController(
 		UUID:                 uuidp,
 		DbClient:             client,
 		Cache:                cache,
-		CodeVerifierMap:      make(map[primitive.ObjectID]string, 0),
 		DistributedMutex:     dlocker,
 		S3:                   s3,
 		OrganizationStorer:   org_storer,
