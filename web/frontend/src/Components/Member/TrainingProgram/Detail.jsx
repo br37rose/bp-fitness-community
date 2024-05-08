@@ -45,9 +45,6 @@ function MemberTPDetail() {
     useState(null);
   const [selectedPhase, setSelectedPhase] = useState(null);
 
-  const [selectedWorkoutForRoutine, setselectedWorkoutForRoutine] = useState(
-    {}
-  );
   // Event handling
   const handleAddWorkoutClick = (phase) => {
     setSelectedPhase(phase);
@@ -215,13 +212,13 @@ function MemberTPDetail() {
       }
       if (trainingDays.length) {
         return (
-          "Week - " + trainingDays[0].week + ": Day - " + trainingDays[0].day
+          "Week- " + trainingDays[0].week + ": Day - " + trainingDays[0].day
         );
       } else {
         return "";
       }
     };
-    phase.trainingRoutines.map((tr) =>
+    phase.trainingRoutines.map((tr) => {
       plan[0].dailyPlans.push({
         title: getTitle(tr.trainingDays),
         instructions: tr.description,
@@ -234,10 +231,11 @@ function MemberTPDetail() {
                 thumbnailUrl: exc.excercise.thumbnailUrl,
                 description: setInstruction(exc),
                 videoType: exc.excercise.videoType,
+                videoObjectUrl: exc.excercise.videoObjectUrl,
               }))
             : new Array(),
-      })
-    );
+      });
+    });
     return plan;
   }
 
@@ -410,11 +408,22 @@ function MemberTPDetail() {
                           <div className="hero-body">
                             <p className="title">
                               <FontAwesomeIcon className="fas" icon={faTable} />
-                              &nbsp;No Workouts
+                              &nbsp;No Workouts Added in This Phase
                             </p>
                             <p className="subtitle">
-                              No workouts available in this phase. to get.Click
-                              add workouts started creating your first workout.
+                              No workouts are available in this phase. Click
+                              &nbsp;
+                              <Link
+                                to={`/training-program/${id}/edit`}
+                                className=" is-primary is-small is-fullwidth-mobile mr-2"
+                              >
+                                <FontAwesomeIcon
+                                  className="mdi"
+                                  icon={faEdit}
+                                />
+                                &nbsp;Edit
+                              </Link>
+                              to get started adding workouts to this phase.
                             </p>
                           </div>
                         </section>

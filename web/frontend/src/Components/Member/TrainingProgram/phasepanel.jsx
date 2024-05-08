@@ -46,7 +46,7 @@ function PhasePanel({ phases, onAddWorkout, setSelectedPhase }) {
               )}
             </span>
           </div>
-          <div
+          {/* <div
             className={`accordion-body ${
               activeIndex === index ? "is-active" : ""
             }`}
@@ -58,8 +58,8 @@ function PhasePanel({ phases, onAddWorkout, setSelectedPhase }) {
               <FontAwesomeIcon icon={faEdit} className="mr-1" />
               Workouts
             </button>
-            {/* Render other phase details here */}
-          </div>
+            Render other phase details here
+          </div> */}
         </div>
       ))}
     </nav>
