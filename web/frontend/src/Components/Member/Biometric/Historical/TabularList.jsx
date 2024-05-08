@@ -54,8 +54,8 @@ import {
 	RANK_POINT_FUNCTION_AVERAGE,
 	RANK_POINT_FUNCTION_SUM,
 } from "../../../../Constants/App";
-import MemberHistoricalDataTabularListDesktop from "./TabularListDesktop";
-import MemberHistoricalDataTabularListMobile from "./TabularListMobile";
+import MemberHistoricalDataGlobalTabularListDesktop from "./TabularListDesktop";
+import MemberHistoricalDataGlobalTabularListMobile from "./TabularListMobile";
 import {
 	RANK_POINT_METRIC_TYPE_HEART_RATE,
 	RANK_POINT_METRIC_TYPE_STEP_COUNTER,
@@ -142,7 +142,7 @@ function MemberHistoricalDataTabularList() {
 				icon: faHeartbeat,
 				isActive: false,
 			},
-			{text: "Leaderboard", link: "#", icon: faRankingStar, isActive: true},
+			{text: "My History", link: "#", icon: faRankingStar, isActive: true},
 		],
 		mobileBackLinkItems: {
 			link: "/biometrics",
@@ -482,7 +482,7 @@ function MemberHistoricalDataTabularList() {
                             ##################################################################
                         */}
 								<div class="is-hidden-touch">
-									<MemberHistoricalDataTabularListDesktop
+									<MemberHistoricalDataGlobalTabularListDesktop
 										listRank={listRank}
 										setPageSize={setPageSize}
 										pageSize={pageSize}
@@ -499,7 +499,7 @@ function MemberHistoricalDataTabularList() {
                             ###########################################################################
                         */}
 								<div class="is-fullwidth is-hidden-desktop">
-									<MemberHistoricalDataTabularListMobile
+									<MemberHistoricalDataGlobalTabularListMobile
 										listRank={listRank}
 										setPageSize={setPageSize}
 										pageSize={pageSize}
