@@ -63,6 +63,10 @@ func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
 		return
 	}
 
+	// DEVELOPERS NOTE:
+	// The `map` datastructure in Golang is not concurrently safe, therefore we
+	// need to use mutex to coordinate access of our `LockInstances` map
+	// resource between all the goroutines.
 	a.Mutex.Lock()
 	defer a.Mutex.Unlock()
 
