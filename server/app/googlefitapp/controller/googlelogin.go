@@ -62,7 +62,7 @@ func (impl *GoogleFitAppControllerImpl) setCodeVerifier(ctx context.Context, use
 	var codeVerifierMap map[string]primitive.ObjectID
 	str, err := impl.Cache.Get(ctx, "google-code-verifier")
 	if err != nil {
-		impl.Logger.WarnContext(ctx, "failed getting code verifier from cache", slog.Any("err", err))
+		// impl.Logger.WarnContext(ctx, "failed getting code verifier from cache", slog.Any("err", err))
 		codeVerifierMap = make(map[string]primitive.ObjectID, 0)
 	}
 	if str != "" {
@@ -93,7 +93,7 @@ func (impl *GoogleFitAppControllerImpl) searchForUserIdFromCodeVerifier(ctx cont
 	var codeVerifierMap map[string]primitive.ObjectID
 	str, err := impl.Cache.Get(ctx, "google-code-verifier")
 	if err != nil {
-		impl.Logger.WarnContext(ctx, "failed getting code verifier from cache", slog.Any("err", err))
+		// impl.Logger.WarnContext(ctx, "failed getting code verifier from cache", slog.Any("err", err))
 		codeVerifierMap = make(map[string]primitive.ObjectID, 0)
 	}
 	if str != "" {
