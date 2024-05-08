@@ -295,13 +295,23 @@ function AdminMemberProfileDetail() {
                           <Link to={`/admin/member/${id}`}>Detail</Link>
                         </li>
                         <li>
-                          <Link to={`/admin/member/${id}/tags`}>
-                            <strong>Tags</strong>
+                          <Link to={`/admin/member/${id}/tags`}>Tags</Link>
+                        </li>
+                        <li className="is-active">
+                          <Link to={`/admin/member/${datum.id}/profile`}>
+                            Profile
                           </Link>
                         </li>
-                        <li class="is-active">
-                          <Link>
-                            <strong>Profile</strong>
+                        <li>
+                          <Link to={`/admin/member/${datum.id}/fitness-plans`}>
+                            Fitness Plans
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to={`/admin/member/${datum.id}/nutrition-plans`}
+                          >
+                            Nutrition Plans
                           </Link>
                         </li>
                       </ul>

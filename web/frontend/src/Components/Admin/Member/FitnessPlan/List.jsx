@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,16 +8,14 @@ import {
   faArrowLeft,
   faUsers,
   faEye,
-  faPencil,
-  faTrashCan,
   faPlus,
   faGauge,
   faArrowRight,
   faTable,
-  faArrowUpRightFromSquare,
   faRefresh,
   faFilter,
   faSearch,
+  faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 
@@ -25,6 +23,7 @@ import FormErrorBox from "../../../Reusable/FormErrorBox";
 import {
   getFitnessPlanListAPI,
   deleteFitnessPlanAPI,
+  postFitnessPlanCreateAPI,
 } from "../../../../API/FitnessPlan";
 import {
   topAlertMessageState,
@@ -38,9 +37,9 @@ import {
 } from "../../../../AppState";
 import PageLoadingContent from "../../../Reusable/PageLoadingContent";
 import FormInputFieldWithButton from "../../../Reusable/FormInputFieldWithButton";
-import { PAGE_SIZE_OPTIONS } from "../../../../Constants/FieldOptions";
 import AdminFitnessPlanListDesktop from "./ListDesktop";
 import AdminFitnessPlanListMobile from "./ListMobile";
+import FormInputField from "../../../Reusable/FormInputField";
 
 function AdminFitnessPlanList() {
   ////
@@ -48,6 +47,7 @@ function AdminFitnessPlanList() {
   ////
 
   const { uid } = useParams();
+  let navigate = useNavigate();
 
   ////
   //// Global state.
@@ -84,6 +84,9 @@ function AdminFitnessPlanList() {
   const [nextCursor, setNextCursor] = useState(""); // Pagination
   const [currentCursor, setCurrentCursor] = useState(""); // Pagination
   const [showModal, setShowModal] = useState(false);
+  const [showGenerateModal, setshowGenerateModal] = useState(false);
+  const [forceURL, setForceURL] = useState("");
+  const [name, setName] = useState("");
 
   ////
   //// API.
@@ -247,6 +250,58 @@ function AdminFitnessPlanList() {
     setSort("no,1");
     setStatus(0);
   };
+  const handleNavigateToAccount = (e) => {
+    e.preventDefault();
+    navigate("/account", { state: { activeTabProp: "detail" } });
+  };
+
+  const onGenerateFitnessplan = (e) => {
+    setFetching(true);
+    setErrors({});
+    setshowGenerateModal(false);
+
+    // To Snake-case for API from camel-case in React.
+    const decamelizedData = { name: name, user_id: uid };
+    postFitnessPlanCreateAPI(
+      decamelizedData,
+      onMemberFitnessPlanAddSuccess,
+      onMemberFitnessPlanAddError,
+      onMemberFitnessPlanAddDone
+    );
+  };
+
+  function onMemberFitnessPlanAddSuccess(response) {
+    // Add a temporary banner message in the app and then clear itself after 2 seconds.
+    setTopAlertMessage("Fitness plan created");
+    setTopAlertStatus("success");
+    setTimeout(() => {
+      setTopAlertMessage("");
+    }, 2000);
+
+    // Redirect the user to a new page.
+    setForceURL(`/admin/member/${response.userId}/fitness-plan/` + response.id);
+  }
+
+  function onMemberFitnessPlanAddError(apiErr) {
+    setErrors(apiErr);
+
+    // Add a temporary banner message in the app and then clear itself after 2 seconds.
+    setTopAlertMessage("Failed submitting");
+    setTopAlertStatus("danger");
+    setTimeout(() => {
+      setTopAlertMessage("");
+    }, 2000);
+
+    // The following code will cause the screen to scroll to the top of
+    // the page. Please see ``react-scroll`` for more information:
+    // https://github.com/fisshy/react-scroll
+    var scroll = Scroll.animateScroll;
+    scroll.scrollToTop();
+  }
+
+  function onMemberFitnessPlanAddDone() {
+    setFetching(false);
+  }
 
   ////
   //// Misc.
@@ -268,6 +323,10 @@ function AdminFitnessPlanList() {
   ////
   //// Component rendering.
   ////
+
+  if (forceURL !== "") {
+    return <Navigate to={forceURL} />;
+  }
 
   return (
     <>
@@ -311,6 +370,56 @@ function AdminFitnessPlanList() {
           </div>
         </nav>
       )}
+      {/* generate Modal */}
+      <div class={`modal ${showGenerateModal ? "is-active" : ""}`}>
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Generate Fitness plan</p>
+            <button
+              class="delete"
+              aria-label="close"
+              onClick={() => setshowGenerateModal(false)}
+            ></button>
+          </header>
+          <section class="modal-card-body">
+            <FontAwesomeIcon icon={faExclamationCircle} color="#d7c278" /> You
+            are about to create a fitness plan based on your profile.
+            <br />
+            Plan will be based on your profile. if you wish to make any changes
+            in your profile ,please edit it here{" "}
+            <Link type="button" onClick={(e) => handleNavigateToAccount(e)}>
+              <FontAwesomeIcon className="mdi" icon={faArrowRight} />
+              &nbsp;Profile
+            </Link>
+            <br />
+            <br />
+            <FormInputField
+              label="Name:"
+              name="name"
+              placeholder="Fitness plan name"
+              value={name}
+              errorText={errors && errors.name}
+              helpText="Give this fitness plan a name you can use to keep track for your own purposes. Ex: `My Cardio-Plan`."
+              onChange={(e) => setName(e.target.value)}
+              isRequired={true}
+            />
+          </section>
+          <footer class="modal-card-foot">
+            <button
+              class="button is-success"
+              onClick={onGenerateFitnessplan}
+              disabled={!name}
+              title={!name && "Enter Name to submit"}
+            >
+              Confirm
+            </button>
+            <button class="button" onClick={() => setshowGenerateModal(false)}>
+              Cancel
+            </button>
+          </footer>
+        </div>
+      </div>
       <div className="container">
         <section className="section">
           {/* Desktop Breadcrumbs */}
@@ -395,9 +504,9 @@ function AdminFitnessPlanList() {
                 </button>
                 &nbsp;
                 <Link
-                  to={`/fitness-plans/add`}
                   className="is-fullwidth-mobile button is-small is-success"
                   type="button"
+                  onClick={() => setshowGenerateModal(true)}
                 >
                   <FontAwesomeIcon className="mdi" icon={faPlus} />
                   &nbsp;Request Plan
@@ -470,12 +579,15 @@ function AdminFitnessPlanList() {
                     <div class="tabs is-medium is-size-7-mobile">
                       <ul>
                         <li>
-                          <Link to={`/admin/member/${uid}`}>
-                            Detail
-                          </Link>
+                          <Link to={`/admin/member/${uid}`}>Detail</Link>
                         </li>
                         <li>
                           <Link to={`/admin/member/${uid}/tags`}>Tags</Link>
+                        </li>
+                        <li>
+                          <Link to={`/admin/member/${uid}/profile`}>
+                            Profile
+                          </Link>
                         </li>
                         <li class="is-active">
                           <Link>
@@ -538,11 +650,12 @@ function AdminFitnessPlanList() {
                       <p className="subtitle">
                         You currently have no fitness plans.
                         <b>
-                          <Link to="/fitness-plans/add">
+                          <Link type="button">
                             Click here&nbsp;
                             <FontAwesomeIcon
                               className="mdi"
                               icon={faArrowRight}
+                              onClick={() => setshowGenerateModal(false)}
                             />
                           </Link>
                         </b>
@@ -557,15 +670,19 @@ function AdminFitnessPlanList() {
 
             <div class="columns pt-5">
               <div class="column is-half">
-                <Link class="button is-fullwidth-mobile" to={`/dashboard`}>
+                <Link
+                  class="button is-fullwidth-mobile"
+                  to={`/admin/dashboard`}
+                >
                   <FontAwesomeIcon className="fas" icon={faArrowLeft} />
                   &nbsp;Back to Dashboard
                 </Link>
               </div>
               <div class="column is-half has-text-right">
                 <Link
-                  to={`/fitness-plans/add`}
+                  onClick={() => setshowGenerateModal(true)}
                   class="button is-success is-fullwidth-mobile"
+                  type="button"
                 >
                   <FontAwesomeIcon className="fas" icon={faPlus} />
                   &nbsp;Request Plan

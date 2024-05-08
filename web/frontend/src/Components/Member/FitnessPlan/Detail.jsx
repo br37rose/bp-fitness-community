@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,6 +11,8 @@ import {
   faTrophy,
   faEye,
   faIdCard,
+  faExclamationCircle,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
@@ -18,6 +20,7 @@ import { useParams } from "react-router-dom";
 import {
   getFitnessPlanDetailAPI,
   deleteFitnessPlanAPI,
+  putFitnessPlanUpdateAPI,
 } from "../../../API/FitnessPlan";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
@@ -34,6 +37,7 @@ import {
   FITNESS_GOAL_STATUS_PENDING,
 } from "../../../Constants/App";
 import Layout from "../../Menu/Layout";
+import FormInputField from "../../Reusable/FormInputField";
 
 function MemberFitnessPlanDetail() {
   ////
@@ -41,6 +45,7 @@ function MemberFitnessPlanDetail() {
   ////
 
   const { id } = useParams();
+  let navigate = useNavigate();
 
   ////
   //// Global state.
@@ -62,10 +67,17 @@ function MemberFitnessPlanDetail() {
   const [tabIndex, setTabIndex] = useState(1);
   const [selectedFitnessPlanForDeletion, setSelectedFitnessPlanForDeletion] =
     useState(null);
+  const [showGenerateModal, setshowGenerateModal] = useState(false);
+  const [name, setName] = useState("");
 
   ////
   //// Event handling.
   ////
+
+  const handleNavigateToAccount = (e) => {
+    e.preventDefault();
+    navigate("/account", { state: { activeTabProp: "detail" } });
+  };
 
   const onDeleteConfirmButtonClick = () => {
     deleteFitnessPlanAPI(
@@ -85,6 +97,7 @@ function MemberFitnessPlanDetail() {
 
   function onFitnessPlanDetailSuccess(response) {
     setDatum(response);
+    setName(response.name);
   }
 
   function onFitnessPlanDetailError(apiErr) {
@@ -156,6 +169,76 @@ function MemberFitnessPlanDetail() {
       icon: faArrowLeft,
     },
   };
+
+  const onRegeneratePlan = (e) => {
+    console.log("onSubmitClick: Beginning...");
+    setFetching(true);
+    setErrors({});
+
+    // To Snake-case for API from camel-case in React.
+    const decamelizedData = {
+      id: id,
+      name: name,
+    };
+    console.log("onSubmitClick, decamelizedData:", decamelizedData);
+    putFitnessPlanUpdateAPI(
+      decamelizedData,
+      onAdminFitnessPlanUpdateSuccess,
+      onAdminFitnessPlanUpdateError,
+      onAdminFitnessPlanUpdateDone
+    );
+  };
+
+  function onAdminFitnessPlanUpdateSuccess(response) {
+    // For debugging purposes only.
+    console.log("onAdminFitnessPlanUpdateSuccess: Starting...");
+    console.log(response);
+
+    // Add a temporary banner message in the app and then clear itself after 2 seconds.
+    setTopAlertMessage("Fitness plan update");
+    setTopAlertStatus("success");
+    setTimeout(() => {
+      console.log("onAdminFitnessPlanUpdateSuccess: Delayed for 2 seconds.");
+      console.log(
+        "onAdminFitnessPlanUpdateSuccess: topAlertMessage, topAlertStatus:",
+        topAlertMessage,
+        topAlertStatus
+      );
+      setTopAlertMessage("");
+    }, 2000);
+
+    // Redirect the user to a new page.
+    setForceURL("/fitness-plan/" + response.id);
+  }
+
+  function onAdminFitnessPlanUpdateError(apiErr) {
+    console.log("onAdminFitnessPlanUpdateError: Starting...");
+    setErrors(apiErr);
+
+    // Add a temporary banner message in the app and then clear itself after 2 seconds.
+    setTopAlertMessage("Failed submitting");
+    setTopAlertStatus("danger");
+    setTimeout(() => {
+      console.log("onAdminFitnessPlanUpdateError: Delayed for 2 seconds.");
+      console.log(
+        "onAdminFitnessPlanUpdateError: topAlertMessage, topAlertStatus:",
+        topAlertMessage,
+        topAlertStatus
+      );
+      setTopAlertMessage("");
+    }, 2000);
+
+    // The following code will cause the screen to scroll to the top of
+    // the page. Please see ``react-scroll`` for more information:
+    // https://github.com/fisshy/react-scroll
+    var scroll = Scroll.animateScroll;
+    scroll.scrollToTop();
+  }
+
+  function onAdminFitnessPlanUpdateDone() {
+    console.log("onAdminFitnessPlanUpdateDone: Starting...");
+    setFetching(false);
+  }
 
   ////
   //// Misc.
@@ -229,6 +312,60 @@ function MemberFitnessPlanDetail() {
             </footer>
           </div>
         </div>
+        {/* regenerate modal */}
+        {/* generate Modal */}
+        <div class={`modal ${showGenerateModal ? "is-active" : ""}`}>
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Generate Fitness plan</p>
+              <button
+                class="delete"
+                aria-label="close"
+                onClick={() => setshowGenerateModal(false)}
+              ></button>
+            </header>
+            <section class="modal-card-body">
+              <FontAwesomeIcon icon={faExclamationCircle} color="#d7c278" /> You
+              are about to create a fitness plan based on your profile.
+              <br />
+              Plan will be based on your profile. if you wish to make any
+              changes in your profile ,please edit it here{" "}
+              <Link type="button" onClick={(e) => handleNavigateToAccount(e)}>
+                <FontAwesomeIcon className="mdi" icon={faArrowRight} />
+                &nbsp;Profile
+              </Link>
+              <br />
+              <br />
+              <FormInputField
+                label="Name:"
+                name="name"
+                placeholder="Fitness plan name"
+                value={name}
+                errorText={errors && errors.name}
+                helpText="Give this fitness plan a name you can use to keep track for your own purposes. Ex: `My Cardio-Plan`."
+                onChange={(e) => setName(e.target.value)}
+                isRequired={true}
+              />
+            </section>
+            <footer class="modal-card-foot">
+              <button
+                class="button is-success"
+                onClick={onRegeneratePlan}
+                disabled={!name}
+                title={!name && "Enter Name to submit"}
+              >
+                Confirm
+              </button>
+              <button
+                class="button"
+                onClick={() => setshowGenerateModal(false)}
+              >
+                Cancel
+              </button>
+            </footer>
+          </div>
+        </div>
       </nav>
 
       {/* Page */}
@@ -244,9 +381,9 @@ function MemberFitnessPlanDetail() {
             {datum.status === FITNESS_GOAL_STATUS_ACTIVE && (
               <div class="column has-text-right">
                 <Link
-                  to={`/fitness-plan/${id}/update`}
                   class="button is-warning is-small is-fullwidth-mobile"
                   type="button"
+                  onClick={() => setshowGenerateModal(true)}
                 >
                   <FontAwesomeIcon className="mdi" icon={faPencil} />
                   &nbsp;Edit & Re-request
@@ -318,13 +455,13 @@ function MemberFitnessPlanDetail() {
                             <strong>Detail</strong>
                           </Link>
                         </li>
-                        <li>
+                        {/* <li>
                           <Link
                             to={`/fitness-plan/${datum.id}/submission-form`}
                           >
                             Submission Form
                           </Link>
-                        </li>
+                        </li> */}
                       </ul>
                     </div>
 
@@ -378,14 +515,16 @@ function MemberFitnessPlanDetail() {
                   <div class="column is-half has-text-right">
                     <Link
                       class="button is-success is-hidden-touch"
-                      to={`/fitness-plan/${id}/update`}
+                      type="button"
+                      onClick={() => setshowGenerateModal(true)}
                     >
                       <FontAwesomeIcon className="fas" icon={faPencil} />
                       &nbsp;Edit & Re-request
                     </Link>
                     <Link
                       class="button is-success is-fullwidth is-hidden-desktop"
-                      to={`/fitness-plan/${id}/update`}
+                      type="button"
+                      onClick={() => setshowGenerateModal(true)}
                     >
                       <FontAwesomeIcon className="fas" icon={faPencil} />
                       &nbsp;Edit & Re-request

@@ -23,6 +23,7 @@ type FitnessPlanUpdateRequestIDO struct {
 	Status             int8               `bson:"status" json:"status"`
 	TimePerDay         int8               `bson:"time_per_day" json:"time_per_day"`
 	WasProcessed       bool               `bson:"was_processed" json:"was_processed"`
+	UserId             primitive.ObjectID `bson:"user_id" json:"user_id"`
 }
 
 func ValidateUpdateRequest(dirtyData *FitnessPlanUpdateRequestIDO) error {
@@ -32,11 +33,8 @@ func ValidateUpdateRequest(dirtyData *FitnessPlanUpdateRequestIDO) error {
 		e["id"] = "missing value"
 	}
 
-	if dirtyData.TimePerDay == 0 {
-		e["time_per_day"] = "missing value"
-	}
-	if dirtyData.MaxWeeks == 0 {
-		e["max_weeks"] = "missing value"
+	if dirtyData.Name == "" {
+		e["name"] = "missing value"
 	}
 
 	if len(e) != 0 {
@@ -100,6 +98,13 @@ func (c *FitnessPlanControllerImpl) UpdateByID(ctx context.Context, req *Fitness
 			return nil, httperror.NewForForbiddenWithSingleField("message", "you do not belong to this fitnessplan")
 		}
 
+		if userRole == user_d.UserRoleAdmin {
+			if req.UserId.IsZero() {
+				return nil, httperror.NewForBadRequestWithSingleField("userid", "missing value")
+			}
+			userID = req.UserId
+		}
+
 		// Modify our original fitnessplan.
 		os.ModifiedAt = time.Now()
 		os.ModifiedByUserID = userID
@@ -108,6 +113,7 @@ func (c *FitnessPlanControllerImpl) UpdateByID(ctx context.Context, req *Fitness
 		os.Name = req.Name
 		os.WasProcessed = req.WasProcessed
 		os.Status = domain.StatusQueued
+		os.UserID = userID
 
 		// Save to the database the modified fitnessplan.
 		if err := c.FitnessPlanStorer.UpdateByID(sessCtx, os); err != nil {

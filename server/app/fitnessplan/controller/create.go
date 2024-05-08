@@ -10,16 +10,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	a_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/config/constants"
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/utils/httperror"
 )
 
 type FitnessPlanCreateRequestIDO struct {
-	EstimatedReadyDate time.Time `bson:"estimated_ready_date,omitempty" json:"estimated_ready_date,omitempty"`
-	Name               string    `bson:"name" json:"name"`
-	Status             int8      `bson:"status" json:"status"`
-	TimePerDay         int8      `bson:"time_per_day" json:"time_per_day"`
-	WasProcessed       bool      `bson:"was_processed" json:"was_processed"`
+	EstimatedReadyDate time.Time          `bson:"estimated_ready_date,omitempty" json:"estimated_ready_date,omitempty"`
+	Name               string             `bson:"name" json:"name"`
+	Status             int8               `bson:"status" json:"status"`
+	TimePerDay         int8               `bson:"time_per_day" json:"time_per_day"`
+	WasProcessed       bool               `bson:"was_processed" json:"was_processed"`
+	UserId             primitive.ObjectID `bson:"user_id" json:"user_id"`
 }
 
 func ValidateCreateRequest(dirtyData *FitnessPlanCreateRequestIDO) error {
@@ -42,9 +44,16 @@ func (c *FitnessPlanControllerImpl) Create(ctx context.Context, req *FitnessPlan
 	userID := ctx.Value(constants.SessionUserID).(primitive.ObjectID)
 	userName := ctx.Value(constants.SessionUserName).(string)
 	userLexicalName := ctx.Value(constants.SessionUserLexicalName).(string)
+	userRole, _ := ctx.Value(constants.SessionUserRole).(int8)
 
 	if err := ValidateCreateRequest(req); err != nil {
 		return nil, err
+	}
+	if userRole == datastore.UserRoleAdmin {
+		if req.UserId.IsZero() {
+			return nil, httperror.NewForBadRequestWithSingleField("userid", "missing value")
+		}
+		userID = req.UserId
 	}
 
 	////

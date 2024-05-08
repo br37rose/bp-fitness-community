@@ -205,7 +205,7 @@ func (c *FitnessPlanControllerImpl) generateFitnessPlanInstructionsPrompt(sessCt
 	prompt := `CLIENT DETAILS AS QUESTIONS AND ANSWERS:`
 	for _, qstn := range qstRes.Results {
 		if ans, ok := AnsMap[qstn.ID.Hex()]; ok {
-			prompt = fmt.Sprintf("%s,\n %s : %s", prompt, qstn.Subtitle, ans)
+			prompt = fmt.Sprintf("%s,\n %s (%s) : %s", prompt, qstn.Title, qstn.Subtitle, strings.Join(ans.Answers, ","))
 		}
 	}
 
@@ -371,7 +371,7 @@ func (c *FitnessPlanControllerImpl) generateFitnessPlanRecommendedExercisesPromp
 	clientProfile := ""
 	for _, qstn := range qstRes.Results {
 		if ans, ok := AnsMap[qstn.ID.Hex()]; ok {
-			clientProfile = fmt.Sprintf("%s,\n %s : %s", clientProfile, qstn.Subtitle, ans)
+			clientProfile = fmt.Sprintf("%s,\n %s (%s) : %s", clientProfile, qstn.Title, qstn.Subtitle, ans)
 		}
 	}
 
