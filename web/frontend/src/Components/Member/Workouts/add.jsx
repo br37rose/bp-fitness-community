@@ -222,6 +222,7 @@ function MemberWorkoutAdd() {
 			targetText: "",
 			targetType: "",
 		};
+		console.log(item)
 
 		setselectableExcercises((prevExercises) =>
 			prevExercises.filter((e) => e.id !== exercise.id)
@@ -492,7 +493,6 @@ function MemberWorkoutAdd() {
 													<ExerciseDisplay
 														wrapperclass={"excersizeWrapper"}
 														exercises={selectableExcercises}
-														isdraggable
 														onAdd={onDrop}
 														showindex={false}
 														showDescription={false}
