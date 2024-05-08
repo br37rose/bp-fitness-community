@@ -75,6 +75,7 @@ import PrivacyStaticPage from "./Components/Misc/Privacy";
 import TermsOfServiceStaticPage from "./Components/Misc/TOS";
 import AnonymousCurrentUserRedirector from "./Components/Misc/AnonymousCurrentUserRedirector";
 import TwoFactorAuthenticationRedirector from "./Components/Misc/TwoFactorAuthenticationRedirector";
+import GoogleFitRequiresLoginAgainTopBanner from "./Components/Misc/GoogleFitRequiresLoginAgainTopBanner";
 import TopAlertBanner from "./Components/Misc/TopAlertBanner";
 import Sidebar from "./Components/Menu/Sidebar";
 import Topbar from "./Components/Menu/Top";
@@ -141,6 +142,7 @@ function AppRoute() {
           <TwoFactorAuthenticationRedirector />
           <TopAlertBanner />
           <Topbar />
+          <GoogleFitRequiresLoginAgainTopBanner />
           <div class="columns pt-3">
             <Sidebar />
             <div class="column">
