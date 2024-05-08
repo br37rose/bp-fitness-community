@@ -245,6 +245,11 @@ p {
       color: #3273dc;
       /* Color for icons */ }
 
+.scrollable-exercises {
+  max-height: 60vh;
+  /* Adjust based on your design needs */
+  overflow-y: auto; }
+
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,

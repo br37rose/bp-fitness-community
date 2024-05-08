@@ -263,3 +263,8 @@
         }
     }
 }
+
+.scrollable-exercises {
+    max-height: 60vh;  /* Adjust based on your design needs */
+    overflow-y: auto;
+  }

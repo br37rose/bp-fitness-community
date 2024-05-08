@@ -32,16 +32,16 @@ export function getLeaderboardListAPI(filtersMap = new Map(), onSuccessCallback,
         const data = camelizeKeys(responseData);
 
         // Bugfixes.
-        console.log("getMySummaryAPI | pre-fix | results:", data);
+        // console.log("getMySummaryAPI | pre-fix | results:", data);
         if (data.results !== undefined && data.results !== null && data.results.length > 0) {
             data.results.forEach(
                 (item, index) => {
                     item.createdAt = DateTime.fromISO(item.createdAt).toLocaleString(DateTime.DATETIME_MED);
-                    console.log(item, index);
+                    // console.log(item, index);
                 }
             )
         }
-        console.log("getMySummaryAPI | post-fix | results:", data);
+        // console.log("getMySummaryAPI | post-fix | results:", data);
 
         // Return the callback data.
         onSuccessCallback(data);
@@ -75,16 +75,16 @@ export function getMySummaryAPI(filtersMap=new Map(), onSuccessCallback, onError
         const data = camelizeKeys(responseData);
 
         // Bugfixes.
-        console.log("getMySummaryAPI | pre-fix | results:", data);
+        // console.log("getMySummaryAPI | pre-fix | results:", data);
         if (data.results !== undefined && data.results !== null && data.results.length > 0) {
             data.results.forEach(
                 (item, index) => {
                     item.createdAt = DateTime.fromISO(item.createdAt).toLocaleString(DateTime.DATETIME_MED);
-                    console.log(item, index);
+                    // console.log(item, index);
                 }
             )
         }
-        console.log("getMySummaryAPI | post-fix | results:", data);
+        // console.log("getMySummaryAPI | post-fix | results:", data);
 
         // Return the callback data.
         onSuccessCallback(data);
@@ -117,16 +117,16 @@ export function getHistoricDataAPI(filtersMap=new Map(), onSuccessCallback, onEr
         const data = camelizeKeys(responseData);
 
         // Bugfixes.
-        console.log("getHistoricDataAPI | pre-fix | results:", data);
+        // console.log("getHistoricDataAPI | pre-fix | results:", data);
         if (data.results !== undefined && data.results !== null && data.results.length > 0) {
             data.results.forEach(
                 (item, index) => {
                     item.createdAt = DateTime.fromISO(item.createdAt).toLocaleString(DateTime.DATETIME_MED);
-                    console.log(item, index);
+                    // console.log(item, index);
                 }
             )
         }
-        console.log("getHistoricDataAPI | post-fix | results:", data);
+        // console.log("getHistoricDataAPI | post-fix | results:", data);
 
         // Return the callback data.
         onSuccessCallback(data);
