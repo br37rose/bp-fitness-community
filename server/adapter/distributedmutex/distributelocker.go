@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/bsm/redislock"
@@ -23,6 +24,7 @@ type distributedLockerAdapter struct {
 	Redis         redis.UniversalClient
 	Locker        *redislock.Client
 	LockInstances map[string]*redislock.Lock
+	Mutex         *sync.Mutex // Add a mutex for synchronization with goroutines
 }
 
 // NewAdapter constructor that returns the default DistributedLocker generator.
@@ -39,6 +41,7 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) Adapter
 		Redis:         redisClient,
 		Locker:        locker,
 		LockInstances: make(map[string]*redislock.Lock, 0),
+		Mutex:         &sync.Mutex{}, // Initialize the mutex
 	}
 }
 
@@ -60,8 +63,11 @@ func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
 		return
 	}
 
+	a.Mutex.Lock()
+	defer a.Mutex.Unlock()
+
 	if a.LockInstances != nil { // Defensive code.
-		a.LockInstances[k] = lock
+		a.LockInstances[k] = lock //TODO: Why am I getting error "fatal error: concurrent map writes" here?
 	}
 }
 
