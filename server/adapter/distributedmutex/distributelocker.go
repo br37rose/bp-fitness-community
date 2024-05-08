@@ -49,8 +49,8 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) Adapter
 func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
 	a.Logger.Debug(fmt.Sprintf("locking fo key: %v", k))
 
-	// Retry every 100ms, for up-to 5x
-	backoff := redislock.LimitRetry(redislock.LinearBackoff(100*time.Millisecond), 5)
+	// Retry every 250ms, for up-to 10x
+	backoff := redislock.LimitRetry(redislock.LinearBackoff(250*time.Millisecond), 10)
 
 	// Obtain lock with retry
 	lock, err := a.Locker.Obtain(ctx, k, time.Minute, &redislock.Options{
