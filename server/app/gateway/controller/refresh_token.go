@@ -29,7 +29,7 @@ func (impl *GatewayControllerImpl) RefreshToken(ctx context.Context, value strin
 
 	uBin, err := impl.Cache.Get(ctx, sessionID)
 	if err != nil {
-		impl.Logger.Error("in-memory set error", slog.Any("err", err))
+		impl.Logger.Error("in-memory get error", slog.Any("err", err))
 		return nil, "", time.Now(), "", time.Now(), err
 	}
 
