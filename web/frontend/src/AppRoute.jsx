@@ -70,7 +70,9 @@ import LogoutRedirector from "./Components/Gateway/LogoutRedirector";
 import Login from "./Components/Gateway/Login";
 import Register from "./Components/Gateway/Register";
 import RegisterSuccessful from "./Components/Gateway/RegisterSuccessful";
-import Index from "./Components/Gateway/Index/Index";
+import IndexStaticPage from "./Components/Gateway/Index/Index";
+import PrivacyStaticPage from "./Components/Misc/Privacy";
+import TermsOfServiceStaticPage from "./Components/Misc/TOS";
 import AnonymousCurrentUserRedirector from "./Components/Misc/AnonymousCurrentUserRedirector";
 import TwoFactorAuthenticationRedirector from "./Components/Misc/TwoFactorAuthenticationRedirector";
 import TopAlertBanner from "./Components/Misc/TopAlertBanner";
@@ -757,7 +759,17 @@ function AppRoute() {
                     path="/password-reset"
                     element={<PasswordReset />}
                   />
-                  <Route exact path="/" element={<Index />} />
+                  <Route
+                    exact
+                    path="/terms-of-service"
+                    element={<TermsOfServiceStaticPage />}
+                  />
+                  <Route
+                    exact
+                    path="/privacy"
+                    element={<PrivacyStaticPage />}
+                  />
+                  <Route exact path="/" element={<IndexStaticPage />} />
                   <Route path="*" element={<NotFoundError />} />
                 </Routes>
               </section>
