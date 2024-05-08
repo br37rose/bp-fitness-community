@@ -2,7 +2,9 @@ import PropTypes from "prop-types";
 
 const YouTubeVideo = ({ videoId, parseForVideoId = true }) => {
   const getYouTubeVideoId = (url) => {
-    const match = url.match(/[?&]v=([^&]+)/);
+    const match =
+      url.match(/[?&]v=([^&]+)/) ||
+      url.match(/(?:youtu\.be\/|\/embed\/|\/\?v=|&v=)([^\/?\&]+)/);
     return match && match[1];
   };
 
