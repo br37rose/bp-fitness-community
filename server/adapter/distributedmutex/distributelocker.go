@@ -67,7 +67,7 @@ func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
 	defer a.Mutex.Unlock()
 
 	if a.LockInstances != nil { // Defensive code.
-		a.LockInstances[k] = lock //TODO: Why am I getting error "fatal error: concurrent map writes" here?
+		a.LockInstances[k] = lock
 	}
 }
 
