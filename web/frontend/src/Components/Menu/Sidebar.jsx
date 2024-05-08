@@ -31,7 +31,7 @@ export default (props) => {
   //// Global State
   ////
   const [onHamburgerClicked, setOnHamburgerClicked] = useRecoilState(
-    onHamburgerClickedState
+    onHamburgerClickedState,
   );
   const [currentUser] = useRecoilState(currentUserState);
 
@@ -64,6 +64,8 @@ export default (props) => {
     "/register-step-2",
     "/register-successful",
     "/index",
+    "/terms-of-service",
+    "/privacy-policy",
     "/login",
     "/login/2fa",
     "/login/2fa/step-1",

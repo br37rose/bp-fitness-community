@@ -20,7 +20,7 @@ function Topbar() {
   //// Global State
   ////
   const [onHamburgerClicked, setOnHamburgerClicked] = useRecoilState(
-    onHamburgerClickedState
+    onHamburgerClickedState,
   );
   const [currentUser] = useRecoilState(currentUserState);
 
@@ -53,6 +53,8 @@ function Topbar() {
     "/register-step-2",
     "/register-successful",
     "/index",
+    "/terms-of-service",
+    "/privacy-policy",
     "/login",
     "/login/2fa",
     "/login/2fa/step-1",
@@ -63,7 +65,7 @@ function Topbar() {
     "/forgot-password",
     "/password-reset",
     "/terms",
-    "/privacy"
+    "/privacy",
   ];
   const location = useLocation();
   var arrayLength = ignorePathsArr.length;

@@ -766,7 +766,7 @@ function AppRoute() {
                   />
                   <Route
                     exact
-                    path="/privacy"
+                    path="/privacy-policy"
                     element={<PrivacyStaticPage />}
                   />
                   <Route exact path="/" element={<IndexStaticPage />} />
