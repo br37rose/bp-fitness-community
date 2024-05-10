@@ -47,6 +47,7 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) Adapter
 
 // Lock function blocks the current thread if the lock key is currently locked.
 func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
+	startDT := time.Now()
 	a.Logger.Debug(fmt.Sprintf("locking for key: %v", k))
 
 	// Retry every 250ms, for up-to 20x
@@ -57,7 +58,11 @@ func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
 		RetryStrategy: backoff,
 	})
 	if err == redislock.ErrNotObtained {
-		a.Logger.Error("could not obtain lock", slog.String("key", k))
+		diff := startDT.Sub(time.Now())
+		a.Logger.Error("could not obtain lock",
+			slog.String("key", k),
+			slog.Any("duration_in_minutes", diff.Minutes()))
+		return
 	} else if err != nil {
 		a.Logger.Error("failed obtaining lock because of the following error: %v", err, slog.String("key", k))
 		return
