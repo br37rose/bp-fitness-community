@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -71,6 +72,18 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaID(ctx context.
 		impl.Logger.Debug("updated google fit app with new token", slog.String("gfa_id", gfaID.Hex()))
 	})
 	if err != nil {
+		// DEVELOPERS NOTE:
+		// Occasionally Google's web-services go down and thus we need to handle
+		// this case; as a result, we will check to see if that happens and thus
+		// temporarily abort this function.
+		if !strings.Contains(err.Error(), "The service is currently unavailable") {
+			impl.Logger.Warn("google api web-service is down, aborting token refresh for now...",
+				slog.String("gfa_id", gfaID.Hex()),
+				slog.String("user_id", gfa.UserID.Hex()),
+				slog.Any("error", err))
+			return nil
+		}
+
 		impl.Logger.Error("failed pulling data from google fit web-service",
 			slog.String("gfa_id", gfaID.Hex()),
 			slog.Any("error", err))
