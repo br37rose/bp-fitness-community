@@ -49,10 +49,10 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaID(ctx context.
 		return err
 	}
 
-	impl.Logger.Debug("starting...",
-		slog.String("gfa_id", gfaID.Hex()),
-		slog.String("user_id", gfa.UserID.Hex()),
-	)
+	// impl.Logger.Debug("starting...",
+	// 	slog.String("gfa_id", gfaID.Hex()),
+	// 	slog.String("user_id", gfa.UserID.Hex()),
+	// )
 
 	// Authenticated http client for a specific user's account. Note: No need
 	// for refresh token handling as it's already handled!

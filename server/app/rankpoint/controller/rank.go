@@ -124,6 +124,6 @@ func (impl *RankPointControllerImpl) GenerateGlobalRankingForActiveGoogleFitApps
 		return err
 	}
 
-	impl.Logger.Debug("ranking completed")
+	// impl.Logger.Debug("ranking completed")
 	return nil
 }

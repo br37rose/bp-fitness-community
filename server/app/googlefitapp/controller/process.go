@@ -57,7 +57,7 @@ DataTypeNameWeight
 */
 
 func (impl *GoogleFitAppControllerImpl) ProcessAllQueuedData() error {
-	impl.Logger.Debug("processing all queued data...")
+	// impl.Logger.Debug("processing all queued data...")
 
 	// DEVELOPERS NOTE:
 	// Load up only the data we want to process in our application. In future
@@ -122,21 +122,21 @@ func (impl *GoogleFitAppControllerImpl) ProcessAllQueuedData() error {
 
 		if dpdp.HasNextPage {
 			cursor = dpdp.NextCursor
-			impl.Logger.Debug("processing next page of all queued data...")
+			// impl.Logger.Debug("processing next page of all queued data...")
 		} else {
 			// If there is no more cursors from the list results then that means
 			// all our pagination have been completed so we can exit while loop.
 			isRunning = false
-			impl.Logger.Debug("processing finished of all queued data")
+			// impl.Logger.Debug("processing finished of all queued data")
 		}
 	}
 
-	impl.Logger.Debug("finished task")
+	// impl.Logger.Debug("finished task")
 	return nil
 }
 
 func (impl *GoogleFitAppControllerImpl) processForQueuedDataWithGfaID(ctx context.Context, gfaID primitive.ObjectID) error {
-	impl.Logger.Debug("processing queued data for gfa...", slog.String("gfa_id", gfaID.Hex()))
+	// impl.Logger.Debug("processing queued data for gfa...", slog.String("gfa_id", gfaID.Hex()))
 
 	// DEVELOPERS NOTE:
 	// We are only going to pull a limited number of data by using pagination
@@ -160,10 +160,10 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedDataWithGfaID(ctx contex
 				slog.Any("error", err))
 			return err
 		}
-		impl.Logger.Debug("processing 250 queued data...",
-			slog.String("cursor", cursor),
-			slog.String("gfa_id", gfaID.Hex()),
-			slog.Int("count", int(len(dpdp.Results))))
+		// impl.Logger.Debug("processing 250 queued data...",
+		// 	slog.String("cursor", cursor),
+		// 	slog.String("gfa_id", gfaID.Hex()),
+		// 	slog.Int("count", int(len(dpdp.Results))))
 
 		for _, dp := range dpdp.Results {
 			if err := impl.processForQueuedData(ctx, dp); err != nil {
@@ -176,20 +176,20 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedDataWithGfaID(ctx contex
 
 		if dpdp.HasNextPage {
 			cursor = dpdp.NextCursor
-			impl.Logger.Debug("processing next page of queued data for gfa...",
-				slog.String("gfa_id", gfaID.Hex()),
-			)
+			// impl.Logger.Debug("processing next page of queued data for gfa...",
+			// 	slog.String("gfa_id", gfaID.Hex()),
+			// )
 		} else {
 			// If there is no more cursors from the list results then that means
 			// all our pagination have been completed so we can exit while loop.
 			isRunning = false
-			impl.Logger.Debug("processing finished of queued data for gfa...",
-				slog.String("gfa_id", gfaID.Hex()),
-			)
+			// impl.Logger.Debug("processing finished of queued data for gfa...",
+			// 	slog.String("gfa_id", gfaID.Hex()),
+			// )
 		}
 	}
 
-	impl.Logger.Debug("processed queued data for gfa", slog.String("gfa_id", gfaID.Hex()))
+	// impl.Logger.Debug("processed queued data for gfa", slog.String("gfa_id", gfaID.Hex()))
 	return nil
 }
 
@@ -265,24 +265,24 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 			return err
 		}
 
-		// STEP 3: For debugging purposes update the console log.
-		impl.Logger.Debug("created datapoint",
-			slog.String("data_type_name", dp.DataTypeName),
-			slog.String("metric_id", dp.MetricID.Hex()),
-			slog.String("user_id", dp.UserID.Hex()),
-			slog.Time("start_at", dp.StartAt),
-			slog.Time("end_at", dp.EndAt),
-			slog.Int("status", int(dp.Status)),
-		)
+		// // STEP 3: For debugging purposes update the console log.
+		// impl.Logger.Debug("created datapoint",
+		// 	slog.String("data_type_name", dp.DataTypeName),
+		// 	slog.String("metric_id", dp.MetricID.Hex()),
+		// 	slog.String("user_id", dp.UserID.Hex()),
+		// 	slog.Time("start_at", dp.StartAt),
+		// 	slog.Time("end_at", dp.EndAt),
+		// 	slog.Int("status", int(dp.Status)),
+		// )
 	} else {
 		if dp.Status == gfdp_ds.StatusQueued {
-			impl.Logger.Debug("datapoint already exists",
-				slog.String("data_type_name", dp.DataTypeName),
-				slog.String("metric_id", dp.MetricID.Hex()),
-				slog.Time("start_at", dp.StartAt),
-				slog.Time("end_at", dp.EndAt),
-				slog.Int("status", int(dp.Status)),
-			)
+			// impl.Logger.Debug("datapoint already exists",
+			// 	slog.String("data_type_name", dp.DataTypeName),
+			// 	slog.String("metric_id", dp.MetricID.Hex()),
+			// 	slog.Time("start_at", dp.StartAt),
+			// 	slog.Time("end_at", dp.EndAt),
+			// 	slog.Int("status", int(dp.Status)),
+			// )
 
 			// Update our Google Fit datapoint to be `active` status.
 			dp.Status = gfdp_ds.StatusActive
@@ -292,14 +292,14 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedData(ctx context.Context
 				return err
 			}
 
-			// STEP 3: For debugging purposes update the console log.
-			impl.Logger.Debug("updated datapoint",
-				slog.String("data_type_name", dp.DataTypeName),
-				slog.String("metric_id", dp.MetricID.Hex()),
-				slog.Time("start_at", dp.StartAt),
-				slog.Time("end_at", dp.EndAt),
-				slog.Int("status", int(dp.Status)),
-			)
+			// // STEP 3: For debugging purposes update the console log.
+			// impl.Logger.Debug("updated datapoint",
+			// 	slog.String("data_type_name", dp.DataTypeName),
+			// 	slog.String("metric_id", dp.MetricID.Hex()),
+			// 	slog.Time("start_at", dp.StartAt),
+			// 	slog.Time("end_at", dp.EndAt),
+			// 	slog.Int("status", int(dp.Status)),
+			// )
 		}
 
 	}

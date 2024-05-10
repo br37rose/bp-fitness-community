@@ -31,13 +31,13 @@ func (impl *GoogleFitAppControllerImpl) pullOxygenSaturationDataFromGoogleWithGf
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty oxygen saturation dataset",
-			slog.String("gfa_id", gfa.ID.Hex()))
+		// impl.Logger.Warn("pulled empty oxygen saturation dataset",
+		// 	slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled oxygen saturation dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulled oxygen saturation dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
@@ -86,8 +86,8 @@ func (impl *GoogleFitAppControllerImpl) pullOxygenSaturationDataFromGoogleWithGf
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted oxygen saturation data point",
-					slog.Any("dp", dp))
+				// impl.Logger.Debug("inserted oxygen saturation data point",
+				// 	slog.Any("dp", dp))
 			}
 		}
 	}

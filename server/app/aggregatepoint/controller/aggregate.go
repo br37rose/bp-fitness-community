@@ -131,8 +131,8 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		gfa.HeartRateBPMMetricID:   gcp_a.DataTypeNameHeartRateBPM,
 	}
 
-	impl.Logger.Debug("aggregation starting...",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("aggregation starting...",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	// Variable stores the number of goroutines we expect to wait for. We
 	// set value of `1` because we have the following functions we want to
@@ -349,6 +349,6 @@ func (impl *AggregatePointControllerImpl) aggregateForGoogleFitApp(ctx context.C
 		return err
 	}
 
-	impl.Logger.Debug("aggregation completed", slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("aggregation completed", slog.String("gfa_id", gfa.ID.Hex()))
 	return nil
 }

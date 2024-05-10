@@ -53,11 +53,11 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 		gcp_a.DataTypeNameHeartRateBPM,
 	}
 
-	impl.Logger.Debug("processing rankings per data name type",
-		slog.Any("period", period),
-		slog.Time("start", start),
-		slog.Time("end", end),
-	)
+	// impl.Logger.Debug("processing rankings per data name type",
+	// 	slog.Any("period", period),
+	// 	slog.Time("start", start),
+	// 	slog.Time("end", end),
+	// )
 
 	for _, metricDataTypeName := range metricDataTypeNames {
 		f := &ag_s.AggregatePointPaginationListFilter{
@@ -281,56 +281,56 @@ func (impl *RankPointControllerImpl) processGlobalRanksForGoogleFitAppsV2(ctx co
 	}
 
 	for metricDataTypeName, rps := range rpsAvg {
-		impl.Logger.Debug("ranking start",
-			slog.String("metric_data_type_name", metricDataTypeName),
-			slog.Int("function", int(rp_s.FunctionAverage)),
-			slog.Int("period", int(period)),
-			slog.Int("rps_count", len(rps)),
-		)
+		// impl.Logger.Debug("ranking start",
+		// 	slog.String("metric_data_type_name", metricDataTypeName),
+		// 	slog.Int("function", int(rp_s.FunctionAverage)),
+		// 	slog.Int("period", int(period)),
+		// 	slog.Int("rps_count", len(rps)),
+		// )
 
 		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, rp_s.FunctionAverage, period); err != nil {
 			return err
 		}
 
-		impl.Logger.Debug("ranking done",
-			slog.String("metric_data_type_name", metricDataTypeName),
-			slog.Int("period", int(period)),
-		)
+		// impl.Logger.Debug("ranking done",
+		// 	slog.String("metric_data_type_name", metricDataTypeName),
+		// 	slog.Int("period", int(period)),
+		// )
 	}
 
 	for metricDataTypeName, rps := range rpsSum {
-		impl.Logger.Debug("ranking start",
-			slog.String("metric_data_type_name", metricDataTypeName),
-			slog.Int("function", int(rp_s.FunctionSum)),
-			slog.Int("period", int(period)),
-			slog.Int("rps_count", len(rps)),
-		)
+		// impl.Logger.Debug("ranking start",
+		// 	slog.String("metric_data_type_name", metricDataTypeName),
+		// 	slog.Int("function", int(rp_s.FunctionSum)),
+		// 	slog.Int("period", int(period)),
+		// 	slog.Int("rps_count", len(rps)),
+		// )
 
 		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, rp_s.FunctionSum, period); err != nil {
 			return err
 		}
 
-		impl.Logger.Debug("ranking done",
-			slog.String("metric_data_type_name", metricDataTypeName),
-			slog.Int("period", int(period)),
-		)
+		// impl.Logger.Debug("ranking done",
+		// 	slog.String("metric_data_type_name", metricDataTypeName),
+		// 	slog.Int("period", int(period)),
+		// )
 	}
 
 	for metricDataTypeName, rps := range rpsCount {
-		impl.Logger.Debug("ranking start",
-			slog.String("metric_data_type_name", metricDataTypeName),
-			slog.Int("function", int(rp_s.FunctionCount)),
-			slog.Int("period", int(period)),
-			slog.Int("rps_count", len(rps)),
-		)
+		// impl.Logger.Debug("ranking start",
+		// 	slog.String("metric_data_type_name", metricDataTypeName),
+		// 	slog.Int("function", int(rp_s.FunctionCount)),
+		// 	slog.Int("period", int(period)),
+		// 	slog.Int("rps_count", len(rps)),
+		// )
 		if err := impl.sortForRankPoints(ctx, metricDataTypeName, rps, rp_s.FunctionCount, period); err != nil {
 			return err
 		}
 
-		impl.Logger.Debug("ranking done",
-			slog.String("metric_data_type_name", metricDataTypeName),
-			slog.Int("period", int(period)),
-		)
+		// impl.Logger.Debug("ranking done",
+		// 	slog.String("metric_data_type_name", metricDataTypeName),
+		// 	slog.Int("period", int(period)),
+		// )
 	}
 
 	return nil
@@ -361,17 +361,17 @@ func (impl *RankPointControllerImpl) sortForRankPoints(ctx context.Context, dtn 
 				slog.Any("error", err))
 			return err
 		}
-		impl.Logger.Debug("ranked",
-			slog.String("user_first_name", rp.UserFirstName),
-			slog.String("metric_data_type_name", rp.MetricDataTypeName),
-			slog.Time("start", rp.Start),
-			slog.Time("end", rp.End),
-			slog.Int("function", int(rp.Function)),
-			slog.Int("period", int(rp.Period)),
-			slog.Int("function", int(rp.Function)),
-			slog.Int("place", int(rp.Place)),
-			slog.Float64("value", rp.Value),
-		)
+		// impl.Logger.Debug("ranked",
+		// 	slog.String("user_first_name", rp.UserFirstName),
+		// 	slog.String("metric_data_type_name", rp.MetricDataTypeName),
+		// 	slog.Time("start", rp.Start),
+		// 	slog.Time("end", rp.End),
+		// 	slog.Int("function", int(rp.Function)),
+		// 	slog.Int("period", int(rp.Period)),
+		// 	slog.Int("function", int(rp.Function)),
+		// 	slog.Int("place", int(rp.Place)),
+		// 	slog.Float64("value", rp.Value),
+		// )
 	}
 
 	return nil

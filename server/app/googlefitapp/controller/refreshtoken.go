@@ -142,11 +142,11 @@ func (impl *GoogleFitAppControllerImpl) refreshTokenFromGoogle(ctx context.Conte
 		expiryDurInMins = expiryDur.Hours() * 60 * (-1)
 	}
 
-	impl.Logger.Debug("checked gfa is ok",
-		slog.String("gfa_id", gfaID.Hex()),
-		slog.String("user_id", gfa.UserID.Hex()),
-		slog.Time("token_expiry", gfa.Token.Expiry),
-		slog.Float64("token_mins_unitl_expiry", expiryDurInMins),
-	)
+	// impl.Logger.Debug("checked gfa is ok",
+	// 	slog.String("gfa_id", gfaID.Hex()),
+	// 	slog.String("user_id", gfa.UserID.Hex()),
+	// 	slog.Time("token_expiry", gfa.Token.Expiry),
+	// 	slog.Float64("token_mins_unitl_expiry", expiryDurInMins),
+	// )
 	return nil
 }
