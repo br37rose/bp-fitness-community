@@ -58,9 +58,12 @@ func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
 		RetryStrategy: backoff,
 	})
 	if err == redislock.ErrNotObtained {
-		diff := startDT.Sub(time.Now())
+		nowDT := time.Now()
+		diff := nowDT.Sub(startDT)
 		a.Logger.Error("could not obtain lock",
 			slog.String("key", k),
+			slog.Time("start_dt", startDT),
+			slog.Time("now_dt", nowDT),
 			slog.Any("duration_in_minutes", diff.Minutes()))
 		return
 	} else if err != nil {
