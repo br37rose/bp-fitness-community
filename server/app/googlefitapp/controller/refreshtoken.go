@@ -66,7 +66,7 @@ func (impl *GoogleFitAppControllerImpl) refreshTokenFromGoogle(ctx context.Conte
 		impl.Logger.Debug("updated google fit app with new token")
 	})
 	if err != nil {
-		impl.Logger.Warn("detected error when refreshing google fit token from oauth",
+		impl.Logger.Error("detected error when refreshing google fit token from oauth",
 			slog.String("gfa_id", gfaID.Hex()),
 			slog.String("user_id", gfa.UserID.Hex()),
 			slog.Any("error", err),
