@@ -21,6 +21,7 @@ type EventSchedulerAdapter interface {
 	ScheduleEveryMinuteFunc(function any, parameters ...any) error
 	ScheduleEveryFiveMinutesFunc(function any, parameters ...any) error
 	ScheduleEveryFifteenMinutesFunc(function any, parameters ...any) error
+	ScheduleEveryHourFunc(function any, parameters ...any) error
 }
 
 type eventSchedulerAdapter struct {
@@ -147,7 +148,7 @@ func (adapt *eventSchedulerAdapter) ScheduleEveryMinuteFunc(function any, parame
 
 	// Create a new recuring job every 1 minute.
 	job := gocron.DurationJob(
-		60 * time.Second,
+		1 * 60 * time.Second,
 	)
 
 	// Create a new job with the task and one-time job configuration
@@ -184,7 +185,7 @@ func (adapt *eventSchedulerAdapter) ScheduleEveryFiveMinutesFunc(function any, p
 	// Create a new task with the provided function and parameters
 	task := gocron.NewTask(function, parameters...)
 
-	// Create a new recuring job every 1 minute.
+	// Create a new recuring job every 5 minutes.
 	job := gocron.DurationJob(
 		5 * 60 * time.Second,
 	)
@@ -223,9 +224,48 @@ func (adapt *eventSchedulerAdapter) ScheduleEveryFifteenMinutesFunc(function any
 	// Create a new task with the provided function and parameters
 	task := gocron.NewTask(function, parameters...)
 
-	// Create a new recuring job every 1 minute.
+	// Create a new recuring job every 15 minutes.
 	job := gocron.DurationJob(
 		15 * 60 * time.Second,
+	)
+
+	// Create a new job with the task and one-time job configuration
+	_, err := adapt.Scheduler.NewJob(
+		job,
+		task,
+		// gocron.WithEventListeners(
+		// 	gocron.AfterJobRuns(
+		// 		func(jobID uuid.UUID, jobName string) {
+		// 			// do something after the job completes
+		// 			fmt.Println("done", jobID, jobName)
+		// 		},
+		// 	),
+		// ),
+	)
+	if err != nil {
+		adapt.Logger.Error("failed enqueuing every 15 minutes job", slog.Any("err", err))
+		return err
+	}
+	// adapt.Logger.Debug("enqueued one-time job", slog.Any("id", j.ID()))
+
+	return nil
+}
+
+func (adapt *eventSchedulerAdapter) ScheduleEveryHourFunc(function any, parameters ...any) error {
+	// xxx, err1 := adapt.Locker.Lock(context.Background(), "test-1-2-3")
+	// if err1 != nil {
+	// 	return err1
+	// }
+	// if xxx != nil {
+	// 	defer xxx.Unlock(context.Background())
+	// }
+
+	// Create a new task with the provided function and parameters
+	task := gocron.NewTask(function, parameters...)
+
+	// Create a new recuring job every 1 hour.
+	job := gocron.DurationJob(
+		60 * 60 * time.Second,
 	)
 
 	// Create a new job with the task and one-time job configuration
