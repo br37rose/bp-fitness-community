@@ -189,7 +189,7 @@ func (impl *GoogleFitAppControllerImpl) processForQueuedDataWithGfaID(ctx contex
 		}
 	}
 
-	impl.Logger.Debug("finished task")
+	impl.Logger.Debug("processed queued data for gfa", slog.String("gfa_id", gfaID.Hex()))
 	return nil
 }
 

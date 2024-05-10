@@ -281,7 +281,7 @@ func (impl *GoogleFitAppControllerImpl) attemptAuthorizationForKey(sessCtx mongo
 
 			impl.Logger.DebugContext(sessCtx, "processing queued initial historic data from google", slog.Any("gfa_id", gfa.ID.Hex()))
 			if err := impl.processForQueuedDataWithGfaID(context.Background(), gfa.ID); err != nil {
-				impl.Logger.ErrorContext(sessCtx, "processing queued intiial historic data from google error",
+				impl.Logger.ErrorContext(sessCtx, "processing queued intitial historic data from google error",
 					slog.Any("gfa_id", gfa.ID),
 					slog.Any("err", err),
 				)

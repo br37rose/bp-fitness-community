@@ -47,19 +47,19 @@ func NewAdapter(loggerp *slog.Logger, redisClient redis.UniversalClient) Adapter
 
 // Lock function blocks the current thread if the lock key is currently locked.
 func (a distributedLockerAdapter) Lock(ctx context.Context, k string) {
-	a.Logger.Debug(fmt.Sprintf("locking fo key: %v", k))
+	a.Logger.Debug(fmt.Sprintf("locking for key: %v", k))
 
-	// Retry every 250ms, for up-to 10x
-	backoff := redislock.LimitRetry(redislock.LinearBackoff(250*time.Millisecond), 10)
+	// Retry every 250ms, for up-to 20x
+	backoff := redislock.LimitRetry(redislock.LinearBackoff(250*time.Millisecond), 20)
 
 	// Obtain lock with retry
 	lock, err := a.Locker.Obtain(ctx, k, time.Minute, &redislock.Options{
 		RetryStrategy: backoff,
 	})
 	if err == redislock.ErrNotObtained {
-		a.Logger.Error("could not obtain lock!")
+		a.Logger.Error("could not obtain lock", slog.String("key", k))
 	} else if err != nil {
-		a.Logger.Error("failed obtaining lock because of the following error: %v", err)
+		a.Logger.Error("failed obtaining lock because of the following error: %v", err, slog.String("key", k))
 		return
 	}
 
@@ -90,7 +90,7 @@ func (a distributedLockerAdapter) Unlock(ctx context.Context, k string) {
 	if ok {
 		defer lockInstance.Release(ctx)
 	} else {
-		a.Logger.Error("Could not obtain lock to unlock!")
+		a.Logger.Error("could not obtain to unlock", slog.String("key", k))
 	}
 	return
 }
