@@ -74,10 +74,10 @@ function MemberBiometricLaunchpad() {
         <div class="columns">
           <div class="column">
             <h1 class="title is-4 is-hidden-touch"><FontAwesomeIcon className="fas" icon={faHeartbeat} />
-              &nbsp;Biometrics
+              &nbsp;Biometrics&nbsp;<span class="tag is-success is-light">Beta</span>
             </h1>
             <h1 class="title is-6 is-hidden-desktop mt-2"><FontAwesomeIcon className="fas" icon={faHeartbeat} />
-              &nbsp;Biometrics
+              &nbsp;Biometrics&nbsp;<span class="tag is-success is-light">Beta</span>
             </h1>
           </div>
         </div>

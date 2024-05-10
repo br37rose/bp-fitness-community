@@ -318,7 +318,7 @@ function MemberLeaderboardGlobalTabularList() {
 					<div className="column">
 						<h1 className="title is-4">
 							<FontAwesomeIcon className="fas" icon={faRankingStar} />
-							&nbsp;Leaderboard - Global
+							&nbsp;Leaderboard - Global&nbsp;<span class="tag is-success is-light">Beta</span>
 						</h1>
 					</div>
 					<div className="column has-text-right">

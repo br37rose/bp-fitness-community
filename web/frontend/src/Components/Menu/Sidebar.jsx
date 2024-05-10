@@ -447,7 +447,7 @@ export default (props) => {
                   }`}
                 >
                   <FontAwesomeIcon className="fas" icon={faHeartbeat} />
-                  &nbsp;Biometrics
+                  &nbsp;Biometrics&nbsp;<span class="tag is-success is-light is-small">Beta</span>
                 </a>
                 <ul>
                   <li>

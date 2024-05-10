@@ -401,7 +401,7 @@ function MemberHistoricalDataTabularList() {
 					<div className="column">
 						<h1 className="title is-4">
 							<FontAwesomeIcon className="fas" icon={faRankingStar} />
-							&nbsp;My History
+							&nbsp;My History&nbsp;<span class="tag is-success is-light">Beta</span>
 						</h1>
 					</div>
 					<div className="column has-text-right">
