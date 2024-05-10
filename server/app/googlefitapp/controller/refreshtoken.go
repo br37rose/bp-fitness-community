@@ -69,7 +69,7 @@ func (impl *GoogleFitAppControllerImpl) refreshTokenFromGoogle(ctx context.Conte
 		impl.Logger.Warn("detected error when refreshing google fit token from oauth",
 			slog.String("gfa_id", gfaID.Hex()),
 			slog.String("user_id", gfa.UserID.Hex()),
-			slog.Any("error", err)
+			slog.Any("error", err),
 		)
 
 		//
