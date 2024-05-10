@@ -14,8 +14,8 @@ import (
 )
 
 func (impl *GoogleFitAppControllerImpl) pullOxygenSaturationDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling oxygen saturation dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulling oxygen saturation dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Get `Google Fit` data
