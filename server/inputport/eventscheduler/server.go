@@ -86,10 +86,10 @@ func (port *schedulerInputPort) Run() {
 	if err := port.GoogleFitAppScheduler.RunEveryFifteenMinutesPullDataFromGoogle(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
-	if err := port.AggregatePointScheduler.RunEveryMinuteAggregation(); err != nil {
+	if err := port.AggregatePointScheduler.RunEveryFiveMinutesAggregation(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
-	if err := port.RankPointScheduler.RunEveryMinuteRanking(); err != nil {
+	if err := port.RankPointScheduler.RunEveryFiveMinutesRanking(); err != nil {
 		port.Logger.Error("scheduler has error", slog.Any("err", err))
 	}
 	if err := port.FitnessPlanScheduler.RunEveryMinuteUpdateFitnessPlans(); err != nil {

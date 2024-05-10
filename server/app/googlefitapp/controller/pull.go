@@ -71,6 +71,10 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaID(ctx context.
 		impl.Logger.Debug("updated google fit app with new token", slog.String("gfa_id", gfaID.Hex()))
 	})
 	if err != nil {
+		impl.Logger.Error("failed pulling data from google fit web-service",
+			slog.String("gfa_id", gfaID.Hex()),
+			slog.Any("error", err))
+
 		//
 		// If any errors occur let's force the user to log in again.
 		//

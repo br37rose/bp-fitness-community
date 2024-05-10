@@ -10,7 +10,7 @@ import (
 )
 
 type RankPointScheduler interface {
-	RunEveryMinuteRanking() error
+	RunEveryFiveMinutesRanking() error
 	RunOnceAndStartImmediatelyRanking() error
 }
 
@@ -37,9 +37,9 @@ func NewScheduler(
 	}
 }
 
-func (impl *rankPointSchedulerImpl) RunEveryMinuteRanking() error {
+func (impl *rankPointSchedulerImpl) RunEveryFiveMinutesRanking() error {
 	impl.Logger.Debug("scheduled: ranking", slog.String("interval", "every minute"))
-	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryFiveMinutesFunc(func() {
 		if err := impl.Controller.GenerateGlobalRankingForActiveGoogleFitApps(context.Background()); err != nil {
 			impl.Logger.Error("failed ranking",
 				slog.Any("error", err))

@@ -33,6 +33,7 @@ func (impl *AggregatePointControllerImpl) AggregateForAllActiveGoogleFitApps(ctx
 		return nil
 	}
 
+	impl.Logger.Debug("aggregation completed")
 	return nil
 }
 func (impl *AggregatePointControllerImpl) AggregateForGoogleFitAppID(ctx context.Context, gfaID primitive.ObjectID) error {
