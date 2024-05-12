@@ -62,6 +62,7 @@ function MemberDashboard() {
   const [isComingSoon, setComingSoon] = useState(true);
   const [answers, setAnswers] = useState({});
   const [forceURL, setForceURL] = useState("");
+  const defaultAvatarUrl = 'static/default_user.jpg';
 
   useEffect(() => {
     console.log(answers);
@@ -497,10 +498,9 @@ function MemberDashboard() {
                       <div class="is-flex is-align-items-center ">
                         <div class="">
                           <span>
-                            <FontAwesomeIcon
-                              className="fas is-size-1"
-                              icon={faUser}
-                            />
+                          <figure className="image is-128x128" style={{ margin: 'auto' }}>
+                            <img className="is-rounded" src={currentUser.avatarObjectUrl || defaultAvatarUrl} alt={currentUser.name} style={{ objectFit: 'cover', height: '128px', width: '128px' }} />
+                        </figure>
                           </span>
                         </div>
                         <div class="ml-6">
@@ -663,7 +663,7 @@ function MemberDashboard() {
                       <h5 class="mt-2 is-size-4 has-text-centered has has-text-weight-semibold is-size-5-mobile">
                         {datum &&
                           datum.heartRateThisDaySummary &&
-                          datum.heartRateThisDaySummary.average.toFixed(2) || 0}{" "}
+                          datum.heartRateThisDaySummary.average.toFixed(2) || 0}{" bpm"}
                       </h5>
                       <p class="is-size-5 has-text-weight-semibold is-size-6-mobile">
                         avg. resting heart rate
