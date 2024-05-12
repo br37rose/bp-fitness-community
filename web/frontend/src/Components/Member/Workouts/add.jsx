@@ -492,7 +492,7 @@ function MemberWorkoutAdd() {
 												) : (
 													<WorkoutDisplay
 														wrapperclass={"excersizeWrapper"}
-														exercises={selectableExcercises}
+														workouts={selectableExcercises}
 														onAdd={onDrop}
 														showindex={false}
 														showDescription={false}

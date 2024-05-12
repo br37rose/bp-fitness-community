@@ -1,19 +1,19 @@
 import React from "react";
 import WorkoutDraggableItem from "./WorkoutDraggable";
 
-function ExerciseDisplay({ exercises, onAdd }) {
-  const TableRow = ({ exercise, index }) => (
+function WorkoutDisplay({ workouts, onAdd }) {
+  const TableRow = ({ workout, index }) => (
     <WorkoutDraggableItem
-      key={exercise.id}
-      id={exercise.id}
+      key={workout.id}
+      id={workout.id}
       onAdd={onAdd}
-      exercise={exercise}
+      workout={workout}
       component="tr"
       content={(
         <>
           <td>{index + 1}</td>
-          <td>{exercise.name}</td>
-          <td><img src={exercise.thumbnailObjectUrl} alt={exercise.name} style={{ width: '100px', height: 'auto' }} /></td>
+          <td>{workout.name}</td>
+          <td><img src={workout.thumbnailObjectUrl} alt={workout.name} style={{ width: '100px', height: 'auto' }} /></td>
         </>
       )}
     />
@@ -30,11 +30,11 @@ function ExerciseDisplay({ exercises, onAdd }) {
           </tr>
         </thead>
         <tbody>
-          {exercises.map((exercise, index) => <TableRow key={exercise.id} exercise={exercise} index={index} />)}
+          {workouts.map((workout, index) => <TableRow key={workout.id} workout={workout} index={index} />)}
         </tbody>
       </table>
     </div>
   );
 }
 
-export default ExerciseDisplay;
+export default WorkoutDisplay;

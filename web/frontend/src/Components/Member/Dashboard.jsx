@@ -532,7 +532,7 @@ function MemberDashboard() {
                           <h5 class="is-size-2 is-size-4-mobile  has-text-centered has-text-weight-semibold">
                             {datum &&
                               datum.stepsCounterThisDaySummary &&
-                              datum.stepsCounterThisDaySummary.sum}
+                              datum.stepsCounterThisDaySummary.sum || 0}
                             <span class="is-size-5 has-text-weight-semibold is-size-6-mobile">
                               &nbsp;Total Steps
                             </span>
@@ -557,18 +557,20 @@ function MemberDashboard() {
                         />
                       </span>
                       <h5 class="mt-2 is-size-4 has-text-centered has has-text-weight-semibold is-size-5-mobile">
-                        Coming Soon
+                      {datum &&
+                          datum.distanceDeltaThisDaySummary &&
+                          datum.distanceDeltaThisDaySummary.average.toFixed(2) || 0}{" "}
+
                       </h5>
                       <p class="is-size-5 has-text-weight-semibold is-size-6-mobile">
                         Total Miles
                       </p>
-                      <p class="is-size-6 is-size-6-mobile">
-                        <FontAwesomeIcon
-                          className="fas px-3 is-size-6-mobile"
-                          icon={faArrowUp}
-                        />
-                        &nbsp;Coming Soon
-                      </p>
+                      <AverageAndTimeComparison
+                        lastDay={datum && datum.distanceDeltaLastDaySummary}
+                        thisDay={datum && datum.distanceDeltaThisDaySummary}
+                        iconState={true}
+                        mode={1}
+                      />
                       <p></p>
                     </div>
                   </div>
@@ -581,22 +583,24 @@ function MemberDashboard() {
                         />
                       </span>
                       <h5 class="mt-2 is-size-4 has-text-centered has has-text-weight-semibold is-size-5-mobile">
-                        Coming Soon
-                      </h5>
+                      {datum &&
+                          datum.caloriesBurnedLastDaySummary &&
+                          datum.caloriesBurnedLastDaySummary.average.toFixed(2) || 0}{" kcal"}
+                          </h5>
+
                       <p class="is-size-5 is-size-6-mobile has-text-weight-semibold">
                         avg calories burn
                       </p>
-                      <p class="is-size-6 is-size-6-mobile">
-                        <FontAwesomeIcon
-                          className="fas px-3 is-size-6-mobile"
-                          icon={faArrowUp}
-                        />
-                        &nbsp;Coming Soon
-                      </p>
+                      <AverageAndTimeComparison
+                        lastDay={datum && datum.caloriesBurnedLastDaySummary}
+                        thisDay={datum && datum.caloriesBurnedThisDaySummary}
+                        iconState={true}
+                        mode={1}
+                      />
                       <p></p>
                     </div>
                   </div>
-                  <div class="column">
+                  {/* <div class="column">
                     <div class="box is-flex is-align-items-center is-flex-direction-column	">
                       <span>
                         <FontAwesomeIcon
@@ -605,23 +609,75 @@ function MemberDashboard() {
                         />
                       </span>
                       <h5 class="mt-2 is-size-4 has-text-centered has has-text-weight-semibold is-size-5-mobile">
-                        Coming Soon
+                      {datum &&
+                          datum.stepsCountDeltaLastDaySummary &&
+                          datum.stepsCountDeltaLastDaySummary.average.toFixed(2) || 0}{" "}
                       </h5>
                       <p class="is-size-5 has-text-weight-semibold is-size-6-mobile">
                         Active minutes
                       </p>
-                      <p class="is-size-6 is-size-6-mobile">
-                        <FontAwesomeIcon
-                          className="fas px-3 is-size-6-mobile"
-                          icon={faArrowUp}
+                      <AverageAndTimeComparison
+                        lastDay={datum && datum.caloriesBurnedLastDaySummary}
+                        thisDay={datum && datum.caloriesBurnedThisDaySummary}
+                        iconState={true}
+                        mode={1} 
                         />
-                        &nbsp;Coming Soon
+                      <p></p>
+                    </div>
+                  </div> */}
+                </div>
+                <div class="columns">
+                <div class="column">
+                    <div class="box bg_brand is-flex is-align-items-center is-flex-direction-column	">
+                      <span>
+                        <FontAwesomeIcon
+                          className="fas px-3 has-text-primary is-size-1"
+                          icon={faChild}
+                        />
+                      </span>
+                      <h5 class="mt-2 is-size-4 has-text-centered has has-text-weight-semibold is-size-5-mobile">
+                      {datum &&
+                          datum.stepsCountDeltaLastDaySummary &&
+                          datum.stepsCountDeltaLastDaySummary.average.toFixed(2) || 0}{" "}
+                      </h5>
+                      <p class="is-size-5 has-text-weight-semibold is-size-6-mobile">
+                        avg hrs 250+ steps
                       </p>
+                      <AverageAndTimeComparison
+                        lastDay={datum && datum.stepsCountDeltaLastDaySummary}
+                        thisDay={datum && datum.stepsCountDeltaDaySummary}
+                        iconState={true}
+                        mode={1} 
+                        />
                       <p></p>
                     </div>
                   </div>
-                </div>
-                <div class="columns">
+                  <div class="column">
+                    <div class="box is-flex is-align-items-center is-flex-direction-column	">
+                      <span>
+                        <FontAwesomeIcon
+                          className="fas px-3 has-text-primary is-size-1"
+                          icon={faHeart}
+                        />
+                      </span>
+                      <h5 class="mt-2 is-size-4 has-text-centered has has-text-weight-semibold is-size-5-mobile">
+                        {datum &&
+                          datum.heartRateThisDaySummary &&
+                          datum.heartRateThisDaySummary.average.toFixed(2) || 0}{" "}
+                      </h5>
+                      <p class="is-size-5 has-text-weight-semibold is-size-6-mobile">
+                        avg. resting heart rate
+                      </p>
+                      <AverageAndTimeComparison
+                        lastDay={datum && datum.heartRateLastDaySummary}
+                        thisDay={datum && datum.heartRateThisDaySummary}
+                        iconState={true}
+                        mode={1}
+                      />
+                    </div>
+                  </div>
+                  </div>
+                {/* <div class="columns">
                   <div class="column">
                     <div class="box bg_brand is-flex is-align-items-center is-flex-direction-column	">
                       <span>
@@ -681,7 +737,7 @@ function MemberDashboard() {
                       <h5 class="mt-2 is-size-4 has-text-centered has has-text-weight-semibold is-size-5-mobile">
                         {datum &&
                           datum.heartRateThisDaySummary &&
-                          datum.heartRateThisDaySummary.average.toFixed(2)}{" "}
+                          datum.heartRateThisDaySummary.average.toFixed(2) || 0}{" "}
                       </h5>
                       <p class="is-size-5 has-text-weight-semibold is-size-6-mobile">
                         avg. resting heart rate
@@ -694,8 +750,8 @@ function MemberDashboard() {
                       />
                     </div>
                   </div>
-                </div>
-                <div class="columns">
+                </div> */}
+                {/* <div class="columns">
                   <div class="column">
                     <div class="box is-flex is-align-items-center is-flex-direction-column	">
                       <span>
@@ -720,7 +776,7 @@ function MemberDashboard() {
                       <p></p>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div class="columns">
                   <div class="column is-half">
                     <div class="box has-text-centered hero is-medium is-dark custom-hero">
@@ -782,7 +838,7 @@ function MemberDashboard() {
                   </div>
                 </div>
                 <div class="columns">
-                  <div class="column is-half">
+                  <div class="column">
                     <div class="box has-text-centered hero is-medium is-dark custom-hero">
                       <div class="hero-body">
                         <p class="title">
@@ -798,35 +854,6 @@ function MemberDashboard() {
                           <br />
                           <br />
                           <Link className="has-text-white" to={"/exercises"}>
-                            View&nbsp;
-                            <FontAwesomeIcon
-                              className="fas"
-                              icon={faArrowRight}
-                            />
-                          </Link>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="column is-half">
-                    <div class="box has-text-centered hero is-medium is-dark custom-hero">
-                      <div class="hero-body">
-                        <p class="title">
-                          <FontAwesomeIcon
-                            className="fas has-text-primary"
-                            icon={faVideoCamera}
-                          />
-                          <br />
-                          Videos
-                        </p>
-                        <p class="subtitle">
-                          View the videos of BP8 Fitness:
-                          <br />
-                          <br />
-                          <Link
-                            className="has-text-white"
-                            to={"/video-categories"}
-                          >
                             View&nbsp;
                             <FontAwesomeIcon
                               className="fas"
