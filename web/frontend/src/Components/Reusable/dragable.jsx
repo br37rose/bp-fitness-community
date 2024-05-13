@@ -1,33 +1,44 @@
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 
-function DraggableItem({ id, exercise, content, onAdd, component: Component = "div" }) {
+function DraggableItem({ id, content, className, onAdd }) {
   const [{ isDragging }, dragRef] = useDrag({
     type: "item",
-    item: { id },
+    item: { id: id },
   });
 
   const [showAddButton, setShowAddButton] = useState(false);
 
-  const handleAddClick = (e) => {
-    e.stopPropagation(); // Prevent triggering onClick of the row when clicking the button
-    onAdd(exercise);
-    setShowAddButton(false);
+  const handleAddClick = () => {
+    onAdd(id); // Call the onAdd function passed as prop
+    setShowAddButton(false); // Hide the add button after adding
   };
 
   return (
-    <Component ref={dragRef} onClick={() => setShowAddButton(true)} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div
+      ref={dragRef}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        cursor: "pointer",
+        width: "auto",
+      }}
+      className={className}
+      onClick={(e) => {
+        setShowAddButton(true);
+      }} // Show add button on click
+      onMouseLeave={() => setShowAddButton(false)} // Hide add button on mouse leave
+      // onMouseEnter={() => setShowAddButton(true)}
+    >
       {content}
       {showAddButton && (
         <button
-          className="button is-small is-success"
+          className="is-small button is-light is-success"
           onClick={handleAddClick}
-          style={{ marginLeft: '10px' }}
         >
           Add
-        </button>
+        </button> // Show add button if state is true
       )}
-    </Component>
+    </div>
   );
 }
 

@@ -353,7 +353,7 @@ function AdminWorkoutDetail() {
                                     );
                                   case EXERCISE_VIDEO_TYPE_VIMEO:
                                     return (
-                                      <div className="vimeo-container">
+                                      <div className="video-container is-16by9">
                                         <Vimeo
                                           className="vimeo-wrapper"
                                           video={`${exercise.excercise.videoUrl}`}

@@ -24,7 +24,7 @@ import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import DropZone from "../../Reusable/dropzone";
 import {getExerciseListAPI} from "../../../API/Exercise";
-import ExerciseDisplay from "../../Reusable/ExerciseDisplay";
+import WorkoutDisplay from "../../Reusable/Workouts/WorkoutDisplay";
 import {postWorkoutCreateAPI} from "../../../API/workout";
 import DragSortListForSelectedWorkouts from "../../Reusable/draglistforSelectWorkouts";
 import Modal from "../../Reusable/modal";
@@ -490,9 +490,9 @@ function MemberWorkoutAdd() {
 														displayMessage={"Please wait..."}
 													/>
 												) : (
-													<ExerciseDisplay
+													<WorkoutDisplay
 														wrapperclass={"excersizeWrapper"}
-														exercises={selectableExcercises}
+														workouts={selectableExcercises}
 														onAdd={onDrop}
 														showindex={false}
 														showDescription={false}

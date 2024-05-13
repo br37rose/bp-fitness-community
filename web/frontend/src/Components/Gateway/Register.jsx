@@ -652,15 +652,18 @@ function Register() {
 						to sign in.
 					</span>
 				</section>
-				<div className="content has-text-centered">
-					<br />
-					<p>Need help?</p>
-					<p>
-						<Link to="mailto:mike@bp8fitness.com">mike@bp8fitness.com</Link>
-					</p>
-					<p>
-						<a href="tel:+16479672269">(647) 967-2269</a>
-					</p>
+				<div className="columns">
+					<div className="column has-text-centered">
+						<p>Need help?</p>
+						<p>
+							<Link to="mailto:admin@bcinnovationlabs.com">
+								admin@bcinnovationlabs.com
+							</Link>
+						</p>
+						<p>
+							<a href="tel:+1234567891">(123) 456-7891</a>
+						</p>
+					</div>
 				</div>
 			</div>
 		</>
