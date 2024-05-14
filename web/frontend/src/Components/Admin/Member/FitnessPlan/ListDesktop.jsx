@@ -56,7 +56,7 @@ function AdminFitnessPlanListDesktop(props) {
                                                             </Link>
                                                         */}
                         <Link
-                          to={`/fitness-plan/${datum.id}`}
+                          to={`/admin/member/${datum.userId}/fitness-plan/${datum.id}`}
                           className="button is-small is-dark"
                           type="button"
                         >

@@ -29,6 +29,18 @@ function ExerciseDisplay({
       ? description.slice(0, maxLength) + "..."
       : description;
   };
+  const getVimeoVideoId = (url) => {
+    // Regular expression to match Vimeo video IDs
+    var regExp = /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com)\/?(.+)/;
+
+    // Extract video ID from URL using regular expression
+    var match = url.match(regExp);
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      return null; // No match found
+    }
+  };
   const exerciseItemJSX = (exercise, index) => (
     <div key={index} className="mb-3 exercise-item">
       <h2 className="mb-3 has-text-weight-bold is-size-6">
@@ -81,11 +93,16 @@ function ExerciseDisplay({
               );
             case EXERCISE_VIDEO_TYPE_VIMEO:
               return (
-                <div className="vimeo-container">
-                  <Vimeo
-                    className="vimeo-wrapper"
-                    video={`${exercise.videoUrl}`}
-                  />
+                <div className="video-container is-16by9">
+                  <iframe
+                    src={`https://player.vimeo.com/video/${getVimeoVideoId(
+                      exercise.videoUrl
+                    )}`}
+                    // width="640"
+                    // height="360"
+                    frameborder="0"
+                    allowfullscreen
+                  ></iframe>
                 </div>
               );
             default:

@@ -48,7 +48,7 @@ function AdminFitnessPlanListMobile(props) {
               <div class="is-hidden-mobile" key={`tablet_${datum.id}`}>
                 <div className="buttons is-right">
                   <Link
-                    to={`/fitness-plan/${datum.id}`}
+                    to={`/admin/member/${datum.userId}/fitness-plan/${datum.id}`}
                     class="button is-small is-dark mb-2"
                     type="button"
                   >
