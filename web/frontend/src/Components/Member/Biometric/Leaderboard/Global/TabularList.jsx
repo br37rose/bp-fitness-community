@@ -60,6 +60,7 @@ import {
 	RANK_POINT_METRIC_TYPE_STEP_COUNTER,
 } from "../../../../../Constants/App";
 import Layout from "../../../../Menu/Layout";
+import MobileLeaderboard from "../MobileView/MobileLeaderboard";
 
 function MemberLeaderboardGlobalTabularList() {
 	let navigate = useNavigate();
@@ -318,7 +319,7 @@ function MemberLeaderboardGlobalTabularList() {
 					<div className="column">
 						<h1 className="title is-4">
 							<FontAwesomeIcon className="fas" icon={faRankingStar} />
-							&nbsp;Leaderboard - Global
+							&nbsp;Leaderboard - Global&nbsp;<span class="tag is-success is-light">Beta</span>
 						</h1>
 					</div>
 					<div className="column has-text-right">
@@ -515,6 +516,15 @@ function MemberLeaderboardGlobalTabularList() {
 										onNextClicked={onNextClicked}
 										currentUser={currentUser}
 									/>
+									{/* <MobileLeaderboard 
+									listRank={listRank}
+									setPageSize={setPageSize}
+									pageSize={pageSize}
+									previousCursors={previousCursors}
+									onPreviousClicked={onPreviousClicked}
+									onNextClicked={onNextClicked}
+									currentUser={currentUser}
+									/> */}
 								</div>
 							</div>
 						) : (

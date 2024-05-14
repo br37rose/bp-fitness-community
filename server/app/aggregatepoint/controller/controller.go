@@ -43,7 +43,6 @@ type AggregatePointControllerImpl struct {
 	UUID                     uuid.Provider
 	DbClient                 *mongo.Client
 	Cache                    mongodbcache.Cacher
-	CodeVerifierMap          map[primitive.ObjectID]string
 	DistributedMutex         distributedmutex.Adapter
 	OrganizationStorer       organization_s.OrganizationStorer
 	UserStorer               user_s.UserStorer
@@ -73,7 +72,6 @@ func NewController(
 		UUID:                     uuidp,
 		DbClient:                 client,
 		Cache:                    cache,
-		CodeVerifierMap:          make(map[primitive.ObjectID]string, 0),
 		DistributedMutex:         dlocker,
 		OrganizationStorer:       org_storer,
 		UserStorer:               usr_storer,

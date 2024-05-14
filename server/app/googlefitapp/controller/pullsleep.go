@@ -14,8 +14,8 @@ import (
 )
 
 func (impl *GoogleFitAppControllerImpl) pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling sleep dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulling sleep dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Get `Google Fit` data
@@ -31,13 +31,13 @@ func (impl *GoogleFitAppControllerImpl) pullSleepDataFromGoogleWithGfaAndFitness
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty sleep dataset",
-			slog.String("gfa_id", gfa.ID.Hex()))
+		// impl.Logger.Warn("pulled empty sleep dataset",
+		// 	slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled sleep dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulled sleep dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
@@ -45,11 +45,11 @@ func (impl *GoogleFitAppControllerImpl) pullSleepDataFromGoogleWithGfaAndFitness
 
 	sleepDataset := gcp_a.ParseSleep(dataset)
 
-	impl.Logger.Debug("",
-		slog.String("gfa_id", gfa.ID.Hex()),
-		slog.Any("dataset", dataset),
-		slog.Any("sleepDataset", sleepDataset),
-	)
+	// impl.Logger.Debug("",
+	// 	slog.String("gfa_id", gfa.ID.Hex()),
+	// 	slog.Any("dataset", dataset),
+	// 	slog.Any("sleepDataset", sleepDataset),
+	// )
 
 	////
 	//// Save into our database.
@@ -86,8 +86,8 @@ func (impl *GoogleFitAppControllerImpl) pullSleepDataFromGoogleWithGfaAndFitness
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted sleep data point",
-					slog.Any("dp", dp))
+				// impl.Logger.Debug("inserted sleep data point",
+				// 	slog.Any("dp", dp))
 			}
 		}
 	}

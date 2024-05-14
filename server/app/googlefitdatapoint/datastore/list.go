@@ -10,7 +10,7 @@ import (
 )
 
 func (impl GoogleFitDataPointStorerImpl) ListByFilter(ctx context.Context, f *GoogleFitDataPointPaginationListFilter) (*GoogleFitDataPointPaginationListResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 12*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
 	// Create the paginated filter based on the cursor

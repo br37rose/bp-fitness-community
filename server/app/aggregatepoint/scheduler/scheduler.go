@@ -10,7 +10,7 @@ import (
 )
 
 type AggregatePointScheduler interface {
-	RunEveryMinuteAggregation() error
+	RunEveryFiveMinutesAggregation() error
 	RunOnceAndStartImmediatelyAggregation() error
 }
 
@@ -37,9 +37,9 @@ func NewScheduler(
 	}
 }
 
-func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregation() error {
+func (impl *aggregatePointSchedulerImpl) RunEveryFiveMinutesAggregation() error {
 	impl.Logger.Debug("scheduled: aggregation", slog.String("interval", "every minute"))
-	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryFiveMinutesFunc(func() {
 		if err := impl.Controller.AggregateForAllActiveGoogleFitApps(context.Background()); err != nil {
 			impl.Logger.Error("failed aggregation",
 				slog.Any("error", err))
@@ -66,33 +66,3 @@ func (impl *aggregatePointSchedulerImpl) RunOnceAndStartImmediatelyAggregation()
 	}
 	return nil
 }
-
-// func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateToday() error {
-// 	impl.Logger.Debug("scheduled: aggregate today", slog.String("interval", "every minute"))
-// 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
-// 		if err := impl.Controller.AggregateTodayForAllActiveGoogleFitApps(context.Background()); err != nil {
-// 			impl.Logger.Error("failed aggregating today",
-// 				slog.Any("error", err))
-// 		}
-// 	})
-// 	if err != nil {
-// 		impl.Logger.Error("aggregate today error with scheduler", slog.Any("err", err))
-// 		return err
-// 	}
-// 	return nil
-// }
-//
-// func (impl *aggregatePointSchedulerImpl) RunEveryMinuteAggregateToday() error {
-// 	impl.Logger.Debug("scheduled: aggregate today", slog.String("interval", "every minute"))
-// 	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
-// 		if err := impl.Controller.AggregateTodayForAllActiveGoogleFitApps(context.Background()); err != nil {
-// 			impl.Logger.Error("failed aggregating today",
-// 				slog.Any("error", err))
-// 		}
-// 	})
-// 	if err != nil {
-// 		impl.Logger.Error("aggregate today error with scheduler", slog.Any("err", err))
-// 		return err
-// 	}
-// 	return nil
-// }

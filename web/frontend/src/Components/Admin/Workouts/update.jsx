@@ -6,35 +6,39 @@ import {
   faPlus,
   faArrowLeft,
   faEdit,
-  faSearch,
+  faFilterCircleXmark,
   faClose,
   faSave,
-  faFilterCircleXmark,
+  faSearch,
   faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRecoilState } from "recoil";
 import FormErrorBox from "../../Reusable/FormErrorBox";
 import FormTextareaField from "../../Reusable/FormTextareaField";
 import PageLoadingContent from "../../Reusable/PageLoadingContent";
-import { topAlertMessageState, topAlertStatusState } from "../../../AppState";
+import {
+  currentUserState,
+  topAlertMessageState,
+  topAlertStatusState,
+} from "../../../AppState";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DropZone from "../../Reusable/dropzone";
 import { getExerciseListAPI } from "../../../API/Exercise";
-import ExerciseDisplay from "../../Reusable/ExerciseDisplay";
+import WorkoutDisplay from "../../Reusable/Workouts/WorkoutDisplay";
 import { getWorkoutDetailAPI, putWorkoutUpdateAPI } from "../../../API/workout";
 import DragSortListForSelectedWorkouts from "../../Reusable/draglistforSelectWorkouts";
-import Modal from "../../Reusable/modal";
-import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
-import FormSelectField from "../../Reusable/FormSelectField";
 import {
   EXERCISE_CATEGORY_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_GENDER_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_MOMENT_TYPE_OPTIONS_WITH_EMPTY_OPTION,
-  EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION,
   EXERCISE_VIDEO_FILE_TYPE_OPTIONS_WITH_EMPTY_OPTION,
 } from "../../../Constants/FieldOptions";
+import FormSelectField from "../../Reusable/FormSelectField";
+import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
+import Modal from "../../Reusable/modal";
 import FormMultiSelectFieldForTags from "../../Reusable/FormMultiSelectFieldForTags";
+
 function AdminWorkoutUpdate() {
   const [topAlertMessage, setTopAlertMessage] =
     useRecoilState(topAlertMessageState);
@@ -50,6 +54,8 @@ function AdminWorkoutUpdate() {
   const [selectableExcercises, setselectableExcercises] = useState(listdata);
   const [forceURL, setForceURL] = useState("");
   const [datum, setDatum] = useState({});
+  const [currentUser] = useRecoilState(currentUserState);
+  const [exerciseLoading, setExerciseLoading] = useState(true);
   const [showExerciseFilter, setshowExerciseFilter] = useState(false);
   const [temporarySearchText, setTemporarySearchText] = useState("");
   const [actualSearchText, setActualSearchText] = useState("");
@@ -68,8 +74,8 @@ function AdminWorkoutUpdate() {
       name: name,
       description: description,
       visibility: datum.visibility, //1. visible to all 2. personal
-      user_id: datum.userId || null,
-      user_name: datum.userName,
+      user_id: datum.user_id || currentUser.id,
+      user_name: datum.userName || currentUser.name,
     };
     let workoutExcercises = new Array();
     selectedWorkouts.map((w, index) =>
@@ -100,7 +106,7 @@ function AdminWorkoutUpdate() {
     }, 2000);
 
     // Redirect the organization to the organization attachments page.
-    setForceURL("/admin/workouts/" + response.id + "");
+    setForceURL("/workouts/" + response.id + "");
   }
 
   function onAddError(apiErr) {
@@ -119,6 +125,7 @@ function AdminWorkoutUpdate() {
   }
 
   const getAllExcericses = (clear = false, search = "") => {
+    setExerciseLoading(true);
     let params = new Map();
     params.set("page_size", 1000000);
     params.set("sort_field", "created");
@@ -145,9 +152,6 @@ function AdminWorkoutUpdate() {
     if (!clear && videoType !== "") {
       params.set("video_type", videoType);
     }
-    if (tags.length > 0) {
-      params.set("tags", tags);
-    }
     getExerciseListAPI(
       params,
       onExerciseListSuccess,
@@ -172,6 +176,7 @@ function AdminWorkoutUpdate() {
 
   function onExerciseListDone() {
     setFetching(false);
+    setExerciseLoading(false);
   }
 
   function workoutdetailsuccess(response) {
@@ -211,10 +216,12 @@ function AdminWorkoutUpdate() {
     getAllExcericses(false, temporarySearchText);
     setshowExerciseFilter(false);
   };
+
   function ApplyFilter() {
     getAllExcericses();
     setshowExerciseFilter(false);
   }
+
   const onClearFilterClick = (e) => {
     setshowExerciseFilter(false);
     setActualSearchText("");
@@ -301,7 +308,7 @@ function AdminWorkoutUpdate() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="container">
+      <div className="container is-fluid">
         <section className="section">
           <div className="box">
             <p className="title is-4">
@@ -318,7 +325,7 @@ function AdminWorkoutUpdate() {
               <PageLoadingContent displayMessage={"Please wait..."} />
             ) : (
               <>
-                <div className="container">
+                <div className="container is-fluid">
                   <div className="columns">
                     <div className="column">
                       <FormTextareaField
@@ -449,22 +456,7 @@ function AdminWorkoutUpdate() {
                                     }
                                   />
                                 </div>
-                                <div class="column">
-                                  <FormSelectField
-                                    label="Status"
-                                    name="status"
-                                    placeholder="Pick"
-                                    selectedValue={status}
-                                    errorText={errors && errors.status}
-                                    helpText=""
-                                    onChange={(e) =>
-                                      setStatus(parseInt(e.target.value))
-                                    }
-                                    options={
-                                      EXERCISE_STATUS_OPTIONS_WITH_EMPTY_OPTION
-                                    }
-                                  />
-                                </div>
+
                                 <div class="column">
                                   <FormSelectField
                                     label="Gender"
@@ -544,12 +536,19 @@ function AdminWorkoutUpdate() {
                             </div>
                           </Modal>
                         </div>
-                        <ExerciseDisplay
+                        {exerciseLoading ? (
+                          <PageLoadingContent
+                            displayMessage={"Please wait..."}
+                          />
+                        ) : (
+                          <WorkoutDisplay
                           wrapperclass={"excersizeWrapper"}
-                          exercises={selectableExcercises}
-                          isdraggable
+                          workouts={selectableExcercises}
                           onAdd={onDrop}
-                        />
+                          showindex={false}
+                          showDescription={false}
+													/>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -557,7 +556,7 @@ function AdminWorkoutUpdate() {
                     <div className="column is-half">
                       <Link
                         className="button is-fullwidth-mobile"
-                        to={`/admin/workouts`}
+                        to={`/workouts`}
                       >
                         <FontAwesomeIcon icon={faArrowLeft} />
                         &nbsp;Back to workouts

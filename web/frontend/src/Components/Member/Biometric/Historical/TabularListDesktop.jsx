@@ -37,7 +37,7 @@ import GoogleFitDataPointValueToString from "../../../Reusable/SpecificPage/Biom
 import GoogleFitDataPointTypeToString from "../../../Reusable/SpecificPage/Biometrics/GoogleFitDataPointTypeToString";
 
 
-function MemberLeaderboardGlobalTabularListDesktop(props) {
+function MemberHistoricalDataGlobalTabularListDesktop(props) {
   const {
     listRank,
     setPageSize,
@@ -116,4 +116,4 @@ function MemberLeaderboardGlobalTabularListDesktop(props) {
   );
 }
 
-export default MemberLeaderboardGlobalTabularListDesktop;
+export default MemberHistoricalDataGlobalTabularListDesktop;

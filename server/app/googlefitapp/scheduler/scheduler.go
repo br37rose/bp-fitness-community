@@ -9,7 +9,7 @@ import (
 )
 
 type GoogleFitAppScheduler interface {
-	RunEveryMinuteRefreshTokensFromGoogle() error
+	RunEveryHourRefreshTokensFromGoogle() error
 	RunEveryMinuteProcessAllQueuedData() error
 	RunOnceAndStartImmediatelyProcessAllQueuedData() error
 	RunEveryFifteenMinutesPullDataFromGoogle() error
@@ -39,9 +39,9 @@ func NewScheduler(
 	}
 }
 
-func (impl *googleFitAppSchedulerImpl) RunEveryMinuteRefreshTokensFromGoogle() error {
+func (impl *googleFitAppSchedulerImpl) RunEveryHourRefreshTokensFromGoogle() error {
 	impl.Logger.Debug("scheduled: refresh token", slog.String("interval", "every minute"))
-	err := impl.EventScheduler.ScheduleEveryMinuteFunc(func() {
+	err := impl.EventScheduler.ScheduleEveryHourFunc(func() {
 		impl.Logger.Debug("running refresh token...")
 		if err := impl.Controller.RefreshTokensFromGoogle(); err != nil {
 			impl.Logger.Error("refresh token error with scheduler", slog.Any("err", err))

@@ -52,18 +52,18 @@ func (impl *AggregatePointControllerImpl) aggregateForMetric(
 				slog.Any("error", err))
 			return err
 		}
-		// For debugging purposes only.
-		impl.Logger.Debug("created aggregate point",
-			slog.String("metric_id", metricID.Hex()),
-			slog.String("suer_id", userID.Hex()),
-			slog.Int("period", int(period)),
-			slog.Time("start", startAt),
-			slog.Time("end", endAt),
-			slog.Any("count", response.Count),
-			slog.Any("avg", response.Average),
-			slog.Any("min", response.Min),
-			slog.Any("max", response.Max),
-			slog.Any("sum", response.Sum))
+		// // For debugging purposes only.
+		// impl.Logger.Debug("created aggregate point",
+		// 	slog.String("metric_id", metricID.Hex()),
+		// 	slog.String("suer_id", userID.Hex()),
+		// 	slog.Int("period", int(period)),
+		// 	slog.Time("start", startAt),
+		// 	slog.Time("end", endAt),
+		// 	slog.Any("count", response.Count),
+		// 	slog.Any("avg", response.Average),
+		// 	slog.Any("min", response.Min),
+		// 	slog.Any("max", response.Max),
+		// 	slog.Any("sum", response.Sum))
 	} else {
 		// CASE 2 OF 2: Update
 		ap.MetricID = metricID

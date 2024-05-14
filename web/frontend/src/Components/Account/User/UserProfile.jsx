@@ -273,7 +273,7 @@ function UserProfile(props) {
                             }
                           >
                             <a onClick={() => setActiveTab("wearableTech")}>
-                              <strong>Wearable Tech</strong>
+                              <strong>Wearable Tech&nbsp;<span class="tag is-success is-light">Beta</span></strong>
                             </a>
                           </li>
 

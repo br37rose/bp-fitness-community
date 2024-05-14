@@ -263,3 +263,65 @@
         }
     }
 }
+
+.scrollable-exercises {
+    max-height: 60vh;  /* Adjust based on your design needs */
+    overflow-y: auto;
+  }
+
+
+
+
+ /* General Container Styles */
+.leaderboard-container {
+    background-color: #151729; /* Dark background */
+    color: white;
+    font-family: 'Inter', sans-serif; /* Ensure Inter font is loaded or provide a fallback */
+  }
+  
+  
+  /* Leaderboard Entry Styles */
+  .leaderboard-entry {
+    display: flex;
+    align-items: center;
+    padding: 10px; /* Adjusted for better spacing */
+    gap: 10px;
+  }
+  
+  /* Common Styles for Names, Scores, Usernames */
+  .name, .score, .username {
+    word-wrap: break-word;
+  }
+  .name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #F7FAFC;
+  }
+  .score {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .username {
+    font-size: 8px;
+    font-weight: 300;
+    color: #B7B3B3;
+  }
+  
+  /* Top Rank Specific Styles */
+  .top-entry .score {
+    color: #FFAA00; /* Gold for top rank */
+  }
+  
+  .crown-icon {
+    position: relative;
+    top: -32px;
+    left: 35%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: #FFD700;
+  }
+  
+  /* Top 3 Avatar Border Styles */
+  .bordered-avatar {
+    border: 3px solid;
+  }

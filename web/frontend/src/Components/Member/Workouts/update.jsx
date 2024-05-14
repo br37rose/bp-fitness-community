@@ -25,7 +25,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DropZone from "../../Reusable/dropzone";
 import { getExerciseListAPI } from "../../../API/Exercise";
-import ExerciseDisplay from "../../Reusable/ExerciseDisplay";
+import WorkoutDisplay from "../../Reusable/Workouts/WorkoutDisplay";
 import { getWorkoutDetailAPI, putWorkoutUpdateAPI } from "../../../API/workout";
 import DragSortListForSelectedWorkouts from "../../Reusable/draglistforSelectWorkouts";
 import {
@@ -38,6 +38,7 @@ import FormSelectField from "../../Reusable/FormSelectField";
 import FormInputFieldWithButton from "../../Reusable/FormInputFieldWithButton";
 import Modal from "../../Reusable/modal";
 import FormMultiSelectFieldForTags from "../../Reusable/FormMultiSelectFieldForTags";
+
 function MemberWorkoutEdit() {
   const [topAlertMessage, setTopAlertMessage] =
     useRecoilState(topAlertMessageState);
@@ -54,7 +55,7 @@ function MemberWorkoutEdit() {
   const [forceURL, setForceURL] = useState("");
   const [datum, setDatum] = useState({});
   const [currentUser] = useRecoilState(currentUserState);
-  const [exersizeLoading, setexersizeLoading] = useState(true);
+  const [exerciseLoading, setExerciseLoading] = useState(true);
   const [showExerciseFilter, setshowExerciseFilter] = useState(false);
   const [temporarySearchText, setTemporarySearchText] = useState("");
   const [actualSearchText, setActualSearchText] = useState("");
@@ -124,7 +125,7 @@ function MemberWorkoutEdit() {
   }
 
   const getAllExcericses = (clear = false, search = "") => {
-    setexersizeLoading(true);
+    setExerciseLoading(true);
     let params = new Map();
     params.set("page_size", 1000000);
     params.set("sort_field", "created");
@@ -175,7 +176,7 @@ function MemberWorkoutEdit() {
 
   function onExerciseListDone() {
     setFetching(false);
-    setexersizeLoading(false);
+    setExerciseLoading(false);
   }
 
   function workoutdetailsuccess(response) {
@@ -535,17 +536,18 @@ function MemberWorkoutEdit() {
                             </div>
                           </Modal>
                         </div>
-                        {exersizeLoading ? (
+                        {exerciseLoading ? (
                           <PageLoadingContent
                             displayMessage={"Please wait..."}
                           />
                         ) : (
-                          <ExerciseDisplay
-                            wrapperclass={"excersizeWrapper"}
-                            exercises={selectableExcercises}
-                            isdraggable
-                            onAdd={onDrop}
-                          />
+                          <WorkoutDisplay
+                          wrapperclass={"excersizeWrapper"}
+                          workouts={selectableExcercises}
+                          onAdd={onDrop}
+                          showindex={false}
+                          showDescription={false}
+													/>
                         )}
                       </div>
                     </div>

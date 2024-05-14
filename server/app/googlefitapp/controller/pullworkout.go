@@ -15,8 +15,8 @@ import (
 
 // pullWorkoutDataFromGoogleWithGfaAndFitnessStore is deprecated. Note: https://9to5google.com/2020/11/30/google-fit-latest-update-removes-advanced-weight-training-features-on-wear-os/.
 func (impl *GoogleFitAppControllerImpl) pullWorkoutDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling workout dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulling workout dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Get `Google Fit` data
@@ -32,13 +32,13 @@ func (impl *GoogleFitAppControllerImpl) pullWorkoutDataFromGoogleWithGfaAndFitne
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty workout dataset",
-			slog.String("gfa_id", gfa.ID.Hex()))
+		// impl.Logger.Warn("pulled empty workout dataset",
+		// 	slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled workout dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulled workout dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
@@ -81,8 +81,8 @@ func (impl *GoogleFitAppControllerImpl) pullWorkoutDataFromGoogleWithGfaAndFitne
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted workout data point",
-					slog.Any("dp", dp))
+				// impl.Logger.Debug("inserted workout data point",
+				// 	slog.Any("dp", dp))
 			}
 		}
 	}

@@ -32,16 +32,16 @@ export function getExerciseListAPI(filtersMap=new Map(), onSuccessCallback, onEr
         const data = camelizeKeys(responseData);
 
         // Bugfixes.
-        console.log("getExerciseListAPI | pre-fix | results:", data);
+        // console.log("getExerciseListAPI | pre-fix | results:", data);
         if (data.results !== undefined && data.results !== null && data.results.length > 0) {
             data.results.forEach(
                 (item, index) => {
                     item.createdAt = DateTime.fromISO(item.createdAt).toLocaleString(DateTime.DATETIME_MED);
-                    console.log(item, index);
+                    // console.log(item, index);
                 }
             )
         }
-        console.log("getExerciseListAPI | post-fix | results:", data);
+        // console.log("getExerciseListAPI | post-fix | results:", data);
 
         // Return the callback data.
         onSuccessCallback(data);
@@ -77,7 +77,7 @@ export function getExerciseDetailAPI(exerciseID, onSuccessCallback, onErrorCallb
         const data = camelizeKeys(responseData);
 
         // For debugging purposeso pnly.
-        console.log(data);
+        // console.log(data);
 
         // Return the callback data.
         onSuccessCallback(data);

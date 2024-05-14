@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/adapter/cache/mongodbcache"
@@ -28,7 +27,6 @@ type GoogleFitDataPointControllerImpl struct {
 	UUID                     uuid.Provider
 	DbClient                 *mongo.Client
 	Cache                    mongodbcache.Cacher
-	CodeVerifierMap          map[primitive.ObjectID]string
 	Kmutex                   kmutex.Provider
 	OrganizationStorer       organization_s.OrganizationStorer
 	UserStorer               user_s.UserStorer
@@ -52,7 +50,6 @@ func NewController(
 		UUID:                     uuidp,
 		DbClient:                 client,
 		Cache:                    cache,
-		CodeVerifierMap:          make(map[primitive.ObjectID]string, 0),
 		Kmutex:                   kmutexp,
 		UserStorer:               usr_storer,
 		GoogleFitDataPointStorer: dp_storer,

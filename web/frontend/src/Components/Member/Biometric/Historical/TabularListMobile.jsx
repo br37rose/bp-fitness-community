@@ -15,7 +15,7 @@ import GoogleFitDataPointTypeToString from "../../../Reusable/SpecificPage/Biome
 /*
 Display for both tablet and mobile.
 */
-function MemberLeaderboardGlobalTabularListMobile(props) {
+function MemberHistoricalDataGlobalTabularListMobile(props) {
     const { listRank, setPageSize, pageSize, previousCursors, onPreviousClicked, onNextClicked, currentUser } = props;
     return (
         <>
@@ -61,4 +61,4 @@ function MemberLeaderboardGlobalTabularListMobile(props) {
     );
 }
 
-export default MemberLeaderboardGlobalTabularListMobile;
+export default MemberHistoricalDataGlobalTabularListMobile;

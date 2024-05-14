@@ -14,8 +14,8 @@ import (
 )
 
 func (impl *GoogleFitAppControllerImpl) pullBloodPressureDataFromGoogleWithGfaAndFitnessStore(ctx context.Context, gfa *gfa_ds.GoogleFitApp, svc *fitness.Service) error {
-	impl.Logger.Debug("pulling blood pressure dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulling blood pressure dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Get `Google Fit` data
@@ -31,13 +31,13 @@ func (impl *GoogleFitAppControllerImpl) pullBloodPressureDataFromGoogleWithGfaAn
 	}
 
 	if len(dataset) == 0 {
-		impl.Logger.Warn("pulled empty blood pressure dataset",
-			slog.String("gfa_id", gfa.ID.Hex()))
+		// impl.Logger.Warn("pulled empty blood pressure dataset",
+		// 	slog.String("gfa_id", gfa.ID.Hex()))
 		return nil
 	}
 
-	impl.Logger.Debug("pulled blood pressure dataset",
-		slog.String("gfa_id", gfa.ID.Hex()))
+	// impl.Logger.Debug("pulled blood pressure dataset",
+	// 	slog.String("gfa_id", gfa.ID.Hex()))
 
 	////
 	//// Convert from `Google Fit` format into our apps format.
@@ -80,8 +80,8 @@ func (impl *GoogleFitAppControllerImpl) pullBloodPressureDataFromGoogleWithGfaAn
 						slog.Any("error", err))
 					return err
 				}
-				impl.Logger.Debug("inserted blood pressure data point",
-					slog.Any("dp", dp))
+				// impl.Logger.Debug("inserted blood pressure data point",
+				// 	slog.Any("dp", dp))
 			}
 		}
 	}

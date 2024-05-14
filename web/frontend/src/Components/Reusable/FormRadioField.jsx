@@ -106,6 +106,8 @@ function FormRadioField({
     helpText,       // The special help task to include.
     onChange        // The function to call when a selection occurs.
 }) {
+
+    console.log(typeof(value), "----->", typeof(opt1Label))
     return (
         <div class="field pb-4">
             <label class="label">{label}</label>
