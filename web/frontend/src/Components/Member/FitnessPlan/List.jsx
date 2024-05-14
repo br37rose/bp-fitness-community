@@ -174,7 +174,7 @@ function AdminFitnessPlanList() {
 
     let params = new Map();
     params.set("page_size", limit); // Pagination
-
+    params.set("user_id", currentUser.id);
     // DEVELOPERS NOTE: Our `sortByValue` is string with the sort field
     // and sort order combined with a comma seperation. Therefore we
     // need to split as follows.

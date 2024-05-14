@@ -13,7 +13,7 @@ const YouTubeVideo = ({ videoId, parseForVideoId = true }) => {
   }
 
   return (
-    <div className="video-responsive">
+    <div className="video-responsive is-16by9 video-container">
       <iframe
         width="853"
         height="480"
