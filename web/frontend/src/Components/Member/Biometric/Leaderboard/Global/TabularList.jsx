@@ -95,7 +95,7 @@ function MemberLeaderboardGlobalTabularList() {
 	const [selectedFitnessPlanForDeletion, setSelectedFitnessPlanForDeletion] =
 		useState("");
 	const [isFetching, setFetching] = useState(false);
-	const [pageSize, setPageSize] = useState(100); // Pagination
+	const [pageSize, setPageSize] = useState(2); // Pagination
 	const [previousCursors, setPreviousCursors] = useState([]); // Pagination
 	const [nextCursor, setNextCursor] = useState(""); // Pagination
 	const [currentCursor, setCurrentCursor] = useState(""); // Pagination
@@ -506,7 +506,7 @@ function MemberLeaderboardGlobalTabularList() {
                             EVERYTHING INSIDE HERE WILL ONLY BE DISPLAYED ON A TABLET OR MOBILE SCREEN.
                             ###########################################################################
                         */}
-								<div class="is-fullwidth is-hidden-desktop">
+								<div class="is-hidden-desktop">
 									<MemberLeaderboardGlobalTabularListMobile
 										listRank={listRank}
 										setPageSize={setPageSize}

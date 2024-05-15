@@ -77,3 +77,11 @@
     width: $width;
     height: $height;
 }
+
+@mixin font-size($size) {
+    font-size: $size;
+  }
+
+  @mixin border-radius($radius) {
+    border-radius: $radius;
+  }

@@ -2,41 +2,40 @@
 $font-primary: "Arial", sans-serif;
 $font-secondary: "Open Sans", sans-serif;
 
-// Colors
-$color-main: #d7c278; // Gold
-$color-light-shade: #ffffff; // White
-$color-dark-shade: #735827; // Darker shade of Gold
-$color-accent1: #b9aa8a; // Desaturated version of Gold
-$color-accent2: #000000;
-$color-shadow: rgba(0, 0, 0, 0.75);
+// Base Colors
+$gold: #d7c278;
+$white: #ffffff;
+$black: #000000;
 
-// Links
-$color-link1: #002366;
-$color-link2: #004225;
-$color-link3: #8B0000;
-$color-link4: #735827d1;
+// Thematic Colors
+$color-main: $gold; 
+$color-light-shade: desaturate($gold, 65%); 
+$color-dark-shade: darken($gold, 25%);  // Dynamically darken gold
+$color-accent1: desaturate($gold, 25%); 
+$color-accent2: $black; 
+$color-accent3: lighten(desaturate(#009BD6, 10%), 15%); // Lightened and slightly desaturated blue 
+$color-accent4: darken(desaturate(#FFAA00, 10%), 10%); // Darkened and slightly desaturated orange
+$color-shadow: rgba($black, 0.75);
 
-// Shades
-$color-green-shades: (
-    #3cb371,
-    #2e8b57,
-    #008000
-);
-$color-yellow-shades: (
-    #ffd700,
-    #ffa500,
-    #ff8c00
-);
-$color-blue-shades: (
-    #1e90ff,
-    #4169e1,
-    #0074d9
-);
-$color-red-shades: (
-    #ff0000,
-    #b22222,
-    #dc143c
-);
+// Layout Colors
+$background-dark: $black;
+$background-light: $color-light-shade;
+$highlight-color: $color-dark-shade;
+$text-dark: $black;  // Black
+$text-light: $white;  // White
+$border-radius: 8px;
+
+// Link Colors
+$color-link1: #002366; // Dark blue
+$color-link2: #004225; // Green
+$color-link3: #8B0000; // Dark red
+$color-link4: lighten($color-dark-shade, 15%); // Lighter shade of dark gold
+
+// Color Palettes
+$color-green-shades: (#3cb371, #2e8b57, #008000);
+$color-yellow-shades: (#ffd700, #ffa500, #ff8c00);
+$color-blue-shades: (#1e90ff, #4169e1, #0074d9);
+$color-red-shades: (#ff0000, #b22222, #dc143c);
 
 // Bulma Overrides
 $family-primary: $font-primary;
@@ -50,4 +49,3 @@ $success: nth($color-green-shades, 1);
 $warning: nth($color-yellow-shades, 1);
 $danger: nth($color-red-shades, 1);
 $dark: $color-accent2;
-$text: $color-accent2;
