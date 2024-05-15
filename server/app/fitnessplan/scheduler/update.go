@@ -86,6 +86,7 @@ func (impl *fitnessPlanSchedulerImpl) updateFitnessPlans() {
 				}
 			}
 		case openai.RunStatusCompleted:
+
 			status = fp_d.StatusActive
 		case openai.RunStatusCancelling, openai.RunStatusExpired, openai.RunStatusFailed:
 			status = fp_d.StatusError

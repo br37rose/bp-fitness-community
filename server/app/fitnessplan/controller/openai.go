@@ -12,6 +12,8 @@ import (
 	exercise_s "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/exercise/datastore"
 	a_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
 	domain "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/fitnessplan/datastore"
+	"github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/question/datastore"
+	u_d "github.com/bci-innovation-labs/bp8fitnesscommunity-backend/app/user/datastore"
 	"github.com/sashabaranov/go-openai"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -184,108 +186,29 @@ func (c *FitnessPlanControllerImpl) generateFitnessPlanInstructionsPrompt(sessCt
 	// in this fitness plan and put it into a string to plug into our prompt.
 	//
 
-	// en := ""
-	// for _, e := range fp.ExerciseNames {
-	// 	en += e + ","
-	// }
-	// if en != "" { // Remove the last comma in the string.
-	// 	en = strings.TrimSuffix(en, ",")
-	// }
-
-	//
-	// Take our fitness plan and stringify it so we can plug into prompt.
-	//
-
 	// Step 1: Convert to a string the `HomeGymEquipment`field.
-	var hge string = ""
-	for _, s := range fp.HomeGymEquipment {
-		hge += domain.HomeGymEquipmentMap[s] + ", "
+	userProfile, err := c.UserStorer.GetByID(sessCtx, fp.UserID)
+	if err != nil {
+		return "", err
 	}
-	if hge != "" { // Remove the last comma in the string.
-		hge = strings.TrimSuffix(hge, ",")
+	AnsMap := make(map[string]u_d.Answer, 0)
+	for _, v := range userProfile.OnboardingAnswers {
+		AnsMap[v.QuestionID.Hex()] = *v
 	}
-
-	// Step 2: Return yes or no if has access to`commercial-style gym`
-	hatcg := "Yes"
-	// if fp.HasAccessToCommercialGym {
-	// 	hatcg = "Yes"
-	// }
-
-	// Step 3: Convert to a string the `EquipmentAccess` field.
-	wah := domain.HasWorkoutsAtHomeMap[fp.HasWorkoutsAtHome]
-
-	// Step 4: Convert clients height.
-	height := fmt.Sprintf("%v ft %v in", fp.HeightFeet, fp.HeightInches)
-
-	// Step 5: Date of birth.
-	bd := fmt.Sprintf("%v", fp.Birthday)
-
-	// Step 6: Gender
-	var gender string
-	if fp.Gender == domain.GenderOther {
-		gender = fp.GenderOther
-	} else {
-		if fp.Gender == domain.GenderMale {
-			gender = "Male"
-		}
-		if fp.Gender == domain.GenderFemale {
-			gender = "Female"
+	qstRes, err := c.QuestionController.ListByFilter(sessCtx,
+		&datastore.QuestionListFilter{
+			PageSize:  10000,
+			SortField: "_id",
+			SortOrder: 1,
+			Status:    true},
+	)
+	prompt := `CLIENT DETAILS AS QUESTIONS AND ANSWERS:`
+	for _, qstn := range qstRes.Results {
+		if ans, ok := AnsMap[qstn.ID.Hex()]; ok {
+			prompt = fmt.Sprintf("%s,\n %s (%s) : %s", prompt, qstn.Title, qstn.Subtitle, strings.Join(ans.Answers, ","))
 		}
 	}
 
-	// Step 7: IdealWeight
-	iw := fmt.Sprintf("%v lbs", fp.IdealWeight)
-
-	// Step 8: PhysicalActivity
-	pa := domain.PhysicalActivityMap[fp.PhysicalActivity]
-
-	// Step 9: WorkoutIntensity
-	wi := domain.WorkoutIntensityMap[fp.WorkoutIntensity]
-
-	// Step 10: DaysPerWeek
-	dpw := domain.DaysPerWeekMap[fp.DaysPerWeek]
-
-	// Step 11: TimePerDay
-	tpd := domain.TimePerDayMap[fp.TimePerDay]
-
-	// Step 12: MaxWeeks
-	mw := domain.MaxWeekMap[fp.MaxWeeks]
-
-	// Step 13: Goals
-	var g string = ""
-	for _, s := range fp.Goals {
-		g += domain.GoalMap[s] + ", "
-	}
-	if g != "" { // Remove the last comma in the string.
-		g = strings.TrimSuffix(g, ",")
-	}
-
-	// Step 14: WorkoutPreferences
-	wp := ""
-	for _, s := range fp.WorkoutPreferences {
-		wp += domain.WorkoutPreferenceMap[s] + ", "
-	}
-	if wp != "" { // Remove the last comma in the string.
-		wp = strings.TrimSuffix(wp, ",")
-	}
-
-	prompt := fmt.Sprintf(`
-        CLIENT DETAILS:
-     	The equipment that client has access to: %s
-		Does client have access to a commercial-style gym: %s
-		Does client workout at home: %s
-		Client Height: %s
-		Client Date of Birth: %s
-        Client Gender: %s
-		Client ideal weight they wish to achieve (lbs): %s
-		Client current level of daily physical activity: %s
-		Client current level of intensity in exercise routine: %s
-        Client wants wants to train the following number of days per week: %s
-        Client's length of time per day that they can train: %s
-        Client's goal of number of weeks that they would like the training plan to last: %s
-        Client's fitness goals: %s
-        Client's workout preference: %s
-	`, hge, hatcg, wah, height, bd, gender, iw, pa, wi, dpw, tpd, mw, g, wp)
 	return prompt, nil
 }
 
@@ -298,7 +221,7 @@ func (c *FitnessPlanControllerImpl) listAvailableExcercises(ctx context.Context,
 		OrganizationID:  fp.OrganizationID,
 		ExcludeArchived: true,
 		PageSize:        500,
-		Gender:          a_d.GenderMap[fp.Gender],
+		// Gender:          a_d.GenderMap[fp.Gender],
 	})
 	if err != nil {
 		c.Logger.Error("304")
@@ -430,99 +353,35 @@ func (c *FitnessPlanControllerImpl) generateFitnessPlanRecommendedExercisesPromp
 	//
 	// Take our fitness plan and stringify it so we can plug into prompt.
 	//
-
-	// Step 1: Convert to a string the `HomeGymEquipment`field.
-	var hge string = ""
-	for _, s := range fp.HomeGymEquipment {
-		hge += domain.HomeGymEquipmentMap[s] + ", "
+	userProfile, err := c.UserStorer.GetByID(sessCtx, fp.UserID)
+	if err != nil {
+		return "", err
 	}
-	if hge != "" { // Remove the last comma in the string.
-		hge = strings.TrimSuffix(hge, ",")
+	AnsMap := make(map[string]u_d.Answer, 0)
+	for _, v := range userProfile.OnboardingAnswers {
+		AnsMap[v.QuestionID.Hex()] = *v
 	}
-
-	// Step 2: Return yes or no if has access to`commercial-style gym`
-	hatcg := "Yes" //TODO
-
-	// Step 3: Convert to a string the `EquipmentAccess` field.
-	wah := domain.HasWorkoutsAtHomeMap[fp.HasWorkoutsAtHome]
-
-	// Step 4: Convert clients height.
-	height := fmt.Sprintf("%v ft %v in", fp.HeightFeet, fp.HeightInches)
-
-	// Step 5: Date of birth.
-	bd := fmt.Sprintf("%v", fp.Birthday)
-
-	// Step 6: Gender
-	var gender string
-	if fp.Gender == domain.GenderOther {
-		gender = fp.GenderOther
-	} else {
-		if fp.Gender == domain.GenderMale {
-			gender = "Male"
+	qstRes, err := c.QuestionController.ListByFilter(sessCtx,
+		&datastore.QuestionListFilter{
+			PageSize:  10000,
+			SortField: "_id",
+			SortOrder: 1,
+			Status:    true},
+	)
+	clientProfile := ""
+	for _, qstn := range qstRes.Results {
+		if ans, ok := AnsMap[qstn.ID.Hex()]; ok {
+			clientProfile = fmt.Sprintf("%s,\n %s (%s) : %s", clientProfile, qstn.Title, qstn.Subtitle, ans)
 		}
-		if fp.Gender == domain.GenderFemale {
-			gender = "Female"
-		}
-	}
-
-	// Step 7: IdealWeight
-	iw := fmt.Sprintf("%v lbs", fp.IdealWeight)
-
-	// Step 8: PhysicalActivity
-	pa := domain.PhysicalActivityMap[fp.PhysicalActivity]
-
-	// Step 9: WorkoutIntensity
-	wi := domain.WorkoutIntensityMap[fp.WorkoutIntensity]
-
-	// Step 10: DaysPerWeek
-	dpw := domain.DaysPerWeekMap[fp.DaysPerWeek]
-
-	// Step 11: TimePerDay
-	tpd := domain.TimePerDayMap[fp.TimePerDay]
-
-	// Step 12: MaxWeeks
-	mw := domain.MaxWeekMap[fp.MaxWeeks]
-
-	// Step 13: Goals
-	var g string = ""
-	for _, s := range fp.Goals {
-		g += domain.GoalMap[s] + ", "
-	}
-	if g != "" { // Remove the last comma in the string.
-		g = strings.TrimSuffix(g, ",")
-	}
-
-	// Step 14: WorkoutPreferences
-	wp := ""
-	for _, s := range fp.WorkoutPreferences {
-		wp += domain.WorkoutPreferenceMap[s] + ", "
-	}
-	if wp != "" { // Remove the last comma in the string.
-		wp = strings.TrimSuffix(wp, ",")
 	}
 
 	prompt := fmt.Sprintf(`
 		As a personal trainer, please select from the following 'EXERCISES' as a JSON array of strings that you recommended based on the following 'CLIENT DETAILS'. Do not include any explanations, only provide a RFC8259 compliant JSON response following this format without deviation.
 
         EXERCISES:
+		%s.
+		CLIENT DETAILS AS QUESTIONS AND ANSWERS:
 		%s
-
-        CLIENT DETAILS:
-     	The equipment that client has access to: %s
-		Does client have access to a commercial-style gym: %s
-		Does client workout at home: %s
-		Client Height: %s
-		Client Date of Birth: %s
-        Client Gender: %s
-		Client ideal weight they wish to achieve (lbs): %s
-		Client current level of daily physical activity: %s
-		Client current level of intensity in exercise routine: %s
-        Client wants wants to train the following number of days per week: %s
-        Client's length of time per day that they can train: %s
-        Client's goal of number of weeks that they would like the training plan to last: %s
-        Client's fitness goals: %s
-        Client's workout preference: %s
-	`, en, hge, hatcg, wah,
-		height, bd, gender, iw, pa, wi, dpw, tpd, mw, g, wp)
+	`, en, clientProfile)
 	return prompt, nil
 }

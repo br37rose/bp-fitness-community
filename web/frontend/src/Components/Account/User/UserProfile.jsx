@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import Scroll from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

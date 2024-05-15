@@ -80,6 +80,16 @@ func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	userIdStr := query.Get("user_id")
+	if userIdStr != "" {
+		userId, err := primitive.ObjectIDFromHex(userIdStr)
+		if err != nil {
+			httperror.ResponseError(w, err)
+			return
+		}
+		f.UserID = userId
+	}
+
 	m, err := h.Controller.ListByFilter(ctx, f)
 	if err != nil {
 		httperror.ResponseError(w, err)

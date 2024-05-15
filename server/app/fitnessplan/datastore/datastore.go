@@ -21,28 +21,10 @@ type FitnessPlan struct {
 	ModifiedAt         time.Time              `bson:"modified_at,omitempty" json:"modified_at,omitempty"`
 	ModifiedByUserName string                 `bson:"modified_by_user_name" json:"modified_by_user_name"`
 	ModifiedByUserID   primitive.ObjectID     `bson:"modified_by_user_id" json:"modified_by_user_id"`
-	Birthday           time.Time              `bson:"birthday,omitempty" json:"birthday,omitempty"`
-	DaysPerWeek        int8                   `bson:"days_per_week" json:"days_per_week"`
-	EquipmentAccess    int8                   `bson:"equipment_access" json:"equipment_access"`
 	EstimatedReadyDate time.Time              `bson:"estimated_ready_date,omitempty" json:"estimated_ready_date,omitempty"`
-	Gender             int8                   `bson:"gender" json:"gender"`
-	GenderOther        string                 `bson:"gender_other" json:"gender_other"`
-	Goals              []int8                 `bson:"goals" json:"goals"`
-	HasWorkoutsAtHome  int8                   `bson:"has_workouts_at_home" json:"has_workouts_at_home"`
-	HeightFeet         float64                `bson:"height_feet" json:"height_feet"`
-	HeightFeetInches   float64                `bson:"height_feet_inches" json:"height_feet_inches"`
-	HeightInches       float64                `bson:"height_inches" json:"height_inches"`
-	HomeGymEquipment   []int8                 `bson:"home_gym_equipment" json:"home_gym_equipment"`
-	IdealWeight        float64                `bson:"ideal_weight" json:"ideal_weight"`
-	MaxWeeks           int8                   `bson:"max_weeks" json:"max_weeks"`
 	Name               string                 `bson:"name" json:"name"`
-	PhysicalActivity   int8                   `bson:"physical_activity" json:"physical_activity"`
 	Status             int8                   `bson:"status" json:"status"`
-	TimePerDay         int8                   `bson:"time_per_day" json:"time_per_day"`
 	WasProcessed       bool                   `bson:"was_processed" json:"was_processed"`
-	Weight             float64                `bson:"weight" json:"weight"`
-	WorkoutIntensity   int8                   `bson:"workout_intensity" json:"workout_intensity"`
-	WorkoutPreferences []int8                 `bson:"workout_preferences" json:"workout_preferences"`
 	OrganizationID     primitive.ObjectID     `bson:"organization_id,omitempty" json:"organization_id,omitempty"`
 	OrganizationName   string                 `bson:"organization_name" json:"organization_name"`
 	ExerciseNames      []string               `bson:"exercise_names" json:"exercise_names"`
