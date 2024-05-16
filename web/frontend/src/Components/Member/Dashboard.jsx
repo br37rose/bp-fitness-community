@@ -62,7 +62,7 @@ function MemberDashboard() {
   const [isComingSoon, setComingSoon] = useState(true);
   const [answers, setAnswers] = useState({});
   const [forceURL, setForceURL] = useState("");
-  const defaultAvatarUrl = 'static/default_user.jpg';
+  const defaultAvatarUrl = 'static/default_user_whitebg.png';
 
   useEffect(() => {
     console.log(answers);
@@ -499,7 +499,7 @@ function MemberDashboard() {
                         <div class="">
                           <span>
                           <figure className="image is-128x128" style={{ margin: 'auto' }}>
-                            <img className="is-rounded" src={currentUser.avatarObjectUrl || defaultAvatarUrl} alt={currentUser.name} style={{ objectFit: 'cover', height: '128px', width: '128px' }} />
+                            <img className="is-rounded" src={currentUser.avatarObjectUrl || defaultAvatarUrl} alt={currentUser.name} style={{ objectFit: 'cover', height: '100px', width: '100px' }} />
                         </figure>
                           </span>
                         </div>

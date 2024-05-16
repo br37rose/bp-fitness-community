@@ -19,7 +19,7 @@ body {
 .modal-card-title,
 .menu-label {
     font-family: $family-primary; // Apply the primary font to headings
-    color: $text;
+    color: set-text-color($background-light);
 }
 
 .subtitle,
@@ -33,11 +33,11 @@ body {
 .level-item,
 .content {
     font-family: $family-secondary; // Apply the secondary font to subtitles
-    color: $text;
+    color: set-text-color($background-light);
 }
 
 // Apply the secondary font to regular paragraphs
 p {
     font-family: $family-secondary;
-    color: $text;
+    color: set-text-color($background-light);
 }
