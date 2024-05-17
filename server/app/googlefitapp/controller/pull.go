@@ -164,152 +164,172 @@ func (impl *GoogleFitAppControllerImpl) pullDataFromGoogleWithGfaAndClient(ctx c
 	// time as the most recent time of our fetch.
 	lastFetchedAtNow := time.Now()
 
+	// DEVELOPERS NOTE 1:
+	// GOOGLE ALLOWS ONLY 100 API CALLS PER 5 MINUTE OR 10,000 API CALLS PER DAY.
+	// THEREFORE THE CODE BELOW IS COMMENTED OUT TO PREVENT CALLING API ENDPOINTS
+	// THAT WE ARE NOT USING TO SAVE THE CALLS. IN ESSENCE WE ONLY NEED:
+	// - CALORIES BURNED
+	// - STEPS COUNT DELTA
+	// - HEART RATE
+	// - DISTANCE (TURN OFF LATER! REASON EXPLAINED BELOW)
+	//
+	// THE CALCULATIONS ARE AS FOLLOWS:
+	// ( 3 API CALLS * 100 PEOPLE ) PER 15 MINUTE = 300 tokens
+	//
+	// DEVELOPERS NOTE 2:
+	// 100 tokens per 05 minute
+	// 300 tokens per 15 minute
+	//
+	// DEVELOPERS NOTE 3:
+	// FOR THE FIRST 50 PEOPLE WE WILL MAKE 4 API CALLS, BUT AFTERWORDS WE WILL
+	// COMMENT OUT ONE OF THE API ENDPOINTS TO LIMIT IT TO THREE
+
 	// --- Activity --- //
 
-	if err := impl.pullActivitySegmentDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling activity dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullBasalMetabolicRateDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling activity dataset from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullActivitySegmentDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling activity dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullBasalMetabolicRateDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling base metabolic dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 	if err := impl.pullCaloriesBurnedDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling calories burned data from google",
 			slog.Any("error", err))
 		return err
 	}
-	if err := impl.pullCyclingPedalingCadenceDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling cycling pedaling cadence dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullCyclingPedalingCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling cycling pedaling cumulative dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullHeartPointsDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling heart points dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullMoveMinutesDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling move minutes dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullPowerDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling power dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullStepCountCadenceDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling step count cadence dataset from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullCyclingPedalingCadenceDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling cycling pedaling cadence dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullCyclingPedalingCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling cycling pedaling cumulative dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullHeartPointsDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling heart points dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullMoveMinutesDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling move minutes dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullPowerDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling power dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullStepCountCadenceDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling step count cadence dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 	if err := impl.pullStepCountDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling step count delta data from google",
 			slog.Any("error", err))
 		return err
 	}
-	if err := impl.pullWorkoutDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling workout dataset from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullWorkoutDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling workout dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 
 	// --- Location --- //
 
-	if err := impl.pullCyclingWheelRevolutionRPMDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling cycling wheel revolution rpm dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullCyclingWheelRevolutionCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling cycling wheel revolution cumulative dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullDistanceDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// if err := impl.pullCyclingWheelRevolutionRPMDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling cycling wheel revolution rpm dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullCyclingWheelRevolutionCumulativeDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling cycling wheel revolution cumulative dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	if err := impl.pullDistanceDeltaDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil { // DEVELOPERS NOTE: TURN OFF WHEN MORE THEN 50 USERS IN SYSTEM!
 		impl.Logger.Error("failed pulling distance delta dataset from google",
 			slog.Any("error", err))
 		return err
 	}
-	if err := impl.pullLocationSampleDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling location sample dataset from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling speed dataset from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullLocationSampleDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling location sample dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullSpeedDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling speed dataset from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 
 	// --- Nutrition --- //
 
-	if err := impl.pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling hydration data from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullNutritionDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling hydration data from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullHydrationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling hydration data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullNutritionDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling hydration data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 
 	// --- Health --- //
 
-	if err := impl.pullBloodGlucoseDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling blood glucose data from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullBloodPressureDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling blood pressure data from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullBodyFatPercentageDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling body fat percentage data from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullBodyTemperatureDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling body temperature data from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullBloodGlucoseDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling blood glucose data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullBloodPressureDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling blood pressure data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullBodyFatPercentageDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling body fat percentage data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullBodyTemperatureDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling body temperature data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 	if err := impl.pullHeartRateDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
 		impl.Logger.Error("failed pulling heart rate dataset from google",
 			slog.Any("error", err))
 		return err
 	}
-	if err := impl.pullHeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling height data from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullOxygenSaturationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling oxygen saturation data from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling sleep data from google",
-			slog.Any("error", err))
-		return err
-	}
-	if err := impl.pullWeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
-		impl.Logger.Error("failed pulling weight data from google",
-			slog.Any("error", err))
-		return err
-	}
+	// if err := impl.pullHeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling height data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullOxygenSaturationDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling oxygen saturation data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullSleepDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling sleep data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
+	// if err := impl.pullWeightDataFromGoogleWithGfaAndFitnessStore(ctx, gfa, svc); err != nil {
+	// 	impl.Logger.Error("failed pulling weight data from google",
+	// 		slog.Any("error", err))
+	// 	return err
+	// }
 
 	//
 	// Keep track of last fetch time.
