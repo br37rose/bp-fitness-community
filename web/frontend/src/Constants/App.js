@@ -76,6 +76,8 @@ export const RANK_POINT_FUNCTION_MAX = 5;
 // Please see `DataTypeKey` prefixed constants via https://github.com/bci-innovation-labs/bp8fitnesscommunity/blob/main/server/adapter/cloudprovider/google/constants.go
 export const RANK_POINT_METRIC_TYPE_HEART_RATE = "com.google.heart_rate.bpm";
 export const RANK_POINT_METRIC_TYPE_STEP_COUNTER = "com.google.step_count.delta";
+export const RANK_POINT_METRIC_TYPE_CALORIES_BURNED = "com.google.calories.expended";
+export const RANK_POINT_METRIC_TYPE_DISTANCE_DELTA = "com.google.distance.delta";
 //TODO: Add more health sensors here...
 
 export const WORKOUT_ALL_VISIBLE = 1;

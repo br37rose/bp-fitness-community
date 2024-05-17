@@ -29,8 +29,10 @@ import {
 	FITNESS_PLAN_STATUS_MAP,
 } from "../../../../../Constants/FieldOptions";
 import {
-	RANK_POINT_METRIC_TYPE_HEART_RATE,
+    RANK_POINT_METRIC_TYPE_HEART_RATE,
 	RANK_POINT_METRIC_TYPE_STEP_COUNTER,
+	RANK_POINT_METRIC_TYPE_CALORIES_BURNED,
+	RANK_POINT_METRIC_TYPE_DISTANCE_DELTA
 } from "../../../../../Constants/App";
 import DateTimeTextFormatter from "../../../../Reusable/DateTimeTextFormatter";
 
@@ -94,6 +96,8 @@ function MemberLeaderboardGlobalTabularListMobile(props) {
 														RANK_POINT_METRIC_TYPE_HEART_RATE && <>bpm</>}
 													{datum.metricType ===
 														RANK_POINT_METRIC_TYPE_STEP_COUNTER && <>steps</>}
+							                        {datum.metricDataTypeName === RANK_POINT_METRIC_TYPE_CALORIES_BURNED && <>kcal</>}
+							                        {datum.metricDataTypeName === RANK_POINT_METRIC_TYPE_DISTANCE_DELTA && <>m</>}
 												</h2>
 												<img
 													src="/static/leaderboard/arrow_up.svg"

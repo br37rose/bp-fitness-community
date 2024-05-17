@@ -24,6 +24,8 @@ import {
 	faSearch,
 	faPercent,
 	faAdd,
+	faFire,
+	faMapMarkerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {useRecoilState} from "recoil";
 
@@ -58,6 +60,8 @@ import MemberLeaderboardGlobalTabularListMobile from "./TabularListMobile";
 import {
 	RANK_POINT_METRIC_TYPE_HEART_RATE,
 	RANK_POINT_METRIC_TYPE_STEP_COUNTER,
+	RANK_POINT_METRIC_TYPE_CALORIES_BURNED,
+	RANK_POINT_METRIC_TYPE_DISTANCE_DELTA
 } from "../../../../../Constants/App";
 import Layout from "../../../../Menu/Layout";
 import MobileLeaderboard from "../MobileView/MobileLeaderboard";
@@ -101,6 +105,8 @@ function MemberLeaderboardGlobalTabularList() {
 	const [currentCursor, setCurrentCursor] = useState(""); // Pagination
 	const [isHeartRate, setIsHeartRate] = useState(true);
 	const [isStepsCounter, setIsStepsCounter] = useState(false);
+	const [isCaloriesBurned, setIsCaloriesBurned] = useState(false);
+	const [isDistanceDelta, setIsDistanceDelta] = useState(false);
 	const [period, setPeriod] = useState(RANK_POINT_PERIOD_DAY);
 	const [calcFunction, setCalcFunction] = useState(RANK_POINT_FUNCTION_AVERAGE);
 
@@ -170,17 +176,41 @@ function MemberLeaderboardGlobalTabularList() {
 
 	const onHeartRateButtonClick = (e) => {
 		e.preventDefault(); // Do not remove this line!
-		setIsStepsCounter(!isStepsCounter);
-		setIsHeartRate(!isHeartRate);
+		setIsStepsCounter(false);
+		setIsHeartRate(true);
+		setIsCaloriesBurned(false);
+		setIsDistanceDelta(false);
 		setCalcFunction(RANK_POINT_FUNCTION_AVERAGE);
 	};
 
 	const onStepCounterButtonClick = (e) => {
 		e.preventDefault(); // Do not remove this line!
-		setIsStepsCounter(!isStepsCounter);
-		setIsHeartRate(!isHeartRate);
+		setIsStepsCounter(true);
+		setIsHeartRate(false);
+		setIsCaloriesBurned(false);
+		setIsDistanceDelta(false);
 		setCalcFunction(RANK_POINT_FUNCTION_AVERAGE);
 	};
+
+	const onCaloriesBurnedButtonClick = (e) => {
+		e.preventDefault(); // Do not remove this line!
+		setIsStepsCounter(false);
+		setIsHeartRate(false);
+		setIsCaloriesBurned(true);
+		setIsDistanceDelta(false);
+		setCalcFunction(RANK_POINT_FUNCTION_AVERAGE);
+	};
+
+	const onDistanceDeltaButtonClick = (e) => {
+		e.preventDefault(); // Do not remove this line!
+		setIsStepsCounter(false);
+		setIsHeartRate(false);
+		setIsCaloriesBurned(false);
+		setIsDistanceDelta(true);
+		setCalcFunction(RANK_POINT_FUNCTION_AVERAGE);
+	};
+
+
 
 	const fetchList = (
 		user,
@@ -191,6 +221,8 @@ function MemberLeaderboardGlobalTabularList() {
 		sbv,
 		isHeartRate,
 		isStepsCounter,
+		isCaloriesBurned,
+		isDistanceDelta,
 		p,
 		cf
 	) => {
@@ -202,6 +234,10 @@ function MemberLeaderboardGlobalTabularList() {
 			metricType = RANK_POINT_METRIC_TYPE_HEART_RATE;
 		} else if (isStepsCounter) {
 			metricType = RANK_POINT_METRIC_TYPE_STEP_COUNTER;
+		} else if (isCaloriesBurned) {
+			metricType = RANK_POINT_METRIC_TYPE_CALORIES_BURNED;
+		} else if (isDistanceDelta) {
+			metricType = RANK_POINT_METRIC_TYPE_DISTANCE_DELTA;
 		}
 
 		let params = new Map();
@@ -264,7 +300,9 @@ function MemberLeaderboardGlobalTabularList() {
 		setSort("timestamp,DESC");
 		setStatus(0);
 		setIsHeartRate(true);
-		setIsStepsCounter(true);
+		setIsStepsCounter(false);
+		setIsCaloriesBurned(false);
+		setIsDistanceDelta(false);
 	};
 
 	////
@@ -285,6 +323,8 @@ function MemberLeaderboardGlobalTabularList() {
 				sort,
 				isHeartRate,
 				isStepsCounter,
+				isCaloriesBurned,
+				isDistanceDelta,
 				period,
 				calcFunction
 			);
@@ -302,6 +342,8 @@ function MemberLeaderboardGlobalTabularList() {
 		sort,
 		isHeartRate,
 		isStepsCounter,
+		isCaloriesBurned,
+		isDistanceDelta,
 		period,
 		calcFunction,
 	]);
@@ -334,6 +376,8 @@ function MemberLeaderboardGlobalTabularList() {
 									sort,
 									isHeartRate,
 									isStepsCounter,
+									isCaloriesBurned,
+									isDistanceDelta,
 									period,
 									calcFunction
 								)
@@ -383,6 +427,26 @@ function MemberLeaderboardGlobalTabularList() {
 								}}>
 								<FontAwesomeIcon className="mdi" icon={faPersonWalking} />
 								&nbsp;Steps Count
+							</Link>
+							&nbsp;
+							<Link
+								class={`button is-small ${isCaloriesBurned && `is-info`}`}
+								type="button"
+								onClick={(e) => {
+									onCaloriesBurnedButtonClick(e);
+								}}>
+								<FontAwesomeIcon className="mdi" icon={faFire} />
+								&nbsp;Calories Burned
+							</Link>
+							&nbsp;
+							<Link
+								class={`button is-small ${isDistanceDelta && `is-info`}`}
+								type="button"
+								onClick={(e) => {
+									onDistanceDeltaButtonClick(e);
+								}}>
+								<FontAwesomeIcon className="mdi" icon={faMapMarkerAlt} />
+								&nbsp;Distance
 							</Link>
 							&nbsp;
 							{/*
@@ -516,7 +580,7 @@ function MemberLeaderboardGlobalTabularList() {
 										onNextClicked={onNextClicked}
 										currentUser={currentUser}
 									/>
-									{/* <MobileLeaderboard 
+									{/* <MobileLeaderboard
 									listRank={listRank}
 									setPageSize={setPageSize}
 									pageSize={pageSize}
