@@ -9,7 +9,7 @@ $black: #000000;
 
 // Thematic Colors
 $color-main: $gold; 
-$color-light-shade: desaturate($gold, 65%); 
+$color-light-shade: lighten($black, 89%); 
 $color-dark-shade: darken($gold, 25%);  // Dynamically darken gold
 $color-accent1: desaturate($gold, 25%); 
 $color-accent2: $black; 
@@ -23,7 +23,9 @@ $background-light: $color-light-shade;
 $highlight-color: $color-dark-shade;
 $text-dark: $black;  // Black
 $text-light: $white;  // White
+$border-radius-sm: 12px;
 $border-radius: 8px;
+$border-radius-lg: 40px;
 
 // Link Colors
 $color-link1: #002366; // Dark blue
@@ -49,3 +51,28 @@ $success: nth($color-green-shades, 1);
 $warning: nth($color-yellow-shades, 1);
 $danger: nth($color-red-shades, 1);
 $dark: $color-accent2;
+
+/* Font Weights */
+$font-weights: (
+  300: 300,
+  400: 400,
+  500: 500,
+  600: 600,
+  700: 700,
+  800: 800,
+  900: 900
+);
+
+/* Texts */
+.text_lg {
+    font-size: 15px;
+    color: $color-light-shade;
+  }
+  .text_md {
+    font-size: 12px;
+    color: $color-light-shade;
+  }
+  .text_sm {
+    font-size: 8px;
+    color: $color-light-shade;
+  }
