@@ -84,174 +84,235 @@ return (
 */
 
 function FormRadioField({
-    label,          // The text to display the user.
-    name,           // The element HTML name.
-    value,          // The selected value.
-    opt1Value,      // The value to use for option #1.
-    opt1Label,      // The label to display for option #1.
-    opt2Value,      // ...
-    opt2Label,      // ...
-    opt3Value,      // ...
-    opt3Label,      // ...
-    opt4Value,      // ...
-    opt4Label,      // ...
-    opt5Value,      // ...
-    opt5Label,      // ...
-    opt6Value,      // ...
-    opt6Label,      // ...
-    opt7Value,      // ...
-    opt7Label,      // ...
-    errorText,      // The error message to display
-    wasValidated,   // Boolean indicates if this element was successfully validated or not.
-    helpText,       // The special help task to include.
-    onChange        // The function to call when a selection occurs.
+  label, // The text to display the user.
+  name, // The element HTML name.
+  value, // The selected value.
+  opt1Value, // The value to use for option #1.
+  opt1Label, // The label to display for option #1.
+  opt2Value, // ...
+  opt2Label, // ...
+  opt3Value, // ...
+  opt3Label, // ...
+  opt4Value, // ...
+  opt4Label, // ...
+  opt5Value, // ...
+  opt5Label, // ...
+  opt6Value, // ...
+  opt6Label, // ...
+  opt7Value, // ...
+  opt7Label, // ...
+  errorText, // The error message to display
+  wasValidated, // Boolean indicates if this element was successfully validated or not.
+  helpText, // The special help task to include.
+  onChange, // The function to call when a selection occurs.
 }) {
-
-    console.log(typeof(value), "----->", typeof(opt1Label))
-    return (
-        <div class="field pb-4">
-            <label class="label">{label}</label>
-            <div class="control">
-                {opt1Label &&
-                    <>
-                        <label class="radio">
-                            <input type="radio"
-                             data-label={opt1Value}
-                                checked={value === opt1Value}
-                                   name={name}
-                                  value={opt1Value}
-                               onChange={onChange} />&nbsp;
-                                    {errorText
-                                        ? <span style={{color:"#f14668"}} >{opt1Label}</span>
-                                        : <span style={wasValidated
-                                            ? {color:"#48c78e"}
-                                            : {color:"#363636"} }>{opt1Label}</span>
-                                    }
-                        </label>
-                        &nbsp;&nbsp;
-                    </>
-                }
-                {opt2Label &&
-                    <>
-                        <label class="radio">
-                            <input type="radio"
-                             data-label={opt2Value}
-                                checked={value === opt2Value}
-                                   name={name}
-                                  value={opt2Value}
-                               onChange={onChange} />&nbsp;
-                                    {errorText
-                                        ? <span style={{color:"#f14668"}} >{opt2Label}</span>
-                                        : <span style={wasValidated
-                                            ? {color:"#48c78e"}
-                                            : {color:"#363636"} }>{opt2Label}</span>
-                                    }
-                        </label>
-                        &nbsp;&nbsp;
-                    </>
-                }
-                {opt3Label &&
-                    <>
-                        <label class="radio">
-                            <input type="radio"
-                             data-label={opt3Value}
-                                checked={value === opt3Value}
-                                   name={name}
-                                  value={opt3Value}
-                               onChange={onChange} />&nbsp;
-                                    {errorText
-                                        ? <span style={{color:"#f14668"}} >{opt3Label}</span>
-                                        : <span style={wasValidated
-                                            ? {color:"#48c78e"}
-                                            : {color:"#363636"} }>{opt3Label}</span>
-                                    }
-                        </label>
-                        &nbsp;&nbsp;
-                    </>
-                }
-                {opt4Label &&
-                    <>
-                        <label class="radio">
-                            <input type="radio"
-                             data-label={opt4Value}
-                                checked={value === opt4Value}
-                                   name={name}
-                                  value={opt4Value}
-                               onChange={onChange} />&nbsp;
-                                    {errorText
-                                        ? <span style={{color:"#f14668"}} >{opt4Label}</span>
-                                        : <span style={wasValidated
-                                            ? {color:"#48c78e"}
-                                            : {color:"#363636"} }>{opt4Label}</span>
-                                    }
-                        </label>
-                        &nbsp;&nbsp;
-                    </>
-                }
-                {opt5Label &&
-                    <>
-                        <label class="radio">
-                            <input type="radio"
-                             data-label={opt5Value}
-                                checked={value === opt5Value}
-                                   name={name}
-                                  value={opt5Value}
-                               onChange={onChange} />&nbsp;
-                                    {errorText
-                                        ? <span style={{color:"#f14668"}} >{opt5Label}</span>
-                                        : <span style={wasValidated
-                                            ? {color:"#48c78e"}
-                                            : {color:"#363636"} }>{opt5Label}</span>
-                                    }
-                        </label>
-                        &nbsp;&nbsp;
-                    </>
-                }
-                {opt6Label &&
-                    <>
-                        <label class="radio">
-                            <input type="radio"
-                             data-label={opt6Value}
-                                checked={value === opt6Value}
-                                   name={name}
-                                  value={opt6Value}
-                               onChange={onChange} />&nbsp;
-                                    {errorText
-                                        ? <span style={{color:"#f14668"}} >{opt6Label}</span>
-                                        : <span style={wasValidated
-                                            ? {color:"#48c78e"}
-                                            : {color:"#363636"} }>{opt6Label}</span>
-                                    }
-                        </label>
-                        &nbsp;&nbsp;
-                    </>
-                }
-                {opt7Label &&
-                    <>
-                        <label class="radio">
-                            <input type="radio"
-                             data-label={opt7Value}
-                                checked={value === opt7Value}
-                                   name={name}
-                                  value={opt7Value}
-                               onChange={onChange} />&nbsp;
-                                    {errorText
-                                        ? <span style={{color:"#f14668"}} >{opt7Label}</span>
-                                        : <span style={wasValidated
-                                            ? {color:"#48c78e"}
-                                            : {color:"#363636"} }>{opt7Label}</span>
-                                    }
-                        </label>
-                        &nbsp;&nbsp;
-                    </>
-                }
-            </div>
-            {errorText &&
-                <p class="help is-danger">{errorText}</p>
-            }
-            <p class="help">{helpText}</p>
-        </div>
-    );
+  let options = {
+    opt1Label: opt1Value,
+    opt2Label: opt2Value,
+    opt3Label: opt3Value,
+    opt4Label: opt4Value,
+    opt5Label: opt5Value,
+    opt6Label: opt6Value,
+    opt7Label: opt7Value,
+  };
+  return (
+    <div class="field pb-4">
+      <label class="label">{label}</label>
+      <div class="control">
+        {opt1Label && (
+          <>
+            <label class="radio">
+              <input
+                type="radio"
+                data-label={opt1Value}
+                checked={options[opt1Label] && options[opt1Label] === value}
+                name={name}
+                value={opt1Value}
+                onChange={onChange}
+              />
+              &nbsp;
+              {errorText ? (
+                <span style={{ color: "#f14668" }}>{opt1Label}</span>
+              ) : (
+                <span
+                  style={
+                    wasValidated ? { color: "#48c78e" } : { color: "#363636" }
+                  }
+                >
+                  {opt1Label}
+                </span>
+              )}
+            </label>
+            &nbsp;&nbsp;
+          </>
+        )}
+        {opt2Label && (
+          <>
+            <label class="radio">
+              <input
+                type="radio"
+                data-label={opt2Value}
+                checked={options[opt2Label] && options[opt2Label] === value}
+                name={name}
+                value={opt2Value}
+                onChange={onChange}
+              />
+              &nbsp;
+              {errorText ? (
+                <span style={{ color: "#f14668" }}>{opt2Label}</span>
+              ) : (
+                <span
+                  style={
+                    wasValidated ? { color: "#48c78e" } : { color: "#363636" }
+                  }
+                >
+                  {opt2Label}
+                </span>
+              )}
+            </label>
+            &nbsp;&nbsp;
+          </>
+        )}
+        {opt3Label && (
+          <>
+            <label class="radio">
+              <input
+                type="radio"
+                data-label={opt3Value}
+                checked={options[opt3Label] && options[opt3Label] === value}
+                name={name}
+                value={opt3Value}
+                onChange={onChange}
+              />
+              &nbsp;
+              {errorText ? (
+                <span style={{ color: "#f14668" }}>{opt3Label}</span>
+              ) : (
+                <span
+                  style={
+                    wasValidated ? { color: "#48c78e" } : { color: "#363636" }
+                  }
+                >
+                  {opt3Label}
+                </span>
+              )}
+            </label>
+            &nbsp;&nbsp;
+          </>
+        )}
+        {opt4Label && (
+          <>
+            <label class="radio">
+              <input
+                type="radio"
+                data-label={opt4Value}
+                checked={options[opt4Label] && options[opt4Value] === value}
+                name={name}
+                value={opt4Value}
+                onChange={onChange}
+              />
+              &nbsp;
+              {errorText ? (
+                <span style={{ color: "#f14668" }}>{opt4Label}</span>
+              ) : (
+                <span
+                  style={
+                    wasValidated ? { color: "#48c78e" } : { color: "#363636" }
+                  }
+                >
+                  {opt4Label}
+                </span>
+              )}
+            </label>
+            &nbsp;&nbsp;
+          </>
+        )}
+        {opt5Label && (
+          <>
+            <label class="radio">
+              <input
+                type="radio"
+                data-label={opt5Value}
+                checked={options[opt5Label] && options[opt5Label] === value}
+                name={name}
+                value={opt5Value}
+                onChange={onChange}
+              />
+              &nbsp;
+              {errorText ? (
+                <span style={{ color: "#f14668" }}>{opt5Label}</span>
+              ) : (
+                <span
+                  style={
+                    wasValidated ? { color: "#48c78e" } : { color: "#363636" }
+                  }
+                >
+                  {opt5Label}
+                </span>
+              )}
+            </label>
+            &nbsp;&nbsp;
+          </>
+        )}
+        {opt6Label && (
+          <>
+            <label class="radio">
+              <input
+                type="radio"
+                data-label={opt6Value}
+                checked={options[opt6Label] && options[opt6Label] === value}
+                name={name}
+                value={opt6Value}
+                onChange={onChange}
+              />
+              &nbsp;
+              {errorText ? (
+                <span style={{ color: "#f14668" }}>{opt6Label}</span>
+              ) : (
+                <span
+                  style={
+                    wasValidated ? { color: "#48c78e" } : { color: "#363636" }
+                  }
+                >
+                  {opt6Label}
+                </span>
+              )}
+            </label>
+            &nbsp;&nbsp;
+          </>
+        )}
+        {opt7Label && (
+          <>
+            <label class="radio">
+              <input
+                type="radio"
+                data-label={opt7Value}
+                checked={options[opt7Label] && options[opt7Label] === value}
+                name={name}
+                value={opt7Value}
+                onChange={onChange}
+              />
+              &nbsp;
+              {errorText ? (
+                <span style={{ color: "#f14668" }}>{opt7Label}</span>
+              ) : (
+                <span
+                  style={
+                    wasValidated ? { color: "#48c78e" } : { color: "#363636" }
+                  }
+                >
+                  {opt7Label}
+                </span>
+              )}
+            </label>
+            &nbsp;&nbsp;
+          </>
+        )}
+      </div>
+      {errorText && <p class="help is-danger">{errorText}</p>}
+      <p class="help">{helpText}</p>
+    </div>
+  );
 }
 
 export default FormRadioField;
