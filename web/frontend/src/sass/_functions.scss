@@ -9,3 +9,9 @@
         @return $text-light;  // Use light text for dark backgrounds
     }
 }
+
+@each $key, $value in $font-weights {
+    .f_#{$key} {
+      font-weight: #{$value} !important;
+    }
+  }

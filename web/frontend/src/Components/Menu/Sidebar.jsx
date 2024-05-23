@@ -398,7 +398,7 @@ export default (props) => {
                   }`}
                 >
                   <FontAwesomeIcon className="fas" icon={faTrophy} />
-                  &nbsp;Fitness Plan
+                  &nbsp;My Fitness Plan
                 </a>
               </li>
               <li>
@@ -409,7 +409,7 @@ export default (props) => {
                   }`}
                 >
                   <FontAwesomeIcon className="fas" icon={faLeaf} />
-                  &nbsp;Nutrition Plan
+                  &nbsp;My Nutrition Plan
                 </a>
               </li>
               <li>

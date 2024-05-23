@@ -163,7 +163,7 @@ const Leader = ({listRank}) => {
 		listRank.results.forEach((datum) => {
 			const leaderElement = (
 				<div
-					className={`leader ${
+					className={`column is-one-third leader ${
 						datum.place === 1 ? "first" : datum.place === 2 ? "second" : "third"
 					}`}>
 					<div className="leader_img_wrap">
