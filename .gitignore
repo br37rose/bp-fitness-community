@@ -55,4 +55,4 @@ $RECYCLE.BIN/
 .env
 
 
-/web/frontend/*
+*.env
