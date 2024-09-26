@@ -133,3 +133,5 @@ func (impl UserStorerImpl) GetLiteByEmail(ctx context.Context, email string) (*U
 	}
 	return &result, nil
 }
+
+// Auto-generated comment for change 20
