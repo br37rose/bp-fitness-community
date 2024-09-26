@@ -28,3 +28,5 @@ func (impl UserStorerImpl) Create(ctx context.Context, u *User) error {
 
 	return nil
 }
+
+// Auto-generated comment for change 24
