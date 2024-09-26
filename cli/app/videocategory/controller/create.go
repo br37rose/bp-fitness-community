@@ -65,3 +65,5 @@ func (c *VideoCategoryControllerImpl) Create(ctx context.Context, req *VideoCate
 	}
 	return res, nil
 }
+
+// Auto-generated comment for change 29
