@@ -15,3 +15,5 @@ func (impl VideoCategoryStorerImpl) DeleteByID(ctx context.Context, id primitive
 	}
 	return nil
 }
+
+// Auto-generated comment for change 34
