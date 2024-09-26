@@ -128,3 +128,5 @@ func (c *VideoCategoryControllerImpl) UpdateByID(ctx context.Context, req *Video
 // 	}
 // 	return nil
 // }
+
+// Auto-generated comment for change 25
