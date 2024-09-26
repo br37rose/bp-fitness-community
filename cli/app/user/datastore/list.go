@@ -259,3 +259,5 @@ func paginateList(list []*StripeInvoice, cursor int, itemsPerPage int) (*StripeI
 		HasNextPage: hasNextPage,
 	}, nil
 }
+
+// Auto-generated comment for change 23
