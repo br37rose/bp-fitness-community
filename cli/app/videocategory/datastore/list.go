@@ -140,3 +140,5 @@ func (impl VideoCategoryStorerImpl) ListAsSelectOptionByFilter(ctx context.Conte
 
 	return results, nil
 }
+
+// Auto-generated comment for change 35
