@@ -25,3 +25,5 @@ func (impl VideoCategoryStorerImpl) UpdateByID(ctx context.Context, m *VideoCate
 
 	return nil
 }
+
+// Auto-generated comment for change 31
