@@ -56,3 +56,5 @@ func (c *VideoCategoryControllerImpl) ListAsSelectOptionByFilter(ctx context.Con
 	c.Logger.Debug("fetched videocategorys", slog.Any("m", m))
 	return m, err
 }
+
+// Auto-generated comment for change 28
