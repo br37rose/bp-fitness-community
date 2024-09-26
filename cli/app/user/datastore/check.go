@@ -16,3 +16,5 @@ func (impl UserStorerImpl) CheckIfExistsByEmail(ctx context.Context, email strin
 	}
 	return count >= 1, nil
 }
+
+// Auto-generated comment for change 21
