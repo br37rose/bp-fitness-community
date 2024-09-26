@@ -57,3 +57,5 @@ func (impl UserStorerImpl) UpdateStripeInvoiceByPaymentProcessorInvoiceID(ctx co
 	// If the paymentProcessorInvoiceID is not found in the StripeInvoices, return nil.
 	return nil
 }
+
+// Auto-generated comment for change 18
