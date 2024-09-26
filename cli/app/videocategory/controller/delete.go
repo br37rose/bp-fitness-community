@@ -83,3 +83,5 @@ func (impl *VideoCategoryControllerImpl) PermanentlyDeleteByID(ctx context.Conte
 	impl.Logger.Debug("deleted from database", slog.Any("videocategory_id", id))
 	return nil
 }
+
+// Auto-generated comment for change 27
