@@ -96,3 +96,5 @@ func runCreateAdmin(cfg *config.Conf, pass p.Provider, org o_d.OrganizationStore
 	fmt.Print("\033[H\033[2J")
 	fmt.Println("successfully created admin")
 }
+
+// Auto-generated comment for change 9
