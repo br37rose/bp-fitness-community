@@ -66,3 +66,5 @@ func runChangePassword(cfg *config.Conf, pass p.Provider, us user_ds.UserStorer)
 	fmt.Print("\033[H\033[2J")
 	fmt.Println("Password successfully changed")
 }
+
+// Auto-generated comment for change 13
